@@ -1,0 +1,2623 @@
+using UnityEngine;
+using System.Collections.Generic;
+using CodeStage.AntiCheat.ObscuredTypes;
+
+namespace GameBerry
+{
+    public enum IFFType
+    {
+        IFF_None = 0,
+        IFF_Friend, // 우리팀
+        IFF_Foe, // 상대팀
+    }
+
+    public enum V2Enum_Dungeon
+    {
+        None = 0,
+        LobbyScene,
+        StageScene,
+
+        DiamondDungeon = 11,
+        TowerDungeon = 12,
+        GoldDungeon = 13,
+        SoulStoneDungeon = 14,
+        RuneDungeon = 15,
+        HellDungeon = 16,
+        GuildRaidDungeonNormal = 17,
+        GuildRaidDungeonRank = 18,
+
+        CrackDungeon = 101,
+
+        GoddessDungeon = 201,
+
+        RedBullDungeon = 301,
+
+        RotationDungeon = 401,
+
+        UrsulaDungeon = 501,
+
+        KingSlimeDungeon = 601,
+
+        AllyArenaDungeon = 1001,
+    }
+
+    public enum Enum_ARR_LookDirection
+    {
+        None = 0,
+        Left,
+        Right,
+    }
+
+    public enum V2Enum_ARR_MonsterRoleType
+    {
+        Warrior = 11, //전사
+        Assassin = 12, //암살
+        Magic = 13, //마법
+        Defence = 14, //방어
+        RangeSup = 15, //원거리
+        Support = 16, //지원
+
+        Max,
+    }
+
+
+    public enum V2Enum_ARR_MonsterGradeType
+    {
+        Normal = 11, //일반 몬스터
+        Named = 12, //네임드 몬스터
+        Boss = 13, //보스 몬스터
+
+        Max
+    }
+
+    public enum V2Enum_ARR_RoomType
+    {
+        Normal = 0, //일반 몬스터
+        Slot = 11, //슬롯 이벤트가 출현하는 웨이브
+
+        Max
+    }
+
+    public enum V2Enum_Grade
+    {
+        D = 11,
+        C = 12,
+        B = 13,
+        A = 14,
+        S = 15,
+        SS = 16,
+        SR = 17,
+        SU = 18,
+        SSR = 19,
+
+        Max,
+    }
+
+    // 트리거
+    public enum V2Enum_ARR_CoolTimeType
+    {
+        Default = 0, // 메인 캐릭터 스킬 쿨타임
+        GamebleCoolTime = 11, // 겜블 스킬 쿨타임
+        AttackCount = 12, // 공격 횟수
+        KillingCount = 13, // 적을 죽인 횟수
+        HitCount = 14, // 내가 피격된 횟수
+
+        HPPercentOver = 15, // 현재 HP가 50% 이상
+        HPPercentBelow = 16, // 현재 HP가 50% 미만
+
+        CriticalAttack = 17, // 치명타 공격 시 (메인 캐릭터의 공격에만 해당)
+        IsBoss = 18, // 보스 몬스터 공격 시
+        IsNormal = 19, // 일반 몬스터 공격 시
+        Interest = 20, // 이자 획득 시
+        WaveClear = 21, // 웨이브 클리어 시
+        WaveStart = 22, // 웨이브 시작 시
+
+        GambleCardReward = 23, //카드 뽑기 도박 결과 획득 시
+        FailGasGamble = 24, //가스 카드 도박 실패 시
+        GainGasReward = 25, //가스 Reward 조건이 1 이상인 곳 클리어 시
+        MissionComplete = 26, //미션 완료 시
+
+        GambleCardRewardFire = 27, //  카드 뽑기 도박 결과 불 획득 시 (횟수)
+        GambleCardRewardGold = 28, //  카드 뽑기 도박 결과 금 획득시
+        GambleCardRewardWater = 29, //  카드 뽑기 도박 결과 물 획득시
+        GambleCardRewardThunder = 30, //  카드 뽑기 도박 결과 번개 획득시
+        Revive = 31, //  부활 발동 시 
+
+        Max,
+    }
+
+
+    // 트리거
+    public enum V2Enum_ARR_TriggerType
+    {
+        Active = 11,
+        Passive = 12,
+        Default = 13,
+
+        Max,
+    }
+
+    public enum V2Enum_ARR_TargetAttackType
+    {
+        None = 0,
+        Circle = 11,
+        Line = 12,
+
+        Max,
+    }
+
+    public enum Enum_ARR_TargetCheckType
+    {
+        Self = 11,
+        Friendly = 12,
+        Enemy = 13,
+        Mother = 14,
+
+        Max,
+    }
+
+    public enum Enum_ARR_TargetStateType
+    {
+        All = 11, //모든 상황에
+        HPPercentOver = 12, //현재 HP가 50% 이상
+        HPPercentBelow = 13, //현재 HP가 50% 미만
+        BossMonster = 14, //보스 몹에게
+        NormalMonster = 15, //일반 몹에게
+
+        Max,
+    }
+
+    // 대상탐색
+    public enum Enum_ARR_TargetConditionType
+    {
+        Range = 11,
+        RangeAll = 12,
+        HpHigh = 13,
+        HpLow = 14,
+        AtkHigh = 15,
+        Far = 16, // 먼
+        Near = 17, // 가까운
+        HPPercentOver = 18, // 현재 HP가 50% 이상
+        HPPercentBelow = 19, // 현재 HP가 50% 미만
+
+        RangeNear = 20,
+
+        Max,
+    }
+
+    public enum Enum_ARR_PowerType
+    {
+        Stat = 11, // Stat값 파싱
+        Synergy = 12, // 시너지
+        Descend = 13, // 강림
+        Relic = 14, // 유물
+    }
+
+    public enum Enum_ARR_SynergyPowerType
+    {
+        LevelUpSynergy = 11, // 시너지 1 레벨업
+        GetCSynergyRune = 12, // C등급 룬 획득
+        GetBSynergyRune = 13, // B등급 룬 획득
+        GetASynergyRune = 14, // A등급 룬 획득
+        GetSSynergyRune = 15, // S등급 룬 획득
+    }
+
+    public enum Enum_ARR_RelicPowerType
+    {
+        GetRelic = 11, // 유물 최초 획득
+        LevelUpRelic = 12, // 유물 레벨업
+    }
+
+    public enum Enum_ARR_DescendPowerType
+    {
+        GetDescend = 11, // 강림 획득
+        LevelupDescend = 12, // 강림 레벨업
+    }
+
+    // 대미지
+    public enum V2Enum_ARR_DamageType
+    {
+        Direct = 11,
+        Projectile = 12,
+        Sunken = 13,
+        Pierce = 14,
+        Void = 15,
+        DirectVisioning = 16,
+        RepeatAttack = 17,
+
+        Max,
+    }
+
+    public enum V2Enum_ARR_SynergyType
+    {
+        Red = 11, // 공격형 증강체
+        Yellow = 12, // 자원형 증강체
+        Blue = 13, // 캐릭터 유틸 지원형 증강체
+        White = 14, // 적군 디버프형 증강체
+
+        Max,
+    }
+
+    public enum V2Enum_ARRR_TotalLevelType
+    {
+        BasicStat = 11, // 일반 스테이터스
+        SynergyUnlock = 12, // 시너지 레벨 해금
+        CardGradeLimitBreak = 13, // 할리갈리 결과 레벨업 GambleGradeProb값 파싱해서 확률안내
+        JokerLimitBreak = 14, // 조커 해금
+        DescendSlotOpen = 15, // 강림 슬롯 오픈
+    }
+
+    public enum V2Enum_ARR_DescendType
+    {
+        DescendSkill = 11, // 쿨타임마다 나와서 액티브 하는 형태
+        DescendPassive = 12, // 지속적으로 영향을 미치는 형태 (아바타 타입)
+
+        Max,
+    }
+
+    public enum V2Enum_ARR_MainSkillType
+    {
+        AddSkill = 11, // 새로운 겜블 스킬 추가
+        SkillEnforge = 12, // 특정 스킬 모듈 추가
+        AfterSkill = 13, // 특정 스킬 에프터 추가
+        AfterGroupSkill = 14, //특정 스킬 타입 에프터 추가 
+                              //(11:메인스킬 12:등급별스킬 13:모든 데미지스킬)
+
+        SkillEnforgeGroupSkill = 15, //특정 스킬 타입 에프터 추가 
+                              //(11:메인스킬 12:등급별스킬 13:모든 데미지스킬)
+        Max,
+    }
+
+    public enum V2Enum_ARR_GambleSlotType
+    {
+        SlotStat = 11, // 스테이터스 관련 슬롯
+        SlotValue = 12, // 수치 관련 슬롯
+
+        Max,
+    }
+
+    public enum V2Enum_ARR_GambleSlotGrade
+    {
+        One = 11, // 슬롯 숫자 1
+        Two = 12, // 슬롯 숫자 2
+        Three = 13, // 슬롯 숫자 3
+        Four = 14, // 슬롯 숫자 4
+        Five = 15, // 슬롯 숫자 5
+        Six = 16, // 슬롯 숫자 6
+
+        Max,
+    }
+
+
+    public enum V2Enum_ARR_GambleType
+    {
+        Card = 11, // 짝맞추기
+        Slot = 12, // 슬롯
+        Reinforcement = 13, // 강화 관련
+
+        Max,
+    }
+
+
+    public enum V2Enum_ARR_BattleSpeed
+    {
+        x1 = 11,
+        x1Dot5 = 12,
+        x2 = 13,
+        x3 = 14,
+        xHalf = 15,
+        Pause = 16,
+
+        Max,
+    }
+
+
+
+
+
+    public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);
+    public delegate void CallSendDamage(double damage);
+    public delegate void RefreshOpenCondition(V2Enum_OpenConditionType v2Enum_OpenConditionType, int conditionValue);
+    public delegate void CallCharacterState(CharacterState characterState);
+
+    public delegate void OnCallBack();
+    public delegate void OnCallBack_Int(int intcallback);
+    public delegate void OnCallBack_String(string text);
+    public delegate void OnCallBack_Double(double doublecallback);
+
+
+    // 스탯
+    public enum V2Enum_Stat
+    {
+        Attack = 11,
+
+        HP = 12,
+        Defence = 13,
+
+        MoveSpeed = 14,
+
+        CritChance = 15,
+
+        VampiricRate = 16,
+        ResistanceStat = 17,
+
+        ResistancePenetration = 18,
+        CritDmgIncrease = 19,
+        DmgBoost = 20,
+
+        Evasion = 21,
+        Accuracy = 22,
+
+        GoldIncrease = 23,
+        SkillCoolTimeDecrease = 24,
+
+        HpRecovery = 25,
+
+        Max,
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public enum V2Enum_OnlyStatDetailView
+    {
+        FinalAttack = 0,
+        FinalHP,
+        FinalDefence,
+        FinalCriticalDamage,
+        FinalSuperCriticalDamage,
+        FinalHyperCriticalDamage,
+
+        Max,
+    }
+
+    // 등급
+    
+
+    // 재화
+    public enum V2Enum_Goods
+    {
+        Gear = 11,
+
+        Point = 20,
+        CharacterSkill = 21,
+        Ally = 22,
+        TimePoint = 23,
+        SummonTicket = 24,
+        Box = 25,
+        Skin = 26,
+        Synergy = 27,
+        Descend = 28,
+        Relic = 29,
+        VipPackage = 30,
+        SynergyRune = 31,
+        SynergyBreak = 32,
+        DescendBreak = 33,
+
+        Max,
+    }
+
+    public enum V2Enum_GearType
+    {
+        Weapon = 11,
+        Helmet = 12,
+        Armor = 13,
+        Shoes = 14,
+        Ring = 15,
+        Necklace = 16,
+
+        Max,
+    }
+
+    public enum V2Enum_BoxType
+    {
+        PackageTypeBox = 11,
+        RandomTypeBox = 12,
+
+        Max,
+    }
+
+    public enum V2Enum_ResearchType
+    {
+        FireGambleLevel = 11, // 불 속성 뽑기 레벨
+        GoldGambleLevel = 12, // 금 속성 뽑기 레벨
+        WaterGambleLevel = 13, // 물 속성 뽑기 레벨
+        ThunderGambleLevel = 14, // 번개 속성 뽑기 레벨
+        Attack = 15, // 공격력
+        Hp = 16, // 체력
+        Defence = 17, // 방어력
+        StageRewardIncrease = 18, // 스테이지 보상량 증가 %
+        SkillCoolTimeReduce = 19, // 스킬 쿨타임 감소 %
+        DailyDia = 20, // 접속 시 매일 다이아 지급 // 사용안함
+        ResearchTimeReduce = 21, // 연구 시간 감소 %
+        WaveRewardIncrease = 22, // 웨이브 클리어 시 골드 지급
+        DungeonRewardIncrease = 23, // 던전 보상량 증가 %
+        GasHpIncrease = 24, // 진주 회복 회복량 증가 %
+        GasGambleIncrease = 25, // 진주 카드 뽑기 확률 증가 %
+        MissionRewardIncrease = 26, // 미션 보상량 증가 %
+        FreeGoodsCountIncrease = 27, // 무료 지급 연구 재화 개수 증가
+        FreeGoodsTimeDecrease = 28, // 무료 지급 연구 재화 인터벌 감소
+        FreeGoodsSaveIncrease = 29, // 무료 지급 연구 재화 최대치 증가
+
+        Max,
+    }
+
+    public enum V2Enum_GuildGoods
+    {
+        //GuildContribution = 176010001, // 길드 기여도 삭제
+        GuildExp = 176010002, // 길드 경험치
+        GuildRaidPoint = 176010003, // 레이드 포인트
+    }
+
+    public enum V2Enum_GuildPosition
+    {
+        Master = 0,
+        ViceMaster,
+        Member,
+    }
+
+    public enum V2Enum_Skin
+    {
+        SkinWeapon = 11,
+        SkinBody = 12,
+        SkinAura = 13,
+
+        Max,
+    }
+
+    // 표기
+    public enum V2Enum_PrintType : int
+    {
+        Value = 0,
+        Percent = 1,
+
+        Max,
+    }
+
+    // 개방조건
+    public enum V2Enum_OpenConditionType
+    {
+        None = -1,
+
+        Stage = 11, //스테이지 진행
+        CharacterLevel = 12, //캐릭터 레벨
+
+        StackLogin = 13, //누적 접속일 수
+        StackSkillCount = 14, //보유 시너지 스킬 개수
+        GetGear = 15, //특정 등급의 장비 획득
+        BreakthroughCount = 16, //캐릭터 돌파 횟수
+        Wave = 17, //특정 웨이브 클리어 / TotalNumber 파싱
+
+        StaminaStack = 18, //행동력 일정 개수 이하 일 때
+        StaminaCount = 19, //누적 행동력 소모량
+        WaveDeath = 20, //"특정 웨이브 이상에서 사망 시 다음 스테이지로 넘어가는 경우 미적용"
+        RelicSummonCount = 21, //누적 유물 뽑기 횟수
+        SummonCount = 22, //누적 일반 뽑기 횟수
+        GearSummonCount = 23, //누적 장비 뽑기 횟수
+        GetSynergySkill = 24, //특정 시너지 스킬 획득
+        GetDescendSkill = 25, //특정 강림 스킬 획득
+
+        KillMonster = 26, //몬스터 처치 수 (이벤트 발생 이후)
+
+        SynergySkillLevelStack = 27, //누적 시너지 강화 레벨
+        DescendSkillLevelStack = 28, //누적 강림 레벨
+
+        NoAdBuff = 29, //N일간 버프제거 패키지를 구매하지 않은 경우
+
+        RelicLevelStack = 30, //누적 유물 레벨
+
+        WaveReward = 31, //웨이브 리워드
+
+        RuneSummonCount = 32, //누적 룬 뽑기 횟수
+        RuneCombineCount = 33, //누적 룬 합성 횟수
+        FireSynergyLevelStack = 34, //  불 속성 스킬 누적 레벨  
+        GoldSynergyLevelStack = 35, //  금 속성 스킬 누적 레벨  
+        WaterSynergyLevelStack = 36, //  물 속성 스킬 누적 레벨  
+        ThunderSynergyLevelStack = 37, //  번개 속성 스킬 누적 레벨  
+
+        FireSynergyBreakStack = 38, //  불 속성 진화 누적 레벨  
+        GoldSynergyBreakStack = 39, //  금 속성 진화 누적 레벨  
+        WaterSynergyBreakStack = 40, //  물 속성 진화 누적 레벨  
+        ThunderSynergyBreakStack = 41, //  번개 속성 진화 누적 레벨  
+
+        Synergy4GradeSkillCount = 42, // 4단계 시너지 스킬 해금 갯수
+
+        DungeonDiffClear = 43, // 4단계 시너지 스킬 해금 갯수
+
+        Max,
+    }
+
+    public enum V2Enum_BuffEffectType
+    {
+        IncreaseStat = 11, // 공방체 증가 %
+        IncreaseReward = 12, // 스테이지 결과 보상 지급량 증가 %
+        IncreaseDungeonReward = 13, // 던전 결과 보상 지급량 증가 %
+
+        Max,
+    }
+
+    public enum V2Enum_ContentType
+    {
+        AdBuff = 11, // 광고버프
+        Pass = 12, // 패스
+        MailBox = 13, // 우편함
+        Quest = 14, // 퀘스트
+        Synergy = 15, // 시너지
+        Descend = 16, // 강림
+        Relic = 17, // 유물
+        Shop = 18, // 상점
+        RelicSummon = 19, // 유물 소환
+        DescendPass = 20, // 강림 패스
+        HuntingPass = 21, // 사냥 패스
+        RuneSummon = 22, // 룬 소환
+        Rune = 23, // 룬
+        Research = 24, // 연구소
+
+        DescendShop = 25, // 강림 상점
+        SynergyBreakthrough = 26, // 속성 스킬 돌파
+        Gear = 27, // 장비
+        GearSummon = 28, // 장비 소환
+
+        UnlockGoldSynergy = 29, // 금 속성 해금
+        UnlockThunderSynergy = 30, // 번개 속성 해금
+
+        Sweep = 31, // 소탕 해금
+        Ranking = 32, // 랭킹 해금
+
+        Dungeon = 33, // 던전
+        DiamondDungeon = 34, // 다이아던전
+
+        Job = 35, // 전직
+
+        AutoPlay = 36, // 오토
+
+        Max,
+    }
+
+    public enum V2Enum_IntervalType
+    {
+        None = -1,
+
+        Quarter = 11, // 15분		
+        Hour = 12, // 1시간		
+        Day = 13, // 1일		
+        Week = 14, // 1주일		
+        Month = 15, // 1달		
+        Account = 16, // 계정당
+
+        Custom = 17, // 커스텀 (이벤트 등 버전 관리 목적용)
+    }
+
+    public enum V2Enum_TargetType
+    {
+        Character = 11,
+        Ally = 12,
+        Monster = 13,
+        CharacterAndAlly = 14,
+    }
+
+    // 속성
+    public enum V2Enum_ElementType
+    {
+        None = 11,
+        Light = 12,
+        Darkness = 13,
+        Water = 14,
+        Fire = 15,
+        Grass = 16,
+
+        Max,
+    }
+
+    // 직업
+    public enum V2Enum_JobType
+    {
+        Ghost = 11,
+        Soldier = 12,
+        AssaultWarrior = 13,
+        Mage = 14,
+        Beast = 15,
+        Scientist = 16,
+        Bandit = 17,
+        Summons = 18,
+        Slime = 19,
+        Undead = 20,
+        Castellan = 21,
+        Wizard = 22,
+        Insect = 23,
+        Plant = 24,
+        Hunter = 25,
+
+        Max
+    }
+
+    // 군중제어
+    public enum V2Enum_SkillEffectType
+    {
+        None = 0,
+        Invincible = 11, // 무적      있던거
+        Cleansing = 12, // 상태이상 해제      있던거
+        HOT = 13, // 지속 힐      있던거
+        IncreaseAtt = 14, // 공격력 증가 %
+        IncreaseArmor = 15, // 방어력 증가 %
+
+
+
+        // 완료
+        IncreaseMoveSpeed = 16, //이동속도 증가 %
+        KillingMoney = 17, //적 처치 시 1골드 획득
+        DoubleInterest = 18, //이자 획득 시 2배 획득
+        SkillCooltimeReduce = 19, //스킬 쿨타임 %만큼 상시 감소
+        Revive = 20, //부활 (Value 로 부활 시 HP제어)
+        GoldIncreaseAtt = 21, //보유 골드의 일정 %만큼 공격력 증가
+        GoldIncreaseArmor = 22, //보유 골드의 일정 %만큼 방어력 증가
+        DecreaseAtt = 23, //공격력 감소 %
+        DecreaseArmor = 24, //방어력 감소 %
+        GoldGainTimer = 25, //10초 마다 추가 골드 획득 Value 1만당 1골드획득
+        WasteGoldBuff = 26, //소모 골드량에 비례하여 공방 버프
+
+        EarnInterest = 27, //이자 획득 (스킬 시전 시 보유 금액의 10% / Value 100만당 맥시멈 획득 골드량)
+        IncreaseHp = 28, //생명력 증가 %
+        RandomSynergyGain = 29, //랜덤한 시너지 게이지 획득 (Value 100만당 1개 획득)
+        GetSameSynergy = 30, //뽑기 결과에서 획득한 동일한 시너지를 Value 만큼 획득함
+        GetGas = 31, //Value 만큼의 가스 획득
+        IncreaseGasGambleProb = 32, //Value 1만당 가스 도박 성공확률 1% 증가
+        MinorJoker = 33, //"조커 카드 효과 (4개 시너지 중 1개 획득) Value 에 맞춰서 결과에서 얻을 수 있는 시너지 카운트 제어"
+        IncreaseGasHpHeal = 34, //Value 1만당 가스 HP 회복률 1% 증가
+        IncreaseJokerProb = 35, //조커 카드 등장 확률 증가 (Value 1만당 1% 상승)
+        DecreaseGamblePrice = 36, //카드 뽑기 시행 비용 감소 (1만당 1% 감소 / 소숫점 올림처리)
+
+        GetSynergyFire = 37, //불 속성 시너지 획득 (Value 100만당 1)
+        GetSynergyGold = 38, //금 속성 시너지 획득 (Value 100만당 1)
+        GetSynergyWater = 39, //물 속성 시너지 획득 (Value 100만당 1)
+        GetSynergyThunder = 40, //번개 속성 시너지 획득 (Value 100만당 1)
+        ReduceSynergyFire = 41, //불 시너지 요구 조건 감소 (Value 100만당 1)
+        ReduceSynergyGold = 42, //금 시너지 요구 조건 감소 (Value 100만당 1)
+        ReduceSynergyWater = 43, //물 시너지 요구 조건 감소 (Value 100만당 1)
+        ReduceSynergyThunder = 44, //번개 시너지 요구 조건 감소 (Value 100만당 1)
+        ReduceDescendExp = 45, //모든 속성타입 시너지 요구 조건 감소 (Value 100만당 1)
+        // 완료
+
+        IncreaseInterestRate = 46, //이자 획득 비율 증가
+        IncreaseSynergyCount = 47, //속성 뽑기 결과 카운트 +1
+
+        IncreaseAttFireCount = 48, //불 시너지 개수 비례 공격력 % 증가
+        IncreaseAttGoldCount = 49, //금 시너지 개수 비례 공격력 % 증가
+        IncreaseAttWaterCount = 50, //물 시너지 개수 비례 공격력 % 증가
+        IncreaseAttThunderCount = 51, //번개 시너지 개수 비례 공격력 % 증가
+
+        IncreaseDefFireCount = 52, //불 시너지 개수 비례 방어력 % 증가
+        IncreaseDefGoldCount = 53, //금 시너지 개수 비례 방어력 % 증가
+        IncreaseDefWaterCount = 54, //물 시너지 개수 비례 방어력 % 증가
+        IncreaseDefThunderCount = 55, //번개 시너지 개수 비례 방어력 % 증가
+
+        IncreaseHpFireCount = 56, //불 시너지 개수 비례 생명력 % 증가
+        IncreaseHpGoldCount = 57, //금 시너지 개수 비례 생명력 % 증가
+        IncreaseHpWaterCount = 58, //물 시너지 개수 비례 생명력 % 증가
+        IncreaseHpThunderCount = 59, //번개 시너지 개수 비례 생명력 % 증가
+
+        GetDescendGoods = 60, //Value 만큼의 강림 강화 재료 획득
+        IncreaseHealEffect = 61, //회복효과 % 증가
+
+        Stun = 1001, // 스턴(이동, 평타, 스킬 모두 불능)      있던거
+        Silence = 1002, // 침묵 (스킬 불능)      있던거
+        Blind = 1003, // 실명 (평타 불능)      있던거
+        Snare = 1004, // 속박 (이동 불능)      있던거
+        Slow = 1005, // 둔화 (이속 공속 감소)      있던거
+        DOT = 1006, // 지속 피해      있던거
+
+        BurnDOT = 1007, // 화상 지속 피해 (공격력 비례) SkillEffect가 종속된 Damage 값의 일정 %를 0.5초마다 입힌다.
+
+
+
+        Knockback = 2001, // 넉백      있던거
+        Fling = 2002, // 당기기      있던거
+        AdditionalDmg = 2003, // 추가데미지 %
+
+        // 완료
+        ResetUsedSkillCooltime = 2004, //사용한 스킬 쿨타임 초기화
+        RandomSkillCooltimeDecrease = 2005, //랜덤한 메인 캐릭터 스킬 쿨타임 감소(1당 1초)
+        VampiricDmg = 2006, //피해량에 비례한 HP 회복
+        Heal = 2007, //공격력에 비례한 HP 즉시 회복
+        DotHeal = 2008, //공격력에 비례한 HP를 0.5초마다 회복 (Duration 만큼 지속)
+        Death = 2009, //일정 HP 이하 적 즉사(Value로 % 수치 제어)
+        // 완료
+
+        Shield = 2010, //HP %에 비례한 방어막 생성
+        DamageBoost = 2011, //데미지 증폭 (1만당 1%, 최종계산식에서 곱해지는 형태)
+        DamageReduce = 2012, //데미지 경감 (1만당 1%, 최종 피해량에서 곱해지는 형태)
+
+        VampiricDmgFire = 2013, // 불 시너지 개수 비례 흡혈효과
+        VampiricDmgGold = 2014, // 금 시너지 개수 비례 흡혈효과
+        VampiricDmgWater = 2015, // 물 시너지 개수 비례 흡혈효과
+        VampiricDmgThunder = 2016, // 번개 시너지 개수 비례 흡혈효과
+
+        SheildFireCount = 2017, // 불 시너지 개수 비례 방어막 생성 %
+        SheildGoldCount = 2018, // 금 시너지 개수 비례 방어막 생성 %
+        SheildWaterCount = 2019, // 물 시너지 개수 비례 방어막 생성 %
+        SheildThunderCount = 2020, // 번개 시너지 개수 비례 방어막 생성 %
+
+        DescendDmgFireCount = 2021, // 불 시너지 개수 비례 강림 피해량 증가
+        DescendDmgGoldCount = 2022, // 금 시너지 개수 비례 강림 피해량 증가
+        DescendDmgWaterCount = 2023, // 물 시너지 개수 비례 강림 피해량 증가
+        DescendDmgThunderCount = 2024, // 번개 시너지 개수 비례 강림 피해량 증가
+
+        Max,
+    }
+
+    public enum V2Enum_Point
+    {
+        InGameGold = 199010001,
+        LobbyGold = 199010002,
+
+        Dia = 199010003,
+
+        InGameGas = 199010004,
+
+        Stamina = 199010005,
+
+        SynergyEnhance = 199010006,
+
+        SynergyLimitFire = 199010007,
+        SynergyLimitGold = 199010008,
+        SynergyLimitWater = 199010009,
+        SynergyLimitThunder = 199010010,
+
+        ResearchAccel = 199010011,
+
+        DescendEnhance = 199010012,
+        DescendLimit = 199010013,
+
+        WeaponEnhance = 199010014,
+        HelmetEnhance = 199010015,
+        ArmorEnhance = 199010016,
+        ShoesEnhance = 199010017,
+        AccessoryEnhance = 199010018,
+
+
+        RelicSummonTicket = 199010019,
+        EquipSummonTicket = 199010020,
+        GeneralSummonTicket = 199010021,
+        SynergySummonTicket = 199010022,
+
+        ResearchTicket = 199010023,
+        ResearchSlotTwo = 199010024,
+
+        InGameDescendEnforce = 199010025,
+
+        BuyDescend = 199010026,
+        JobEnhance = 199010027,
+        DiaDungeonTicket = 199010028,
+        SkillSummonTicket = 199010029,
+        AllySummonTicket = 199010030,
+        JewelrySummonTicket = 199010031,
+
+        LuckyCoin = 199010032,
+
+        EventDungeonTicket = 199010033,
+        EventDungeonHeart = 199010033,
+
+        ClanMissionCompass = 199010034,
+        ClanMissionRefreshTicket = 199010035,
+
+        HellDungeonTicket = 199010036,
+
+        HellMonster_Helmet = 199010037,
+        HellMonster_Heart = 199010038,
+        HellMonster_Sword = 199010039,
+        HellMonster_Arm = 199010040,
+        HellMonster_Reg = 199010041,
+        HellMonster_Tail = 199010042,
+
+        HellFragments_Anger = 199010043,
+        HellFragments_Madness = 199010044,
+        HellFragments_Murderous = 199010045,
+        HellFragments_Arrogance = 199010046,
+        HellFragments_Obsession = 199010047,
+        HellFragments_Hatred = 199010048,
+
+        HellStone_Awake = 199010049,
+
+        AllyArenaTicket = 199010050,
+        AllyArenaHonorCoin = 199010051,
+
+        AllyJewelrySurpassReset = 199010052,
+
+        GoddessPick = 199010053,
+
+        RedBullPick = 199010054,
+
+        SkinLevelUP = 199010055,
+
+        RotationEventTicket = 199010056,
+
+        UrsulaPick = 199010057,
+
+        Shovel = 199010058,
+
+        ForgeHammer = 199010059,
+        ForgeShield = 199010060,
+
+        MathRpgCoin = 199010061,
+
+        KingSlimePick = 199010062,
+
+        GuildRaidTicket = 199010063,
+        GuildCoin = 199010064,
+        GuildMileage = 199010065,
+        GuildHammer = 199010066,
+
+        Max,
+    }
+
+    public enum V2Enum_ButtnLightType
+    {
+        Equip = 11,
+        Enhance,
+        Promo,
+        Ad,
+
+        Max,
+    }
+
+    public enum V2Enum_SummonType
+    {
+        SummonGear = 11,
+        SummonNormal = 12,
+        SummonRelic = 13,
+        SummonRune = 14,
+
+        Max
+    }
+
+    public enum V2Enum_ActorEmotion
+    {
+        None = 11,
+        StandStill = 12, // 서있는상태
+        Exhausted = 13, // 지친상태
+        FallDown = 14, // 쓰러진상태
+
+        Max,
+    }
+
+    public enum V2Enum_CheckInType
+    {
+        Once = 11,
+        Repeat = 12,
+
+        Max,
+    }
+
+    public enum CharacterSlotState
+    {
+        None = 0,
+        OpenSlot,
+        AddSlot,
+        LockSlot,
+    }
+
+    public enum NoneTargetProjectileState
+    {
+        None = 0,
+        Shoot,
+        Hit,
+    }
+
+    public enum V2Enum_ShopMenuType
+    {
+        LimitPackage = 11, // 	기간 한정 패키지
+        Daily = 12, // 	일간 패키지
+        Weekly = 13, // 	주간 패키지
+        Monthly = 14, // 	월간 패키지
+        Descend = 15, // 	강림 강화 재화
+        DayofWeek = 16, // 	요일마다 달라지는 상점
+        DiaCharging = 17, // 	다이아 구매
+        GoldCharging = 18, // 	골드 구매
+        Research = 19, // 연구 상점
+        Synergy = 20, // 속성 상점
+
+        Max,
+    }
+
+    public enum V2Enum_ShopTagType
+    {
+        New = 11, // 신규
+        Hot = 12, // 인기
+        Best = 13, // 추천
+        Efficiency = 14, // n배 효율! 태그
+        Discount = 15, // n% 할인 태그
+
+        Max,
+    }
+
+    public enum V2Enum_DisplayType
+    {
+        Static = 11, // 고정상품
+        Dynamic = 12, // 돌발상품
+
+        Max,
+    }
+
+    public enum V2Enum_DefineType
+    {
+        PenetrationFactorMin = 11, // 관통계수 최소값
+        ResistanceFactorMin = 12, // 저항계수 최소값
+
+        InterestTimer = 13, // 1회 이자를 받기 위해 필요한 시간
+        InterestMaxReward = 14, // 1회 이자 최대치 (이자로 획득하는 골드 기준)
+        InterestRate = 15, // 이자 1골드를 얻기 위한 보유 골드량
+
+        GambleMinimumRate = 16, // 짝맞추기 겜블 최소 확률 보정치
+        GambleReinforcementMaxLevel = 17, // 겜블 내부 확률 보정 강화 최대치
+
+        DefaultSkin = 18, // 상시로 켜지는 코스튬 경로
+        DefenseStandard = 19, // 방어력 상수 기준값
+        MaximumDecreaseAtt = 20, // 공격력 최대 감소 가능 %
+        MaximumDecreaseArmor = 21, // 방어력 최대 감소 가능 %
+
+        DefaultGainGold = 22, // 스테이지를 클리어하지 않았을 때 기본으로 제공되는 보상
+
+
+        NexusMonsterIndex = 27, // 넥서스용 몬스터 인덱스
+        NewCharacterSkill = 28, // 신규 캐릭터 생성 시 지급되는 캐릭터 스킬 인덱스
+        NewCharacterEquipSkill = 29, // 신규 캐릭터 생성 시 자동 장착되는 스킬 인덱스
+        StageStartGold = 30, // 스테이지 시작 시 지급되는 골드
+
+        StaminaChargeTime = 31, // 행동력 1 충전에 필요한 시간 (초)
+        MaxStamina = 32, // 행동력 맥스 수치
+        RequiredStamina = 33, // 1회 입장 시 소모하는 행동력 수치
+        StaminaIndex = 34, // 1회 입장 시 소모하는 행동력 수치
+
+        JokerCardProb = 35, // 조커 카드 등장 확률
+        JokerCardCount = 36, // 조커 카드 획득 시 얻는 시너지 게이지 스택
+
+        LimitDailyAdStamina = 37, // 하루에 최대 광고로 회복시킬 수 있는 행동력 횟수
+        StaminaChargeCount = 38, // 행동력 회복 시 몇 개의 행동력이 회복되는지
+        StaminaPrice = 39, // 행동력 구매 시 최초 몇 개의 다이아가 필요한지
+
+        GasSynergyProb = 40, // 가스 시너지 도박 시 성공률
+        GasSynergyCount = 41, // 가스 시너지 도박 성공 시 얻는 시너지 게이지 스택
+        GasHpRecovery = 42, // 가스 소모하여 회복되는 HP % (전체 HP%)
+        GasIndex = 43, // 가스 재화 인덱스
+
+        RandomShopAdRefreshCount = 44, //랜덤 상점 AD 초기화 최대 횟수
+        RandomShopRefreshCount = 45, //랜덤 상점 다이아 초기화 최대 횟수
+        RandomShopRefreshIndex = 46, //랜덤 상점 초기화 필요 재화 인덱스
+        RandomShopRefreshValue = 47, //랜덤 상점 초기화 필요 재화 개수
+        RandomShopSlot = 48, //랜덤 상점에 노출되는 아이템 개수
+
+        RandomShopFreeDia = 49, //랜덤 상점 첫번째 슬롯에 상시 노출되는 다이아 개수
+        RandomShopFreeDiaAD = 50, //광고 보고 추가로 지급받을 수 있는 다이아 횟수
+
+        BuffAdDailyCount = 51, //하루에 광고 버프를 활성화 할 수 있는 횟수 제한
+        BaseSellingItemOnce = 52, //계정 생성 후 최초 1회 일일 상점 고정 
+
+        Research2SlotOpenCost = 53, // 연구 2슬롯 해금 PID
+        Research3SlotOpenCost = 54, // 연구 3슬롯 해금 필요 다이아 개수
+
+        ResearchGoodsEarn = 55, // 연구 1회 회복당 획득 개수
+        ResearchChargingTime = 56, // 연구 1회 회복에 필요한 시간 (초)
+
+        ResearchGoodsLimitCount = 57, // 연구 재료 최대 소지량
+        ResearchGoodsIndex = 58, // 연구 재료 인덱스
+
+        ResearchADTime = 59, // 연구 광고 시청 시 감소하는 시간 (초)
+        ResearchADTimeCount = 60, // 연구 광고 시청 가능 횟수
+
+        ResearchAccelTicketIndex = 61, // 가속 티켓 인덱스
+        ResearchAccelTime = 62, // 가속 티켓 1개당 감소하는 연구 시간 (초)
+
+        SkillEvolutionUnlock = 63, // 스킬 진화 해금 조건
+
+        SynergyMAXGoods = 64, // 속성 MAX 이후 지급되는 재화 인덱스
+
+        DailySweepCount = 65, // 하루 광고보고 소탕 할 수 있는 제한 횟수
+        DailyDoubleRewardCount = 66, // 하루 광고보고 소탕 할 수 있는 제한 횟수
+
+        Max,
+    }
+
+    public enum V2Enum_EventType
+    {
+        SkillSummon = 22, // 스킬 소환
+        SkillEquip = 23, // 스킬 장착
+        SkillLevelUp = 24, // 스킬 강화
+
+        AllySummon = 25, // 동료 소환
+        AllyEquip = 26, // 동료 장착
+        AllyLevelUp = 27, // 동료 강화
+        AllyCompose = 28, // 동료 합성
+
+        JewelrySummon = 29, // 보석 소환
+        JewelryEquip = 30, // 보석 장착
+        JewelryCompose = 31, // 보석 합성
+
+        FameLevelUp = 32, // 명성 달성
+
+        ResearchLevelUp = 33, // 일반 마스터리 강화
+
+        PassFreeRewardClaim = 40, // 패스 무료보상 획득
+
+        BuffAddView = 41, // 버프광고 시청
+
+        MonsterKill = 42, // 몬스터 처치
+
+        StageClear = 43, // 스테이지 돌파
+
+        DiamondDungeonClear = 44, // 다이아던전 클리어
+        MasteryDungeonClear = 45, // 마스터리던전 클리어
+        GoldDungeonClear = 46, // 골드던전 클리어
+        SoulStoneDungeonClear = 47, // 영혼석던전 클리어
+        RuneDungeonClear = 48, // 룬던전 클리어
+
+
+        CheckInRewardGet = 58, //출석보상 획득
+        DailyMissionRewardGet = 59, //일일미션 보상획득
+        FreePurchase = 60, //무료상품 구매
+
+        BossChallenge = 63, //도전하기
+        MailGet = 64, //우편받기
+
+
+        CheckExchange = 74, //거래소 확인
+        AllyStarUp = 75, //동료 승급
+
+        TutoGambleCard = 77, // 겜블 카드 가이드
+
+        TutoGambleSynergy = 80, // 겜블 Synergy
+
+        WaveReward = 81, // 웨이브 리워드
+
+        SynergyCombine = 82, // SynergyCombine
+
+        SynergyChange = 83, // SynergyChange
+
+        DescendChange = 84, // DescendChange
+
+        SpeedUp = 85, // SpeedUp
+
+        NextStage = 86, // NextStage
+
+        GasSynergy = 87, // NextStage
+
+        RelicTutorial = 88, // Relic
+
+        ResearchTutorial = 89, // Relic
+
+        RuneTutorial = 90, // Relic
+
+        SynergyBreak = 91, // Break
+
+        GearTutorial = 92, // Break
+
+        TutoGambleGas = 93, // 1스테이지 가스 튜토리얼
+        TutoGambleGasSynergyPick = 94, // 1스테이지 가스 강제 튜토리얼
+        TutoGambleGasSynergy = 95, // 1스테이지 가스 시너지
+
+        GearEquipTutorial = 96, // 
+
+        InGameDescendUpGradeTutorial = 97, // 
+
+        SynergyOpen = 98, // SynergyChange
+
+        SynergyInteraction = 99, // 첫 스테이지 시너지 렙업 도우미
+
+        SynergyUnLock = 100, // SynergyChange
+
+        Job = 101, // SynergyChange
+
+        Dungeon = 102, // SynergyChange
+
+        Max,
+    }
+
+    public enum V2Enum_EventKindType
+    {
+        EventRoulette = 11, //이벤트 룰렛
+        EventDungeon = 12, //이벤트 던전
+        EventHealDungeon = 13, //이벤트 힐 던전
+        EventRedBullDungeon = 14, //이벤트 레드불 던전
+        EventUrsulaDungeon = 15, //이벤트 우르슬라 던전
+        EventDig = 16, //이벤트 뽑기
+        EventMathRpg = 17, //이벤트 사칙연산
+        EventKingSlime = 18, //이벤트 킹슬라임 던전
+
+        RotationEvent = 99, //로테이션 이벤트
+    }
+
+    public enum V2Enum_QuestType
+    { 
+        Daily = 11,
+        Weekly = 12,
+        Monthly = 13,
+        Achievement = 14,
+
+        Max,
+    }
+
+    public enum V2Enum_QuestGoalType
+    {
+        MonterKillCount = 11, // 몬스터 처치 수
+        StageChallenge = 12, // 스테이지 진행 횟수
+        WatchingAd = 13, // 광고 시청 횟수
+        CardGambleCount = 14, // 카드 뽑기 시행 횟수
+        CharacterLevel = 15, // 캐릭터 레벨 달성
+
+        SynergyChange = 16, // 시너지 교체 진행
+        SynergyCombineClear = 17, // 시너지 조합 미션 달성 횟수
+
+        DailyMissionClearCount = 18, // 일일 미션 클리어 횟수
+        WeeklyMissionClearCount = 19, // 주간 미션 클리어 횟수
+
+        LoginOnce = 20, // 로그인 하기
+        LoginTime = 21, // 접속 유지 시간 (분)
+
+    }
+
+    public enum V2Enum_PassType
+    {
+        Wave = 11, //웨이브 패스
+        CharacterLevel = 12, //캐릭터 레벨
+        SkillLevel = 13, //스킬 레벨업 (누적)
+        DescendLevel = 14, //강림 레벨
+        MonsterKill = 15, //몬스터 처치
+
+        Max,
+    }
+
+    public enum V2Enum_RankType
+    {
+        Stage = 11, //스테이지
+        Power = 12, //전투력
+
+        GuildRaid = 101,
+        GuildDona = 102,
+
+        Max,
+    }
+
+    public enum V2Enum_Enum_MissionRarityType
+    {
+        Normal = 11, //일반
+        Advanced = 12, //고급
+        Rare = 13, //희귀
+        Elite = 14, //정예
+        Special = 15, //특수
+
+        Max,
+    }
+
+    public enum V2Enum_DungeonDifficultyType
+    {
+        Normal = 11, //일반
+        Advanced = 12, //지옥
+        Expert = 13, //악몽
+        Master = 14, //저주
+        GrandMaster = 15, //심연
+        Challenger = 16, //낙인
+
+        Max,
+    }
+
+
+    public enum ContentDetailList
+    { 
+        None = 0,
+
+        CharacterProfile,
+
+        LobbySynergy = 100,
+        LobbySynergy_AllEnhance = 101,
+        LobbySynergy_Red = 110,
+        LobbySynergy_Yellow = 120,
+        LobbySynergy_Blue = 130,
+        LobbySynergy_White = 140,
+
+        LobbyDescend = 200,
+
+        LobbyRelic = 300,
+
+        TimeAttackMission = 400,
+
+        LobbySynergyRune = 500,
+        LobbySynergyRune_Slot = 510,
+        LobbySynergyRune_Combine = 520,
+
+        LobbyGear = 600,
+        LobbyGear_Slot = 610,
+        LobbyGear_Combine = 620,
+
+        LobbyCharacterJob = 700,
+        LobbyCharacterJob_Upgrade = 710,
+        LobbyCharacterJob_LevelUp = 710,
+
+        CharacterSkin = 1600,
+        CharacterSkin_Weapon = 1610,
+        CharacterSkin_Body = 1620,
+
+        LobbyResearch = 2000,
+        LobbyResearch_Shop = 2010,
+        LobbyResearch_Charge = 2020,
+
+        Dungeon = 3000,
+        DungeonDiamond,
+        DungeonTower,
+        DungeonGold,
+        DungeonSoulStone,
+        DungeonRune,
+        DungeonHell,
+
+        ClanAllyArena = 4400,
+        ClanAllyArenaMission = 4410,
+        ClanAllyArenaBattleShop = 4420,
+        ClanAllyArenaHonorShop = 4430,
+        ClanAllyArenaRank = 4440,
+
+        Guild = 4500,
+        Guild_List = 4510,
+        Guild_Mission = 4520,
+        Guild_MissionDaily = 4521,
+        Guild_MissionWeekly = 4522,
+        Guild_CoinShop = 4530,
+        Guild_RaidShop = 4540,
+        Guild_RaidShopDia = 4541,
+        Guild_RaidShopIAP = 4542,
+        Guild_Purchase = 4550,
+        Guild_CheckIn = 4560,
+        Guild_RaidEntrance = 4570,
+        Guild_RaidEntrance_Normal = 4571,
+        Guild_RaidEntrance_Rank = 4572,
+        Guild_Option = 4580,
+        Guild_Option_Member = 4581,
+        Guild_Option_Notice = 4582,
+        Guild_Option_Option = 4583,
+        Guild_Option_RankRaid = 4584,
+        Guild_Option_RankMember = 4585,
+        Guild_Option_RankGlobal = 4586,
+        Guild_Option_AcceptList = 4587,
+
+
+        Shop = 5000,
+
+        ShopGeneral = 5100,
+        ShopGeneralPackage = 5110,
+        ShopSummon_Normal = 5120,
+        ShopSummon_Relic,
+        ShopSummon_Rune,
+        ShopSummon_Gear,
+        ShopInGameStore = 5130,
+        ShopInGameStore_Descend,
+        ShopInGameStore_Gold,
+        ShopInGameStore_Synergy,
+        ShopDiamondStore = 5140,
+
+        ShopDescend = 5200,
+        ShopDescendStore = 5210,
+
+        ShopPackage = 5300,
+        ShopRandomStore = 5110,
+        ShopDailyWeek_DiaPackage = 5310,
+        ShopDailyWeek_WeekPackage = 5320,
+        ShopDailyWeek_DayPackage = 5330,
+        ShopDailyWeek_MonthPackage = 5340,
+
+        ShopDailyWeek,
+
+        ShopRelayPackage = 5390,
+
+        ShopVip = 5400,
+        ShopVipStore_AD,
+        ShopVipStore_Dia,
+
+
+        ShopCharge = 5500,
+        ShopCharge_Gold = 5510,
+        ShopCharge_Dia = 5520,
+
+        Post = 6000,
+        PostGeneral,
+        PostShop,
+
+        Pass = 7000,
+        PassWave, //웨이브 패스
+        PassCharacterLevel, //캐릭터 레벨
+        PassSkillLevel, //스킬 레벨업 (누적)
+        PassDescendLevel, //강림 레벨
+        PassMonsterKill, //몬스터 처치
+
+        AdBuff = 8000,
+        AdBuffAtk,
+        AdBuffGold,
+        AdBuffAttackSpeed,
+
+        Raid = 9000,
+
+        CheckIn = 10000,
+
+        GameOption = 11000,
+
+        Quest = 12000,
+        Quest_Daily = 12100,
+        Quest_Weekly = 12200,
+        Quest_Monthly = 12300,
+        Quest_Achievement = 12400,
+
+        Exchange = 13000,
+
+        Rank = 14000,
+        Rank_Stage = 14100,
+        Rank_CombatPower = 14200,
+
+        EventRoulette = 15000,
+        EventRoulette_Mission = 15100,
+
+
+        EventDungeon = 16000,
+        EventDungeon_Mission = 16100,
+        EventDungeon_Shop = 16200,
+        EventDungeon_ShopSpecial = 16300,
+
+        StageMap = 17000,
+        StageMap_StageChange = 17100,
+        StageMap_DevilCastlePopup = 17200,
+        StageMap_TrialTowerPopup = 17300,
+
+        EventDungeonGoddess = 18000,
+        EventDungeonGoddess_Mission = 18100,
+        EventDungeonGoddess_Shop = 18200,
+        EventDungeonGoddess_Pass = 18300,
+
+        Inventory = 19000,
+        Inventory_Item = 19100,
+        Inventory_Point = 19200,
+
+        EventRedBull = 20000,
+        EventRedBull_Mission = 20100,
+        EventRedBull_Shop = 20200,
+        EventRedBull_Pass = 20300,
+
+
+        EventPass = 21000,
+        EventPass_Reward = 21100,
+        EventPass_Mission = 21200,
+
+        RotationEvent = 22000,
+        RotationEvent_Mission = 22100,
+        RotationEvent_Shop = 22200,
+        RotationEvent_ShopSpecial = 22300,
+
+        Event = 23000,
+
+        EventUrsula = 24000,
+        EventUrsula_Mission = 24100,
+        EventUrsula_Shop = 24200,
+        EventUrsula_Pass = 24300,
+
+        EventDig = 25000,
+        EventDig_Shop = 25200,
+        EventDig_Pass = 25300,
+
+        EventMathRpg = 26000,
+        EventMathRpg_Shop = 26200,
+        EventMathRpg_Pass = 26300,
+        EventMathRpg_Stage = 26400,
+        EventMathRpg_Roulette = 26500,
+
+        EventDungeonKingSlime = 27000,
+        EventDungeonKingSlime_Mission = 27100,
+        EventDungeonKingSlime_Shop = 27200,
+        EventDungeonKingSlime_Pass = 27300,
+
+        SevenDayMission = 28000,
+        SevenDayMission_Day1 = 28100,
+        SevenDayMission_Day2 = 28200,
+        SevenDayMission_Day3 = 28300,
+        SevenDayMission_Day4 = 28400,
+        SevenDayMission_Day5 = 28500,
+        SevenDayMission_Day6 = 28600,
+        SevenDayMission_Day7 = 28700,
+
+        Notice = 99000,
+    }
+
+    public struct V2SkillAttackData
+    {
+        public V2DamageData v2DamageDatas;
+        public List<V2CCData> v2CCDatas;
+
+        public SkillBaseData skillBaseData;
+        public CharacterControllerBase characterControllerBase;
+        public Vector3 HitPos;
+        public int HitCount;
+
+        // V2Enum_SkillEffectType.ResetUsedSkillCooltime
+        public List<V2CCData> SelfEffecter;
+
+        public List<V2CCData> AddDamageEffecter;
+
+        public List<V2CCData> DeadEffecter;
+
+        public List<V2CCData> VampiricDmgEffecter;
+
+        public double criticalChance;
+        public IFFType actorType;
+
+        public double DamageBoost;
+
+        public bool IsMain;
+
+        public bool IsAfter;
+    }
+
+    public struct V2DamageData
+    {
+        public double AttackValue;
+        public double SkillValue;
+    }
+
+    public struct V2CCData
+    {
+        public V2Enum_SkillEffectType CCTypeEnum;
+
+        public Enum_ARR_TargetStateType TargetCondition;
+
+        public float CCTime;
+        public double CCValue;
+        public double CCProb;
+
+        public Vector3 AttackerPos;
+    }
+
+    public struct ARR_CardGambleResultData
+    {
+        public V2Enum_Grade Fake_GambleGrade;
+        public V2Enum_Grade V2Enum_Grade;
+
+        public ARR_CardGambleData[] FinalSkillData;
+    }
+
+    public struct SynergyViewDirectionOrderData
+    {
+        public V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType;
+        public Vector3 startpos;
+        public ARR_CardGambleData gambleSkillData;
+
+        public SynergyEffectData beforeData;
+        public int beforeStack;
+        public SynergyEffectData afterData;
+        public int afterStack;
+
+        public int DescendEnhance;
+    }
+
+    public class ARR_CardGambleData
+    {
+        public V2Enum_Grade SynergyGrade;
+        public ObscuredInt SynergyStack;
+        public V2Enum_ARR_SynergyType SynergyType;
+    }
+
+    public enum V2Enum_ObjectType
+    {
+        ObjectCombat = 11,
+        ObjectReward = 12,
+        ObjectBonus = 13,
+        ObjectBuff = 14,
+        ObjectNerf = 15,
+
+        Max,
+    }
+
+    public enum V2Enum_ReportType
+    {
+        inappropriate = 0, //비속어 및 성적 발언
+        conflict, //갈등 조장 및 허위 사실 유포
+        spam, //채팅창 도배 및 광고
+
+        Max,
+    }
+
+    public class RewardData
+    {
+        [System.NonSerialized]
+        public bool IsPoolData = false;
+
+        public V2Enum_Goods V2Enum_Goods = V2Enum_Goods.Max;
+        public ObscuredInt Index;
+        public ObscuredDouble Amount;
+
+        public ObscuredInt DupliIndex = -1;
+        public ObscuredDouble DupliAmount;
+    }
+
+    public static class Define
+    {
+        public static double CriticalDamageValue = 2.0f;
+
+        public static double DamageReductionValue = 10.0f;
+
+        public const int DisplayMapDataCount = 5;
+
+        public const int DisplayGambleCardCount = 10;
+
+        public const int DisplayGambleSkillCount = 2;
+
+
+        public const string BoxIconPath = "Icon/box/{0}";
+        public const string PetIconPath = "Icon/pet/{0}";
+        public const string PointIconPath = "Icon/point/{0}";
+        public const string SkillIconPath = "Icon/skill/{0}";
+        public const string SynergyBreakPath = "Icon/synergybreak/{0}";
+        public const string SynergyRunePath = "Icon/synergyrune/{0}";
+        public const string StatIconPath = "Icon/stat/{0}";
+        public const string DescendIconPath = "Icon/descend/{0}";
+        public const string RelicIconPath = "Icon/relic/{0}";
+        public const string AdBuffIconPath = "Icon/adbuff/{0}";
+        public const string VipPackageIconPath = "Icon/vippackage/{0}";
+        public const string ResearchPath = "Icon/research/{0}";
+        public const string GearPath = "Icon/gear/{0}";
+
+
+
+
+
+
+
+
+
+        public static readonly float DefaultScreenWidth = 1080.0f;
+        public static readonly float DefaultScreenHeight = 1920.0f;
+        public static readonly float DefaultInGameCameraSize = 4.88f;
+
+        //카메라 관련
+        public static readonly float DefaultScreenInGameWidth = 17.7777f;
+
+        //아이템 드랍 관련
+        public static readonly string GoldDungeonCustomKey = "GoldDungeonCustom";
+        public static readonly string SoulDungeonCustomKey = "SoulDungeonCustom";
+
+        // 최초 로그인인가
+        public static readonly string FirstLoginKey = "FirstLogin";
+
+        public static readonly int NickNameMinCount = 2;
+        public static readonly int NickNameMaxCount = 8;
+
+        //참조 스트링
+        public static readonly string WeaponAniResourceKey = "DarkKnight_Weapon";
+        public static readonly string WeaponResourceNameKey = "DarkKnight_Weapon_{0}";
+
+        public static readonly string PhantomWeaponNameKey = "DarkKnight_Weapon_Costume_Phantom_00";
+
+        //CharacterAniSampleSetting
+        public static readonly string PlayerSpriteResourceName = "DarkKnight";
+        public static readonly int PlayerSpriteVariationNumber = 3;
+
+        public static readonly string KnightNameLocalizeKey = "characterDialogueName";
+
+
+
+
+        //PlayerPrefs
+        public static readonly string LoginTypeKey = "loginKey";
+        public static readonly string SocialTypeKey = "socialKey";
+        public static readonly string CurrentDungeonKey = "currentdungeonKey";
+        public static readonly string StoryDungeonKey = "storydungeonKey";
+        public static readonly string OpenSkillListKey = "openskilllistKey";
+        public static readonly string OpenSkillSlotCountKey = "openskillslotcountKey";
+        public static readonly string EquipSkillKey = "equipskillKey";
+        public static readonly string EquipPetKey = "equipskillKey";
+        public static readonly string NewSynergyKey = "newsynergyKey";
+        public static readonly string NewSynergyBreakKey = "newsynergybreakKey";
+        public static readonly string NewSynergyRuneKey = "newsynergyruneKey";
+        public static readonly string NewDescendKey = "newdescendKey";
+        public static readonly string NewRelicKey = "newrelicKey";
+        public static readonly string NewGearKey = "newgearKey";
+        public static readonly string AutoGambleKey = "autogambleKey";
+        public static readonly string AutoMaxStopKey = "automaxstopKey";
+
+        //CharacterInfoTableKey
+        public const string PlayerInfoTable = "PlayerInfo";
+        public const string PlayerFame = "PlayerFame";
+        public const string PlayerAdFree = "PlayerAdFree";
+        public const string PlayerBuffFree = "PlayerBuffFree";
+        public const string PlayerServerKind = "PlayerServerKind";
+        public const string PlayerServerNum = "PlayerServerNum";
+        public const string PlayerCheatingCheck = "PlayerCheatingCheck";
+        public const string PlayerDontSearchCheat = "PlayerDontSearchCheat";
+        public const string PlayerProfile = "PlayerProfile";
+        public const string PlayerRecvLaunchReward = "PlayerRecvLaunchReward";
+        public const string PlayerRecvPreReward = "PlayerRecvPreReward";
+
+        public const string PlayerRouletteInitTime = "RouletteInitTime";
+        public const string PlayerRouletteActionTime = "RouletteActionTime";
+        public const string PlayerRouletteActionCount = "RouletteActionCount";
+
+        //CharacterInfoTableKey
+        public const string PlayerSocialInfoTable = "PlayerSocialInfo";
+        public const string PlayerGuildSupportAllyInfo = "GuildSupportAlly";
+
+        //CharacterInfoTableKey
+        public const string PlayerARRRInfoTable = "ARRRInfo";
+        public const string PlayerARRRLevel = "ARRRLevel";
+        public const string PlayerARRRLimitCompleteLevel = "ARRRLimitCompleteLevel";
+        public const string PlayerARRRDefaultGoods = "DefaultGoods";
+
+        //StaminaInfoTableKey
+        public const string PlayerStaminaInfoTable = "StaminaInfo";
+        public const string PlayerStaminaInitTime = "InitTime";
+        public const string PlayerStaminaAccumUse = "AccumUse";
+        public const string PlayerStaminaLastChargeTime = "LastChargeTime";
+        public const string PlayerToDayDigAdCount = "ToDayDigAdCount";
+        public const string PlayerToDayDigDiaBuyCount = "ToDayDigDiaBuyCount";
+
+        //StaminaInfoTableKey
+        public const string PlayerJobInfoTable = "JobInfo";
+        public const string PlayerJobInfo = "Job";
+        public const string PlayerJobType = "JobType";
+        public const string PlayerJobTier = "JobTier";
+
+        //StaminaInfoTableKey
+        public const string PlayerVipPackageInfoTable = "VipPackageInfo";
+        public const string PlayerVipPackageInfo = "VipPackage";
+        public const string PlayerVipPackageShopInfo = "VipPackageShop";
+
+
+        //SynergyInfoTableKey
+        public const string PlayerSynergyInfoTable = "SynergyInfo";
+        public const string PlayerSynergyAccumLevel = "AccumLevel";
+        public const string PlayerSynergyInfo = "Synergy";
+        public const string PlayerSynergyEquipInfo = "SynergyEquip";
+        public const string PlayerSynergyExp = "Exp";
+        public const string PlayerSynergyRune = "Rune";
+
+        //DescendTableKey
+        public const string PlayerDescendInfoTable = "DescendInfo";
+        public const string PlayerDescendAccumLevel = "AccumLevel";
+        public const string PlayerDescendInfo = "Descend";
+        public const string PlayerDescendEquipInfo = "DescendEquip";
+        public const string PlayerDescendExp = "Exp";
+
+
+        //SynergyRuneInfoTableKey
+        public const string PlayerSynergyRuneInfoTable = "SynergyRuneInfo";
+        public const string PlayerSynergyRuneInfo = "Rune";
+        public const string PlayerSynergyRuneEquipInfo = "RuneEquip";
+        public const string PlayerSynergyRuneAccumCombine = "CombineCount";
+
+
+
+        //RelicTableKey
+        public const string PlayerRelicInfoTable = "RelicInfo";
+        public const string PlayerRelicInfo = "Relic";
+
+        //PlayerPointTable
+        public const string PlayerPointTable = "PointInfo";
+        public const string PlayerDiaAmount = "PlayerDiaAmount";
+        public const string PlayerAccumUseDia = "PlayerAccumUseDia";
+
+        //PlayerSummonTicketTable
+        public const string PlayerSummonTicketTable = "PlayerSummonTicket";
+
+        //PlayerBoxTable
+        public const string PlayerBoxTable = "PlayerBox";
+
+        //PlayerTrainingTable
+        public const string PlayerTrainingTable = "PlayerTraining";
+
+        //PlayerGearInfo
+        public const string PlayerGearTable = "GearInfo";
+        public const string PlayerGearInfo = "Gear";
+        public const string PlayerGearEquipInfo = "Equip";
+        public const string PlayerGearSlotInfo = "Slot";
+        public const string PlayerGearAccumCombine = "CombineCount";
+
+
+        //PlayerSkinInfo
+        public const string PlayerSkinTable = "PlayerSkinInfo";
+        public const string PlayerSkinEquip = "PlayerSkinEquip";
+
+
+        //CharacterSkillInfoKey
+        public const string PlayerSkillInfoTable = "SkillInfo";
+        public const string PlayerSkillInfo = "skillinfo";
+        public const string PlayerSkillSlotInfo = "skillslotinfo";
+        public const string PlayerSkillSlotPage = "skillslotpage";
+        public const string PlayerSkillOpenSlotCount = "skillopenslotcount";
+
+        //MapInfo
+        public const string PlayerMapInfoTable = "MapInfo";
+        public const string PlayerMapMaxWaveClear = "MapMaxWaveClear";
+        public const string PlayerMapMaxClear = "MapMaxClear";
+        public const string PlayerMapMapStageInfo = "StageInfo";
+        public const string PlayerMapKey = "MapKey";
+        public const string PlayerEventDayInitTime = "InitTime";
+        public const string PlayerToDaySweepCount = "SweepCount";
+        public const string PlayerToDayDoubleRewardCount = "DoubleReward";
+
+        //DungeonInfo
+        public const string PlayerDungeonInfoTable = "DungeonInfo";
+
+        public const string PlayerAutoBossChallenge = "AutoBossChallenge";
+
+   
+        public const string PlayerDiamondDungeonMaxClear = "DiamondDungeonMaxClear";
+        public const string PlayerTowerDungeonMaxClear = "TowerDungeonMaxClear";
+
+        public const string PlayerDungeonInitInfo = "DungeonInitInfo";
+
+
+        //PlayerAllyInfo
+        public const string PlayerAllyInfoTable = "AllyInfo";
+        public const string PlayerAllyInfo = "AllyInfo";
+        public const string PlayerAllySlotInfo = "AllySlotInfo";
+
+        //PlayerAllyJewelryInfo
+        public const string PlayerAllyJewelryInfoTable = "PlayerAllyJewelryInfo";
+        public const string PlayerAllyJewelryInfo = "AllyJewelryInfo";
+        public const string PlayerAllyEquipJewelryInfo = "AllyEquipJewelryInfo";
+        public const string PlayerAllyJewelryMaxStorage = "AllyJewelryMaxStorage";
+        public const string PlayerAllyJewelryValuePatch = "JewelryValuePatch";
+
+        //PlayerRuneInfo
+        public const string PlayerRuneInfoTable = "PlayerRuneInfo";
+        public const string PlayerRuneInfo = "RuneInfo";
+        public const string PlayerRuneEquipInfo = "RuneEquipInfo";
+
+        //PlayerResearchInfo
+        public const string PlayerResearchInfoTable = "ResearchInfo";
+        public const string PlayerResearchInfo = "ResearchInfo";
+        public const string PlayerResearchSlot = "Slot";
+        public const string PlayerResearchAdCount = "AdCount";
+        public const string PlayerResearchDailyInitTime = "InitTime";
+        public const string PlayerResearchChargeCount = "chargecount";
+        public const string PlayerResearchLastCharge = "lastchargetime";
+        public const string PlayerResearchViewQueue = "viewqueue";
+
+        //PlayerTraitInfo
+        public const string PlayerTraitInfoTable = "PlayerTraitInfo";
+        public const string PlayerTraitInfo = "TraitInfo";
+        public const string PlayerTraitSlotPage = "TraitSlotPage";
+
+        //SummonInfo
+        public const string PlayerSummonInfoTable = "SummonInfo";
+        public const string PlayerSummonInfo = "SummonInfo";
+        public const string PlayerAllySummonMileage = "AllySummonMileage";
+
+        //TimeInfo
+        public const string PlayerTimeInfoTable = "TimeInfo";
+        public const string PlayerLastRecvStageCoolTimeReward = "LastRecvStageCoolTimeReward";
+        public const string PlayerAccumLoginTime = "AccumLoginTime";
+        public const string PlayerDailyInitTimeStamp = "DailyInitTimeStamp";
+        public const string PlayerAccumLoginCount = "AccumLoginCount";
+
+        //AdBuffInfo
+        public const string PlayerAdBuffInfoTable = "AdBuffInfo";
+        public const string PlayerAdBuffInfo = "AdBuff";
+        public const string PlayerAdBuffInitTime = "InitTime";
+        public const string PlayerAdBuffTodayActiveCount = "TodayCount";
+
+
+        //CheckInInfo
+        public const string PlayerCheckInInfoTable = "PlayerCheckinInfo";
+        public const string PlayerCheckInRewardInfo = "PlayerCheckInRewardInfo";
+
+        //ShopInfo
+        public const string PlayerShopInfoTable = "ShopInfo";
+        public const string PlayerShopPostInfo = "ShopPostInfo";
+
+        //ShopRandomStoreInfo
+        public const string PlayerShopRandomStoreInfoTable = "ShopRandomStoreInfo";
+        public const string PlayerShopRandomStoreInitTime = "InitTime";
+
+        public const string PlayerShopRandomStoreBuyInfo = "Buy";
+        public const string PlayerShopRandomStoreDisplay = "Display";
+
+        public const string PlayerShopRandomStoreResetAdView = "ResetAd";
+        public const string PlayerShopRandomStoreResetDia = "ResetDia";
+        public const string PlayerShopRandomStoreDiaFree = "DiaFree";
+
+        //PassInfo
+        public const string PlayerPassInfoTable = "PassInfo";
+        public const string PlayerPassMonsterKillInfo = "MonsterKill";
+        public const string PlayerPassInfo = "PassInfo";
+
+        //QuestInfo
+        public const string PlayerQuestInfoTable = "QuestInfo";
+        public const string PlayerClearGuideQuestOrderInfo = "PlayerClearGuideQuestOrderInfo";
+        public const string PlayerQuestInfo = "PlayerQuestInfo";
+        public const string PlayerQuestGaugeInfo = "PlayerQuestGaugeInfo";
+        public const string PlayerQuestDailyInit = "DailyInit";
+
+        //QuestInfo
+        public const string PlayerTimeAttackMissionInfoTable = "TimeAttackMissionInfo";
+        public const string PlayerTimeAttackMissionInfo = "MissionInfo";
+        public const string PlayerFocusMissionInfo = "Focus";
+
+
+        //ExchangeInfo
+        public const string PlayerExchangeInfoTable = "PlayerExchangeInfo";
+        public const string PlayerExchangeInfo = "PlayerExchangeInfo";
+
+        //RankInfo
+        public const string PlayerRankInfoTable = "RankInfo";
+        public const string PlayerRankCombatPower = "CombatPower";
+        public const string PlayerStage = "Stage";
+        public const string PlayerEvent = "Event";
+        public const string PlayerEventDamage = "EventDamage";
+        public const string PlayerAllyArena = "AllyArena";
+        public const string PlayerEventGod = "EventGod";
+        public const string PlayerEventBull = "EventBull";
+        public const string PlayerEventRot = "EventRot";
+        public const string PlayerEventUrs = "EventUrs";
+        public const string PlayerEventRpg = "EventRpg";
+        public const string PlayerEventKing = "EventKing";
+        public const string PlayerDetail = "Detail";
+
+        //ClanLevelInfo
+        public const string PlayerClanInfoTable = "PlayerClanInfo";
+        public const string PlayerClanLevel = "ClanLevel";
+
+        //ClanMIssionInfo
+        public const string PlayerClanMissionInfoTable = "PlayerClanMissionInfo";
+
+        public const string PlayerClanMissionLevel = "MissionLevel";
+
+        public const string PlayerClanMissionExp = "Exp";
+        public const string PlayerClanMissionAccumExp = "AccumExp";
+
+        public const string PlayerCompassToDayAdViewCount = "AdViewCount";
+        public const string PlayerCompassRechargeInitTimeStemp = "AdInitTimeStemp";
+
+        public const string PlayerDisPlayMissionData = "MissionData";
+
+        public const string PlayerAutoDispatch = "AutoDispatch";
+        public const string PlayerAutoDispatchRarity = "AutoDispatchRarity";
+
+        //BerserkerModeInfo
+        public const string PlayerBerserkerModeInfoTable = "PlayerBerserkerModeInfo";
+
+        public const string PlayerBerserkerModeSlotLevel = "SlotLevel";
+        public const string PlayerBerserkerModeMonsterKillCount = "KillCount";
+
+        //AllyArenaInfo
+        public const string PlayerAllyArenaInfoTable = "PlayerAllyArenaInfo";
+
+        public const string PlayerAllyArenaDeck = "Deck";
+        public const string PlayerAllyArenaInitTimeStemp = "InitTime";
+        public const string PlayerAllyArenaTestBattleCount = "TestCount";
+        public const string PlayerAllyArenaTestOrder = "TestBotOrder";
+        public const string PlayerAllyArenaPoint = "ArenaPoint";
+        public const string PlayerAllyArenaAccumPlay = "AccumPlay";
+        public const string PlayerAllyArenaRecvedOnceReward = "OnceReward";
+        public const string PlayerAllyArenaMIssionInfo = "MissionInfo";
+
+        public const string PlayerAllyArenaDailyInitTime = "DailyInitTime";
+        public const string PlayerAllyArenaBuyHonorShopInfo = "HonorBuy";
+        public const string PlayerAllyArenaHonorShopDisPlayList = "HonorDisplay";
+        public const string PlayerAllyArenaHonorRefreshCount = "HonorRefresh";
+
+        public const string PlayerAllyArenaAdViewCount = "AdView";
+
+        //BerserkerModeInfo
+        public const string PlayerForgeInfoTable = "PlayerForgeInfo";
+
+        public const string PlayerForgeInfo = "Forge";
+        public const string PlayerForgeCollectionInfo = "Collection";
+
+        public const string PlayerForgeInitTimeStemp = "InitTime"; // 일일초기화
+
+        public const string PlayerForgeToDayDigAdCount = "ToDayAd";
+        public const string PlayerForgeToDayDigDiaBuyCount = "ToDayDigDia";
+
+        //EventRouletteInfo
+        public const string PlayerEventRouletteTable = "PlayerEventRouletteInfo";
+        public const string PlayerEventRouletteVersion = "Version";
+
+        public const string PlayerEventRouletteAccumEventCount = "AccumCount";
+        public const string PlayerEventRouletteRecvedAccumReward = "RecvedAccumReward";
+
+        public const string PlayerEventRouletteLimitRewardPickRecord = "LimitRewardPickRecord";
+        public const string PlayerEventRouletteResetRewardPickRecord = "ResetRewardPickRecord";
+
+        public const string PlayerEventRouletteLimitedRewardCount = "LimitedRewardCount";
+        public const string PlayerEventRouletteRouletteMissionInfo = "MissionInfo";
+
+
+        //EventDungeonInfo
+        public const string PlayerEventDungeonTable = "PlayerEventDungeonInfo";
+        public const string PlayerEventDungeonVersion = "Version";
+
+        public const string PlayerEventDungeonAccumEventCount = "AccumCount";
+        public const string PlayerEventDungeonRecvedOnceReward = "RecvedOnceReward";
+        public const string PlayerEventDungeonRecvedRepeatReward = "RecvedRepeatReward";
+        public const string PlayerEventDungeonDamageScore = "DamageScore";
+        public const string PlayerEventDungeonDamageBast = "DamageBest";
+
+        public const string PlayerEventDungeonMissionInfo = "MissionInfo";
+
+
+        //EventDungeonGoddessInfo
+        public const string PlayerEventDungeonGoddessTable = "PlayerEventDungeonGoddessInfo";
+        public const string PlayerEventDungeonGoddessVersion = "Version";
+
+        public const string PlayerEventDungeonGoddessInitTimeStemp = "InitTime"; // 일일초기화
+
+        public const string PlayerEventDungeonGoddessAccumEventCount = "AccumCount";
+        public const string PlayerEventDungeonGoddessDoDiaSummon = "DoDiaCount";
+        public const string PlayerEventDungeonGoddessRecvedOnceReward = "RecvedOnceReward";
+        public const string PlayerEventDungeonGoddessSummonPickRewardCount = "PickRewardCount";
+
+        public const string PlayerEventDungeonGoddessToDayEnterCount = "DungeonToDayEnterCount";
+        public const string PlayerEventDungeonGoddessEnterCount = "DungeonEnterCount";
+        public const string PlayerEventDungeonGoddessEnterReward = "DungeonEnterReward";
+
+        public const string PlayerEventDungeonGoddessAttainPromo = "AttainPromo";
+        public const string PlayerEventDungeonGoddessRecvedFree = "RecvedFree";
+
+        public const string PlayerEventDungeonGoddessMissionInfo = "MissionInfo";
+
+
+        //EventRedBullInfo
+        public const string PlayerEventRedBullTable = "PlayerEventRedBullInfo";
+        public const string PlayerEventRedBullVersion = "Version";
+
+        public const string PlayerEventRedBullInitTimeStemp = "InitTime"; // 일일초기화
+
+        public const string PlayerEventRedBullAccumEventCount = "AccumCount";
+        public const string PlayerEventRedBullDoDiaSummon = "DoDiaCount";
+        public const string PlayerEventRedBullRecvedOnceReward = "RecvedOnceReward";
+        public const string PlayerEventRedBullSummonPickRewardCount = "PickRewardCount";
+
+        public const string PlayerEventRedBullToDayEnterCount = "DungeonToDayEnterCount";
+        public const string PlayerEventRedBullEnterCount = "DungeonEnterCount";
+        public const string PlayerEventRedBullEnterReward = "DungeonEnterReward";
+        public const string PlayerEventRedBullAccumDamage = "AccumDamage";
+        public const string PlayerEventRedBullToDayDiaChargeCount = "DiaChargeCount";
+
+        public const string PlayerEventRedBullAttainPromo = "AttainPromo";
+        public const string PlayerEventRedBullRecvedFree = "RecvedFree";
+
+        public const string PlayerEventRedBullMissionInfo = "MissionInfo";
+
+
+        //EventPassInfo
+        public const string PlayerEventPassTable = "PlayerEventPassInfo";
+        public const string PlayerEventPassInfo = "EventPassInfo";
+        public const string PlayerEventDailyInitTimeStemp = "DailyInitTime";
+        public const string PlayerEventWeeklyInitTimeStemp = "WeeklyInitTime";
+
+
+
+        //RotationEventInfo
+        public const string PlayerRotationEventTable = "PlayerRotationEventInfo";
+
+        public const string PlayerRotationEventInitTime = "InitTime";
+        public const string PlayerRotationEventOrder = "EventOrder";
+
+        public const string PlayerRotationEventAccumEventCount = "AccumCount";
+        public const string PlayerRotationEventRecvedOnceReward = "RecvedOnceReward";
+        public const string PlayerRotationEventRecvedRepeatReward = "RecvedRepeatReward";
+        public const string PlayerRotationEventDamageScore = "DamageScore";
+        public const string PlayerRotationEventDamageBast = "DamageBest";
+
+        public const string PlayerRotationEventMissionInfo = "MissionInfo";
+
+
+
+
+        //EventUrsulaInfo
+        public const string PlayerEventUrsulaTable = "PlayerEventUrsulaInfo";
+        public const string PlayerEventUrsulaVersion = "Version";
+
+        public const string PlayerEventUrsulaInitTimeStemp = "InitTime"; // 일일초기화
+
+        public const string PlayerEventUrsulaAccumEventCount = "AccumCount";
+        public const string PlayerEventUrsulaDoDiaSummon = "DoDiaCount";
+        public const string PlayerEventUrsulaRecvedOnceReward = "RecvedOnceReward";
+        public const string PlayerEventUrsulaSummonPickRewardCount = "PickRewardCount";
+
+        public const string PlayerEventUrsulaToDayEnterCount = "DungeonToDayEnterCount";
+        public const string PlayerEventUrsulaEnterCount = "DungeonEnterCount";
+        public const string PlayerEventUrsulaEnterReward = "DungeonEnterReward";
+        public const string PlayerEventUrsulaAccumDamage = "AccumDamage";
+        public const string PlayerEventUrsulaToDayDiaChargeCount = "DiaChargeCount";
+
+        public const string PlayerEventUrsulaAttainPromo = "AttainPromo";
+        public const string PlayerEventUrsulaRecvedFree = "RecvedFree";
+
+        public const string PlayerEventUrsulaMissionInfo = "MissionInfo";
+
+
+
+        //EventDigInfo
+        public const string PlayerEventDigTable = "PlayerEventDigInfo";
+        public const string PlayerEventDigVersion = "Version";
+
+        public const string PlayerEventDigInitTimeStemp = "InitTime"; // 일일초기화
+
+        public const string PlayerEventDigToDayDigAdCount = "ToDayAd";
+        public const string PlayerEventDigToDayDigDiaBuyCount = "ToDayDigDia";
+
+        public const string PlayerEventDigAccumCarrot = "AccumCarrot";
+        public const string PlayerEventDigRecvedDigOnceReward = "RecvedOnceReward";
+
+        public const string PlayerEventDigAccumDig = "AccumDig";
+
+        public const string PlayerEventDigTargetIndex = "TargetIndex";
+
+        public const string PlayerEventDigOpenIndex = "OpenIndex";
+        public const string PlayerEventDigFailList = "FailList";
+
+        public const string PlayerEventDigPassLevel = "PassLevel";
+        public const string PlayerEventDigPassExp = "PassExp";
+
+        public const string PlayerEventDigPassRecvedLevel = "PassRecvedLevel";
+
+        public const string PlayerEventDigEnablePaidPass = "EnablePaidPass";
+
+        //EventMathRpgInfo
+        public const string PlayerEventMathRpgTable = "PlayerEventMathRpgInfo";
+        public const string PlayerEventMathRpgVersion = "Version";
+
+        public const string PlayerEventMathRpgBattlePower = "Power";
+
+        public const string PlayerEventMathRpgStageStep = "Step";
+        public const string PlayerEventMathRpgStageStepBrickIdx = "BrickIdx";
+        public const string PlayerEventMathRpgClearPhase = "Phase";
+
+        public const string PlayerEventMathRpgCharacterExp = "Exp";
+        public const string PlayerEventMathRpgCharacterLevel = "Level";
+
+        public const string PlayerEventMathRpgAccumReward = "AccumReward";
+
+        public const string PlayerEventMathRpgBoostGauge = "Boost";
+        public const string PlayerEventMathRpgBoostGaugeResetTime = "BoostReset";
+
+        public const string PlayerEventMathRpgPassLevel = "PassLevel";
+        public const string PlayerEventMathRpgPassExp = "PassExp";
+        public const string PlayerEventMathRpgPassRecvedLevel = "PassRecvedLevel";
+
+        public const string PlayerEventMathRpgEnablePaidPass = "EnablePaidPass";
+
+        public const string PlayerEventMathRpgCoinLastChargeTime = "LastChargeTime";
+
+
+        //EventDungeonKingSlimeInfo
+        public const string PlayerEventDungeonKingSlimeTable = "PlayerEventDungeonKingSlimeInfo";
+        public const string PlayerEventDungeonKingSlimeVersion = "Version";
+
+        public const string PlayerEventDungeonKingSlimeInitTimeStemp = "InitTime"; // 일일초기화
+
+        public const string PlayerEventDungeonKingSlimeAccumEventCount = "AccumCount";
+        public const string PlayerEventDungeonKingSlimeDoDiaSummon = "DoDiaCount";
+        public const string PlayerEventDungeonKingSlimeRecvedOnceReward = "RecvedOnceReward";
+        public const string PlayerEventDungeonKingSlimeSummonPickRewardCount = "PickRewardCount";
+
+        public const string PlayerEventDungeonKingSlimeToDayEnterCount = "DungeonToDayEnterCount";
+        public const string PlayerEventDungeonKingSlimeEnterCount = "DungeonEnterCount";
+        public const string PlayerEventDungeonKingSlimeEnterReward = "DungeonEnterReward";
+        public const string PlayerEventDungeonKingSlimeAccumMonsterKillCount = "KillCount";
+        public const string PlayerEventDungeonKingSlimeToDayDiaChargeCount = "DiaChargeCount";
+
+        public const string PlayerEventDungeonKingSlimeAttainPromo = "AttainPromo";
+        public const string PlayerEventDungeonKingSlimeRecvedFree = "RecvedFree";
+
+        public const string PlayerEventDungeonKingSlimeMissionInfo = "MissionInfo";
+
+        //EventPassInfo
+        public const string PlayerGuildTable = "PlayerGuildInfo";
+
+        public const string PlayerGuildWithdrawTimeStemp = "WithdrawTime";
+
+        public const string PlayerGuildDailyInitTimeStemp = "DailyInitTime";
+        public const string PlayerGuildWeeklyInitTimeStemp = "WeeklyInitTime";
+
+        public const string PlayerGuildMissionInfo = "MissionInfo";
+
+        public const string PlayerGuildCoinShopInfo = "CoinShop";
+
+        public const string PlayerGuildCheckInCountInfo = "CheckInCount";
+        public const string PlayerGuildCheckInRecvInfo = "CheckInRecv";
+
+        public const string PlayerGuildCheckInCostInfo = "CheckInCost";
+
+        public const string PlayerGuildGetPurchaseCoinInfo = "PurchaseCoin";
+        public const string PlayerGuildRecvPurchaseInfo = "RecvPurchase";
+
+        public const string PlayerGuildDiaShopInfo = "DiaShop";
+
+        public const string PlayerGuildDoSupportCountInfo = "SupportCount";
+
+        public const string PlayerGuildRaidNormalDamageInfo = "NormalDamage";
+
+        public const string PlayerGuildRaidNormalRewardInfo = "NormalReward";
+        public const string PlayerGuildRaidNormalEnterInfo = "NormalEnter";
+
+
+        public const string PlayerGuildRaidToDayEnterRankInfo = "RankToday";
+        public const string PlayerGuildRaidToDayChargeRankInfo = "RankCharge";
+
+        public const string PlayerGuildCoinWeekAccumAddCountInfo = "CoinWeekAccum";
+
+        //SevenDayInfo
+        public const string PlayerSevenDayTable = "PlayerSevenDayInfo";
+
+        public const string PlayerSevenDayGroupInfo = "Group";
+        public const string PlayerSevenDayMissionInfo = "MissionInfo";
+        public const string PlayerSevenDayRecvedOnceReward = "RecvedOnceReward";
+        public const string PlayerSevenDayAccumMissionClearCount = "AccumCount";
+        public const string PlayerSevenDayClose = "Close";
+
+        //ViewData
+        public const string PlayerViewDataTable = "PlayerViewDataInfo";
+        public const string PlayerViewDataSummon = "Summon";
+        public const string PlayerViewDataJewelryTLv = "JewelryTLv";
+        public const string PlayerViewDataBuyPrice = "Buy";
+
+        //CharacterDefaultSetting
+        public static readonly int PlayerDefaultSummonLevel = 1;
+
+        public static readonly int PlayerSkillDefaultLevel = 0;
+        public static readonly int PlayerSynergyDefaultLevel = 1;
+        public static readonly int PlayerDescendDefaultLevel = 1;
+        public static readonly int PlayerJewelryDefaultLevel = 0;
+        public static readonly int PlayerJobDefaultLevel = 1;
+
+        public static readonly int CreatureDefaultLevel = 1;
+
+        public static readonly int CombineGoodsAmount = 5;
+
+        public static readonly int GearRingSlotTotalCount = 5;
+
+        public static readonly int SkillSlotTotalPage = 5;
+        public static readonly int AllySlotTotalPage = 5;
+        public static readonly int TraitSlotTotalPage = 5;
+
+        public static readonly int AllyComposeMaterialCount = 6;
+
+        public static readonly int AllyJewelrySlotTotalCount = 4;
+        public static readonly int AllyJewelryCombineMaterialCount = 5;
+
+        public static readonly int AllyJewelryTranscendMaterialCount = 1;
+
+        public static V2Enum_Grade AllyJewelryPossibleTranscendGrade = V2Enum_Grade.SS;
+
+        public static V2Enum_Goods RuneGachaGoodType = V2Enum_Goods.Point;
+        public static V2Enum_Point RuneGachaPointType = V2Enum_Point.Dia;
+
+        public static V2Enum_Point MasteryInitPointType = V2Enum_Point.InGameGold;
+        public static double MasteryInitPointPrice = 10.0;
+
+        public static V2Enum_Goods TraitGachaGoodType = V2Enum_Goods.Point;
+        public static V2Enum_Point TraitGachaPointType = V2Enum_Point.SynergyLimitFire;
+        public static double TraitGachaBasePrice = 1.0;
+        public static double TraitGachaLockAddPrice = 1.0;
+
+        public static double StageCoolTimeRewardTimeGab = 60.0;
+        public static double StageCooltimeRewardMaxSecond = 7200;
+
+
+        // DefineTable
+        public static double PenetrationFactorMin = 0.2;
+        public static double ResistanceFactorMin = 0.2;
+
+        public static float InterestTimer = 10.0f;
+        public static double InterestMaxReward = 50.0;
+        public static double InterestRate = 10.0;
+
+        public static double GambleMinimumRate = 0.0;
+        public static double GambleReinforcementMaxLevel = 10.0;
+
+        public static string DefaultSkin = "Body/00"; // 상시로 켜지는 코스튬 경로
+        public static double DefenseStandard = 100; // 방어력 상수 기준값
+        public static double MaximumDecreaseAtt = -70; // 공격력 최대 감소 가능 %
+        public static double MaximumDecreaseArmor = -80; // 방어력 최대 감소 가능 %
+
+        public static double DefaultGainGold = 100; // 스테이지를 클리어하지 않았을 때 기본으로 제공되는 보상
+
+        public static int NexusMonsterIndex = 100; // 넥서스용 몬스터 인덱스
+        public static List<int> NewCharacterSkill = new List<int>(); // 신규 캐릭터 생성 시 지급되는 캐릭터 스킬 인덱스
+        public static List<int> NewCharacterEquipSkill = new List<int>(); // 신규 캐릭터 생성 시 자동 장착되는 스킬 인덱스
+        public static double StageStartGold = 30; // 스테이지 시작 시 지급되는 골드
+
+        public static double StaminaChargeTime = 60; // 행동력 1 충전에 필요한 시간 (초)
+        public static int MaxStamina = 30; // 행동력 맥스 수치
+        public static int RequiredStamina = 5; // 1회 입장 시 소모하는 행동력 수치
+        public static int StaminaIndex = 199010005; // 행동력 인덱스
+
+        public static double JokerCardProb = 10000; // 조커 카드 등장 확률
+        public static int JokerCardCount = 10; // 조커 카드 획득 시 얻는 시너지 게이지 스택
+
+
+        public static int LimitDailyAdStamina = 3; // 하루에 최대 광고로 회복시킬 수 있는 행동력 횟수
+        public static double StaminaChargeCount = 15; // 행동력 회복 시 몇 개의 행동력이 회복되는지
+        public static double StaminaPrice = 200; // 행동력 구매 시 최초 몇 개의 다이아가 필요한지
+
+
+
+
+        public static double GasSynergyProb = 60; // 가스 시너지 도박 시 성공률
+        public static int GasSynergyCount = 5; // 가스 시너지 도박 성공 시 얻는 시너지 게이지 스택
+        public static double GasHpRecovery = 15; // 가스 소모하여 회복되는 HP % (전체 HP%)
+        public static int GasIndex = 199010004; // 가스 재화 인덱스
+
+        public static int RandomShopAdRefreshCount = 2; //랜덤 상점 AD 초기화 최대 횟수
+        public static int RandomShopRefreshCount = 3; //랜덤 상점 다이아 초기화 최대 횟수
+        public static int RandomShopRefreshIndex = 199010003; //랜덤 상점 초기화 필요 재화 인덱스
+        public static double RandomShopRefreshValue = 50; //랜덤 상점 초기화 필요 재화 개수
+        public static int RandomShopSlot = 5; //랜덤 상점에 노출되는 아이템 개수
+
+        public static double RandomShopFreeDia = 20; //랜덤 상점 첫번째 슬롯에 상시 노출되는 다이아 개수
+        public static int RandomShopFreeDiaAD = 2; //광고 보고 추가로 지급받을 수 있는 다이아 횟수
+
+        public static int BuffAdDailyCount = 2; //하루에 광고 버프를 활성화 할 수 있는 횟수 제한
+        public static int BaseSellingItemOnce = 150050026; //계정 생성 후 최초 1회 일일 상점 고정 
+
+
+
+        public static int Research2SlotOpenCost = 150010001; // 연구 2슬롯 해금 PID
+        public static double Research3SlotOpenCost = 3000; // 연구 3슬롯 해금 필요 다이아 개수
+
+        public static double ResearchGoodsEarn = 3; // 연구 1회 회복당 획득 개수
+        public static double ResearchChargingTime = 60; // 연구 1회 회복에 필요한 시간 (초)
+
+        public static double ResearchGoodsLimitCount = 500; // 연구 재료 최대 소지량
+        public static int ResearchGoodsIndex = 199010023; // 연구 재료 인덱스
+
+        public static double ResearchADTime = 1800; // 연구 광고 시청 시 감소하는 시간 (초)
+        public static int ResearchADTimeCount = 4; // 연구 광고 시청 가능 횟수
+
+        public static int ResearchAccelTicketIndex = 199010011; // 가속 티켓 인덱스
+        public static double ResearchAccelTime = 600; // 가속 티켓 1개당 감소하는 연구 시간 (초)
+
+        public static int SkillEvolutionUnlock = 10; // 스킬 진화 해금 조건
+        public static int SynergyMAXGoods = 199010025; // 속성 MAX 이후 지급되는 재화 인덱스
+
+        public static int DailySweepCount = 5; // 하루 광고보고 소탕 할 수 있는 제한 횟수
+        public static int DailyDoubleRewardCount = 5; // 하루 광고보고 소탕 할 수 있는 제한 횟수
+
+
+
+        public static float SkillMinCoolTime = 0.3f; // 스킬 최소 쿨타임
+        public static int SkillMinCoolCount = 1; // 스킬 최소 쿨타임카운트
+
+        public static float SkillMaxCoolDecrease = 0.8f; // 스킬 최소 쿨타임
+
+        public static int SynergyTutorialStage = 9999; // 시너지 튜토리얼 스테이지
+        public static int SynergyTutorialWave = 1; // 시너지 튜토리얼 웨이브
+
+        public static int SynergyOpenTutorialStage = 9999; // 시너지 오픈 튜토리얼 스테이지
+        public static int SynergyOpenTutorialWave = 5; // 시너지 오픈 튜토리얼 웨이브
+
+        public static int SynergyUnLockTutorialStage = 9999; // 시너지 오픈 튜토리얼 스테이지
+        public static int SynergyUnLockTutorialWave = 5; // 시너지 오픈 튜토리얼 웨이브
+
+        public static int ResearchTutorialStage = 9999; // 연구소 튜토리얼 스테이지
+        public static int ResearchTutorialWave = 20; // 연구소 튜토리얼 웨이브
+
+        public static int GearTutorialStage = 3; // 장비 튜토리얼 스테이지
+        public static int GearTutorialWave = 5; // 장비 튜토리얼 웨이브
+
+        public static int GearEquipTutorialStage = 3; // 장비 튜토리얼 스테이지
+        public static int GearEquipTutorialWave = 10; // 장비 튜토리얼 웨이브
+
+
+        public static int RelicTutorialStage = 4; // 유물 튜토리얼 스테이지
+        public static int RelicTutorialWave = 20; // 유물 튜토리얼 웨이브
+
+        public static int DescendTutorialStage = 5; // 강림 튜토리얼 스테이지
+        public static int DescendTutorialWave = 5; // 강림 튜토리얼 웨이브
+
+        public static int SynergyBreakTutorialStage = 4; // 시너지 튜토리얼 스테이지
+        public static int SynergyBreakTutorialWave = 5; // 시너지 튜토리얼 웨이브
+
+        public static int RuneTutorialStage = 5; // 룬 튜토리얼 스테이지
+        public static int RuneTutorialWave = 20; // 룬 튜토리얼 웨이브
+
+
+        public static int JobTutorialStage = 5; // 전직 튜토리얼 스테이지
+        public static int JobTutorialWave = 40; // 전직 튜토리얼 웨이브
+
+        public static int DungeonTutorialStage = 3; // 던전 튜토리얼 스테이지
+        public static int DungeonTutorialWave = 30; // 던전 튜토리얼 웨이브
+
+        public static V2Enum_IntervalType ExchangeInterval = V2Enum_IntervalType.Day;
+
+        public static double NickNameChangeDiaCost = 500.0;
+
+        public static int ExtensionSummonMultiplyValue = 10;
+
+        public static string ServerKind = "GO";
+        public static int ServerNum = 108;
+
+        //public static double HurdleIncreaseFactor1 = 0.26;
+        //public static double HurdleIncreaseFactor2 = 0.35;
+
+        public static int HurdleIncreaseFactor1 = 1;
+        public static int HurdleIncreaseFactor2 = 1;
+
+        public static ObscuredInt ClanMissionResetTicketDailyRecharge;
+
+        public static List<int> HellDungeonClearRewardGroup = new List<int>();
+
+        public static ObscuredFloat PenaltySkillIntervalStart;
+        public static ObscuredFloat PenaltySkillIntervalDecrease;
+        public static ObscuredFloat PenaltySkillIntervalMin;
+
+
+
+        public static ObscuredInt EventRouletteLimitedRewardDrawCount = 100;
+        public static ObscuredInt EventRouletteFinalRewardDrawCount = 500;
+
+        public static ObscuredInt EnemyBoostValueOnBerserker = 2;
+
+        public static ObscuredFloat BerserkerStageWaveInterval = 0.3f;
+
+
+        public static ObscuredInt AllyArenaSearchingCountBottom = 15;
+        public static ObscuredInt AllyArenaSearchingCountTop = 5;
+
+        public static ObscuredLong AllyArenaRankPointMaxForWin = 2215;
+        public static ObscuredLong AllyArenaRankPointBaseForWin = 1000;
+        public static ObscuredLong AllyArenaRankPointMinForWin = 250;
+
+        public static ObscuredLong AllyArenaRankPointMaxForLose = 1000;
+        public static ObscuredLong AllyArenaRankPointBaseForLose = 850;
+        public static ObscuredLong AllyArenaRankPointMinForLose = 100;
+
+        public static ObscuredInt HonorCoinRewardAmountForAllyArenaWin = 1;
+
+        public static ObscuredInt HonorShopProductDisplayAmount = 9;
+        public static ObscuredInt HonorShopAutoResetInterval = 86400;
+        public static ObscuredInt HonorShopManualResetDiaCostBase = 500;
+        public static ObscuredInt HonorShopManualResetDiaCostAdd = 250;
+
+        public static ObscuredDouble AllyArenaStatModForResistance = 0.5;
+        public static ObscuredDouble AllyArenaStatModForHp = 0.1;
+
+        public static ObscuredInt AllyArenaTestBattleCount = 6;
+        public static ObscuredInt AllyArenaTicketDailyRechargeCount = 3;
+
+        public static ObscuredFloat AllyArenaTimeLimit = 59;
+
+        public static ObscuredInt JewelSurpassResetCost = 1;
+
+        public static ObscuredInt HealDungeonFinalRewardCombatCount = 15; // 우리엘 지급 조건 (여신던전 누적 전투)
+        public static ObscuredInt HealDungeonFinalRewardSummonCount = 200; // 우리엘 지급 조건 (여신던전 누적 소환)
+        public static ObscuredInt HealDungeonDiaSummonDailyLimit = 10; // 여신던전 다이아 소환 일일 제한
+        public static ObscuredDouble HealDungeonDiaSummonCostForOne = 500; // 여신던전 1회 소환 다이아 비용
+        public static ObscuredDouble HealDungeonDiaSummonCostForTen = 4500; // 여신던전 10회 소환 다이아 비용
+        public static ObscuredInt HealDungeonDailyEnterCount = 5; // 여신던전 일일 입장제한 횟수
+        public static ObscuredInt HealDungeonEventTargetAlly = 104010064; // 여신던전 타깃 동료 (일련번호)
+        public static ObscuredFloat HealDungeonTimeLimit = 29;
+
+        public static ObscuredInt LuckyRouletteDailySpinMaxCount = 5; // 행운룰렛 일일스핀 최대횟수
+        public static ObscuredInt LuckyRouletteSpinInterval = 300; // 행운룰렛 스핀 인터벌 (초)
+
+        public static ObscuredFloat RedBullKnockBackInterval = 2.0f; // 레드불 넉백 인터벌
+
+        public static ObscuredFloat DiamondDungeonTimeLimit = 59.0f; // 레드불 넉백 인터벌
+        public static ObscuredFloat GoldDungeonTimeLimit = 29.0f; // 레드불 넉백 인터벌
+        public static ObscuredFloat RuneDungeonTimeLimit = 59.0f; // 레드불 넉백 인터벌
+
+        public static ObscuredDouble ForgeHammerRechargeInterval = 300.0; // 단조 망치 충전주기 (초)
+        public static ObscuredDouble ForgeHammerRechargeAmount = 1; // 단조 망치 충전량 (개수)
+        public static ObscuredDouble ForgeHammerRechargeAmountMax = 720; // 단조 망치 최대 충전량 (개수)
+
+        public static ObscuredDouble ForgeHammerDiaRechargeCostBase = 500; // 망치 다이아 충전 기본값
+        public static ObscuredDouble ForgeHammerDiaRechargeAmount = 10; // 망치 구매 시 충전량
+        public static ObscuredInt ForgeHammerAdvertiseCount = 1; // 망치 광고 보상 획득가능 횟수
+        public static ObscuredDouble ForgeHammerAdvertiseRechargeAmount = 10; // 광고로 획득 할 수 있는 망치 개수
+
+
+        public static ObscuredDouble LevelUpStatCharacter = 1; // 강화로 인한 스테이터스 캐릭터 상수
+        public static ObscuredDouble LevelUpStatMonster = 0.7; // 강화로 인한 스테이터스 몬스터 상수
+        public static ObscuredDouble GambleProbMInimum = 0; // 도박 확률 최소 보정치
+
+        public static ObscuredFloat MaxEffectiveMoveSpeedValue = 15.0f;
+
+        public static ObscuredInt RedBullDungeonFinalRewardCombatCount = 15; // 레드불 지급 조건 (레드불던전 누적 전투)
+        public static ObscuredInt RedBullDungeonFinalRewardSummonCount = 200; // 레드불 지급 조건 (레드불던전 누적 소환)
+        public static ObscuredInt RedBullDungeonDiaSummonDailyLimit = 10; // 레드불던전 다이아 소환 일일 제한
+        public static ObscuredDouble RedBullDungeonDiaSummonCostForOne = 500; // 레드불던전 1회 소환 다이아 비용
+        public static ObscuredDouble RedBullDungeonDiaSummonCostForTen = 4500; // 레드불던전 10회 소환 다이아 비용
+        public static ObscuredInt RedBullDungeonDailyEnterCount = 5; // 레드불던전 일일 입장제한 횟수
+        public static ObscuredInt RedBullDungeonEventTargetAlly = 104010065; // 레드불던전 타깃 동료 (일련번호)
+        public static ObscuredFloat RedBullDungeonTimeLimit = 29;
+        public static ObscuredDouble RedBullDungeonDiaEnterCostBase = 500;
+
+        public static ObscuredDouble RotationEventInitialTime = 0; // 로테이션 이벤트 최초 시작 시간
+        public static ObscuredFloat RotationEventDungeonTimeLimit = 29.0f; // 로테이션던전 제한시간 (초)
+
+
+        public static ObscuredInt UrsulaDungeonFinalRewardCombatCount = 15; // 우르슬라 지급 조건 (우르슬라던전 누적 전투)
+        public static ObscuredInt UrsulaDungeonFinalRewardSummonCount = 200; // 우르슬라 지급 조건 (우르슬라던전 누적 소환)
+        public static ObscuredInt UrsulaDungeonDiaSummonDailyLimit = 10; // 우르슬라던전 다이아 소환 일일 제한
+        public static ObscuredDouble UrsulaDungeonDiaSummonCostForOne = 500; // 우르슬라던전 1회 소환 다이아 비용
+        public static ObscuredDouble UrsulaDungeonDiaSummonCostForTen = 4500; // 우르슬라던전 10회 소환 다이아 비용
+        public static ObscuredInt UrsulaDungeonDailyEnterCount = 5; // 우르슬라던전 일일 입장제한 횟수
+        public static ObscuredInt UrsulaDungeonEventTargetAlly = 104010066; // 우르슬라던전 타깃 동료 (일련번호)
+        public static ObscuredFloat UrsulaDungeonTimeLimit = 29;
+        public static ObscuredDouble UrsulaDungeonDiaEnterCostBase = 500;
+
+        public static ObscuredInt ShovelDailyRechargeAmount = 3; // 모종삽 일일 충전량
+        public static ObscuredDouble ShovelDiaRechargeCostBase = 500; // 모종삽 다이아 충전 기본값
+        public static ObscuredDouble ShovelDiaRechargeAmount = 3; // 모종삽 충전량
+
+        public static ObscuredDouble MathRpgCoinRechargeInterval = 60.0;
+        public static ObscuredDouble MathRpgCharacterBasePower = 500;
+        public static ObscuredDouble MathRpgPowerModifier = 1.25;
+        public static ObscuredDouble MathRPGBoostTime = 1800;
+        public static ObscuredInt MathRPGBoostRequireJewel = 40;
+
+        public static ObscuredInt KingSlimeDungeonFinalRewardCombatCount = 15; // 킹슬라임 지급 조건 (킹슬라임 누적 전투)
+        public static ObscuredInt KingSlimeDungeonFinalRewardSummonCount = 200; // 킹슬라임 지급 조건 (킹슬라임 누적 소환)
+        public static ObscuredInt KingSlimeDungeonDiaSummonDailyLimit = 10; // 킹슬라임 다이아 소환 일일 제한
+        public static ObscuredDouble KingSlimeDungeonDiaSummonCostForOne = 500; // 킹슬라임 1회 소환 다이아 비용
+        public static ObscuredDouble KingSlimeDungeonDiaSummonCostForTen = 4500; // 킹슬라임 10회 소환 다이아 비용
+        public static ObscuredInt KingSlimeDungeonDailyEnterCount = 5; // 킹슬라임 일일 입장제한 횟수
+        public static ObscuredInt KingSlimeDungeonEventTargetAlly = 104010067; // 킹슬라임 타깃 동료 (일련번호)
+        public static ObscuredFloat KingSlimeDungeonTimeLimit = 29;
+        public static ObscuredDouble KingSlimeDungeonDiaEnterCostBase = 500;
+
+        // Guild
+        public static ObscuredDouble GuildFoundateDiaCost = 50000; // 길드 생성 비용 (다이아)
+        public static ObscuredDouble GuildRaidRankDungeonDiaEnterCostBase = 500; // 길드 레이드던전 랭크모드 다이아 입장 기본값 (다이아)
+        public static ObscuredInt GuildRaidSupportUseDailyLimit = 1;
+
+        // Event
+        public static ObscuredDouble EventRouletteStartTime;
+        public static ObscuredDouble EventRouletteEndTime;
+        public static ObscuredDouble EventRouletteDisPlayTime;
+        public static ObscuredLong EventRouletteDisPlaySecond;
+
+        public static ObscuredInt EventNumber = -1;
+
+
+        public static ObscuredDouble EventDungeonStartTime;
+        public static ObscuredDouble EventDungeonEndTime;
+        public static ObscuredDouble EventDungeonDisPlayTime;
+        public static ObscuredLong EventDungeonDisPlaySecond;
+
+        public static ObscuredInt EventDungeonNumber = -1;
+
+
+        public static ObscuredDouble EventHealDungeonStartTime;
+        public static ObscuredDouble EventHealDungeonEndTime;
+        public static ObscuredDouble EventHealDungeonDisPlayTime;
+        public static ObscuredLong EventHealDungeonDisPlaySecond;
+
+        public static ObscuredInt EventHealDungeonNumber = -1;
+
+
+
+        public static ObscuredDouble EventRedBullStartTime;
+        public static ObscuredDouble EventRedBullEndTime;
+        public static ObscuredDouble EventRedBullDisPlayTime;
+        public static ObscuredLong EventRedBullDisPlaySecond;
+
+        public static ObscuredInt EventRedBullNumber = -1;
+
+
+        public static ObscuredDouble EventUrsulaStartTime;
+        public static ObscuredDouble EventUrsulaEndTime;
+        public static ObscuredDouble EventUrsulaDisPlayTime;
+        public static ObscuredLong EventUrsulaDisPlaySecond;
+
+        public static ObscuredInt EventUrsulaNumber = -1;
+
+
+        public static ObscuredDouble EventDigStartTime;
+        public static ObscuredDouble EventDigEndTime;
+        public static ObscuredDouble EventDigDisPlayTime;
+        public static ObscuredLong EventDigDisPlaySecond;
+
+        public static ObscuredInt EventDigNumber = -1;
+
+
+        public static ObscuredDouble EventMathRpgStartTime;
+        public static ObscuredDouble EventMathRpgEndTime;
+        public static ObscuredDouble EventMathRpgDisPlayTime;
+        public static ObscuredLong EventMathRpgDisPlaySecond;
+
+        public static ObscuredInt EventMathRpgNumber = -1;
+
+
+        public static ObscuredDouble EventKingSlimeDungeonStartTime;
+        public static ObscuredDouble EventKingSlimeDungeonEndTime;
+        public static ObscuredDouble EventKingSlimeDungeonDisPlayTime;
+        public static ObscuredLong EventKingSlimeDungeonDisPlaySecond;
+
+        public static ObscuredInt EventKingSlimeDungeonNumber = -1;
+
+
+
+        // GameDeckKey
+        public static readonly string SaveCurrentSkillDeckKey = "SaveCurrentSkillDeck";
+        public static readonly string SaveCurrentAllyDeckKey = "SaveCurrentAllyDeck";
+
+
+        //기본 오토모드 설정
+        public static readonly bool AwakeAutoMode = true;
+
+        //시스템챗 이름
+        public static readonly string SystemChatName = "System";
+
+
+        public static readonly double PerStatRecoverValue = 0.0001;
+        
+        public static readonly double PerSkillRecoverValue = 0.0001;
+        public static readonly double PerSkillEffectRecoverValue = 0.000001;
+        public static readonly double PerGambleSlotStatRecoverValue = 0.0001;
+        public static readonly double PerStatPrintRecoverValue = 0.01;
+        public static readonly double PerStatPrintRecoverValueTemp = 0.0001;
+
+        public static readonly double PercentageRecoverValue = 0.01; // 백분율
+        public static readonly double PerTenThousandRecoverValue = 0.0001; // 만분율
+        //public static readonly double PerStatRecoverValue = 0.01;
+
+        public static readonly string AutoBossChallengeModeKey = "AutoBossChallengeModeKey";
+
+        public static readonly float CharacterDirectionRunDuration = 0.5f; // 만분율
+
+        public const string DayLocalKey = "time/day";
+        public const string HourLocalKey = "time/hour";
+        public const string MinuteLocalKey = "time/minute";
+        public const string SecondLocalKey = "time/second";
+
+        // 셋팅 관련
+
+        public static readonly string SoundBGOnKey = "SoundBGOnKey";
+        public static bool SoundBGOn = true;
+
+        public static readonly string SoundFXOnKey = "SoundFXOnKey";
+        public static bool SoundBGOff = true;
+
+        public static readonly string VisibleDamageFontKey = "VisibleDamageFontKey";
+        public static bool VisibleDamageFont = true;
+
+        public static readonly string LowSpecModeKey = "LowSpecModeKey";
+        public static bool LowSpecMode = true;
+
+        public static readonly string DeviceLocalizeKey = "DeviceLocalizeKey";
+        public static readonly string ChatLocalizeKey = "ChatLocalizeKey";
+        public static readonly string ChatBenUserKey = "ChatBenUserKey";
+
+        public static readonly int ChatBenMaxCount = 20;
+
+        // 셋팅 관련
+
+        public static readonly string RedDotSaveKey = "RedDot_";
+
+        public static ObscuredBool IsAdFree = false;
+        public static ObscuredBool IsSpeedUpMode = false;
+        public static ObscuredInt InCreaseAdBuffCount = 0;
+        public static ObscuredBool OpenResearchSlot = false;
+        public static ObscuredBool IsAdBuffAlways = false;
+        public static ObscuredBool IsSweepUnlimited = false;
+
+        public static double Skill_Element_Damage = 0.3; //속성 상성에 따른 데미지 변화량
+        public static int Player_NameReset_Cost_Gem_Count = 1000;
+
+
+        public static int TestDefence_Stage = 999999;
+        public static int TestDefence_Wave = 23;
+        public static double TestDefence_HpRatio = 0.3;
+        public static double TestDefence_Value = 200;
+
+        public static int TestDamage_Stage = 999999;
+        public static int TestDamage_SynergyLevel = 5;
+        public static double TestDamage_Value = 1;
+
+
+
+        public static readonly ObscuredInt SynergyDungeonCharge = 50;
+    }
+}

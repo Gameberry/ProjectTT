@@ -1,0 +1,392 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a93b7ad19b4e54ab1c1066b5c3d40b, type: 3}
+  m_Name: StaticResource
+  m_EditorClassIdentifier: 
+  GambleCardSprites:
+  - CardType: 11
+    SynergyIcon: {fileID: 21300000, guid: ba7b446dac74a98418b0904439cdcf90, type: 3}
+    SpotBar: {r: 0.96470594, g: 0.49803925, b: 0.49803925, a: 1}
+    Bar: {r: 0.8862746, g: 0.32156864, b: 0.32156864, a: 1}
+    CircleBg: {r: 0.40784317, g: 0.12941177, b: 0.12941177, a: 1}
+    JobGearIcon: {fileID: 21300000, guid: 97f82d76e17945d42ad3677dcb50f9bc, type: 3}
+    JobRuneIcon: {fileID: 21300000, guid: 2f02ab9d408bbee4ea6e5d7783d870be, type: 3}
+  - CardType: 12
+    SynergyIcon: {fileID: 21300000, guid: c8e7fe03b74c8b54cae5b3936066496e, type: 3}
+    SpotBar: {r: 0.9607844, g: 0.8196079, b: 0.23529413, a: 1}
+    Bar: {r: 0.8862746, g: 0.6392157, b: 0.14901961, a: 1}
+    CircleBg: {r: 0.41960788, g: 0.24313727, b: 0.10980393, a: 1}
+    JobGearIcon: {fileID: 21300000, guid: e0578d074b9531242a854eeb8003b8ae, type: 3}
+    JobRuneIcon: {fileID: 21300000, guid: 480bd0d5fa4a00746acb99cc0fdf15a0, type: 3}
+  - CardType: 13
+    SynergyIcon: {fileID: 21300000, guid: 131d46a43cef0aa4ead930db894d2660, type: 3}
+    SpotBar: {r: 0.654902, g: 0.8352942, b: 0.95294124, a: 1}
+    Bar: {r: 0.47450984, g: 0.68235296, b: 0.8941177, a: 1}
+    CircleBg: {r: 0.14901961, g: 0.2901961, b: 0.427451, a: 1}
+    JobGearIcon: {fileID: 21300000, guid: 1934db1099b480a43a784f62d0a92fe2, type: 3}
+    JobRuneIcon: {fileID: 21300000, guid: fc1225b22e0d55545b4501aaf17fe234, type: 3}
+  - CardType: 14
+    SynergyIcon: {fileID: 21300000, guid: d99f7c9ea9d09f6469584b09d371e1ac, type: 3}
+    SpotBar: {r: 0.8235295, g: 0.8235295, b: 0.9215687, a: 1}
+    Bar: {r: 0.654902, g: 0.654902, b: 0.8117648, a: 1}
+    CircleBg: {r: 0.2901961, g: 0.2901961, b: 0.46274513, a: 1}
+    JobGearIcon: {fileID: 21300000, guid: 78b064995ecd64f43a6ae739ff1a7f5e, type: 3}
+    JobRuneIcon: {fileID: 21300000, guid: a14c05e31fca64b40b0f6293df983d7f, type: 3}
+  - CardType: 15
+    SynergyIcon: {fileID: 21300000, guid: 0a6590eaa02c8b447973d4049a92bbad, type: 3}
+    SpotBar: {r: 1, g: 1, b: 1, a: 1}
+    Bar: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
+    CircleBg: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+    JobGearIcon: {fileID: 0}
+    JobRuneIcon: {fileID: 0}
+  GambleGradeBGSprites:
+  - GradeType: 11
+    GradeSprite: {fileID: 21300000, guid: ab3cd059c8cc2c340a0b4d46694557a4, type: 3}
+  - GradeType: 12
+    GradeSprite: {fileID: 21300000, guid: ae22e580f03cde04f8292689baae3e33, type: 3}
+  - GradeType: 13
+    GradeSprite: {fileID: 21300000, guid: 78cfb583f73fe5e46a6ce38d45dc4975, type: 3}
+  - GradeType: 14
+    GradeSprite: {fileID: 21300000, guid: 8557992bb6fa0a3439349e8983526a37, type: 3}
+  - GradeType: 15
+    GradeSprite: {fileID: 21300000, guid: 26499dcc5ce79744da7e852ce8ac5ade, type: 3}
+  elementFrameResourceData:
+    FrameSprite:
+    - v2Enum_Grade: 15
+      Sprite: {fileID: 21300000, guid: 377cd86f37f2d484b90c3f5517f27ed0, type: 3}
+    - v2Enum_Grade: 16
+      Sprite: {fileID: 21300000, guid: 738756e67742c8948bc58bca71ec8c03, type: 3}
+    - v2Enum_Grade: 17
+      Sprite: {fileID: 21300000, guid: 738756e67742c8948bc58bca71ec8c03, type: 3}
+    DefaultFrame: {fileID: 21300000, guid: 268ada3ce9636b2438f5f8fb0aa7cd05, type: 3}
+    AllyFrameSprite:
+    - v2Enum_Grade: 15
+      Sprite: {fileID: 21300000, guid: c568c32210fb7b949b5bf11f1512a6c5, type: 3}
+    - v2Enum_Grade: 16
+      Sprite: {fileID: 21300000, guid: 45210badab33cde45a5aa1dd252eb53a, type: 3}
+    - v2Enum_Grade: 17
+      Sprite: {fileID: 21300000, guid: 45210badab33cde45a5aa1dd252eb53a, type: 3}
+    DefaultAllyFrame: {fileID: 21300000, guid: 56c2f8f7482a8354ead109caa6dd55ae, type: 3}
+    GradeFrameSprite:
+    - v2Enum_Grade: 15
+      Sprite: {fileID: 21300000, guid: 48885c1d49f9d314bb483897add2294e, type: 3}
+    - v2Enum_Grade: 16
+      Sprite: {fileID: 21300000, guid: 0bb82bd96bde27148876a61f4f72cf1f, type: 3}
+    - v2Enum_Grade: 17
+      Sprite: {fileID: 21300000, guid: 0bb82bd96bde27148876a61f4f72cf1f, type: 3}
+    DefaultGradeFrame: {fileID: 21300000, guid: 67b9ef1283cf8c8479491c5333da61e3, type: 3}
+  GradeColorDatas:
+  - v2Enum_Grade: 11
+    GradeTextColor: {r: 0.6784314, g: 0.6784314, b: 0.80784315, a: 1}
+    GradeTextImage: {fileID: 21300000, guid: dadb28dbc1a31604bb97b2f084f45287, type: 3}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeColor: {r: 0.3372549, g: 0.3372549, b: 0.41960785, a: 1}
+    GradeBGImage: {fileID: 21300000, guid: b04c7cfc94e69d244ab72297dde32a78, type: 3}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 21300000, guid: ab3cd059c8cc2c340a0b4d46694557a4, type: 3}
+  - v2Enum_Grade: 12
+    GradeTextColor: {r: 0.54901963, g: 0.8392157, b: 0.40392157, a: 1}
+    GradeTextImage: {fileID: 21300000, guid: 7a2aaebbc1556c64d9ecfecec78741b7, type: 3}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeColor: {r: 0.28235295, g: 0.52156866, b: 0.16470589, a: 1}
+    GradeBGImage: {fileID: 21300000, guid: e2ca69bd01739d7408a93bf518c9a376, type: 3}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 21300000, guid: ae22e580f03cde04f8292689baae3e33, type: 3}
+  - v2Enum_Grade: 13
+    GradeTextColor: {r: 0.83137256, g: 0.5137255, b: 0.9882353, a: 1}
+    GradeTextImage: {fileID: 21300000, guid: f17cb6c45c1969b4282c75518544b710, type: 3}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeColor: {r: 0.43137255, g: 0.15294118, b: 0.65882355, a: 1}
+    GradeBGImage: {fileID: 21300000, guid: 177d304dcdd49bf4f948566b4e0f7621, type: 3}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 21300000, guid: 78cfb583f73fe5e46a6ce38d45dc4975, type: 3}
+  - v2Enum_Grade: 14
+    GradeTextColor: {r: 1, g: 0.56078434, b: 0.7058824, a: 1}
+    GradeTextImage: {fileID: 21300000, guid: 527c06da696c0894fb0a6444a4387f00, type: 3}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeColor: {r: 0.8, g: 0.12941177, b: 0.3529412, a: 1}
+    GradeBGImage: {fileID: 21300000, guid: 239dd23e1beebcb43b2aac7c22991c6a, type: 3}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 21300000, guid: 8557992bb6fa0a3439349e8983526a37, type: 3}
+  - v2Enum_Grade: 15
+    GradeTextColor: {r: 1, g: 0.8509804, b: 0.25882354, a: 1}
+    GradeTextImage: {fileID: 21300000, guid: 4825535f78e797142a90cf91c150a443, type: 3}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeColor: {r: 0.84313726, g: 0.43137255, b: 0.101960786, a: 1}
+    GradeBGImage: {fileID: 21300000, guid: c8bb98bd0552b7a4f965ac0b8d0cbd11, type: 3}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 21300000, guid: 26499dcc5ce79744da7e852ce8ac5ade, type: 3}
+  - v2Enum_Grade: 16
+    GradeTextColor: {r: 0.2627451, g: 0.12941177, b: 0.6392157, a: 1}
+    GradeTextImage: {fileID: 21300000, guid: 0f1db314950494149a7071ee741ef4d7, type: 3}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0.9450981, g: 0.20000002, b: 0.20000002, a: 1}
+      topRight: {r: 0, g: 0.54901963, b: 1, a: 1}
+      bottomLeft: {r: 1, g: 0.60784316, b: 0.2627451, a: 1}
+      bottomRight: {r: 0.43529415, g: 1, b: 0, a: 1}
+    GradeColor: {r: 0.42190772, g: 0.28800002, b: 0.8, a: 1}
+    GradeBGImage: {fileID: 21300000, guid: d883dd9042145434c9de5b2def48c39b, type: 3}
+    UseGradeImageGradation: 1
+    Vertex1: {r: 0.2, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 0.52156866, b: 0.8392157, a: 1}
+    GradeSprite: {fileID: 21300000, guid: 2c1f7f375ae34e64d8c7fbcfe4b2aeab, type: 3}
+  - v2Enum_Grade: 17
+    GradeTextColor: {r: 0.85882354, g: 0.03529412, b: 0.03529412, a: 1}
+    GradeTextImage: {fileID: 0}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeColor: {r: 0.627451, g: 0.098039225, b: 0.098039225, a: 1}
+    GradeBGImage: {fileID: 0}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 0}
+  - v2Enum_Grade: 18
+    GradeTextColor: {r: 0.98039216, g: 0.87058824, b: 0.12941177, a: 1}
+    GradeTextImage: {fileID: 0}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeColor: {r: 0.83921576, g: 0.6784314, b: 0.043137256, a: 1}
+    GradeBGImage: {fileID: 0}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 0}
+  - v2Enum_Grade: 19
+    GradeTextColor: {r: 1, g: 1, b: 1, a: 1}
+    GradeTextImage: {fileID: 0}
+    UseGradeTextGradation: 1
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 1, b: 0.9608457, a: 1}
+      topRight: {r: 0, g: 1, b: 0.9608457, a: 1}
+      bottomLeft: {r: 1, g: 0.21226418, b: 0.95069474, a: 1}
+      bottomRight: {r: 1, g: 0.21226418, b: 0.95069474, a: 1}
+    GradeColor: {r: 0.28324133, g: 0.6207003, b: 0.6320754, a: 1}
+    GradeBGImage: {fileID: 0}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 0}
+  - v2Enum_Grade: 20
+    GradeTextColor: {r: 1, g: 1, b: 1, a: 1}
+    GradeTextImage: {fileID: 0}
+    UseGradeTextGradation: 1
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 1, b: 0.9608457, a: 1}
+      topRight: {r: 0, g: 1, b: 0.9608457, a: 1}
+      bottomLeft: {r: 1, g: 0.21226418, b: 0.95069474, a: 1}
+      bottomRight: {r: 1, g: 0.21226418, b: 0.95069474, a: 1}
+    GradeColor: {r: 0.28324133, g: 0.6207003, b: 0.6320754, a: 1}
+    GradeBGImage: {fileID: 21300000, guid: 54eb99914ce5cca47a6b9fd2a1607045, type: 3}
+    UseGradeImageGradation: 0
+    Vertex1: {r: 1, g: 1, b: 1, a: 1}
+    Vertex2: {r: 1, g: 1, b: 1, a: 1}
+    GradeSprite: {fileID: 0}
+  m_varianceColor_List:
+  - VarianceType: 11
+    color: {r: 1, g: 1, b: 1, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: b2398fba9b647ef42874b05eebdb77fd, type: 2}
+  - VarianceType: 15
+    color: {r: 1, g: 0.67774284, b: 0, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: 1ad1ca01f35445d4c8819e0b039adbd8, type: 2}
+  - VarianceType: 19
+    color: {r: 1, g: 1, b: 1, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: b774cb56f7dbc8d4b85ebed9dfe4422f, type: 2}
+  - VarianceType: 21
+    color: {r: 1, g: 1, b: 1, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: b43d808f73483a34a988fb0e80237a51, type: 2}
+  - VarianceType: 10000
+    color: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: b2398fba9b647ef42874b05eebdb77fd, type: 2}
+  - VarianceType: 10001
+    color: {r: 1, g: 1, b: 1, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: 9eae9fc239891be40a83aaafe2d94765, type: 2}
+  - VarianceType: 10002
+    color: {r: 1, g: 1, b: 1, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: 168f06c6a8fe4d746ad9b4af3a239734, type: 2}
+  - VarianceType: 10003
+    color: {r: 0.49790847, g: 0.52407515, b: 0.6320754, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: b2398fba9b647ef42874b05eebdb77fd, type: 2}
+  - VarianceType: 10004
+    color: {r: 0.8666667, g: 0.11372549, b: 0.30980393, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: b2398fba9b647ef42874b05eebdb77fd, type: 2}
+  - VarianceType: 10005
+    color: {r: 1, g: 1, b: 1, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: d2dda7425d1c25b4bb8ce5ccba23bffc, type: 2}
+  - VarianceType: 10006
+    color: {r: 0.71418464, g: 1, b: 0.3160377, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: d2dda7425d1c25b4bb8ce5ccba23bffc, type: 2}
+  - VarianceType: 10007
+    color: {r: 0.71418464, g: 1, b: 0.3160377, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: d2dda7425d1c25b4bb8ce5ccba23bffc, type: 2}
+  - VarianceType: 10008
+    color: {r: 0.71418464, g: 1, b: 0.3160377, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: d2dda7425d1c25b4bb8ce5ccba23bffc, type: 2}
+  - VarianceType: 10009
+    color: {r: 0.71418464, g: 1, b: 0.3160377, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: d2dda7425d1c25b4bb8ce5ccba23bffc, type: 2}
+  - VarianceType: 10010
+    color: {r: 0.71418464, g: 1, b: 0.3160377, a: 1}
+    VarianceMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+    VarianceColorGradient: {fileID: 11400000, guid: d2dda7425d1c25b4bb8ce5ccba23bffc, type: 2}
+  TotalLevelEffectColor:
+  - EffectType: 11
+    EffectColor: {r: 0.20784314, g: 0.3137255, b: 0.52156866, a: 1}
+  - EffectType: 12
+    EffectColor: {r: 0.94509804, g: 0.7882353, b: 0.16862746, a: 1}
+  - EffectType: 13
+    EffectColor: {r: 0.28627452, g: 0.8, b: 0.35686275, a: 1}
+  - EffectType: 14
+    EffectColor: {r: 0.9372549, g: 0.30980393, b: 0.30980393, a: 1}
+  - EffectType: 15
+    EffectColor: {r: 0.3254902, g: 0.7176471, b: 0.8745098, a: 1}
+  GearResourceDatas:
+  - v2Enum_GearType: 11
+    GearSprite: {fileID: 21300000, guid: 32cda4360b667624ca7f4bd0d886d6e0, type: 3}
+    gearLocalKey: geartype/11
+  - v2Enum_GearType: 12
+    GearSprite: {fileID: 21300000, guid: f76a4672199818041966f4105d974448, type: 3}
+    gearLocalKey: geartype/12
+  - v2Enum_GearType: 13
+    GearSprite: {fileID: 21300000, guid: 72b0a689c1687f640997804769d8b42f, type: 3}
+    gearLocalKey: geartype/13
+  - v2Enum_GearType: 14
+    GearSprite: {fileID: 21300000, guid: c30261aa95dbf6743a88200a040f03d1, type: 3}
+    gearLocalKey: geartype/14
+  - v2Enum_GearType: 15
+    GearSprite: {fileID: 21300000, guid: 5b55b723117f2404baffff9986af3ee2, type: 3}
+    gearLocalKey: geartype/15
+  - v2Enum_GearType: 16
+    GearSprite: {fileID: 21300000, guid: cedd2cb8a336d17419d4161c55cd78df, type: 3}
+    gearLocalKey: geartype/16
+  HitColorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  HitRecoveryTime: 0.1
+  DeadColorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  DeadDirectionTime: 0.5
+  DeadDirectionSwingForce: 15
+  DeadDirectionSwingRotationSpeed: 600

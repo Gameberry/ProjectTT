@@ -1,0 +1,5917 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!29 &1
+OcclusionCullingSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_OcclusionBakeSettings:
+    smallestOccluder: 5
+    smallestHole: 0.25
+    backfaceThreshold: 100
+  m_SceneGUID: 00000000000000000000000000000000
+  m_OcclusionCullingData: {fileID: 0}
+--- !u!104 &2
+RenderSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 10
+  m_Fog: 0
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogMode: 3
+  m_FogDensity: 0.01
+  m_LinearFogStart: 0
+  m_LinearFogEnd: 300
+  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
+  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientIntensity: 1
+  m_AmbientMode: 0
+  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_HaloStrength: 0.5
+  m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
+  m_HaloTexture: {fileID: 0}
+  m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
+  m_DefaultReflectionMode: 0
+  m_DefaultReflectionResolution: 128
+  m_ReflectionBounces: 1
+  m_ReflectionIntensity: 1
+  m_CustomReflection: {fileID: 0}
+  m_Sun: {fileID: 0}
+  m_UseRadianceAmbientProbe: 0
+--- !u!157 &3
+LightmapSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
+  m_GISettings:
+    serializedVersion: 2
+    m_BounceScale: 1
+    m_IndirectOutputScale: 1
+    m_AlbedoBoost: 1
+    m_EnvironmentLightingMode: 0
+    m_EnableBakedLightmaps: 1
+    m_EnableRealtimeLightmaps: 0
+  m_LightmapEditorSettings:
+    serializedVersion: 12
+    m_Resolution: 2
+    m_BakeResolution: 40
+    m_AtlasSize: 1024
+    m_AO: 0
+    m_AOMaxDistance: 1
+    m_CompAOExponent: 1
+    m_CompAOExponentDirect: 0
+    m_ExtractAmbientOcclusion: 0
+    m_Padding: 2
+    m_LightmapParameters: {fileID: 0}
+    m_LightmapsBakeMode: 1
+    m_TextureCompression: 1
+    m_ReflectionCompression: 2
+    m_MixedBakeMode: 2
+    m_BakeBackend: 1
+    m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
+    m_PVRSampleCount: 512
+    m_PVRBounces: 2
+    m_PVREnvironmentSampleCount: 256
+    m_PVREnvironmentReferencePointCount: 2048
+    m_PVRFilteringMode: 1
+    m_PVRDenoiserTypeDirect: 1
+    m_PVRDenoiserTypeIndirect: 1
+    m_PVRDenoiserTypeAO: 1
+    m_PVRFilterTypeDirect: 0
+    m_PVRFilterTypeIndirect: 0
+    m_PVRFilterTypeAO: 0
+    m_PVREnvironmentMIS: 1
+    m_PVRCulling: 1
+    m_PVRFilteringGaussRadiusDirect: 1
+    m_PVRFilteringGaussRadiusIndirect: 5
+    m_PVRFilteringGaussRadiusAO: 2
+    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+    m_PVRFilteringAtrousPositionSigmaIndirect: 2
+    m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
+  m_LightingDataAsset: {fileID: 0}
+  m_LightingSettings: {fileID: 0}
+--- !u!196 &4
+NavMeshSettings:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_BuildSettings:
+    serializedVersion: 3
+    agentTypeID: 0
+    agentRadius: 0.5
+    agentHeight: 2
+    agentSlope: 45
+    agentClimb: 0.4
+    ledgeDropHeight: 0
+    maxJumpAcrossDistance: 0
+    minRegionArea: 2
+    manualCellSize: 0
+    cellSize: 0.16666667
+    manualTileSize: 0
+    tileSize: 256
+    buildHeightMesh: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
+    debug:
+      m_Flags: 0
+  m_NavMeshData: {fileID: 0}
+--- !u!1 &155036201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 155036202}
+  - component: {fileID: 155036204}
+  - component: {fileID: 155036203}
+  m_Layer: 5
+  m_Name: BottomUIStandardPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &155036202
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155036201}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 834275699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 800}
+  m_SizeDelta: {x: 1080, y: 6}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &155036203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155036201}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &155036204
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155036201}
+  m_CullTransparentMesh: 1
+--- !u!1 &173929572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 173929573}
+  - component: {fileID: 173929575}
+  - component: {fileID: 173929574}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &173929573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173929572}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2035741890}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &173929574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173929572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &173929575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173929572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 200
+--- !u!1 &221639384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 221639385}
+  - component: {fileID: 221639386}
+  m_Layer: 5
+  m_Name: Content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &221639385
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221639384}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 834275699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &221639386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221639384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0a9a6ae16a28444964ccaf6fe2ebe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &257499287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 257499289}
+  - component: {fileID: 257499288}
+  - component: {fileID: 257499293}
+  - component: {fileID: 257499291}
+  - component: {fileID: 257499292}
+  m_Layer: 15
+  m_Name: SceneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &257499288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257499287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db659757d035a004d87af750a4131e1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startScene: 1
+  nowScene: 0
+  _buildEnvironmentSelectAsset: {fileID: 11400000, guid: 6bab980ee59ace145aa1f9c419735c8b, type: 2}
+  BuildElement: 0
+  DevTool: {fileID: 1646424462}
+  SpacialCharRegex: "[^a-zA-Z0-9\uAC00-\uD787\uAC00-\uD788\u3131-\u314E\u314F-\u3163\u3041-\u3094\u30A1-\u30F4\u30FC\u3005\u3006\u3024\u4E00-\u9FA5]"
+  FranceEmptyStr: "\u202F"
+  AuthOverride: 0
+  AuthOverrideID: 
+  IOSDeviceToken: 
+  UseLocalChart: 1
+--- !u!4 &257499289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257499287}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1646424462}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &257499291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257499287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03468e1e82c63824191f701fd398ac19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isReady: 0
+  localNoticeDatas:
+  - noticeType: 0
+    Hour: 8
+    LocalHead: push/morning/head
+    LocalBody: push/morning/body
+  - noticeType: 1
+    Hour: 12
+    LocalHead: push/afternoon/head
+    LocalBody: push/afternoon/body
+  - noticeType: 2
+    Hour: 18
+    LocalHead: push/evening/head
+    LocalBody: push/evening/body
+  coolTimeRewardNotice:
+    noticeType: 3
+    Hour: 0
+    LocalHead: push/cooltimeReward/head
+    LocalBody: push/cooltimeReward/body
+  clanMissionNotice:
+    noticeType: 4
+    Hour: 0
+    LocalHead: push/dispatchComplete/head
+    LocalBody: push/dispatchComplete/body
+--- !u!114 &257499292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257499287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d2fa9d267e0b284ba40964c36b45e08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CheckTimeConvert_Start: 2025-07-02 11:00:00
+  CheckTimeConvert_End: 2025-07-02 11:30:00
+  FindCheaterList: 
+  FindRankerData: []
+  SearchJewelryLevel: 5
+  JewelryData: 28,5,11,92249,0/19,23,28,82418,0/29,41,23,8952,0/1,41,23,8238,0/126,155,22,95946,0/30,83,31,94281,0/31,77,30,74550,0/17,10,27,25656,0/12,4,11,25937,0/40,4,11,29031,0/33,22,28,32268,0/62,22,28,31408,0/32,22,28,26031,0/15,40,23,2706,0/54,40,23,2519,0/55,40,23,2695,0/25,58,18,26220,0/69,64,19,306,0/84,58,18,28292,0/44,64,19,350,0/5,70,20,27201,0/39,70,20,29320,0/24,52,17,369,0/41,70,20,28712,0/35,52,17,360,0/7,70,20,28922,0/64,82,31,25904,0/26,82,31,26016,0/47,82,31,28044,0/65,82,31,28235,0/4,88,32,42689,0/36,124,44,30125,0/37,88,32,41644,0/21,88,32,39461,0/10,94,33,45217,0/3,94,33,42956,0/71,88,32,42412,0/16,88,32,46709,0/11,94,33,39025,0/72,118,43,32043,0/13,88,32,45911,0/14,94,33,46253,0/146,3,11,8146,0/140,39,23,919,0/22,63,19,195,0/57,51,17,232,0/83,51,17,233,0/60,63,19,188,0/70,81,31,9197,0/67,75,30,9462,0/82,81,31,9431,0/56,81,31,9315,0/66,87,32,8782,0/46,141,47,8950,0/75,93,33,8334,0/38,135,46,9585,0/81,117,43,10131,0/8,117,43,8384,0/78,111,36,9168,0/43,105,35,8720,0/61,135,46,8934,0/58,87,32,9423,0/59,129,45,9202,0/92,87,32,7777,0/74,135,46,8413,0/73,135,46,9342,0/42,104,35,6238,0/156,98,34,6322,0/174,7,27,3326,0/172,19,28,2693,0/179,31,29,2518,0/177,37,23,308,0/171,37,23,280,0/176,67,20,3289,0/175,61,19,139,0/116,73,30,2953,0/114,73,30,3200,0/117,73,30,3024,0/107,79,31,3395,0/180,97,34,3031,0/178,109,36,2831,0
+  m_allyJewelryInfo:
+  - Id:
+      currentCryptoKey: 1356497006
+      hiddenValue: 1356497007
+      fakeValue: 1
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1389147706
+      hiddenValue: 1421650947
+      fakeValue: 108010041
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5715606094498058548
+      hiddenValue: 8471569961324459089
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8238
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1492112279
+      hiddenValue: 1492112279
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1653337477
+      hiddenValue: 1653337478
+      fakeValue: 3
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1996654895
+      hiddenValue: 1903334209
+      fakeValue: 108010094
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 33
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2411765947520989524
+      hiddenValue: -2766228688753175495
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 42956
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1148833224
+      hiddenValue: 1148833224
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1842636608
+      hiddenValue: 1842636612
+      fakeValue: 4
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2117887139
+      hiddenValue: 2018279115
+      fakeValue: 108010088
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7592938524731438794
+      hiddenValue: 8915765319205571318
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 42689
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1449562802
+      hiddenValue: 1449562802
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1297253877
+      hiddenValue: 1297253872
+      fakeValue: 5
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2136483219
+      hiddenValue: 2032680901
+      fakeValue: 108010070
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 20
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 3104666484854224692
+      hiddenValue: -590134905975130889
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 27201
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1667792320
+      hiddenValue: 1667792320
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1865545705
+      hiddenValue: 1865545710
+      fakeValue: 7
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1271501092
+      hiddenValue: 1304005490
+      fakeValue: 108010070
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 20
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7640113688993813868
+      hiddenValue: 7771851885129198677
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 28922
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2051948600
+      hiddenValue: 2051948600
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1274201861
+      hiddenValue: 1274201869
+      fakeValue: 8
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1776094861
+      hiddenValue: 1873613832
+      fakeValue: 108010117
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 43
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5314869041822957708
+      hiddenValue: 4251971262921083904
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8384
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1144310058
+      hiddenValue: 1144310058
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1207712530
+      hiddenValue: 1207712536
+      fakeValue: 10
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1192714793
+      hiddenValue: 1097300039
+      fakeValue: 108010094
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 33
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7635332299214161361
+      hiddenValue: 7282365895349555461
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 45217
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1214779127
+      hiddenValue: 1214779127
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1191481739
+      hiddenValue: 1191481728
+      fakeValue: 11
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1581405335
+      hiddenValue: 1479692025
+      fakeValue: 108010094
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 33
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1153101428850399306
+      hiddenValue: -8943215727299573096
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 39025
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1347784732
+      hiddenValue: 1347784732
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1898414973
+      hiddenValue: 1898414961
+      fakeValue: 12
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1058829394
+      hiddenValue: 963407430
+      fakeValue: 108010004
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 11
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4472495619305363076
+      hiddenValue: 5893098838921544918
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 25937
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1500370565
+      hiddenValue: 1500370565
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1364715895
+      hiddenValue: 1364715898
+      fakeValue: 13
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1240819831
+      hiddenValue: 1334145567
+      fakeValue: 108010088
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5622990601265494984
+      hiddenValue: -3968218231708399557
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 45911
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1650523072
+      hiddenValue: 1650523072
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1645673405
+      hiddenValue: 1645673395
+      fakeValue: 14
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1324490231
+      hiddenValue: 1216481177
+      fakeValue: 108010094
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 33
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4409875034455930183
+      hiddenValue: 6545275693911721973
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 46253
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1366622077
+      hiddenValue: 1366622077
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1140937407
+      hiddenValue: 1140937392
+      fakeValue: 15
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1946708869
+      hiddenValue: 1920496061
+      fakeValue: 108010040
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 3877873353858761886
+      hiddenValue: 4932978563142164036
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 2706
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1133598889
+      hiddenValue: 1133598889
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1100895798
+      hiddenValue: 1100895782
+      fakeValue: 16
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1235549661
+      hiddenValue: 1339353013
+      fakeValue: 108010088
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8520252384971608922
+      hiddenValue: -4118481614212146605
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 46709
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1667271531
+      hiddenValue: 1667271531
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1368530574
+      hiddenValue: 1368530591
+      fakeValue: 17
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1805676550
+      hiddenValue: 1842375196
+      fakeValue: 108010010
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 27
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2085614162713036156
+      hiddenValue: 515763973476875461
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 25656
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1163961187
+      hiddenValue: 1163961187
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 2000384817
+      hiddenValue: 2000384802
+      fakeValue: 19
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1388391672
+      hiddenValue: 1420900063
+      fakeValue: 108010023
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 28
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8200974793785872222
+      hiddenValue: 4556290049188716047
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 82418
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1102650725
+      hiddenValue: 1102650725
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1463391586
+      hiddenValue: 1463391607
+      fakeValue: 21
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1930907424
+      hiddenValue: 1969706312
+      fakeValue: 108010088
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8298859361316789102
+      hiddenValue: 4523922161441074779
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 39461
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2108223429
+      hiddenValue: 2108223429
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1171508713
+      hiddenValue: 1171508735
+      fakeValue: 22
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2059661472
+      hiddenValue: 2092165871
+      fakeValue: 108010063
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 19
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5650088708353705474
+      hiddenValue: -4755504039144324538
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 195
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1076750669
+      hiddenValue: 1076750669
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1187450598
+      hiddenValue: 1187450622
+      fakeValue: 24
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2086702223
+      hiddenValue: 2047907531
+      fakeValue: 108010052
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 17
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 9103701645838438343
+      hiddenValue: 7575405080507500495
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 369
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1975052700
+      hiddenValue: 1975052700
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1085743519
+      hiddenValue: 1085743494
+      fakeValue: 25
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2146105303
+      hiddenValue: 2040196509
+      fakeValue: 108010058
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 18
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5632879324357438560
+      hiddenValue: -1804520018034597716
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 26220
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1963407592
+      hiddenValue: 1963407592
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1895432398
+      hiddenValue: 1895432404
+      fakeValue: 26
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1088018139
+      hiddenValue: 1185533113
+      fakeValue: 108010082
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2193924840483105988
+      hiddenValue: 336466001676125356
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 26016
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1174001910
+      hiddenValue: 1174001910
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1385426854
+      hiddenValue: 1385426874
+      fakeValue: 28
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1540000517
+      hiddenValue: 1572507920
+      fakeValue: 108010005
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 11
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4642189915159817835
+      hiddenValue: -5649201842370876562
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 92249
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1251227721
+      hiddenValue: 1251227721
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1355248781
+      hiddenValue: 1355248784
+      fakeValue: 29
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1992916429
+      hiddenValue: 1891198964
+      fakeValue: 108010041
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 3731087314218624763
+      hiddenValue: 2595888682921098150
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8952
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1805827633
+      hiddenValue: 1805827633
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1412513664
+      hiddenValue: 1412513694
+      fakeValue: 30
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1152883707
+      hiddenValue: 1120371096
+      fakeValue: 108010083
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8504391930226226337
+      hiddenValue: -652398866475933388
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 94281
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1358815256
+      hiddenValue: 1358815256
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1540563165
+      hiddenValue: 1540563138
+      fakeValue: 31
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1902347252
+      hiddenValue: 1997773225
+      fakeValue: 108010077
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 30
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2356269205228416184
+      hiddenValue: 4269799567934142700
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 74550
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1668688723
+      hiddenValue: 1668688723
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1348018752
+      hiddenValue: 1348018784
+      fakeValue: 32
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1286035081
+      hiddenValue: 1255623855
+      fakeValue: 108010022
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 28
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7220058276795743121
+      hiddenValue: 9217501365478592891
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 26031
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1294814385
+      hiddenValue: 1294814385
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1250813576
+      hiddenValue: 1250813609
+      fakeValue: 33
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2115854600
+      hiddenValue: 2020440878
+      fakeValue: 108010022
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 28
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1515283848503789788
+      hiddenValue: -6784578427669914488
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 32268
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1159207772
+      hiddenValue: 1159207772
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1061982204
+      hiddenValue: 1061982175
+      fakeValue: 35
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1044996052
+      hiddenValue: 943277456
+      fakeValue: 108010052
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 17
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2790819840391097569
+      hiddenValue: -2608597402422091348
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 360
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1071965525
+      hiddenValue: 1071965525
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1517119503
+      hiddenValue: 1517119531
+      fakeValue: 36
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1859868039
+      hiddenValue: 1756057355
+      fakeValue: 108010124
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 44
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1249059729153938729
+      hiddenValue: 8397051556527548757
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 30125
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2082164910
+      hiddenValue: 2082164910
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1005559380
+      hiddenValue: 1005559409
+      fakeValue: 37
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1624644828
+      hiddenValue: 1722156724
+      fakeValue: 108010088
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4287786544056761205
+      hiddenValue: -6600734357723056645
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 41644
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1837712552
+      hiddenValue: 1837712552
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1512100841
+      hiddenValue: 1512100815
+      fakeValue: 38
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2099780782
+      hiddenValue: 2069366329
+      fakeValue: 108010135
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 46
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5218467423061845654
+      hiddenValue: -528882680858896730
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9585
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1379737301
+      hiddenValue: 1379737301
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1323069839
+      hiddenValue: 1323069864
+      fakeValue: 39
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1991939608
+      hiddenValue: 1892322382
+      fakeValue: 108010070
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 20
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4342332262790311943
+      hiddenValue: 3431598548051101616
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 29320
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1414623022
+      hiddenValue: 1414623022
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 2081589010
+      hiddenValue: 2081589050
+      fakeValue: 40
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1869565541
+      hiddenValue: 1763660913
+      fakeValue: 108010004
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 11
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1343188159475623095
+      hiddenValue: 4863697037244151588
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 29031
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1174453063
+      hiddenValue: 1174453063
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1468631014
+      hiddenValue: 1468630991
+      fakeValue: 41
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1716774877
+      hiddenValue: 1612971403
+      fakeValue: 108010070
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 20
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8586386591803351362
+      hiddenValue: 2086354047763038881
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 28712
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1815412676
+      hiddenValue: 1815412676
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1625177523
+      hiddenValue: 1625177497
+      fakeValue: 42
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1992018235
+      hiddenValue: 1892406083
+      fakeValue: 108010104
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 35
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6638769101380795531
+      hiddenValue: 5951820250963282748
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 6238
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1647550131
+      hiddenValue: 1647550131
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1478387872
+      hiddenValue: 1478387851
+      fakeValue: 43
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1990607646
+      hiddenValue: 1893095783
+      fakeValue: 108010105
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 35
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5913170062833214573
+      hiddenValue: -2896356874047361564
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8720
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1055022121
+      hiddenValue: 1055022121
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1431597265
+      hiddenValue: 1431597309
+      fakeValue: 44
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1293494259
+      hiddenValue: 1265188259
+      fakeValue: 108010064
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 19
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8039276040170232632
+      hiddenValue: -656347011105736485
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 350
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1219548430
+      hiddenValue: 1219548430
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1566074181
+      hiddenValue: 1566074219
+      fakeValue: 46
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2032657843
+      hiddenValue: 2136473390
+      fakeValue: 108010141
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 47
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2862968771706645966
+      hiddenValue: -1334640858462630291
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8950
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2062541685
+      hiddenValue: 2062541685
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1391926564
+      hiddenValue: 1391926539
+      fakeValue: 47
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1984052081
+      hiddenValue: 1882333459
+      fakeValue: 108010082
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4339024756374820618
+      hiddenValue: 498910220896438999
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 28044
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1493095059
+      hiddenValue: 1493095059
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1150360487
+      hiddenValue: 1150360465
+      fakeValue: 54
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2135288848
+      hiddenValue: 2033579560
+      fakeValue: 108010040
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6733128515108545212
+      hiddenValue: -5344896107718001630
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 2519
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1063729855
+      hiddenValue: 1063729855
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1406448561
+      hiddenValue: 1406448518
+      fakeValue: 55
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1324757760
+      hiddenValue: 1216751928
+      fakeValue: 108010040
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6216409601811065579
+      hiddenValue: -7430915119430308950
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 2695
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1967131995
+      hiddenValue: 1967131995
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1512349507
+      hiddenValue: 1512349563
+      fakeValue: 56
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1559848225
+      hiddenValue: 1518960448
+      fakeValue: 108010081
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6598081694473600089
+      hiddenValue: -2930969066122553028
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9315
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1740331662
+      hiddenValue: 1740331662
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1277932213
+      hiddenValue: 1277932172
+      fakeValue: 57
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1922649969
+      hiddenValue: 1961448754
+      fakeValue: 108010051
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 17
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 3652752784026980901
+      hiddenValue: 5610484785479624018
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 232
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1806245268
+      hiddenValue: 1806245268
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1313171606
+      hiddenValue: 1313171628
+      fakeValue: 58
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1145998542
+      hiddenValue: 1111398057
+      fakeValue: 108010087
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1984636277614892941
+      hiddenValue: -5960413226908348969
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9423
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1235103869
+      hiddenValue: 1235103869
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 2084944499
+      hiddenValue: 2084944456
+      fakeValue: 59
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1942746679
+      hiddenValue: 1975250086
+      fakeValue: 108010129
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 45
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1796830572189933633
+      hiddenValue: -2148682774264856224
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9202
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1466797639
+      hiddenValue: 1466797639
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1540122273
+      hiddenValue: 1540122269
+      fakeValue: 60
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1020302202
+      hiddenValue: 983599413
+      fakeValue: 108010063
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 19
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2539231200250193267
+      hiddenValue: 5934165039693984613
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 188
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1799704098
+      hiddenValue: 1799704098
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1019872855
+      hiddenValue: 1019872874
+      fakeValue: 61
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1290248757
+      hiddenValue: 1251457186
+      fakeValue: 108010135
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 46
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6461987774341963190
+      hiddenValue: -6598870883596388643
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8934
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2136748567
+      hiddenValue: 2136748567
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 2060055248
+      hiddenValue: 2060055278
+      fakeValue: 62
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1357413561
+      hiddenValue: 1452828319
+      fakeValue: 108010022
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 28
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5544247641633200690
+      hiddenValue: -2724945282397097446
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 31408
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1269800484
+      hiddenValue: 1269800484
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1660347567
+      hiddenValue: 1660347631
+      fakeValue: 64
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1132382451
+      hiddenValue: 1158599313
+      fakeValue: 108010082
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 3177633104226670677
+      hiddenValue: 8701073729644615128
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 25904
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1257999416
+      hiddenValue: 1257999416
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1260287078
+      hiddenValue: 1260287015
+      fakeValue: 65
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1859076220
+      hiddenValue: 1757370910
+      fakeValue: 108010082
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 3300932591334963118
+      hiddenValue: 8292373583645617847
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 28235
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2082869254
+      hiddenValue: 2082869254
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1140163531
+      hiddenValue: 1140163465
+      fakeValue: 66
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1517132767
+      hiddenValue: 1545437624
+      fakeValue: 108010087
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4292207628129565061
+      hiddenValue: 1752317913787958649
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8782
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1517317176
+      hiddenValue: 1517317176
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1731404746
+      hiddenValue: 1731404681
+      fakeValue: 67
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1454760093
+      hiddenValue: 1355152070
+      fakeValue: 108010075
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 30
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2117978150213521470
+      hiddenValue: -1754611741091414512
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9462
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1817856176
+      hiddenValue: 1817856176
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1129750263
+      hiddenValue: 1129750194
+      fakeValue: 69
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1971657738
+      hiddenValue: 1945437786
+      fakeValue: 108010064
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 19
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7711460500441324070
+      hiddenValue: 8608397302756943578
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 306
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1076689709
+      hiddenValue: 1076689709
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1129976975
+      hiddenValue: 1129977033
+      fakeValue: 70
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1194941857
+      hiddenValue: 1095321536
+      fakeValue: 108010081
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6124374860465150925
+      hiddenValue: -270474565856277093
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9197
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1351067069
+      hiddenValue: 1351067069
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1459743312
+      hiddenValue: 1459743255
+      fakeValue: 71
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2102683402
+      hiddenValue: 2065988962
+      fakeValue: 108010088
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6632384111588941147
+      hiddenValue: -5337297431460291811
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 42412
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1908922570
+      hiddenValue: 1908922570
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1751802126
+      hiddenValue: 1751802182
+      fakeValue: 72
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1728396267
+      hiddenValue: 1635066221
+      fakeValue: 108010118
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 43
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1069254394324781763
+      hiddenValue: -862071491062021366
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 32043
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1732520112
+      hiddenValue: 1732520112
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 2133813747
+      hiddenValue: 2133813690
+      fakeValue: 73
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1876594636
+      hiddenValue: 1772787035
+      fakeValue: 108010135
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 46
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5136534409535599765
+      hiddenValue: -3131682216888724044
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9342
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1750938294
+      hiddenValue: 1750938294
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1414042258
+      hiddenValue: 1414042328
+      fakeValue: 74
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1420614674
+      hiddenValue: 1390200453
+      fakeValue: 108010135
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 46
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5687853566496004854
+      hiddenValue: 3327894312950101722
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8413
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1663260763
+      hiddenValue: 1663260763
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 2000352526
+      hiddenValue: 2000352581
+      fakeValue: 75
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2140942270
+      hiddenValue: 2045523411
+      fakeValue: 108010093
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 33
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5096214222921701313
+      hiddenValue: -3064411316664221289
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8334
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1945169875
+      hiddenValue: 1945169875
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1836153809
+      hiddenValue: 1836153759
+      fakeValue: 78
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1401259138
+      hiddenValue: 1442160381
+      fakeValue: 108010111
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 36
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8775060484387015351
+      hiddenValue: 289982652720920458
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9168
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1445640937
+      hiddenValue: 1445640937
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1095041738
+      hiddenValue: 1095041691
+      fakeValue: 81
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1632231272
+      hiddenValue: 1731839469
+      fakeValue: 108010117
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 43
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1910531087770698364
+      hiddenValue: 7367988328188705986
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 10131
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1921468656
+      hiddenValue: 1921468656
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1584123499
+      hiddenValue: 1584123449
+      fakeValue: 82
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1600638391
+      hiddenValue: 1494734806
+      fakeValue: 108010081
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2775410559500363083
+      hiddenValue: -5600676562859767003
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 9431
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2040730970
+      hiddenValue: 2040730970
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1964012254
+      hiddenValue: 1964012173
+      fakeValue: 83
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1259014556
+      hiddenValue: 1299911647
+      fakeValue: 108010051
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 17
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6249490226500210304
+      hiddenValue: 4600170313220784142
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 233
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1125065198
+      hiddenValue: 1125065198
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1255643000
+      hiddenValue: 1255642924
+      fakeValue: 84
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1581222469
+      hiddenValue: 1481609231
+      fakeValue: 108010058
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 18
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5118919340079275332
+      hiddenValue: 347067097761530973
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 28292
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1074867997
+      hiddenValue: 1074867997
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1427198617
+      hiddenValue: 1427198661
+      fakeValue: 92
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1039630788
+      hiddenValue: 998742947
+      fakeValue: 108010087
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 32
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8142304363916439500
+      hiddenValue: -5962431483835921361
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 7777
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1533430588
+      hiddenValue: 1533430588
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1623310676
+      hiddenValue: 1623310655
+      fakeValue: 107
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1199803086
+      hiddenValue: 1106481297
+      fakeValue: 108010079
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 31
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4841797660499653451
+      hiddenValue: 5880297053042920243
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 3395
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1987979438
+      hiddenValue: 1987979438
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1515573737
+      hiddenValue: 1515573659
+      fakeValue: 114
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1095756673
+      hiddenValue: 1195373016
+      fakeValue: 108010073
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 30
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1716904938388450783
+      hiddenValue: -1046427567604506643
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 3200
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1744480260
+      hiddenValue: 1744480260
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1874401730
+      hiddenValue: 1874401718
+      fakeValue: 116
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1406926263
+      hiddenValue: 1437329390
+      fakeValue: 108010073
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 30
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7997262857904950669
+      hiddenValue: 3628827002390809997
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 2953
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1827648280
+      hiddenValue: 1827648280
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1458569518
+      hiddenValue: 1458569563
+      fakeValue: 117
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1194039857
+      hiddenValue: 1096515688
+      fakeValue: 108010073
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 30
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 8620522163543587788
+      hiddenValue: 4252866583328050363
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 3024
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1899516646
+      hiddenValue: 1899516646
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1675204416
+      hiddenValue: 1675204414
+      fakeValue: 126
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1565537645
+      hiddenValue: 1528836038
+      fakeValue: 108010155
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 22
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 6168226516180489904
+      hiddenValue: -761647518779592618
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 95946
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1316489320
+      hiddenValue: 1316489320
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1333509921
+      hiddenValue: 1333510061
+      fakeValue: 140
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1584457574
+      hiddenValue: 1476459857
+      fakeValue: 108010039
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5822489920992442034
+      hiddenValue: -4953660402802380042
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 919
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1084817933
+      hiddenValue: 1084817933
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 2088939200
+      hiddenValue: 2088939090
+      fakeValue: 146
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1439914069
+      hiddenValue: 1403208262
+      fakeValue: 108010003
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 11
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 1157553123559229190
+      hiddenValue: 7975682142521001543
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 8146
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1013344542
+      hiddenValue: 1013344542
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1844022483
+      hiddenValue: 1844022351
+      fakeValue: 156
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2048671887
+      hiddenValue: 2087475965
+      fakeValue: 108010098
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 34
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2190741663833326762
+      hiddenValue: -1162106130379331068
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 6322
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1154025313
+      hiddenValue: 1154025313
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1647100529
+      hiddenValue: 1647100634
+      fakeValue: 171
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1613139301
+      hiddenValue: 1716950864
+      fakeValue: 108010037
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4866754896058861234
+      hiddenValue: -3820455804637826490
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 280
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2041109761
+      hiddenValue: 2041109761
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1050640135
+      hiddenValue: 1050640299
+      fakeValue: 172
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1429707903
+      hiddenValue: 1397196380
+      fakeValue: 108010019
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 28
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7480624171227971206
+      hiddenValue: 897667194660226686
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 2693
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1015625014
+      hiddenValue: 1015625014
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1821492792
+      hiddenValue: 1821492886
+      fakeValue: 174
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1458286371
+      hiddenValue: 1352381748
+      fakeValue: 108010007
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 27
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 4753852677655773876
+      hiddenValue: -3292129198273547198
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 3326
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2086215779
+      hiddenValue: 2086215779
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1012803295
+      hiddenValue: 1012803184
+      fakeValue: 175
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1734680218
+      hiddenValue: 1628767447
+      fakeValue: 108010061
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 19
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 7721134815466375126
+      hiddenValue: 3767027561574880839
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 139
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1176626042
+      hiddenValue: 1176626042
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1377755468
+      hiddenValue: 1377755644
+      fakeValue: 176
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1361685245
+      hiddenValue: 1465495726
+      fakeValue: 108010067
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 20
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2910496496596966953
+      hiddenValue: 2651890773333518686
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 3289
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 2129434548
+      hiddenValue: 2129434548
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1455360399
+      hiddenValue: 1455360318
+      fakeValue: 177
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1857678321
+      hiddenValue: 1758065092
+      fakeValue: 108010037
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 23
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 2374583174133434723
+      hiddenValue: -3420659328420977719
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 308
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1542407625
+      hiddenValue: 1542407625
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1715614022
+      hiddenValue: 1715614196
+      fakeValue: 178
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 2041026228
+      hiddenValue: 2144832713
+      fakeValue: 108010109
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 36
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5880719893539685959
+      hiddenValue: -7693817643274254458
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 2831
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1900534851
+      hiddenValue: 1900534851
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1133894681
+      hiddenValue: 1133894826
+      fakeValue: 179
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1657211559
+      hiddenValue: 1689718920
+      fakeValue: 108010031
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 29
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5516443663614087841
+      hiddenValue: 5200827390572142866
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 2518
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1948635467
+      hiddenValue: 1948635467
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  - Id:
+      currentCryptoKey: 1449544532
+      hiddenValue: 1449544672
+      fakeValue: 180
+      fakeValueActive: 1
+      inited: 1
+    JewelryDataIndex:
+      currentCryptoKey: 1130132741
+      hiddenValue: 1160540020
+      fakeValue: 108010097
+      fakeValueActive: 1
+      inited: 1
+    EquipEffectType: 34
+    EquipEffectValue:
+      migratedVersion: 
+      currentCryptoKey: 5839214595838475283
+      hiddenValue: -4850920366379756676
+      hiddenValueOldByte8:
+        b1: 0
+        b2: 0
+        b3: 0
+        b4: 0
+        b5: 0
+        b6: 0
+        b7: 0
+        b8: 0
+      fakeValue: 3031
+      fakeValueActive: 1
+      inited: 1
+    Level:
+      currentCryptoKey: 1735462513
+      hiddenValue: 1735462513
+      fakeValue: 0
+      fakeValueActive: 1
+      inited: 1
+  FindViewList: 
+  ViewDataList: []
+--- !u!114 &257499293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257499287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04b2b2bc010285041a1895e759a83c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initializeOnAwake: 1
+  _iap:
+    debugLog: 0
+    items:
+    - productId: arr_diacharge_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_diacharge_02
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_diacharge_03
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_diacharge_04
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_diacharge_05
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_diacharge_06
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_02
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_03
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_04
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_05
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_06
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_07
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_08
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_09
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_10
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_11
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_12
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_13
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_14
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_pass_15
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_02
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_03
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_04
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_05
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_06
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_vippackage_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_vippackage_02
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_07
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_08
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_09
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_10
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_11
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_researchslot_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_gearpackage_02
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_gearpackage_03
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_dailypackage_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_dailypackage_02
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_weeklypackage_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_monthlypackage_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_gearpackage_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_descendpackage_01
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_12
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_13
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_14
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_vippackage_03
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_15
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    - productId: arr_suddenpackage_16
+      productType: 0
+      localizedPriceString: 
+      localizedTitle: 
+      localizedDescription: 
+      isoCurrencyCode: 
+    AutoInsertStr: 
+  _appLovin:
+    debugLog: 0
+    maxSdkKey: 1f7NNgB9E4w-7idGBBcbq3wvbmFFonHpQPBp4NzJRuITbwqn6QMwUHq423KqqbdF_q24B0OdugBTb0EhQbcwuQ
+    attState: 0
+    googleBannerAdUnitId: 
+    googleRewardedAdUnitId: 968c209fb5780e17
+    iosBannerAdUnitId: 
+    iosRewardedAdUnitId: 
+  _appsFlyer:
+    debugLog: 0
+    devKey: xhF6uWRVHfSnDUPgdVJYbS
+    iosAppId: 
+    playstoreLicenseKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs315VPKkc1XcF/a99qLfDigqGDq75NG7HX0jM/37NverJoP4g+mVYoxzKNrK5azITFIGG/k5TYkjoHU+UUwyJlAQaQcX+J2+D1djlErC8TNJdE7zdip7T6ACLwubOBx0xJC8zX9k10WdnHi+ptKbvk2dgJDeFK/f3s+ndL8vvH+UidXJUaF1JEaxprtiVKOpraRW4TIo74Un6+IsvTXwUnNLi6wOXCW52vASVjetebPhjpHV6WluKnQlWEV+ZDYMcMdXkuYniwUxNpqCgO8WMlMljMAMctaNvt2XmgViJt94/r7xRO2GLmdnFvw/3q0wE85G3YTfx8GfWMYSziVghwIDAQAB
+  _facebook:
+    debugLog: 0
+    permissions:
+    - public_profile
+    - email
+--- !u!1 &417425268
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 417425269}
+  - component: {fileID: 417425270}
+  m_Layer: 5
+  m_Name: GlobalContent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &417425269
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417425268}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 834275699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &417425270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417425268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0a9a6ae16a28444964ccaf6fe2ebe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &502797836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 502797837}
+  - component: {fileID: 502797839}
+  - component: {fileID: 502797838}
+  - component: {fileID: 502797840}
+  m_Layer: 0
+  m_Name: UICamera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &502797837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502797836}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2035741890}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &502797838
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502797836}
+  m_Enabled: 1
+--- !u!20 &502797839
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502797836}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 3
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 5
+  m_Depth: 90
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 32
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!114 &502797840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502797836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d627564bde916ae48bf0790ba9ccf4f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clearDepth: 1
+  clearColor: 0
+--- !u!1 &514167109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 514167110}
+  - component: {fileID: 514167113}
+  - component: {fileID: 514167112}
+  - component: {fileID: 514167111}
+  m_Layer: 5
+  m_Name: DamageCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &514167110
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514167109}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1206968867}
+  - {fileID: 1173909761}
+  m_Father: {fileID: 2035741890}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &514167111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514167109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &514167112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514167109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 1
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &514167113
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514167109}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 1
+  m_Camera: {fileID: 502797839}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: -1
+  m_TargetDisplay: 0
+--- !u!1001 &589254472
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1646424462}
+    m_Modifications:
+    - target: {fileID: 51361884214257170, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 51361884214257170, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535009285910347680, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535009285910347680, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535009285910347680, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 912
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535009285910347680, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3307016546278491646, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3482150055558123300, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3482150055558123300, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3482150055558123300, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 3482150055558123300, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222592810263868269, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222592810263868269, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222592810263868269, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4222592810263868269, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -76.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377185104066271584, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377185104066271584, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4377185104066271584, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843283, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_Name
+      value: GpmLogViewer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843283, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843284, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: openerEnable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6898992502111043176, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6898992502111043176, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6898992502111043176, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7122946776485879434, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7122946776485879434, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7122946776485879434, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273137345732591101, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273137345732591101, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7273137345732591101, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381302771176752386, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 22
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+--- !u!1 &640594839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 640594841}
+  - component: {fileID: 640594840}
+  m_Layer: 0
+  m_Name: StaticResource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &640594840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640594839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64328cdd21d821e4eb48e0d7e97a39f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _staticResourceAsset: {fileID: 11400000, guid: 6d228f72517895948bc2deefff0c6f89, type: 2}
+  _creatureSpineModelAsset: {fileID: 11400000, guid: fd5720e0a85e06d4f9ca8481869d881f, type: 2}
+  _arrrSpineModelAsset: {fileID: 11400000, guid: 8377e62a5259fad4fb42d1c04362d1de, type: 2}
+  _battleModeStaticDataAsset: {fileID: 11400000, guid: 5e62c1953d15e92469e803129ad278f5, type: 2}
+  _iconTableAsset: {fileID: 11400000, guid: 353f1b9e144824645b180982da700620, type: 2}
+  _animationTableAsset: {fileID: 11400000, guid: 9898518003efe554897de8d2c9330c44, type: 2}
+  _spriteEffectPoolElement: {fileID: 4798020687961423727, guid: f88b4a3b171b63947b1d460131966790, type: 3}
+  _cCState_PaintIcon: {fileID: 8502356031188090642, guid: 1a32da599b4c6ac45a3dfb3cb5cbf10c, type: 3}
+  _cCState_AnimationSpriteLibraryAsset: {fileID: 11400000, guid: 495e1c45ecd4ac84580721a82c81160e, type: 2}
+  _soundTableAsset: {fileID: 11400000, guid: 65f777fc40eaf4a5494e57813d3e601c, type: 2}
+--- !u!4 &640594841
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640594839}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &726144967
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1068804496}
+    m_Modifications:
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8609863748195768160, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_Name
+      value: ProjectNoticeExitGameDialog
+      objectReference: {fileID: 0}
+    - target: {fileID: 8609863748195768160, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+--- !u!224 &726144968 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5464795850129788442, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+  m_PrefabInstance: {fileID: 726144967}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &726144969 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5299600603958650155, guid: 5bcd7ceae2a26f84293749b9b89b3ab8, type: 3}
+  m_PrefabInstance: {fileID: 726144967}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 957f0cb1bdc974c4e8e3fe140bf89320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &736612587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 736612588}
+  m_Layer: 5
+  m_Name: PowerSavingContent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &736612588
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736612587}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1819174555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &784261858
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 784261860}
+  - component: {fileID: 784261859}
+  m_Layer: 0
+  m_Name: ContentLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &784261859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784261858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35643240537ad5e4a991c60b4edb9825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &784261860
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784261858}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &834275698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 834275699}
+  - component: {fileID: 834275702}
+  - component: {fileID: 834275701}
+  - component: {fileID: 834275700}
+  m_Layer: 5
+  m_Name: Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &834275699
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834275698}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 221639385}
+  - {fileID: 985185066}
+  - {fileID: 417425269}
+  - {fileID: 155036202}
+  - {fileID: 1015440991}
+  m_Father: {fileID: 2035741890}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &834275700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834275698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &834275701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834275698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 1
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &834275702
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834275698}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 1
+  m_Camera: {fileID: 502797839}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!1 &985185065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 985185066}
+  - component: {fileID: 985185067}
+  m_Layer: 5
+  m_Name: ProjectLoadingContent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &985185066
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985185065}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 834275699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &985185067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985185065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0a9a6ae16a28444964ccaf6fe2ebe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1015440990
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1015440991}
+  - component: {fileID: 1015440993}
+  - component: {fileID: 1015440992}
+  m_Layer: 5
+  m_Name: BottomUIExpandPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1015440991
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015440990}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 834275699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1110}
+  m_SizeDelta: {x: 1080, y: 6}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1015440992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015440990}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1015440993
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015440990}
+  m_CullTransparentMesh: 1
+--- !u!1 &1068804495
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1068804496}
+  - component: {fileID: 1068804497}
+  - component: {fileID: 1068804498}
+  m_Layer: 5
+  m_Name: ProjectNotice
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1068804496
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068804495}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1809858226}
+  - {fileID: 1098620643}
+  - {fileID: 726144968}
+  - {fileID: 474555650538397130}
+  - {fileID: 452156509352231931}
+  m_Father: {fileID: 1819174555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1068804497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068804495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0a9628c156469445aadbb227fc99a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectNoticeCheckDialog: {fileID: 1809858227}
+  projectNoticeNeedUpdateDialog: {fileID: 1098620644}
+  projectNoticeExitGameDialog: {fileID: 726144969}
+  projectNoticeGooglePlayServiceUpdateDialog: {fileID: 5425789848687771038}
+--- !u!114 &1068804498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068804495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41bfb0183f2a0624ba1665759f12d81c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkInterval: 5
+  healthCheckUrl: https://www.google.com/generate_204
+  timeoutSeconds: 4
+  disconnectedPopup: {fileID: 1239493887025696492}
+--- !u!1001 &1098620642
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1068804496}
+    m_Modifications:
+    - target: {fileID: 567840335281255218, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_Name
+      value: ProjectNoticeNeedUpdateDialog
+      objectReference: {fileID: 0}
+    - target: {fileID: 567840335281255218, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+--- !u!224 &1098620643 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7958847738999231861, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+  m_PrefabInstance: {fileID: 1098620642}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1098620644 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1479704440623458675, guid: 7780cd4f08a5945488de72ffb84557e6, type: 3}
+  m_PrefabInstance: {fileID: 1098620642}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f4739e5b628fdd4b935e0bede60f1d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1173909760
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1173909761}
+  m_Layer: 5
+  m_Name: DamageTextContent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1173909761
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173909760}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 514167110}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1206968866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1206968867}
+  - component: {fileID: 1206968869}
+  - component: {fileID: 1206968868}
+  m_Layer: 5
+  m_Name: Layout
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1206968867
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206968866}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 514167110}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1206968868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206968866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: f278fe0bddd95b645bbe4c92a62bae74, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1206968869
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206968866}
+  m_CullTransparentMesh: 1
+--- !u!4 &1275242348 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
+  m_PrefabInstance: {fileID: 589254472}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1646424461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1646424462}
+  m_Layer: 15
+  m_Name: DevTool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1646424462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646424461}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1275242348}
+  m_Father: {fileID: 257499289}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1809858225
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1068804496}
+    m_Modifications:
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788123761756829369, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_Name
+      value: ProjectNoticeCheckDialog
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788123761756829369, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+--- !u!224 &1809858226 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2508953879031167518, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+  m_PrefabInstance: {fileID: 1809858225}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1809858227 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1302263920222816648, guid: ab6ac05655435d847aa2f27ad721fac8, type: 3}
+  m_PrefabInstance: {fileID: 1809858225}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58c5d1b4beb6b004b8b9e38540409721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1819174554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1819174555}
+  - component: {fileID: 1819174558}
+  - component: {fileID: 1819174557}
+  - component: {fileID: 1819174556}
+  m_Layer: 5
+  m_Name: SystemCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1819174555
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819174554}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 736612588}
+  - {fileID: 1068804496}
+  m_Father: {fileID: 2035741890}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &1819174556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819174554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &1819174557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819174554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 1
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &1819174558
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819174554}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 1
+  m_Camera: {fileID: 502797839}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
+--- !u!1 &2026264234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2026264235}
+  - component: {fileID: 2026264237}
+  - component: {fileID: 2026264236}
+  m_Layer: 5
+  m_Name: BG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2026264235
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026264234}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 459148716744183250}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2026264236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026264234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.47843137}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 38c7c01fa3a4eae4081f950a7ef3a91c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2026264237
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026264234}
+  m_CullTransparentMesh: 1
+--- !u!1 &2035741889
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2035741890}
+  - component: {fileID: 2035741891}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2035741890
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035741889}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 502797837}
+  - {fileID: 514167110}
+  - {fileID: 834275699}
+  - {fileID: 1819174555}
+  - {fileID: 173929573}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2035741891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035741889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6881ab1c673157c4a940941a559ccd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageCanvas: {fileID: 514167113}
+  DamageCanvasContent: {fileID: 1173909761}
+  screenCanvas: {fileID: 834275702}
+  screenCanvasScaler: {fileID: 834275701}
+  screenCanvasCamera: {fileID: 502797839}
+  screenCanvasContent: {fileID: 221639385}
+  screenCanvasGlobalContent: {fileID: 417425269}
+  screenCanvasRect: {fileID: 834275699}
+  ProjectLoadingContent: {fileID: 985185066}
+  screenCanvasPowerSavingContent: {fileID: 736612588}
+  BottomUIStandardPos: {fileID: 155036202}
+  BottomUIExpandPos: {fileID: 1015440991}
+  IgnoreEnterDialog: 0
+--- !u!222 &161658886123802570
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5991902279720226906}
+  m_CullTransparentMesh: 1
+--- !u!224 &452156509352231931
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239493887025696492}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 459148716744183250}
+  m_Father: {fileID: 1068804496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1350, y: 188}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &459148716744183250
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4359707562161493612}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2026264235}
+  - {fileID: 1039586754433609924}
+  - {fileID: 6298434889139222824}
+  - {fileID: 8383566320051470828}
+  m_Father: {fileID: 452156509352231931}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &474555650538397130 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+  m_PrefabInstance: {fileID: 5425789848687771037}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1039586754433609924
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2447171184573598609}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 459148716744183250}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -6}
+  m_SizeDelta: {x: 0, y: 2}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1215363484540446744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2447171184573598609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.94509804, g: 0.7882353, b: 0.16862746, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 38c7c01fa3a4eae4081f950a7ef3a91c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 0.03
+--- !u!1 &1239493887025696492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 452156509352231931}
+  - component: {fileID: 3716137382210078086}
+  - component: {fileID: 3716137382210078088}
+  - component: {fileID: 3716137382210078087}
+  m_Layer: 5
+  m_Name: UIGlobalNoticeElement_BattlePower (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!222 &1721956698051906145
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2447171184573598609}
+  m_CullTransparentMesh: 1
+--- !u!1 &2447171184573598609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1039586754433609924}
+  - component: {fileID: 1721956698051906145}
+  - component: {fileID: 1215363484540446744}
+  m_Layer: 5
+  m_Name: line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2588281427201705975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5991902279720226906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
+--- !u!222 &2729025305625176621
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8598146877226151615}
+  m_CullTransparentMesh: 1
+--- !u!225 &3716137382210078086
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239493887025696492}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &3716137382210078087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239493887025696492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d0390bd8b8ffd640b34fe25065ff1df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateType: 0
+  isSpeedBased: 0
+  hasOnStart: 0
+  hasOnPlay: 0
+  hasOnUpdate: 0
+  hasOnStepComplete: 0
+  hasOnComplete: 0
+  hasOnTweenCreated: 0
+  hasOnRewind: 0
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onPlay:
+    m_PersistentCalls:
+      m_Calls: []
+  onUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  onStepComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  onTweenCreated:
+    m_PersistentCalls:
+      m_Calls: []
+  onRewind:
+    m_PersistentCalls:
+      m_Calls: []
+  targetIsSelf: 1
+  targetGO: {fileID: 0}
+  tweenTargetIsTargetGO: 1
+  delay: 1
+  duration: 1
+  easeType: 13
+  easeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  loopType: 1
+  loops: -1
+  id: 
+  isRelative: 0
+  isFrom: 0
+  isIndependentUpdate: 0
+  autoKill: 1
+  autoGenerate: 1
+  isActive: 1
+  isValid: 1
+  target: {fileID: 3716137382210078086}
+  animationType: 7
+  targetType: 2
+  forcedTargetType: 0
+  autoPlay: 1
+  useTargetAsV3: 0
+  endValueFloat: 0
+  endValueV3: {x: 0, y: 0, z: 0}
+  endValueV2: {x: 0, y: 0}
+  endValueColor: {r: 1, g: 1, b: 1, a: 1}
+  endValueString: 
+  endValueRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  endValueTransform: {fileID: 0}
+  optionalBool0: 0
+  optionalBool1: 0
+  optionalFloat0: 0
+  optionalInt0: 0
+  optionalRotationMode: 0
+  optionalScrambleMode: 0
+  optionalShakeRandomnessMode: 0
+  optionalString: 
+--- !u!114 &3716137382210078088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239493887025696492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98cdf653f678c21418f0b9b76704ce17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_DOTweenAnimation:
+  - {fileID: 3716137382210078087}
+  DisableRewind: 0
+--- !u!114 &4359240670147762532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5991902279720226906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "\uB124\uD2B8\uC6CC\uD06C \uC0C1\uD0DC\uAC00 \uC6D0\uD65C\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\\n\uC778\uD130\uB137
+    \uC5F0\uACB0\uC0C1\uD0DC\uB97C \uD655\uC778\uD574\uC8FC\uC138\uC694."
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+  m_sharedMaterial: {fileID: -8212028769373830162, guid: f8cb93dc04d40e14d951d52f5c445691, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4278255615
+  m_fontColor: {r: 1, g: 1, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 54
+  m_fontSizeBase: 54
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 24
+  m_fontSizeMax: 48
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: -2
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 0
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &4359707562161493612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 459148716744183250}
+  - component: {fileID: 6308537719046620987}
+  - component: {fileID: 8213293154672023514}
+  m_Layer: 5
+  m_Name: BG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1001 &5425789848687771037
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1068804496}
+    m_Modifications:
+    - target: {fileID: 1737052563200095066, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_Name
+      value: ProjectNoticeGooglePlayServiceUpdateDialog
+      objectReference: {fileID: 0}
+    - target: {fileID: 1737052563200095066, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2243123728073821383, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: LocalizeID
+      value: Update_Message_GoogleWarning
+      objectReference: {fileID: 0}
+    - target: {fileID: 4261901337505949969, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_text
+      value: "\uC5C5\uB370\uC774\uD2B8"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4261901337505949969, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 5133775942048930515, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: LocalizeID
+      value: common/ui/update
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098874851820005568, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8576470804073325260, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+      propertyPath: m_text
+      value: "\uAD6C\uAE00 \uD50C\uB808\uC774 \uC11C\uBE44\uC2A4 \uBC84\uC804\uC774
+        \uB0AE\uC2B5\uB2C8\uB2E4.\\n\uC5C5\uB370\uC774\uD2B8 \uD6C4 \uC774\uC6A9\uD574\uC8FC\uC2DC\uAE30
+        \uBC14\uB78D\uB2C8\uB2E4."
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+--- !u!114 &5425789848687771038 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1441293864066374769, guid: ccbc5d74c68f83d418d75a6d99d9ae86, type: 3}
+  m_PrefabInstance: {fileID: 5425789848687771037}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 101d0065b1385054d909feb1a8c93c34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5991902279720226906
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6298434889139222824}
+  - component: {fileID: 161658886123802570}
+  - component: {fileID: 4359240670147762532}
+  - component: {fileID: 2588281427201705975}
+  - component: {fileID: 6298434889139222825}
+  m_Layer: 5
+  m_Name: TitleText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6298434889139222824
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5991902279720226906}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 459148716744183250}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 32, y: 0}
+  m_SizeDelta: {x: 763.85, y: 48}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6298434889139222825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5991902279720226906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f91ef65adc513c4eb5e0c98a080c5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LocalizeID: connecterror/common
+--- !u!222 &6308537719046620987
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4359707562161493612}
+  m_CullTransparentMesh: 1
+--- !u!114 &7966148555528914762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8598146877226151615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.94509804, g: 0.7882353, b: 0.16862746, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 38c7c01fa3a4eae4081f950a7ef3a91c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 0.03
+--- !u!114 &8213293154672023514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4359707562161493612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7529412}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 38c7c01fa3a4eae4081f950a7ef3a91c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 0.03
+--- !u!224 &8383566320051470828
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8598146877226151615}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 459148716744183250}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 6}
+  m_SizeDelta: {x: 0, y: 2}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &8598146877226151615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8383566320051470828}
+  - component: {fileID: 2729025305625176621}
+  - component: {fileID: 7966148555528914762}
+  m_Layer: 5
+  m_Name: line
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 2035741890}
+  - {fileID: 257499289}
+  - {fileID: 784261860}
+  - {fileID: 640594841}

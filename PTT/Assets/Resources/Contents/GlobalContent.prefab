@@ -1,0 +1,748 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7478625212709596080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2532740526799243851}
+  - component: {fileID: 4372770024996460389}
+  - component: {fileID: 7712006289203153765}
+  m_Layer: 0
+  m_Name: GlobalContent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2532740526799243851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478625212709596080}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4372770024996460389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478625212709596080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b483e986e19c1ac4f91dffa13e5315c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiList:
+  - GlobalBufferingDialog
+  - GlobalButtonLockDialog
+  - GlobalFadeDialog
+  - GlobalPopupDialog
+  - GlobalDungeonFadeDialog
+  - GlobalSettingDialog
+  - GlobalNoticeDialog
+  - GlobalPowerSavingDialog
+  dialogList: []
+--- !u!114 &7712006289203153765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478625212709596080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3537fa14157a9af45bd46023b438af7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ContentName: 
+  _uiLoader: {fileID: 4372770024996460389}
+  dontDestroy: 0
+  m_iconTableAsset: {fileID: 11400000, guid: d170c6ea22e216741b4b998cfd7d8d95, type: 2}
+  m_v2GradeColorDatas:
+  - v2Enum_Grade: 11
+    GradeColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
+    GradeTextColor: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeGradationColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
+  - v2Enum_Grade: 12
+    GradeColor: {r: 0.6415094, g: 0.32983267, b: 0.32983267, a: 1}
+    GradeTextColor: {r: 0.83137256, g: 0.49803922, b: 0.49803922, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeGradationColor: {r: 0.376, g: 0.17070399, b: 0.17070399, a: 1}
+  - v2Enum_Grade: 13
+    GradeColor: {r: 0.20784315, g: 0.40784317, b: 0.18039216, a: 1}
+    GradeTextColor: {r: 0.42352942, g: 0.8235294, b: 0.36862746, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeGradationColor: {r: 0.10196079, g: 0.24313727, b: 0.15294118, a: 1}
+  - v2Enum_Grade: 14
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.47450984, a: 1}
+    GradeTextColor: {r: 0.36862746, g: 0.6156863, b: 0.8235294, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Grade: 15
+    GradeColor: {r: 0.3019608, g: 0.19607845, b: 0.5019608, a: 1}
+    GradeTextColor: {r: 0.58431375, g: 0.45490196, b: 1, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeGradationColor: {r: 0.15686275, g: 0.10196079, b: 0.24313727, a: 1}
+  - v2Enum_Grade: 16
+    GradeColor: {r: 0.6431373, g: 0.40784317, b: 0.10196079, a: 1}
+    GradeTextColor: {r: 1, g: 0.60784316, b: 0.2627451, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0.9450981, g: 0.20000002, b: 0.20000002, a: 1}
+      topRight: {r: 0, g: 0.54901963, b: 1, a: 1}
+      bottomLeft: {r: 1, g: 0.60784316, b: 0.2627451, a: 1}
+      bottomRight: {r: 0.43529415, g: 1, b: 0, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.04705883, a: 1}
+  - v2Enum_Grade: 17
+    GradeColor: {r: 0.627451, g: 0.098039225, b: 0.098039225, a: 1}
+    GradeTextColor: {r: 0.85882354, g: 0.03529412, b: 0.03529412, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeGradationColor: {r: 0.24313727, g: 0.10196079, b: 0.10196079, a: 1}
+  - v2Enum_Grade: 18
+    GradeColor: {r: 0.83921576, g: 0.6784314, b: 0.043137256, a: 1}
+    GradeTextColor: {r: 0.98039216, g: 0.87058824, b: 0.12941177, a: 1}
+    UseGradeTextGradation: 0
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 0, b: 0, a: 0}
+      topRight: {r: 0, g: 0, b: 0, a: 0}
+      bottomLeft: {r: 0, g: 0, b: 0, a: 0}
+      bottomRight: {r: 0, g: 0, b: 0, a: 0}
+    GradeGradationColor: {r: 0.30980393, g: 0.21568629, b: 0.03529412, a: 1}
+  - v2Enum_Grade: 19
+    GradeColor: {r: 0.28324133, g: 0.6207003, b: 0.6320754, a: 1}
+    GradeTextColor: {r: 1, g: 1, b: 1, a: 1}
+    UseGradeTextGradation: 1
+    GradeTextColorGradient:
+      topLeft: {r: 0, g: 1, b: 0.9608457, a: 1}
+      topRight: {r: 0, g: 1, b: 0.9608457, a: 1}
+      bottomLeft: {r: 1, g: 0.21226418, b: 0.95069474, a: 1}
+      bottomRight: {r: 1, g: 0.21226418, b: 0.95069474, a: 1}
+    GradeGradationColor: {r: 0.32630008, g: 0.247833, b: 0.603, a: 1}
+  m_v2MissionRarityColorDatas:
+  - v2Enum_MissionRarityType: 11
+    RarityTextColor: {r: 1, g: 1, b: 1, a: 1}
+  - v2Enum_MissionRarityType: 12
+    RarityTextColor: {r: 0.42352945, g: 0.8235295, b: 0.36862746, a: 1}
+  - v2Enum_MissionRarityType: 13
+    RarityTextColor: {r: 0.36862746, g: 0.6156863, b: 0.8235295, a: 1}
+  - v2Enum_MissionRarityType: 14
+    RarityTextColor: {r: 0.58431375, g: 0.454902, b: 1, a: 1}
+  - v2Enum_MissionRarityType: 15
+    RarityTextColor: {r: 1, g: 0.60784316, b: 0.2627451, a: 1}
+  m_v2PointColorDatas:
+  - v2Enum_Point: 199010001
+    GradeColor: {r: 0.8392157, g: 0.6784314, b: 0.043137256, a: 1}
+    GradeGradationColor: {r: 0.30980393, g: 0.21568628, b: 0.03529412, a: 1}
+  - v2Enum_Point: 199010002
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010003
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.4745098, a: 1}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Point: 199010024
+    GradeColor: {r: 0.28235295, g: 0.61960787, b: 0.6313726, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.24705882, b: 0.6039216, a: 1}
+  - v2Enum_Point: 199010025
+    GradeColor: {r: 0.28235295, g: 0.61960787, b: 0.6313726, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.24705882, b: 0.6039216, a: 1}
+  - v2Enum_Point: 199010008
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010009
+    GradeColor: {r: 0.52156866, g: 0.22352941, b: 0.57254905, a: 1}
+    GradeGradationColor: {r: 0.2, g: 0.101960786, b: 0.24313726, a: 1}
+  - v2Enum_Point: 199010010
+    GradeColor: {r: 0.8392157, g: 0.6784314, b: 0.043137256, a: 1}
+    GradeGradationColor: {r: 0.30980393, g: 0.21568628, b: 0.03529412, a: 1}
+  - v2Enum_Point: 199010011
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.4745098, a: 1}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Point: 199010012
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010022
+    GradeColor: {r: 0.3019608, g: 0.19607843, b: 0.5019608, a: 1}
+    GradeGradationColor: {r: 0.15686275, g: 0.101960786, b: 0.24313726, a: 1}
+  - v2Enum_Point: 199010023
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.4745098, a: 1}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Point: 199010004
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010005
+    GradeColor: {r: 0.5058824, g: 0.50980395, b: 0.50980395, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.24313726, b: 0.24313726, a: 1}
+  - v2Enum_Point: 199010006
+    GradeColor: {r: 0.20665711, g: 0.764151, b: 0.53796774, a: 1}
+    GradeGradationColor: {r: 0.13725491, g: 0.26980394, b: 0.2901961, a: 1}
+  - v2Enum_Point: 199010026
+    GradeColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
+    GradeGradationColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
+  - v2Enum_Point: 199010013
+    GradeColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
+    GradeGradationColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
+  - v2Enum_Point: 199010014
+    GradeColor: {r: 0.6431373, g: 0.32941177, b: 0.32941177, a: 1}
+    GradeGradationColor: {r: 0.3764706, g: 0.17254902, b: 0.17254902, a: 1}
+  - v2Enum_Point: 199010015
+    GradeColor: {r: 0.20784314, g: 0.40784314, b: 0.18039216, a: 1}
+    GradeGradationColor: {r: 0.101960786, g: 0.24313726, b: 0.15294118, a: 1}
+  - v2Enum_Point: 199010016
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.4745098, a: 1}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Point: 199010017
+    GradeColor: {r: 0.3019608, g: 0.19607843, b: 0.5019608, a: 1}
+    GradeGradationColor: {r: 0.15686275, g: 0.101960786, b: 0.24313726, a: 1}
+  - v2Enum_Point: 199010018
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010019
+    GradeColor: {r: 0.8392157, g: 0.6784314, b: 0.043137256, a: 1}
+    GradeGradationColor: {r: 0.30980393, g: 0.21568628, b: 0.03529412, a: 1}
+  - v2Enum_Point: 199010020
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010021
+    GradeColor: {r: 0.28235295, g: 0.61960787, b: 0.6313726, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.24705882, b: 0.6039216, a: 1}
+  - v2Enum_Point: 199010036
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010037
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010038
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010039
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010040
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010041
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010042
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010049
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  - v2Enum_Point: 199010043
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010044
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010045
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010046
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010047
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010048
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010055
+    GradeColor: {r: 0.8392157, g: 0.6784314, b: 0.043137256, a: 1}
+    GradeGradationColor: {r: 0.30980393, g: 0.21568628, b: 0.03529412, a: 1}
+  - v2Enum_Point: 199010035
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.4745098, a: 1}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Point: 199010034
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.4745098, a: 1}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Point: 199010052
+    GradeColor: {r: 0.16078432, g: 0.31764707, b: 0.4745098, a: 1}
+    GradeGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - v2Enum_Point: 199010051
+    GradeColor: {r: 0.6431373, g: 0.40784314, b: 0.101960786, a: 1}
+    GradeGradationColor: {r: 0.3254902, g: 0.1764706, b: 0.047058824, a: 1}
+  - v2Enum_Point: 199010050
+    GradeColor: {r: 0.627451, g: 0.09803922, b: 0.09803922, a: 1}
+    GradeGradationColor: {r: 0.24313726, g: 0.101960786, b: 0.101960786, a: 1}
+  m_v2SkillTriggerColorDatas:
+  - SkillTriggerType: 11
+    BGColor: {r: 0.91372555, g: 0.28235295, b: 0.2627451, a: 1}
+    TextColor: {r: 1, g: 0.8705883, b: 0.70980394, a: 1}
+    TextMaterial: {fileID: 2100000, guid: 4c4c96728b056164fb4060c1fe5ef128, type: 2}
+  - SkillTriggerType: 12
+    BGColor: {r: 0.28627452, g: 0.54509807, b: 0.7254902, a: 1}
+    TextColor: {r: 0.8745099, g: 0.93725497, b: 0.95294124, a: 1}
+    TextMaterial: {fileID: 2100000, guid: c46fdc5a8929b3c4894e5e7f858242c2, type: 2}
+  m_changeTabBtnColorData:
+    m_btnClickMat: {fileID: 2100000, guid: c454204bf7cf19d438dae52aeb38e2f6, type: 2}
+    m_btnClickColor: {r: 1, g: 1, b: 1, a: 1}
+    m_btnClickSprite: {fileID: 21300000, guid: cd0a458872a02e04e85d65a48efcdea1, type: 3}
+    m_btnReleaseMat: {fileID: 2100000, guid: 609464eb95286b14abe1bee25c787f44, type: 2}
+    m_btnReleaseColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    m_btnReleaseSprite: {fileID: 21300000, guid: cd0a458872a02e04e85d65a48efcdea1, type: 3}
+  m_elementResource_List:
+  - elementType: 11
+    elementSprite: {fileID: 21300000, guid: ea0ad791754bbe8428411c20979f1ee9, type: 3}
+    elementNoneBGSprite: {fileID: 21300000, guid: 074a90c435213804588a99ae72d13ad4, type: 3}
+    elementDamageSprite: {fileID: 21300000, guid: ab89dc1e97cb5da44b5241d344b1bc99, type: 3}
+    bgColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
+    textColor: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
+    NameLocalStringKey: 
+    elementColor: {r: 0.25882354, g: 0.25882354, b: 0.25882354, a: 1}
+    elementGradationColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
+  - elementType: 12
+    elementSprite: {fileID: 21300000, guid: 21e7d3197ab09474fa3a21cba6b096fe, type: 3}
+    elementNoneBGSprite: {fileID: 21300000, guid: 6b383c08eb2d4c64eb2b4060287a9b62, type: 3}
+    elementDamageSprite: {fileID: 21300000, guid: b959861e8950a7b4a9ef29fde270ce93, type: 3}
+    bgColor: {r: 1, g: 0.9372188, b: 0, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    NameLocalStringKey: 
+    elementColor: {r: 0.83921576, g: 0.6784314, b: 0.043137256, a: 1}
+    elementGradationColor: {r: 0.30980393, g: 0.21568629, b: 0.03529412, a: 1}
+  - elementType: 13
+    elementSprite: {fileID: 21300000, guid: aea4a5a10ed449b47adb36804828131f, type: 3}
+    elementNoneBGSprite: {fileID: 21300000, guid: f0e83101cadbe0a4ea3728182caa162e, type: 3}
+    elementDamageSprite: {fileID: 21300000, guid: ebf74cedf8d054743849c89169dfece3, type: 3}
+    bgColor: {r: 0.5826187, g: 0, b: 1, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    NameLocalStringKey: 
+    elementColor: {r: 0.41176474, g: 0.19607845, b: 0.5019608, a: 1}
+    elementGradationColor: {r: 0.18431373, g: 0.10588236, b: 0.25490198, a: 1}
+  - elementType: 14
+    elementSprite: {fileID: 21300000, guid: e74465f4032c6e440991059c24f6f03b, type: 3}
+    elementNoneBGSprite: {fileID: 21300000, guid: 39f4860d1dca1ea4ea528999b64543cc, type: 3}
+    elementDamageSprite: {fileID: 21300000, guid: 460be5caed6c6c5429ee81c90277ad45, type: 3}
+    bgColor: {r: 0, g: 0.5261209, b: 1, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    NameLocalStringKey: 
+    elementColor: {r: 0.16078432, g: 0.31764707, b: 0.47450984, a: 1}
+    elementGradationColor: {r: 0.08627451, g: 0.15686275, b: 0.29411766, a: 1}
+  - elementType: 15
+    elementSprite: {fileID: 21300000, guid: 89624c396dab75b4dab83b3a254b7113, type: 3}
+    elementNoneBGSprite: {fileID: 21300000, guid: db8100ad7eae9dd47907488ca345c1cf, type: 3}
+    elementDamageSprite: {fileID: 21300000, guid: 286ccfadc939cca4282f10e2c0cf2a69, type: 3}
+    bgColor: {r: 1, g: 0.2844212, b: 0, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    NameLocalStringKey: 
+    elementColor: {r: 0.627451, g: 0.098039225, b: 0.098039225, a: 1}
+    elementGradationColor: {r: 0.24313727, g: 0.10196079, b: 0.10196079, a: 1}
+  - elementType: 16
+    elementSprite: {fileID: 21300000, guid: e5fe2e386bb8d584c952949b1a877246, type: 3}
+    elementNoneBGSprite: {fileID: 21300000, guid: bb6c8fcc9f98e6b47a37da80e93e344d, type: 3}
+    elementDamageSprite: {fileID: 21300000, guid: 37362432dc949314984c97d3e894d2e4, type: 3}
+    bgColor: {r: 0.56961846, g: 1, b: 0, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    NameLocalStringKey: 
+    elementColor: {r: 0.20784315, g: 0.40784317, b: 0.18039216, a: 1}
+    elementGradationColor: {r: 0.10196079, g: 0.24313727, b: 0.15294118, a: 1}
+  m_jobResource_List:
+  - jobType: 11
+    bgColor: {r: 0, g: 1, b: 0.5815592, a: 1}
+    textColor: {r: 0.8820755, g: 1, b: 0.95239073, a: 1}
+    NameLocalStringKey: 
+  - jobType: 12
+    bgColor: {r: 1, g: 0.8352942, b: 0, a: 1}
+    textColor: {r: 1, g: 0.9945287, b: 0.8632076, a: 1}
+    NameLocalStringKey: 
+  - jobType: 13
+    bgColor: {r: 0, g: 0.77227974, b: 1, a: 1}
+    textColor: {r: 0.8632076, g: 1, b: 0.97650623, a: 1}
+    NameLocalStringKey: 
+  - jobType: 14
+    bgColor: {r: 1, g: 0, b: 0.7123699, a: 1}
+    textColor: {r: 1, g: 0.8254717, b: 0.9546012, a: 1}
+    NameLocalStringKey: 
+  - jobType: 15
+    bgColor: {r: 0, g: 1, b: 0.981899, a: 1}
+    textColor: {r: 0.8632076, g: 1, b: 0.99711, a: 1}
+    NameLocalStringKey: 
+  - jobType: 16
+    bgColor: {r: 1, g: 0.6472527, b: 0, a: 1}
+    textColor: {r: 1, g: 0.9497729, b: 0.8820755, a: 1}
+    NameLocalStringKey: 
+  - jobType: 17
+    bgColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    NameLocalStringKey: 
+  - jobType: 18
+    bgColor: {r: 0.76049376, g: 0, b: 1, a: 1}
+    textColor: {r: 0.99705064, g: 0.8066038, b: 1, a: 1}
+    NameLocalStringKey: 
+  - jobType: 19
+    bgColor: {r: 0, g: 1, b: 0.5803922, a: 1}
+    textColor: {r: 0.98925465, g: 1, b: 0.8915094, a: 1}
+    NameLocalStringKey: 
+  - jobType: 20
+    bgColor: {r: 1, g: 0.8352942, b: 0, a: 1}
+    textColor: {r: 1, g: 0.9728993, b: 0.8820755, a: 1}
+    NameLocalStringKey: 
+  - jobType: 21
+    bgColor: {r: 0, g: 0.7725491, b: 1, a: 1}
+    textColor: {r: 0.9009434, g: 0.99904895, b: 1, a: 1}
+    NameLocalStringKey: 
+  - jobType: 22
+    bgColor: {r: 1, g: 0, b: 0.7137255, a: 1}
+    textColor: {r: 0.9983058, g: 0.8632076, b: 1, a: 1}
+    NameLocalStringKey: 
+  - jobType: 23
+    bgColor: {r: 0, g: 1, b: 0.9803922, a: 1}
+    textColor: {r: 0.9009434, g: 1, b: 0.9979073, a: 1}
+    NameLocalStringKey: 
+  - jobType: 24
+    bgColor: {r: 1, g: 0.64705884, b: 0, a: 1}
+    textColor: {r: 0.9933924, g: 1, b: 0.8632076, a: 1}
+    NameLocalStringKey: 
+  - jobType: 25
+    bgColor: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    NameLocalStringKey: 
+  m_buttnLightColor_List: []
+  m_berserkerModeBGColor_List:
+  - Min: -999
+    Max: -50
+    BGColor: {r: 0.5188679, g: 0, b: 0, a: 1}
+  - Min: -50
+    Max: 999
+    BGColor: {r: 0.1792453, g: 0, b: 0, a: 1}
+  m_promoStarSprite_List:
+  - Promo: 1
+    StarImage:
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 2
+    StarImage:
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 3
+    StarImage:
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 4
+    StarImage:
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 5
+    StarImage:
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 6
+    StarImage:
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 7
+    StarImage:
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 8
+    StarImage:
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 9
+    StarImage:
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: c845bdc012b513d4a92332116bb429ad, type: 3}
+  - Promo: 10
+    StarImage:
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+    - {fileID: 21300000, guid: d40d015724a51e14dbcd029b956ba9c8, type: 3}
+  m_uICharacterAniPositions_List:
+  - AnimationKey: DarkKnight
+    CharacterPos: {x: 0, y: -0.3, z: 0}
+    CharacterScale: {x: 1.3, y: 1.3, z: 1}
+    ShadowPos: {x: 0.06, y: -0.3, z: 1}
+    ShadowScale: {x: 1, y: 1, z: 1}
+  - AnimationKey: Emmet
+    CharacterPos: {x: 0, y: -0.14, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1, y: 1, z: 1}
+  - AnimationKey: Richard
+    CharacterPos: {x: -0.15, y: -0.2, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.05, y: 1, z: 1}
+  - AnimationKey: Aleck
+    CharacterPos: {x: -0.01, y: 0.07, z: 0}
+    CharacterScale: {x: 1.2, y: 1.2, z: 1.2}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.5, y: 1.2, z: 1}
+  - AnimationKey: Arsh
+    CharacterPos: {x: -0.13, y: 0.32, z: 0}
+    CharacterScale: {x: 1.15, y: 1.15, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.2, y: 1, z: 1}
+  - AnimationKey: Falconry
+    CharacterPos: {x: -0.02, y: -0.21, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1, y: 1, z: 1}
+  - AnimationKey: LionLight
+    CharacterPos: {x: -0.09, y: 0.05, z: 0}
+    CharacterScale: {x: 1, y: 1, z: 0.8}
+    ShadowPos: {x: 0, y: -0.24, z: 1}
+    ShadowScale: {x: 1.8, y: 1.2, z: 1}
+  - AnimationKey: Executioner
+    CharacterPos: {x: -0.2, y: 0.18, z: 0}
+    CharacterScale: {x: 1.1, y: 1.1, z: 0.8}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.8, y: 1.2, z: 1}
+  - AnimationKey: Naiad
+    CharacterPos: {x: -0.04, y: -0.1, z: 0}
+    CharacterScale: {x: 1.25, y: 1.25, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.79, y: 1, z: 1}
+  - AnimationKey: Melz
+    CharacterPos: {x: -0.09, y: -0.01, z: 0}
+    CharacterScale: {x: 1.35, y: 1.35, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.2, y: 1.2, z: 1}
+  - AnimationKey: ForestHunter
+    CharacterPos: {x: 0.14, y: -0.17, z: 0}
+    CharacterScale: {x: 1.35, y: 1.35, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.4, y: 1.4, z: 1}
+  - AnimationKey: AngryBull
+    CharacterPos: {x: 0.27, y: 0.06, z: 0}
+    CharacterScale: {x: 1.2, y: 1.2, z: 1.2}
+    ShadowPos: {x: 0, y: -0.24, z: 1}
+    ShadowScale: {x: 1.8, y: 1.2, z: 1}
+  - AnimationKey: FlowerFairy
+    CharacterPos: {x: -0.06, y: -0.15, z: 0}
+    CharacterScale: {x: 1.35, y: 1.35, z: 1}
+    ShadowPos: {x: 0, y: -0.25, z: 1}
+    ShadowScale: {x: 1.2, y: 1.2, z: 1}
+  - AnimationKey: Lepron
+    CharacterPos: {x: 0, y: -0.15, z: 0}
+    CharacterScale: {x: 1.35, y: 1.35, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.27, y: 1.13, z: 1}
+  - AnimationKey: Stumpy
+    CharacterPos: {x: 0.05, y: 0.06, z: 0}
+    CharacterScale: {x: 1.3, y: 1.3, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.27, y: 1.13, z: 1}
+  - AnimationKey: Golem
+    CharacterPos: {x: -0.02, y: 0.07, z: 0}
+    CharacterScale: {x: 1.3, y: 1.3, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: FaceSculpture
+    CharacterPos: {x: 0, y: -0.32, z: 0}
+    CharacterScale: {x: 1.3, y: 1.3, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: DungBeetle
+    CharacterPos: {x: -0.05, y: -0.38, z: 0}
+    CharacterScale: {x: 1.5, y: 1.5, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: WildBoar
+    CharacterPos: {x: -0.02, y: 0, z: 0}
+    CharacterScale: {x: 1.3, y: 1.3, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: FloatingFace
+    CharacterPos: {x: 0, y: -0.21, z: 0}
+    CharacterScale: {x: 1.3, y: 1.3, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: BanditLeader
+    CharacterPos: {x: 0, y: -0.2, z: 0}
+    CharacterScale: {x: 1.6, y: 1.6, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: WolfLeader
+    CharacterPos: {x: 0.04, y: -0.35, z: 0}
+    CharacterScale: {x: 1.5, y: 1.5, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: WolfNormal
+    CharacterPos: {x: -0.07, y: -0.38, z: 0}
+    CharacterScale: {x: 1.5, y: 1.5, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: FrogNormal
+    CharacterPos: {x: 0.02, y: -0.32, z: 0}
+    CharacterScale: {x: 1.5, y: 1.5, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: SnailFly
+    CharacterPos: {x: 0.15, y: -0.12, z: 0}
+    CharacterScale: {x: 1.15, y: 1.15, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: ThiefNormal
+    CharacterPos: {x: 0, y: -0.27, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: BanditTanker
+    CharacterPos: {x: 0.02, y: -0.09, z: 0}
+    CharacterScale: {x: 1.25, y: 1.25, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.97, y: 1.15, z: 1}
+  - AnimationKey: AncientMagician
+    CharacterPos: {x: -0.05, y: -0.06, z: 0}
+    CharacterScale: {x: 1.35, y: 1.35, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: AncientLeader
+    CharacterPos: {x: 0.05, y: 0.01, z: 0}
+    CharacterScale: {x: 1.2, y: 1.2, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Slime
+    CharacterPos: {x: -0.01, y: -0.1, z: 0}
+    CharacterScale: {x: 1.6, y: 1.6, z: 1}
+    ShadowPos: {x: 0, y: -0.27, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: SoldierSword
+    CharacterPos: {x: -0.03, y: -0.1, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: SoldierArcher
+    CharacterPos: {x: -0.03, y: -0.1, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: SoldierSpear
+    CharacterPos: {x: -0.05, y: -0.11, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: SkeletonSword
+    CharacterPos: {x: 0, y: -0.13, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: SkeletonArcher
+    CharacterPos: {x: 0, y: -0.13, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: SkeletonSpear
+    CharacterPos: {x: -0.05, y: -0.13, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: GhostSword
+    CharacterPos: {x: 0.02, y: -0.13, z: 0}
+    CharacterScale: {x: 1.5, y: 1.5, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: GhostArcher
+    CharacterPos: {x: -0.03, y: -0.13, z: 0}
+    CharacterScale: {x: 1.5, y: 1.5, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: GhostSpear
+    CharacterPos: {x: -0.05, y: -0.13, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Alchemist
+    CharacterPos: {x: -0.05, y: -0.33, z: 0}
+    CharacterScale: {x: 1.6, y: 1.6, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Officer
+    CharacterPos: {x: -0.02, y: -0.1, z: 0}
+    CharacterScale: {x: 1.35, y: 1.35, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Lord
+    CharacterPos: {x: 0.02, y: 0.06, z: 0}
+    CharacterScale: {x: 1.4, y: 1.4, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Cupid
+    CharacterPos: {x: 0.02, y: -0.1, z: 0}
+    CharacterScale: {x: 1.2, y: 1.2, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Uriel
+    CharacterPos: {x: 0.02, y: 0.03, z: 0}
+    CharacterScale: {x: 1.2, y: 1.2, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Ursula
+    CharacterPos: {x: 0.05, y: 0.03, z: 0}
+    CharacterScale: {x: 1.1, y: 1.1, z: 1}
+    ShadowPos: {x: 0, y: -0.26, z: 1}
+    ShadowScale: {x: 1.97, y: 1.13, z: 1}
+  - AnimationKey: Lobster
+    CharacterPos: {x: 0.1407, y: -0.1079, z: 0}
+    CharacterScale: {x: 1, y: 1, z: 1}
+    ShadowPos: {x: 0, y: -0.24, z: 1}
+    ShadowScale: {x: 1.8, y: 1.2, z: 1}
+  - AnimationKey: KingSlimeL
+    CharacterPos: {x: 0, y: -0.1079, z: 0}
+    CharacterScale: {x: 1, y: 1, z: 1}
+    ShadowPos: {x: 0, y: -0.24, z: 1}
+    ShadowScale: {x: 1.8, y: 1.2, z: 1}
