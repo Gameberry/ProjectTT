@@ -72,7 +72,7 @@ namespace GameBerry.UI
         [SerializeField]
         private TMP_Text _addDescendStackText;
 
-        private V2Enum_ARR_SynergyType _synergyType = V2Enum_ARR_SynergyType.Max;
+        private Enum_SynergyType _synergyType = Enum_SynergyType.Max;
 
         private int _uILevel = 0;
         private float _uIGauge = 0.0f;
@@ -105,9 +105,9 @@ namespace GameBerry.UI
             }
         }
         //------------------------------------------------------------------------------------
-        public void SetSynergyListData(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public void SetSynergyListData(Enum_SynergyType Enum_SynergyType)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_SynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_SynergyType);
             if (gambleCardSprite != null)
             {
                 if (_gambleSynergyIcon != null)
@@ -134,7 +134,7 @@ namespace GameBerry.UI
 
 
 
-            _synergyType = v2Enum_ARR_SynergyType;
+            _synergyType = Enum_SynergyType;
 
             RefreshSynergyInfo();
         }

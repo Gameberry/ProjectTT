@@ -8,7 +8,7 @@ namespace GameBerry
 {
     public class DungeonInitInfo
     {
-        public V2Enum_Dungeon V2Enum_Dungeon;
+        public Enum_Dungeon EnumDungeon;
         public ObscuredInt ToDayAdEnterCount = 0;
         public ObscuredDouble InitTimeStemp = 0;
     }
@@ -18,7 +18,7 @@ namespace GameBerry
         public static ObscuredInt Diamond_Dungeon_MaxClear = 0;
         public static ObscuredInt Tower_Dungeon_MaxClear = 0;
 
-        public static Dictionary<V2Enum_Dungeon, DungeonInitInfo> m_dungeonInitInfo = new Dictionary<V2Enum_Dungeon, DungeonInitInfo>();
+        public static Dictionary<Enum_Dungeon, DungeonInitInfo> m_dungeonInitInfo = new Dictionary<Enum_Dungeon, DungeonInitInfo>();
 
         public static System.Text.StringBuilder SerializeString = new System.Text.StringBuilder();
 
@@ -28,7 +28,7 @@ namespace GameBerry
 
             foreach (var pair in m_dungeonInitInfo)
             {
-                SerializeString.Append(pair.Value.V2Enum_Dungeon.Enum32ToInt());
+                SerializeString.Append(pair.Value.EnumDungeon.Enum32ToInt());
                 SerializeString.Append(',');
                 SerializeString.Append(pair.Value.ToDayAdEnterCount);
                 SerializeString.Append(',');
@@ -54,11 +54,11 @@ namespace GameBerry
                 string[] arrcontent = arr[i].Split(',');
 
                 DungeonInitInfo dungeonInitInfo = new DungeonInitInfo();
-                dungeonInitInfo.V2Enum_Dungeon = arrcontent[0].ToInt().IntToEnum32<V2Enum_Dungeon>();
+                dungeonInitInfo.EnumDungeon = arrcontent[0].ToInt().IntToEnum32<Enum_Dungeon>();
                 dungeonInitInfo.ToDayAdEnterCount = arrcontent[1].ToInt();
                 dungeonInitInfo.InitTimeStemp = arrcontent[2].ToDouble();
 
-                m_dungeonInitInfo.Add(dungeonInitInfo.V2Enum_Dungeon, dungeonInitInfo);
+                m_dungeonInitInfo.Add(dungeonInitInfo.EnumDungeon, dungeonInitInfo);
             }
         }
 
@@ -142,20 +142,20 @@ namespace GameBerry
             return m_dungeonLocalTable.GetDungeonAllData();
         }
         //------------------------------------------------------------------------------------
-        public static DungeonData GetDungeonData(V2Enum_Dungeon v2Enum_Dungeon)
+        public static DungeonData GetDungeonData(Enum_Dungeon enumDungeon)
         {
-            return m_dungeonLocalTable.GetData(v2Enum_Dungeon);
+            return m_dungeonLocalTable.GetData(enumDungeon);
         }
         //------------------------------------------------------------------------------------
-        public static Dictionary<V2Enum_Dungeon, DungeonInitInfo> GetDungeonAdAllInfo()
+        public static Dictionary<Enum_Dungeon, DungeonInitInfo> GetDungeonAdAllInfo()
         {
             return DungeonDataContainer.m_dungeonInitInfo;
         }
         //------------------------------------------------------------------------------------
-        public static DungeonInitInfo GetDungeonInitInfo(V2Enum_Dungeon v2Enum_Dungeon)
+        public static DungeonInitInfo GetDungeonInitInfo(Enum_Dungeon enumDungeon)
         {
-            if (DungeonDataContainer.m_dungeonInitInfo.ContainsKey(v2Enum_Dungeon) == true)
-                return DungeonDataContainer.m_dungeonInitInfo[v2Enum_Dungeon];
+            if (DungeonDataContainer.m_dungeonInitInfo.ContainsKey(enumDungeon) == true)
+                return DungeonDataContainer.m_dungeonInitInfo[enumDungeon];
 
             return null;
         }
@@ -171,7 +171,7 @@ namespace GameBerry
         {
             DungeonModeBase diamondDungeonData = null;
 
-            int record = (int)GetDungeonRecord(V2Enum_Dungeon.DiamondDungeon);
+            int record = (int)GetDungeonRecord(Enum_Dungeon.DiamondDungeon);
 
             if (record <= 0)
                 diamondDungeonData = GetDiamondDungeonData(1);
@@ -187,7 +187,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public static DungeonModeBase GetMaxClearDiamondDungeonData()
         {
-            return GetDiamondDungeonData((int)GetDungeonRecord(V2Enum_Dungeon.DiamondDungeon));
+            return GetDiamondDungeonData((int)GetDungeonRecord(Enum_Dungeon.DiamondDungeon));
         }
         //------------------------------------------------------------------------------------
         #endregion
@@ -203,7 +203,7 @@ namespace GameBerry
         {
             DungeonModeBase diamondDungeonData = null;
 
-            int record = (int)GetDungeonRecord(V2Enum_Dungeon.TowerDungeon);
+            int record = (int)GetDungeonRecord(Enum_Dungeon.TowerDungeon);
 
             if (record <= 0)
                 diamondDungeonData = GetTowerDungeonData(1);
@@ -219,20 +219,20 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public static DungeonModeBase GetMaxClearTowerDungeonData()
         {
-            return GetTowerDungeonData((int)GetDungeonRecord(V2Enum_Dungeon.TowerDungeon));
+            return GetTowerDungeonData((int)GetDungeonRecord(Enum_Dungeon.TowerDungeon));
         }
         //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
-        public static DungeonModeBase GetMaxEnterDungeonModeData(V2Enum_Dungeon v2Enum_Dungeon)
+        public static DungeonModeBase GetMaxEnterDungeonModeData(Enum_Dungeon enumDungeon)
         {
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         return GetMaxEnterDiamondDungeonData();
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         return GetMaxEnterTowerDungeonData();
                     }
@@ -241,15 +241,15 @@ namespace GameBerry
             return null;
         }
         //------------------------------------------------------------------------------------
-        public static DungeonModeBase GetMaxClearDungeonModeData(V2Enum_Dungeon v2Enum_Dungeon)
+        public static DungeonModeBase GetMaxClearDungeonModeData(Enum_Dungeon enumDungeon)
         {
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         return GetMaxClearDiamondDungeonData();
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         return GetMaxClearTowerDungeonData();
                     }
@@ -258,15 +258,15 @@ namespace GameBerry
             return null;
         }
         //------------------------------------------------------------------------------------
-        public static double GetDungeonRecord(V2Enum_Dungeon v2Enum_Dungeon)
+        public static double GetDungeonRecord(Enum_Dungeon enumDungeon)
         {
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         return DungeonDataContainer.Diamond_Dungeon_MaxClear;
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         return DungeonDataContainer.Tower_Dungeon_MaxClear;
                     }
@@ -275,20 +275,20 @@ namespace GameBerry
             return 1;
         }
         //------------------------------------------------------------------------------------
-        public static bool SetDungeonRecord(V2Enum_Dungeon v2Enum_Dungeon, double record)
+        public static bool SetDungeonRecord(Enum_Dungeon enumDungeon, double record)
         {
-            if (GetDungeonRecord(v2Enum_Dungeon) >= record)
+            if (GetDungeonRecord(enumDungeon) >= record)
                 return false;
 
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         int step = (int)record;
                         DungeonDataContainer.Diamond_Dungeon_MaxClear = step;
                         break;
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         int step = (int)record;
                         DungeonDataContainer.Tower_Dungeon_MaxClear = step;

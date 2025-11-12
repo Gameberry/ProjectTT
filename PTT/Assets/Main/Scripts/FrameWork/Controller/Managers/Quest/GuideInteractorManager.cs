@@ -475,7 +475,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         private void UpdateCoroutineFunc_1Sec()
         {
-            if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.LobbyScene)
+            if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.LobbyScene)
             {
                 if (PlaySynergyTutorial == true)
                     return;

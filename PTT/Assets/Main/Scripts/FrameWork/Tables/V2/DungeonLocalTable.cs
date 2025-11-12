@@ -12,7 +12,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
         public ObscuredInt ResourceIndex;
-        public V2Enum_Dungeon DungeonType;
+        public Enum_Dungeon DungeonType;
 
         public ObscuredInt MapResource;
 
@@ -54,7 +54,7 @@ namespace GameBerry
                 if (dungeonTicketData.ResourceIndex == -1)
                     continue;
 
-                dungeonTicketData.DungeonType = rows[i]["DungeonType"].ToString().FastStringToInt().IntToEnum32<V2Enum_Dungeon>();
+                dungeonTicketData.DungeonType = rows[i]["DungeonType"].ToString().FastStringToInt().IntToEnum32<Enum_Dungeon>();
 
                 dungeonTicketData.MapResource = rows[i]["MapResource"].ToString().ToInt();
 
@@ -78,9 +78,9 @@ namespace GameBerry
             return dungeonDatas;
         }
         //------------------------------------------------------------------------------------
-        public DungeonData GetData(V2Enum_Dungeon v2Enum_Dungeon)
+        public DungeonData GetData(Enum_Dungeon enumDungeon)
         {
-            return dungeonDatas.Find(x => x.DungeonType == v2Enum_Dungeon);
+            return dungeonDatas.Find(x => x.DungeonType == enumDungeon);
         }
         //------------------------------------------------------------------------------------
     }

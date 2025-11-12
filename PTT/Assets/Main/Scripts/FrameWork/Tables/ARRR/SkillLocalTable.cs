@@ -24,16 +24,16 @@ namespace GameBerry
         public float TargetRange;
         public float AttackRange;
 
-        public V2Enum_ARR_TriggerType TriggerType;
+        public Enum_TriggerType TriggerType;
 
-        public V2Enum_ARR_CoolTimeType CoolTimeType;
+        public Enum_CoolTimeType CoolTimeType;
         public float CoolTimeValue;
 
         public bool IsUseCoolTime = false;
 
-        public Enum_ARR_TargetCheckType TargetCheckType;
-        public V2Enum_ARR_TargetAttackType TargetAttackType;
-        public Enum_ARR_TargetConditionType TargetCondition;
+        public Enum_TargetCheckType TargetCheckType;
+        public Enum_TargetAttackType TargetAttackType;
+        public Enum_TargetConditionType TargetCondition;
         public int TargetCount;
 
 
@@ -55,7 +55,7 @@ namespace GameBerry
     public class SkillDamageData
     {
         public int Index;
-        public V2Enum_ARR_DamageType DamageType;
+        public Enum_DamageType DamageType;
         public float DamageParam;
 
         public float Duration;
@@ -72,8 +72,8 @@ namespace GameBerry
     public class SkillEffectData
     {
         public int Index;
-        public Enum_ARR_TargetCheckType TargetCheckType;
-        public Enum_ARR_TargetStateType TargetState;
+        public Enum_TargetCheckType TargetCheckType;
+        public Enum_TargetStateType TargetState;
 
         public V2Enum_SkillEffectType SkillEffectType;
 
@@ -116,7 +116,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_MainSkillType MainSkillType;
+        public Enum_MainSkillType MainSkillType;
         public ObscuredInt MainSkillTypeParam1;
         public ObscuredInt MainSkillTypeParam2;
         public ObscuredInt MainSkillTypeParam3;
@@ -177,9 +177,9 @@ namespace GameBerry
                 
                 skillBaseData.AttackRange = rows[i]["AttackRange"].ToString().ToFloat();
 
-                skillBaseData.TriggerType = rows[i]["TriggerType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_TriggerType>();
+                skillBaseData.TriggerType = rows[i]["TriggerType"].ToString().ToInt().IntToEnum32<Enum_TriggerType>();
 
-                skillBaseData.CoolTimeType = rows[i]["CoolTimeType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_CoolTimeType>();
+                skillBaseData.CoolTimeType = rows[i]["CoolTimeType"].ToString().ToInt().IntToEnum32<Enum_CoolTimeType>();
 
                 string cooltimevalue = rows[i]["CoolTimeValue"].ToString();
 
@@ -193,9 +193,9 @@ namespace GameBerry
                     skillBaseData.CoolTimeValue = cooltimevalue.ToFloat();
                 }
                 
-                skillBaseData.TargetCheckType = rows[i]["TargetCheckType"].ToString().ToInt().IntToEnum32<Enum_ARR_TargetCheckType>();
-                skillBaseData.TargetAttackType = rows[i]["TargetAttackType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_TargetAttackType>();
-                skillBaseData.TargetCondition = rows[i]["TargetCondition"].ToString().ToInt().IntToEnum32<Enum_ARR_TargetConditionType>();
+                skillBaseData.TargetCheckType = rows[i]["TargetCheckType"].ToString().ToInt().IntToEnum32<Enum_TargetCheckType>();
+                skillBaseData.TargetAttackType = rows[i]["TargetAttackType"].ToString().ToInt().IntToEnum32<Enum_TargetAttackType>();
+                skillBaseData.TargetCondition = rows[i]["TargetCondition"].ToString().ToInt().IntToEnum32<Enum_TargetConditionType>();
                 skillBaseData.TargetCount = rows[i]["TargetCount"].ToString().ToInt();
 
                 for (int j = 1; j <= 5; ++j)
@@ -250,7 +250,7 @@ namespace GameBerry
 
                 mainSkillData.Index = rows[i]["Index"].ToString().ToInt();
 
-                mainSkillData.MainSkillType = rows[i]["MainSkillType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_MainSkillType>();
+                mainSkillData.MainSkillType = rows[i]["MainSkillType"].ToString().ToInt().IntToEnum32<Enum_MainSkillType>();
 
                 mainSkillData.MainSkillTypeParam1 = rows[i]["MainSkillTypeParam1"].ToString().ToInt();
                 mainSkillData.MainSkillTypeParam2 = rows[i]["MainSkillTypeParam2"].ToString().ToInt();

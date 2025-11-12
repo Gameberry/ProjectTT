@@ -92,7 +92,7 @@ namespace GameBerry
                 Vector3 applypos = m_charTransform.transform.position;
                 if (m_characterControllerBase != null)
                 {
-                    if(m_characterControllerBase.LookDirection == Enum_ARR_LookDirection.Left)
+                    if(m_characterControllerBase.LookDirection == Enum_LookDirection.Left)
                         pos.x = pos.x * -1.0f;
                 }
 
@@ -203,7 +203,7 @@ namespace GameBerry
                             particlePoolElement.transform.SetParent(null);
                             particlePoolElement.transform.position = data.Renderer.transform.position;
                             Vector3 rotate = Vector3.zero;
-                            rotate.y = m_characterControllerBase.LookDirection == Enum_ARR_LookDirection.Left ? 180.0f : 0.0f;
+                            rotate.y = m_characterControllerBase.LookDirection == Enum_LookDirection.Left ? 180.0f : 0.0f;
                             particlePoolElement.transform.localEulerAngles = rotate;
                         }
 

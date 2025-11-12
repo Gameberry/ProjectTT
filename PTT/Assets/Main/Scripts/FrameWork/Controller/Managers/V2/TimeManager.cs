@@ -32,35 +32,14 @@ namespace GameBerry.Managers
         //private WaitForSeconds m_addTimeWaitForSecondsRealtime = new WaitForSeconds(0.1f);
 
         private Event.ReadyStageCooltimeRewardMsg m_readyStageCooltimeRewardMsg = new Event.ReadyStageCooltimeRewardMsg();
-        private Event.SetRemainLuckyRouletteMsg m_setRemainLuckyRouletteMsg = new Event.SetRemainLuckyRouletteMsg();
-        
 
         private bool m_checkCheckStageCoolTimeReward = false;
-        private bool m_checkCheckLuckyRoulette = false;
 
         private int m_rewardMinute = 0;
 
         private List<RewardData> m_stageCoolTimeRewards = new List<RewardData>();
 
         private List<string> m_changeInfoUpdate = new List<string>();
-
-        public System.Action ShowRouletteEventNotice;
-        public System.Action ShowDungeonEventNotice;
-        public System.Action ShowDungeonGoddessEventNotice;
-        public System.Action ShowRedBullEventNotice;
-        public System.Action ShowUrsulaEventNotice;
-        public System.Action ShowDigEventNotice;
-        public System.Action ShowMathRpgEventNotice;
-        public System.Action ShowDungeonKingSlimeEventNotice;
-
-        private bool m_needShowRouletteEventTimeCheck = false;
-        private bool m_needShowDungeonEventTimeCheck = false;
-        private bool m_needShowDungeonGoddessEventTimeCheck = false;
-        private bool m_needShowRedBullEventTimeCheck = false;
-        private bool m_needShowUrsulaEventTimeCheck = false;
-        private bool m_needShowDigEventTimeCheck = false;
-        private bool m_needShowMathRpgEventTimeCheck = false;
-        private bool m_needShowDungeonKingSlimeEventTimeCheck = false;
 
         //------------------------------------------------------------------------------------
         protected override void Init()
@@ -129,51 +108,6 @@ namespace GameBerry.Managers
             }
 
             m_checkCheckStageCoolTimeReward = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayCheckLuckyRoulette()
-        {
-            m_checkCheckLuckyRoulette = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayRouletteEventStartTimeTrigger()
-        {
-            m_needShowRouletteEventTimeCheck = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayDungeonEventStartTimeTrigger()
-        {
-            m_needShowDungeonEventTimeCheck = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayDungeonGoddessEventStartTimeTrigger()
-        {
-            m_needShowDungeonGoddessEventTimeCheck = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayRedBullEventStartTimeTrigger()
-        {
-            m_needShowRedBullEventTimeCheck = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayUrsulaEventStartTimeTrigger()
-        {
-            m_needShowUrsulaEventTimeCheck = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayDigEventStartTimeTrigger()
-        {
-            m_needShowDigEventTimeCheck = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayMathRpgEventStartTimeTrigger()
-        {
-            m_needShowMathRpgEventTimeCheck = true;
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayDungeonKingSlimeEventStartTimeTrigger()
-        {
-            m_needShowDungeonKingSlimeEventTimeCheck = true;
         }
         //------------------------------------------------------------------------------------
         private void ConvertServerTime(DateTime dateTime)
@@ -345,93 +279,6 @@ namespace GameBerry.Managers
                     {
                         m_checkCheckStageCoolTimeReward = false;
                         Message.Send(m_readyStageCooltimeRewardMsg);
-                    }
-                }
-
-
-                if (m_checkCheckLuckyRoulette == true)
-                {
-                    if (Current_TimeStamp >= PlayerDataContainer.LastRouletteActionTime + Define.LuckyRouletteSpinInterval)
-                    {
-                        m_checkCheckLuckyRoulette = false;
-                        Managers.PlayerDataManager.Instance.SendReadyLuckyRouletteMsg();
-                    }
-                    else
-                    {
-                        Message.Send(m_setRemainLuckyRouletteMsg);
-                    }
-                }
-
-
-                if (m_needShowRouletteEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventRouletteStartTime)
-                    {
-                        ShowRouletteEventNotice?.Invoke();
-                        m_needShowRouletteEventTimeCheck = false;
-                    }
-                }
-
-                if (m_needShowDungeonEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventDungeonStartTime)
-                    {
-                        ShowDungeonEventNotice?.Invoke();
-                        m_needShowDungeonEventTimeCheck = false;
-                    }
-                }
-
-                if (m_needShowDungeonGoddessEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventHealDungeonStartTime)
-                    {
-                        ShowDungeonGoddessEventNotice?.Invoke();
-                        m_needShowDungeonGoddessEventTimeCheck = false;
-                    }
-                }
-
-                if (m_needShowRedBullEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventRedBullStartTime)
-                    {
-                        ShowRedBullEventNotice?.Invoke();
-                        m_needShowRedBullEventTimeCheck = false;
-                    }
-                }
-
-                if (m_needShowUrsulaEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventUrsulaStartTime)
-                    {
-                        ShowUrsulaEventNotice?.Invoke();
-                        m_needShowUrsulaEventTimeCheck = false;
-                    }
-                }
-
-                if (m_needShowDigEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventDigStartTime)
-                    {
-                        ShowDigEventNotice?.Invoke();
-                        m_needShowDigEventTimeCheck = false;
-                    }
-                }
-
-                if (m_needShowMathRpgEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventMathRpgStartTime)
-                    {
-                        ShowMathRpgEventNotice?.Invoke();
-                        m_needShowMathRpgEventTimeCheck = false;
-                    }
-                }
-
-                if (m_needShowDungeonKingSlimeEventTimeCheck == true)
-                {
-                    if (Current_TimeStamp > Define.EventHealDungeonStartTime)
-                    {
-                        ShowDungeonKingSlimeEventNotice?.Invoke();
-                        m_needShowDungeonKingSlimeEventTimeCheck = false;
                     }
                 }
             }

@@ -237,19 +237,19 @@ namespace GameBerry
                     {
                         if (_selectPlaySkillData != null && _selectPlaySkillData.SkillBaseData != null && _selectPlaySkillData.SkillBaseData.SkillDamageIndex != null)
                         {
-                            if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Projectile)
+                            if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Projectile)
                             {
                                 PlayProjectile(_selectPlaySkillData, AttackTarget);
                             }
-                            else if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Pierce)
+                            else if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Pierce)
                             {
                                 PlayPierce(_selectPlaySkillData, _attackTarget);
                             }
-                            else if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Void)
+                            else if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Void)
                             {
                                 PlayVoid(_selectPlaySkillData, _attackTarget);
                             }
-                            else if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.RepeatAttack)
+                            else if (_selectPlaySkillData.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.RepeatAttack)
                             {
                                 PlayRepeatAttack(_selectPlaySkillData, _attackTarget);
                             }
@@ -328,7 +328,7 @@ namespace GameBerry
 
                         if (_attackTarget == null)
                         {
-                            ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Right);
+                            ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
                         }
                         else
                         {
@@ -353,7 +353,7 @@ namespace GameBerry
 
                         if (_attackTarget == null)
                         {
-                            ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Right);
+                            ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
                         }
                         else
                         {
@@ -398,7 +398,7 @@ namespace GameBerry
                                 }
                                 else
                                 {
-                                    _swingDirVec.x = _lookDirection == Enum_ARR_LookDirection.Right ? -1 : 1;
+                                    _swingDirVec.x = _lookDirection == Enum_LookDirection.Right ? -1 : 1;
                                 }
 
                                 _swingDirVec.y = Random.Range(0.3f, 0.6f);
@@ -601,13 +601,13 @@ namespace GameBerry
 
                     if (_selectPlaySkillData != null)
                     {
-                        if (_selectPlaySkillData.SkillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+                        if (_selectPlaySkillData.SkillBaseData.TargetCheckType == Enum_TargetCheckType.Friendly)
                         {
                             ChangeState(CharacterState.Skill);
                             return;
                         }
 
-                        if (distance > _selectPlaySkillData.SkillBaseData.AttackRange * GetOutputAttackRange() * (_selectPlaySkillData.SkillBaseData.TargetAttackType == V2Enum_ARR_TargetAttackType.Circle ? 0.5f : 1.0f))
+                        if (distance > _selectPlaySkillData.SkillBaseData.AttackRange * GetOutputAttackRange() * (_selectPlaySkillData.SkillBaseData.TargetAttackType == Enum_TargetAttackType.Circle ? 0.5f : 1.0f))
                             ChangeState(CharacterState.Run);
                         else
                         {

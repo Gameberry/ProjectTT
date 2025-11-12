@@ -142,7 +142,7 @@ namespace GameBerry.UI
 
             if (Managers.GuideInteractorManager.Instance.PlayRelicTutorial == true)
             {
-                //if (_currentSynergyType == V2Enum_ARR_SynergyType.White)
+                //if (_currentSynergyType == Enum_SynergyType.White)
                 //{
                 //    SynergyEffectData tuto = Managers.SynergyManager.Instance.GetSynergyEffectData(_tutorialIndex);
                 //    if (tuto != null)

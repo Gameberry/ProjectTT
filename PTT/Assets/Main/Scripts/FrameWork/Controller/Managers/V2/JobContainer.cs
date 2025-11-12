@@ -65,14 +65,14 @@ namespace GameBerry
             _synergyLocalTable = Managers.TableManager.Instance.GetTableClass<JobLocalTable>();
         }
         //------------------------------------------------------------------------------------
-        public static Dictionary<ObscuredInt, JobData> GetJobDatas_Dic(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public static Dictionary<ObscuredInt, JobData> GetJobDatas_Dic(Enum_SynergyType Enum_SynergyType)
         {
-            return _synergyLocalTable.GetJobDatas_Dic(v2Enum_ARR_SynergyType);
+            return _synergyLocalTable.GetJobDatas_Dic(Enum_SynergyType);
         }
         //------------------------------------------------------------------------------------
-        public static JobData GetJobData(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt jobTier)
+        public static JobData GetJobData(Enum_SynergyType Enum_SynergyType, ObscuredInt jobTier)
         {
-            return _synergyLocalTable.GetJobData(v2Enum_ARR_SynergyType, jobTier);
+            return _synergyLocalTable.GetJobData(Enum_SynergyType, jobTier);
         }
         //------------------------------------------------------------------------------------
         public static Dictionary<ObscuredInt, JobData> GetAllJobData()

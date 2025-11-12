@@ -687,7 +687,7 @@ namespace GameBerry.Managers
                 List<double> after_quan = new List<double>();
 
                 _refreshResultBattleStage_DoubleRewardMsg.WaveRewardList.Clear();
-                _refreshResultBattleStage_DoubleRewardMsg.v2Enum_Dungeon = V2Enum_Dungeon.StageScene;
+                _refreshResultBattleStage_DoubleRewardMsg.EnumDungeon = Enum_Dungeon.StageScene;
 
 
                 foreach (var pair in coolreward)

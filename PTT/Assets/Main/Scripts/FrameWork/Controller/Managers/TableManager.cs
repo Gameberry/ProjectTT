@@ -134,8 +134,6 @@ namespace GameBerry.Managers
             //AddTable(new EventPassLocalTable());
             //AddTable(new LocalOverrideLocalTable());
 
-            //AddTable(new LuckyRouletteLocalTable());
-
             //AddTable(new SevenDayLocalTable());
             //AddTable(new BackLightLocalTable());
 

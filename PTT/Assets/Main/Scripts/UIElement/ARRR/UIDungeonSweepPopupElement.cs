@@ -121,9 +121,9 @@ namespace GameBerry.UI
             }
         }
         //------------------------------------------------------------------------------------
-        public void SetDungeonSelect(V2Enum_Dungeon v2Enum_Dungeon)
+        public void SetDungeonSelect(Enum_Dungeon enumDungeon)
         {
-            m_dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(v2Enum_Dungeon);
+            m_dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(enumDungeon);
 
             if (m_dungeonData == null)
                 return;
@@ -145,10 +145,8 @@ namespace GameBerry.UI
 
             switch (m_dungeonData.DungeonType)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
-                case V2Enum_Dungeon.TowerDungeon:
-                case V2Enum_Dungeon.GoldDungeon:
-                case V2Enum_Dungeon.RuneDungeon:
+                case Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         m_dungeonModeBase = Managers.DungeonDataManager.Instance.GetMaxClearDungeonModeData(m_dungeonData.DungeonType);
 

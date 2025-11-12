@@ -41,11 +41,11 @@ namespace GameBerry.Managers
 
                 if (BattleSceneManager.isAlive == true)
                 {
-                    if (BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.LobbyScene)
+                    if (BattleSceneManager.Instance.BattleType == Enum_Dungeon.LobbyScene)
                     {
                         ShowExitGame();
                     }
-                    //else if (Managers.DungeonManager.Instance.CurrentDungeonKinds == V2Enum_Dungeon.AllyArenaDungeon)
+                    //else if (Managers.DungeonManager.Instance.CurrentDungeonKinds == Enum_Dungeon.AllyArenaDungeon)
                     //{
                     //    DungeonManager.Instance.VisibleeAllyArenaExitPopup(true);
                     //}

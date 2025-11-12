@@ -7,7 +7,7 @@ namespace GameBerry
 {
     public class BattleSceneBase
     {
-        public V2Enum_Dungeon MyEnum_ARR_BattleType;
+        public Enum_Dungeon MyEnum_BattleType;
 
         protected List<CreatureController> _spawnCreature = new List<CreatureController>();
         protected List<CreatureController> _friendCreature = new List<CreatureController>();
@@ -25,8 +25,8 @@ namespace GameBerry
         private bool _needRefreshBuff_Foe = false;
         private bool _needRefreshBuff_Friend = false;
 
-        public V2Enum_ARR_BattleSpeed BattleSpeedType { get { return _battleSpeedType; } }
-        private V2Enum_ARR_BattleSpeed _battleSpeedType = V2Enum_ARR_BattleSpeed.x1;
+        public Enum_BattleSpeed BattleSpeedType { get { return _battleSpeedType; } }
+        private Enum_BattleSpeed _battleSpeedType = Enum_BattleSpeed.x1;
 
         public bool IsPlay { get { return _isPlay; } }
         protected bool _isPlay = false;
@@ -48,9 +48,9 @@ namespace GameBerry
             return true;
         }
         //------------------------------------------------------------------------------------
-        public void ChangeBattleSpeed(V2Enum_ARR_BattleSpeed v2Enum_ARR_BattleSpeed)
+        public void ChangeBattleSpeed(Enum_BattleSpeed Enum_BattleSpeed)
         {
-            _battleSpeedType = v2Enum_ARR_BattleSpeed;
+            _battleSpeedType = Enum_BattleSpeed;
 
             if (IsPlay == true)
             {
@@ -68,7 +68,7 @@ namespace GameBerry
 
             Managers.ARRRStatManager.Instance.GetPlayerARRRDefaultStat(ref aRRRInfo.DefaultStatValue);
 
-            if (MyEnum_ARR_BattleType != V2Enum_Dungeon.LobbyScene)
+            if (MyEnum_BattleType != Enum_Dungeon.LobbyScene)
             {
                 Managers.ARRRSkillManager.Instance.GetARRREquipSkill(ref aRRRInfo.EquipSkillData);
 
@@ -85,7 +85,7 @@ namespace GameBerry
             //_myARRRControllers.SetRootTransform(rootTrans);
             //_myARRRControllers.SetRootPos();
             //_myARRRControllers.SetCreatureData(creatureData, level);
-            _myARRRControllers.ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Right);
+            _myARRRControllers.ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
 
             _myARRRControllers.SetRootTransform(InGamePositionContainer.Instance.GetArrrStadardPos());
             _myARRRControllers.SetRootPos();
@@ -171,7 +171,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         protected CreatureController SpawnCreature(CreatureData creatureData, 
-            int level, Transform rootTrans, IFFType iFFType, Enum_ARR_LookDirection lookDirection
+            int level, Transform rootTrans, IFFType iFFType, Enum_LookDirection lookDirection
             , Dictionary<V2Enum_Stat, ObscuredDouble> addDefaultStat)
         {
             CreatureController creatureController = Managers.CreatureManager.Instance.GetCreature();
@@ -188,7 +188,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         protected CreatureController SpawnFoe(CreatureData creatureData,
-            Transform rootTrans, Enum_ARR_LookDirection lookDirection
+            Transform rootTrans, Enum_LookDirection lookDirection
             , List<OperatorOverrideStat> overrideStat)
         {
             CreatureController creatureController = Managers.CreatureManager.Instance.GetCreature();
@@ -270,10 +270,10 @@ namespace GameBerry
                 _needRefreshBuff_Foe = true;
         }
         //------------------------------------------------------------------------------------
-        public void AddGambleSkill(MainSkillData gambleSkillData, V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, SkillInfo skillInfo = null)
+        public void AddGambleSkill(MainSkillData gambleSkillData, Enum_SynergyType Enum_SynergyType, SkillInfo skillInfo = null)
         {
             if (_myARRRControllers != null)
-                _myARRRControllers.AddGambleSkill(gambleSkillData, v2Enum_ARR_SynergyType, skillInfo);
+                _myARRRControllers.AddGambleSkill(gambleSkillData, Enum_SynergyType, skillInfo);
         }
         //------------------------------------------------------------------------------------
         public void AddPet(PetData petData, SkillInfo skillInfo = null)

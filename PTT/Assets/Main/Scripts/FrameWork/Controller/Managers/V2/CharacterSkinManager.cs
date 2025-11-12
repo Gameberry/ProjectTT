@@ -131,8 +131,6 @@ namespace GameBerry.Managers
 
             ThirdPartyLog.Instance.SendLog_Skin_GetEvent(characterSkinData.Index);
 
-            PlayerDataManager.Instance.AddNewProfileData_Skin(characterSkinData);
-
             return playerSkinInfo;
         }
         //------------------------------------------------------------------------------------

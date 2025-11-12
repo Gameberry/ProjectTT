@@ -376,7 +376,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
 
 
-        public void SendLog_log_playmode(V2Enum_ARR_BattleSpeed type)
+        public void SendLog_log_playmode(Enum_BattleSpeed type)
         {
             fireBaseEventSender.SendLog_log_playmode(type);
         }
@@ -700,12 +700,6 @@ namespace GameBerry
                 idx, reward_type, before_quan, reward_quan, after_quan);
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_LuckyRouletteEvent(int rec_now, List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
-        {
-            fireBaseEventSender.SendLog_LuckyRouletteEvent(rec_now, 
-                reward_type, before_quan, reward_quan, after_quan);
-        }
-        //------------------------------------------------------------------------------------
         public void SendLog_BoxEvent(int idx, int count, List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
         {
             fireBaseEventSender.SendLog_BoxEvent(idx, count,
@@ -973,19 +967,19 @@ List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<
                 used_type, used_quan, reward_type, reward_quan);
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_Guild_RankDunEvent(V2Enum_Dungeon type, int rec_now)
+        public void SendLog_Guild_RankDunEvent(Enum_Dungeon type, int rec_now)
         {
             fireBaseEventSender.SendLog_Guild_RankDunEvent(type, rec_now);
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_Guild_NorDunEvent(V2Enum_Dungeon type, int rec_now,
+        public void SendLog_Guild_NorDunEvent(Enum_Dungeon type, int rec_now,
             List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
         {
             fireBaseEventSender.SendLog_Guild_NorDunEvent(type, rec_now,
                 reward_type, before_quan, reward_quan, after_quan);
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_Guild_NorDunSweepEvent(V2Enum_Dungeon type, int rec_now, int count,
+        public void SendLog_Guild_NorDunSweepEvent(Enum_Dungeon type, int rec_now, int count,
             List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
         {
             fireBaseEventSender.SendLog_Guild_NorDunSweepEvent(type, rec_now, count,

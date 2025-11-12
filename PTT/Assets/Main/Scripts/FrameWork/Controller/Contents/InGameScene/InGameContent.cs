@@ -22,26 +22,8 @@ namespace GameBerry.Contents
     }
 
 
-    [System.Serializable]
-    public class EventDialog
-    {
-        public V2Enum_EventKindType V2Enum_EventKindType;
-        public List<string> dialogLists = new List<string>();
-    }
-
-    [System.Serializable]
-    public class V2ForgeColorData
-    {
-        public int index;
-        public Color ForgeColor = Color.white;
-        public Color ForgeGradationColor = Color.white;
-    }
-
     public class InGameContent : IContent
     {
-        [Header("----------------Dig----------------")]
-        public List<EventDialog> eventDialogList = new List<EventDialog>();
-
         [Header("----------------Dungeon----------------")]
         [SerializeField]
         private List<VarianceColor> m_varianceColor_List = new List<VarianceColor>();
@@ -57,12 +39,6 @@ namespace GameBerry.Contents
         [SerializeField]
         private List<Sprite> characterProfileSprite_List = new List<Sprite>();
 
-        [Header("----------------Forge----------------")]
-        [SerializeField]
-        private List<V2ForgeColorData> m_v2ForgeColorDatas = new List<V2ForgeColorData>();
-        private static Dictionary<int, V2ForgeColorData> m_v2ForgeColorDatas_Dic = new Dictionary<int, V2ForgeColorData>();
-
-
         public int saveCount = 0;
 
         private static bool m_readyNoticeBattlePower = false;
@@ -74,23 +50,6 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         protected override void OnLoadStart()
         {
-            if (Define.EventRouletteDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventRoulette);
-            if (Define.EventDungeonDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventDungeon);
-            if (Define.EventHealDungeonDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventHealDungeon);
-            if (Define.EventRedBullDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventRedBullDungeon);
-            if (Define.EventUrsulaDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventUrsulaDungeon);
-            if (Define.EventDigDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventDig);
-            if (Define.EventMathRpgDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventMathRpg);
-            if (Define.EventKingSlimeDungeonDisPlayTime > Managers.TimeManager.Instance.Current_TimeStamp)
-                AddEventDialog(V2Enum_EventKindType.EventKingSlime);
-
             Managers.CharacterStatManager.Instance.SetBattlePower();
 
             for (int i = 0; i < m_shopElementCustomResource_List.Count; ++i)
@@ -102,31 +61,6 @@ namespace GameBerry.Contents
 
                 m_shopElementCustomResource_Dic[shopElementCustomResource.ContentDetailList].Add(shopElementCustomResource);
             }
-
-            //m_setNoticeMsg.NoticeStr = string.Format("·ÎµùÁß({0}/{1}");
-
-            //Message.Send(m_setNoticeMsg);
-
-
-            for (int i = 0; i < m_v2ForgeColorDatas.Count; ++i)
-            {
-                if (m_v2ForgeColorDatas_Dic.ContainsKey(m_v2ForgeColorDatas[i].index) == false)
-                {
-                    m_v2ForgeColorDatas_Dic.Add(m_v2ForgeColorDatas[i].index, m_v2ForgeColorDatas[i]);
-                }
-            }
-
-            Managers.PlayerDataManager.Instance.SetProfileData(characterProfileSprite_List);
-        }
-        //------------------------------------------------------------------------------------
-        private void AddEventDialog(V2Enum_EventKindType v2Enum_EventKindType)
-        {
-            EventDialog eventDialog = eventDialogList.Find(x => x.V2Enum_EventKindType == v2Enum_EventKindType);
-
-            if (eventDialog == null)
-                return;
-
-            _uiLoader._uiList.AddRange(eventDialog.dialogLists);
         }
         //------------------------------------------------------------------------------------
         protected override void OnUILoadComplete()
@@ -278,26 +212,6 @@ namespace GameBerry.Contents
             return shopElementCustomResources.Find(x => x.ResoueceIndex == resoueceIndex);
         }
         //------------------------------------------------------------------------------------
-        [ContextMenu("SortShopElementCustomResource")]
-        private void SortShopElementCustomResource()
-        {
-            m_shopElementCustomResource_List.Sort((x, y) =>
-            {
-                if (x.ContentDetailList.Enum32ToInt() > y.ContentDetailList.Enum32ToInt())
-                    return 1;
-                else if (x.ContentDetailList.Enum32ToInt() < y.ContentDetailList.Enum32ToInt())
-                    return -1;
-                else
-                {
-                    if (x.ResoueceIndex > y.ResoueceIndex)
-                        return 1;
-                    else if (x.ResoueceIndex < y.ResoueceIndex)
-                        return -1;
-                }
-                return 0;
-            });
-        }
-        //------------------------------------------------------------------------------------
         public void AddShopElementCustomResource(ShopElementCustomResource shopElementCustomResource)
         {
             m_shopElementCustomResource_List.Add(shopElementCustomResource);
@@ -311,14 +225,6 @@ namespace GameBerry.Contents
             Message.Send(setSimpleDescPopupMsg);
 
             GameBerry.UI.IDialog.RequestDialogEnter<InGameSimpleDescPopupDialog>();
-        }
-        //------------------------------------------------------------------------------------
-        public static V2ForgeColorData GetV2ForgeColorData(int index)
-        {
-            if (m_v2ForgeColorDatas_Dic.ContainsKey(index) == true)
-                return m_v2ForgeColorDatas_Dic[index];
-
-            return null;
         }
         //------------------------------------------------------------------------------------
     }

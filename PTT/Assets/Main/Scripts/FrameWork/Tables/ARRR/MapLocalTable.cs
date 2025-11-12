@@ -21,7 +21,7 @@ namespace GameBerry
         public ObscuredInt MonsterSetIcon;
         public ObscuredDouble WaveClearGold;
         public ObscuredDouble MonsterGold;
-        public V2Enum_ARR_RoomType RoomType;
+        public Enum_RoomType RoomType;
         public ObscuredDouble GasReward;
 
         public Dictionary<V2Enum_Stat, ObscuredDouble> AddStat = new Dictionary<V2Enum_Stat, ObscuredDouble>();
@@ -144,7 +144,7 @@ namespace GameBerry
                 mapWaveData.MonsterSetIcon = rows[i][MonsterSetIcon].ToString().ToInt();
                 mapWaveData.WaveClearGold = rows[i][WaveClearGold].ToString().ToDouble();
                 mapWaveData.MonsterGold = rows[i][MonsterGold].ToString().ToDouble();
-                mapWaveData.RoomType = rows[i][RoomType].ToString().ToInt().IntToEnum32<V2Enum_ARR_RoomType>();
+                mapWaveData.RoomType = rows[i][RoomType].ToString().ToInt().IntToEnum32<Enum_RoomType>();
                 mapWaveData.GasReward = rows[i][GasReward].ToString().ToDouble();
 
                 mapWaveData.AddStat.Add(V2Enum_Stat.Attack, rows[i][AddAtt].ToString().ToDouble());

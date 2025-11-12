@@ -10,14 +10,14 @@ namespace GameBerry.Managers
 {
     public class BattleSceneManager : MonoSingleton<BattleSceneManager>
     {
-        public Dictionary<V2Enum_Dungeon, BattleSceneBase> _battleScene_Dic = new Dictionary<V2Enum_Dungeon, BattleSceneBase>();
+        public Dictionary<Enum_Dungeon, BattleSceneBase> _battleScene_Dic = new Dictionary<Enum_Dungeon, BattleSceneBase>();
 
         private BattleSceneBase _currentBattleScene = null;
         public BattleSceneBase CurrentBattleScene { get { return _currentBattleScene; } }
-        private V2Enum_Dungeon _currentBattleType = V2Enum_Dungeon.None;
-        public V2Enum_Dungeon BattleType { get { return _currentBattleType; } }
+        private Enum_Dungeon _currentBattleType = Enum_Dungeon.None;
+        public Enum_Dungeon BattleType { get { return _currentBattleType; } }
 
-        public V2Enum_Dungeon _prevBattleType = V2Enum_Dungeon.None;
+        public Enum_Dungeon _prevBattleType = Enum_Dungeon.None;
 
         private BGManager _bgManager = null;
         public BGManager CurrentBgManager { get { return _bgManager; } }
@@ -56,10 +56,10 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void InitBattleScene()
         {
-            AddBattleScene(V2Enum_Dungeon.LobbyScene, new Battle_LobbyScene());
-            AddBattleScene(V2Enum_Dungeon.StageScene, new Battle_StageScene());
-            AddBattleScene(V2Enum_Dungeon.DiamondDungeon, new Battle_DiaDungeonScene());
-            AddBattleScene(V2Enum_Dungeon.TowerDungeon, new Battle_DiaDungeonScene());
+            AddBattleScene(Enum_Dungeon.LobbyScene, new Battle_LobbyScene());
+            AddBattleScene(Enum_Dungeon.StageScene, new Battle_StageScene());
+            AddBattleScene(Enum_Dungeon.DiamondDungeon, new Battle_DiaDungeonScene());
+            AddBattleScene(Enum_Dungeon.TowerDungeon, new Battle_DiaDungeonScene());
 
             foreach (var pair in _battleScene_Dic)
             {
@@ -67,13 +67,13 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-        private void AddBattleScene(V2Enum_Dungeon enum_ARR_BattleType, BattleSceneBase battleSceneBase)
+        private void AddBattleScene(Enum_Dungeon Enum_BattleType, BattleSceneBase battleSceneBase)
         {
-            _battleScene_Dic.Add(enum_ARR_BattleType, battleSceneBase);
-            _battleScene_Dic[enum_ARR_BattleType].MyEnum_ARR_BattleType = enum_ARR_BattleType;
+            _battleScene_Dic.Add(Enum_BattleType, battleSceneBase);
+            _battleScene_Dic[Enum_BattleType].MyEnum_BattleType = Enum_BattleType;
         }
         //------------------------------------------------------------------------------------
-        public BattleSceneBase GetBattleSceneLogic(V2Enum_Dungeon enum_BattleType)
+        public BattleSceneBase GetBattleSceneLogic(Enum_Dungeon enum_BattleType)
         {
             if (_battleScene_Dic.ContainsKey(enum_BattleType) == true)
                 return _battleScene_Dic[enum_BattleType];
@@ -90,10 +90,10 @@ namespace GameBerry.Managers
             if (Managers.SceneManager.Instance.BuildElement == BuildEnvironmentEnum.Develop)
             {
                 if (Input.GetKeyUp(KeyCode.Minus))
-                    ChangeBattleScene(V2Enum_Dungeon.LobbyScene);
+                    ChangeBattleScene(Enum_Dungeon.LobbyScene);
 
                 if (Input.GetKeyUp(KeyCode.Plus))
-                    ChangeBattleScene(V2Enum_Dungeon.StageScene);
+                    ChangeBattleScene(Enum_Dungeon.StageScene);
 
                 if (Input.GetKeyUp(KeyCode.KeypadPlus))
                 {
@@ -121,7 +121,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         private bool doChanged = false;
         //------------------------------------------------------------------------------------
-        public void ChangeBattleScene(V2Enum_Dungeon enum_BattleType)
+        public void ChangeBattleScene(Enum_Dungeon enum_BattleType)
         {
             if (_currentBattleType == enum_BattleType)
                 return;
@@ -146,14 +146,14 @@ namespace GameBerry.Managers
             if (_currentBattleScene != null)
                 _currentBattleScene.ReleaseBattleScene();
 
-            ChangeTimeScale(V2Enum_ARR_BattleSpeed.x1);
+            ChangeTimeScale(Enum_BattleSpeed.x1);
 
             _currentBattleScene = _battleScene_Dic[_currentBattleType];
             if (Define.IsSpeedUpMode == false)
             {
-                if (_currentBattleScene.BattleSpeedType == V2Enum_ARR_BattleSpeed.x2
-                    || _currentBattleScene.BattleSpeedType == V2Enum_ARR_BattleSpeed.x3)
-                    _currentBattleScene.ChangeBattleSpeed(V2Enum_ARR_BattleSpeed.x1);
+                if (_currentBattleScene.BattleSpeedType == Enum_BattleSpeed.x2
+                    || _currentBattleScene.BattleSpeedType == Enum_BattleSpeed.x3)
+                    _currentBattleScene.ChangeBattleSpeed(Enum_BattleSpeed.x1);
             }
 
             await UniTask.Delay(500);
@@ -176,10 +176,10 @@ namespace GameBerry.Managers
             if (doChanged == true)
                 return;
 
-            if (BattleType == V2Enum_Dungeon.StageScene && Managers.MapManager.Instance.NeedTutotial1() == true)
+            if (BattleType == Enum_Dungeon.StageScene && Managers.MapManager.Instance.NeedTutotial1() == true)
                 return;
 
-            //if (BattleType == Enum_ARR_BattleType.StageScene && Managers.MapManager.Instance.NeedTutotial2() == true)
+            //if (BattleType == Enum_BattleType.StageScene && Managers.MapManager.Instance.NeedTutotial2() == true)
             //    return;
 
             m_visibleDungeonExitPopupMsg.Visible = visible;
@@ -257,34 +257,34 @@ namespace GameBerry.Managers
             return _currentBattleScene.CreatureLimitLine;
         }
         //------------------------------------------------------------------------------------
-        public V2Enum_ARR_BattleSpeed CurrentBattleSpeed()
+        public Enum_BattleSpeed CurrentBattleSpeed()
         {
             if (_currentBattleScene != null)
                 return _currentBattleScene.BattleSpeedType;
 
-            return V2Enum_ARR_BattleSpeed.x1;
+            return Enum_BattleSpeed.x1;
         }
         //------------------------------------------------------------------------------------
-        public void ChangeTimeScale(V2Enum_ARR_BattleSpeed v2Enum_ARR_BattleSpeed)
+        public void ChangeTimeScale(Enum_BattleSpeed Enum_BattleSpeed)
         {
-            switch (v2Enum_ARR_BattleSpeed)
+            switch (Enum_BattleSpeed)
             {
-                case V2Enum_ARR_BattleSpeed.x1:
+                case Enum_BattleSpeed.x1:
                     Time.timeScale = 1.0f;
                     break;
-                case V2Enum_ARR_BattleSpeed.x1Dot5:
+                case Enum_BattleSpeed.x1Dot5:
                     Time.timeScale = 1.5f;
                     break;
-                case V2Enum_ARR_BattleSpeed.x2:
+                case Enum_BattleSpeed.x2:
                     Time.timeScale = 2.0f;
                     break;
-                case V2Enum_ARR_BattleSpeed.x3:
+                case Enum_BattleSpeed.x3:
                     Time.timeScale = 3.0f;
                     break;
-                case V2Enum_ARR_BattleSpeed.xHalf:
+                case Enum_BattleSpeed.xHalf:
                     Time.timeScale = 0.5f;
                     break;
-                case V2Enum_ARR_BattleSpeed.Pause:
+                case Enum_BattleSpeed.Pause:
                     Time.timeScale = 0.0f;
                     break;
                 default:
@@ -295,37 +295,37 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void ChangeBattleSpeed_UI()
         { // UI 에서 바꾸는건 토글 방식으로만 바꿔준다.
-            V2Enum_ARR_BattleSpeed v2Enum_ARR_BattleSpeed = V2Enum_ARR_BattleSpeed.x1;
+            Enum_BattleSpeed Enum_BattleSpeed = Enum_BattleSpeed.x1;
 
             if (_currentBattleScene != null)
             {
                 switch (_currentBattleScene.BattleSpeedType)
                 {
-                    case V2Enum_ARR_BattleSpeed.x1:
-                        v2Enum_ARR_BattleSpeed = V2Enum_ARR_BattleSpeed.x1Dot5;
+                    case Enum_BattleSpeed.x1:
+                        Enum_BattleSpeed = Enum_BattleSpeed.x1Dot5;
                         break;
-                    case V2Enum_ARR_BattleSpeed.x1Dot5:
+                    case Enum_BattleSpeed.x1Dot5:
                         if (Define.IsSpeedUpMode == true)
-                            v2Enum_ARR_BattleSpeed = V2Enum_ARR_BattleSpeed.x2;
+                            Enum_BattleSpeed = Enum_BattleSpeed.x2;
                         else
-                            v2Enum_ARR_BattleSpeed = V2Enum_ARR_BattleSpeed.x1;
+                            Enum_BattleSpeed = Enum_BattleSpeed.x1;
                         break;
-                    case V2Enum_ARR_BattleSpeed.x2:
+                    case Enum_BattleSpeed.x2:
 #if DEV_DEFINE
-                        v2Enum_ARR_BattleSpeed = V2Enum_ARR_BattleSpeed.x3;
+                        Enum_BattleSpeed = Enum_BattleSpeed.x3;
 #else
-                        v2Enum_ARR_BattleSpeed = V2Enum_ARR_BattleSpeed.x1;
+                        Enum_BattleSpeed = Enum_BattleSpeed.x1;
 #endif
                         break;
-                    case V2Enum_ARR_BattleSpeed.x3:
-                        v2Enum_ARR_BattleSpeed = V2Enum_ARR_BattleSpeed.x1;
+                    case Enum_BattleSpeed.x3:
+                        Enum_BattleSpeed = Enum_BattleSpeed.x1;
                         break;
                 }
             }
 
-            _currentBattleScene.ChangeBattleSpeed(v2Enum_ARR_BattleSpeed);
+            _currentBattleScene.ChangeBattleSpeed(Enum_BattleSpeed);
 
-            ThirdPartyLog.Instance.SendLog_log_playmode(v2Enum_ARR_BattleSpeed);
+            ThirdPartyLog.Instance.SendLog_log_playmode(Enum_BattleSpeed);
 
             Message.Send(_refreshBattleSpeedMsg);
         }
@@ -386,10 +386,10 @@ namespace GameBerry.Managers
                 _currentBattleScene.SetBuff(skillManageInfo, iFFType, false);
         }
         //------------------------------------------------------------------------------------
-        public void AddGambleSkill(MainSkillData gambleSkillData, V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max, SkillInfo skillInfo = null)
+        public void AddGambleSkill(MainSkillData gambleSkillData, Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max, SkillInfo skillInfo = null)
         {
             if (_currentBattleScene != null)
-                _currentBattleScene.AddGambleSkill(gambleSkillData, v2Enum_ARR_SynergyType, skillInfo);
+                _currentBattleScene.AddGambleSkill(gambleSkillData, Enum_SynergyType, skillInfo);
         }
         //------------------------------------------------------------------------------------
         public void AddPet(PetData petData, SkillInfo skillInfo = null)

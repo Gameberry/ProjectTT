@@ -13,7 +13,7 @@ namespace GameBerry.UI
     [System.Serializable]
     public class BattleSceneUI
     {
-        public V2Enum_Dungeon Enum_BattleType;
+        public Enum_Dungeon Enum_BattleType;
 
         public List<Transform> CustomUIs = new List<Transform>();
 
@@ -355,7 +355,7 @@ namespace GameBerry.UI
             if (_battle_StageScene == null)
                 return;
 
-            if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.LobbyScene)
+            if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.LobbyScene)
                 return;
 
             if (_battle_StageScene.MyARRRControllers != null)
@@ -456,7 +456,7 @@ namespace GameBerry.UI
             if (_currentBattleSceneUI.SceneUIDialog != null)
                 _currentBattleSceneUI.SceneUIDialog.ElementEnter();
 
-            if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.StageScene)
+            if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.StageScene)
             {
                 if (_battleSpeed_Btn != null)
                 {
@@ -489,21 +489,21 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void RefreshBattleSpeed(GameBerry.Event.RefreshBattleSpeedMsg msg)
         {
-            V2Enum_ARR_BattleSpeed v2Enum_ARR_BattleSpeed = Managers.BattleSceneManager.Instance.CurrentBattleSpeed();
+            Enum_BattleSpeed Enum_BattleSpeed = Managers.BattleSceneManager.Instance.CurrentBattleSpeed();
 
             if (_battleSpeed_Text != null)
             {
-                if (v2Enum_ARR_BattleSpeed == V2Enum_ARR_BattleSpeed.x1Dot5)
+                if (Enum_BattleSpeed == Enum_BattleSpeed.x1Dot5)
                     _battleSpeed_Text.text = "x1.5";
                 else
-                    _battleSpeed_Text.text = v2Enum_ARR_BattleSpeed.ToString();
+                    _battleSpeed_Text.text = Enum_BattleSpeed.ToString();
             }
 
             if (_battleSpeed_x1 != null)
-                _battleSpeed_x1.gameObject.SetActive(v2Enum_ARR_BattleSpeed == V2Enum_ARR_BattleSpeed.x1);
+                _battleSpeed_x1.gameObject.SetActive(Enum_BattleSpeed == Enum_BattleSpeed.x1);
 
             if (_battleSpeed_xOther != null)
-                _battleSpeed_xOther.gameObject.SetActive(v2Enum_ARR_BattleSpeed != V2Enum_ARR_BattleSpeed.x1);
+                _battleSpeed_xOther.gameObject.SetActive(Enum_BattleSpeed != Enum_BattleSpeed.x1);
         }
         //------------------------------------------------------------------------------------
         private void ResultBattleStage(GameBerry.Event.ResultBattleStageMsg msg)
@@ -540,7 +540,7 @@ namespace GameBerry.UI
                 if (_currentRecord != null)
                 {
                     _currentRecord.gameObject.SetActive(true);
-                    if (msg.v2Enum_Dungeon == V2Enum_Dungeon.StageScene)
+                    if (msg.EnumDungeon == Enum_Dungeon.StageScene)
                     {
                         int stage = msg.currentRecord / 100;
                         int wave = msg.currentRecord % 100;
@@ -557,7 +557,7 @@ namespace GameBerry.UI
                 { 
                     _prevRecord.gameObject.SetActive(false);
 
-                    if (msg.v2Enum_Dungeon == V2Enum_Dungeon.StageScene)
+                    if (msg.EnumDungeon == Enum_Dungeon.StageScene)
                     {
                         int stage = msg.prevRecord / 100;
                         int wave = msg.prevRecord % 100;
@@ -573,7 +573,7 @@ namespace GameBerry.UI
                 if (_loseNotiGroup != null)
                     _loseNotiGroup.gameObject.SetActive(true);
 
-                if (msg.v2Enum_Dungeon == V2Enum_Dungeon.StageScene)
+                if (msg.EnumDungeon == Enum_Dungeon.StageScene)
                 {
                     if (_stageLoseGroup != null)
                         _stageLoseGroup.gameObject.SetActive(true);
@@ -722,7 +722,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void RefreshDoubleRewardBtn()
         {
-            if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.StageScene)
+            if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.StageScene)
             {
                 if (Managers.MapManager.Instance.GetRemainDoubleRewardCount() <= 0)
                 {
@@ -762,7 +762,7 @@ namespace GameBerry.UI
         {
             if (Managers.GuideInteractorManager.Instance.PlayGameSpeedTutorial == true)
             { 
-                Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+                Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
 
                 if (_tutorialBlack != null)
                 {
@@ -790,7 +790,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_ResultLobbyBtn()
         {
-            Managers.BattleSceneManager.Instance.ChangeBattleScene(V2Enum_Dungeon.LobbyScene);
+            Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.LobbyScene);
         }
         //------------------------------------------------------------------------------------
         private void OnClick_DoubleReward()
@@ -807,7 +807,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void PlayARRRTutorial(GameBerry.Event.PlayARRRTutorialMsg msg)
         {
-            if (msg.v2Enum_ARR_GambleType != V2Enum_EventType.SpeedUp)
+            if (msg.Enum_GambleType != V2Enum_EventType.SpeedUp)
                 return;
 
             if (_battleSpeed_Btn != null)
@@ -823,7 +823,7 @@ namespace GameBerry.UI
                 _tutorialBlack.gameObject.SetActive(true);
             }
 
-            Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+            Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
         }
         //------------------------------------------------------------------------------------
     }

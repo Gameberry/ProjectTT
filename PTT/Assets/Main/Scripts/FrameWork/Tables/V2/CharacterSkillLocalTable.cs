@@ -76,7 +76,7 @@ namespace GameBerry
                 m_characterSkillDatas[i].AniStringKey = string.Format("{0}", m_characterSkillDatas[i].ResourceIndex);
             }
 
-            m_characterSkillData_BasicAttack = m_characterSkillDatas.Find(x => x.TriggerType == V2Enum_ARR_TriggerType.Default);
+            m_characterSkillData_BasicAttack = m_characterSkillDatas.Find(x => x.TriggerType == Enum_TriggerType.Default);
             m_characterSkillDatas.Remove(m_characterSkillData_BasicAttack);
 
             //SetListToDic(m_characterSkillDatas);

@@ -17,7 +17,7 @@ namespace GameBerry.UI
     [System.Serializable]
     public class SlotGradeEffect
     {
-        public V2Enum_ARR_GambleSlotGrade v2Enum_ARR_GambleSlotGrade;
+        public Enum_GambleSlotGrade Enum_GambleSlotGrade;
         public ParticleSystem Effect;
     }
 
@@ -45,7 +45,7 @@ namespace GameBerry.UI
         [SerializeField]
         private UIGambleSlotElement _uIGambleSlotElement_Grade;
 
-        private Dictionary<V2Enum_ARR_GambleSlotGrade, UIGambleSlotElement> _slotGradeElements = new Dictionary<V2Enum_ARR_GambleSlotGrade, UIGambleSlotElement>();
+        private Dictionary<Enum_GambleSlotGrade, UIGambleSlotElement> _slotGradeElements = new Dictionary<Enum_GambleSlotGrade, UIGambleSlotElement>();
 
         private List<UIGambleSlotElement> _slotGrade = new List<UIGambleSlotElement>();
 
@@ -112,9 +112,9 @@ namespace GameBerry.UI
                 _slotStat.Add(uIGambleSlotElement);
             }
 
-            for (int i = V2Enum_ARR_GambleSlotGrade.One.Enum32ToInt(); i < V2Enum_ARR_GambleSlotGrade.Max.Enum32ToInt(); ++i)
+            for (int i = Enum_GambleSlotGrade.One.Enum32ToInt(); i < Enum_GambleSlotGrade.Max.Enum32ToInt(); ++i)
             {
-                V2Enum_ARR_GambleSlotGrade v2Enum_Stat = i.IntToEnum32<V2Enum_ARR_GambleSlotGrade>();
+                Enum_GambleSlotGrade v2Enum_Stat = i.IntToEnum32<Enum_GambleSlotGrade>();
                 V2Enum_Grade v2Enum_Grade = i.IntToEnum32<V2Enum_Grade>();
 
                 GameObject clone = Instantiate(_uIGambleSlotElement_Grade.gameObject, _gambleGradeSlotRoot);
@@ -204,7 +204,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         public void OnClick_PlayGamble()
         {
-            //Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+            //Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
 
             AllHideGambleUI();
 
@@ -362,7 +362,7 @@ namespace GameBerry.UI
                 if (_uIGambleGradeEffects[i] == null)
                     continue;
 
-                if (_uIGambleGradeEffects[i].v2Enum_ARR_GambleSlotGrade == gambleSlotIncreaseValueData.GambleSlotGrade)
+                if (_uIGambleGradeEffects[i].Enum_GambleSlotGrade == gambleSlotIncreaseValueData.GambleSlotGrade)
                 {
                     if (_uIGambleGradeEffects[i].Effect != null)
                     { 
@@ -381,7 +381,7 @@ namespace GameBerry.UI
                 if (_uIGambleGradeEffectsResult[i] == null)
                     continue;
 
-                if (_uIGambleGradeEffectsResult[i].v2Enum_ARR_GambleSlotGrade == gambleSlotIncreaseValueData.GambleSlotGrade)
+                if (_uIGambleGradeEffectsResult[i].Enum_GambleSlotGrade == gambleSlotIncreaseValueData.GambleSlotGrade)
                 {
                     if (_uIGambleGradeEffectsResult[i].Effect != null)
                     {
@@ -401,7 +401,7 @@ namespace GameBerry.UI
             GambleResultHideDelay().Forget();
         }
         //------------------------------------------------------------------------------------
-        private IEnumerator GambleGradeSlot(int selectIndex, V2Enum_ARR_GambleSlotGrade resultGrade, double value, float duration)
+        private IEnumerator GambleGradeSlot(int selectIndex, Enum_GambleSlotGrade resultGrade, double value, float duration)
         {
             float StartTime = Time.unscaledTime;
             float EndTime = Time.unscaledTime + duration;

@@ -12,7 +12,7 @@ namespace GameBerry.UI
     [System.Serializable]
     public class UIInGameSynergyDetailKindTab
     {
-        public V2Enum_ARR_SynergyType V2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+        public Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
         public Transform SynergyGroup;
 
@@ -22,9 +22,9 @@ namespace GameBerry.UI
 
         public Transform DisableTrans;
 
-        public System.Action<V2Enum_ARR_SynergyType> _action;
+        public System.Action<Enum_SynergyType> _action;
 
-        public void SetCallBack(System.Action<V2Enum_ARR_SynergyType> action)
+        public void SetCallBack(System.Action<Enum_SynergyType> action)
         {
             if (SynergyBtn != null)
                 SynergyBtn.onClick.AddListener(OnClick);
@@ -34,7 +34,7 @@ namespace GameBerry.UI
 
         private void OnClick()
         {
-            _action?.Invoke(V2Enum_ARR_SynergyType);
+            _action?.Invoke(Enum_SynergyType);
         }
     }
 
@@ -95,15 +95,15 @@ namespace GameBerry.UI
             for (int i = 0; i < _synergyKindTabs.Count; ++i)
             {
                 UIInGameSynergyDetailKindTab uIInGameSynergyDetailKindTab = _synergyKindTabs[i];
-                V2Enum_ARR_SynergyType _synergyType = uIInGameSynergyDetailKindTab.V2Enum_ARR_SynergyType;
+                Enum_SynergyType _synergyType = uIInGameSynergyDetailKindTab.Enum_SynergyType;
 
-                if (_synergyType == V2Enum_ARR_SynergyType.Yellow)
+                if (_synergyType == Enum_SynergyType.Yellow)
                 {
                     if (uIInGameSynergyDetailKindTab.SynergyGroup != null)
                         uIInGameSynergyDetailKindTab.SynergyGroup.gameObject.SetActive(Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy));
                 }
 
-                if (_synergyType == V2Enum_ARR_SynergyType.White)
+                if (_synergyType == Enum_SynergyType.White)
                 {
                     if (uIInGameSynergyDetailKindTab.SynergyGroup != null)
                         uIInGameSynergyDetailKindTab.SynergyGroup.gameObject.SetActive(Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy));
@@ -116,7 +116,7 @@ namespace GameBerry.UI
                 await UniTask.Delay(500, false, PlayerLoopTiming.Update);
             if (_isEnter == true)
             {
-                Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+                Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
             }
         }
         //------------------------------------------------------------------------------------
@@ -140,17 +140,17 @@ namespace GameBerry.UI
             RequestDialogEnter<InGameGambleSynergyDetailDialog>();
 
             if (_synergyTitle != null)
-                Managers.LocalStringManager.Instance.SetLocalizeText(_synergyTitle, string.Format("synergytitle/{0}", msg.v2Enum_ARR_GambleSynergyType.Enum32ToInt()));
+                Managers.LocalStringManager.Instance.SetLocalizeText(_synergyTitle, string.Format("synergytitle/{0}", msg.Enum_GambleSynergyType.Enum32ToInt()));
 
 
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(msg.v2Enum_ARR_GambleSynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(msg.Enum_GambleSynergyType);
             if (gambleCardSprite != null)
             {
                 if (_synergyIcon != null)
                     _synergyIcon.sprite = gambleCardSprite.SynergyIcon;
             }
 
-            List<SynergyEffectData> gambleSynergyEffectDatas = Managers.SynergyManager.Instance.GetInGameEquipSynergyEffectData(msg.v2Enum_ARR_GambleSynergyType);
+            List<SynergyEffectData> gambleSynergyEffectDatas = Managers.SynergyManager.Instance.GetInGameEquipSynergyEffectData(msg.Enum_GambleSynergyType);
 
             for (int i = 0; i < gambleSynergyEffectDatas.Count; ++i)
             {
@@ -180,27 +180,27 @@ namespace GameBerry.UI
                 uIGambleSynergyDetailElement.gameObject.SetActive(false);
             }
 
-            SetSynergyTabUIState(msg.v2Enum_ARR_GambleSynergyType);
+            SetSynergyTabUIState(msg.Enum_GambleSynergyType);
         }
         //------------------------------------------------------------------------------------
-        private void SetSynergyTabUIState(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        private void SetSynergyTabUIState(Enum_SynergyType Enum_GambleSynergyType)
         {
             for (int i = 0; i < _synergyKindTabs.Count; ++i)
             {
                 if (_synergyKindTabs[i].DisableTrans != null)
-                    _synergyKindTabs[i].DisableTrans.gameObject.SetActive(_synergyKindTabs[i].V2Enum_ARR_SynergyType != v2Enum_ARR_GambleSynergyType);
+                    _synergyKindTabs[i].DisableTrans.gameObject.SetActive(_synergyKindTabs[i].Enum_SynergyType != Enum_GambleSynergyType);
 
                 if (_synergyKindTabs[i].SelectedTrans != null)
-                    _synergyKindTabs[i].SelectedTrans.gameObject.SetActive(_synergyKindTabs[i].V2Enum_ARR_SynergyType == v2Enum_ARR_GambleSynergyType);
+                    _synergyKindTabs[i].SelectedTrans.gameObject.SetActive(_synergyKindTabs[i].Enum_SynergyType == Enum_GambleSynergyType);
             }
         }
         //------------------------------------------------------------------------------------
-        private void OnClick_SynergyTab(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        private void OnClick_SynergyTab(Enum_SynergyType Enum_GambleSynergyType)
         {
-            if (v2Enum_ARR_GambleSynergyType == V2Enum_ARR_SynergyType.Max)
+            if (Enum_GambleSynergyType == Enum_SynergyType.Max)
                 return;
 
-            Managers.SynergyManager.Instance.ShowSynergyDetailPopup(v2Enum_ARR_GambleSynergyType);
+            Managers.SynergyManager.Instance.ShowSynergyDetailPopup(Enum_GambleSynergyType);
         }
         //------------------------------------------------------------------------------------
     }

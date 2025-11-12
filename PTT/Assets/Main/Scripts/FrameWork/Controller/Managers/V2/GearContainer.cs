@@ -218,7 +218,7 @@ namespace GameBerry
             return _synergyLocalTable.GetGearCombineData(grade);
         }
         //------------------------------------------------------------------------------------
-        public static GearOptionData GetGearOptionData(V2Enum_GearType v2Enum_Grade, V2Enum_ARR_SynergyType gearNumber)
+        public static GearOptionData GetGearOptionData(V2Enum_GearType v2Enum_Grade, Enum_SynergyType gearNumber)
         {
             return _synergyLocalTable.GetGearOptionData(v2Enum_Grade, gearNumber);
         }

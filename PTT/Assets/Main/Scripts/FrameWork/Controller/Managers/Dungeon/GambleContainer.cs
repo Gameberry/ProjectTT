@@ -46,12 +46,12 @@ namespace GameBerry
             return _gambleLocalTable.GetGambleSkillProbs(V2Enum_Grade);
         }
         //------------------------------------------------------------------------------------
-        public static List<GambleSkillProbData> GetGambleSkillProbs(V2Enum_ARR_SynergyType v2Enum_ARR_Card, V2Enum_Grade V2Enum_Grade)
+        public static List<GambleSkillProbData> GetGambleSkillProbs(Enum_SynergyType Enum_Card, V2Enum_Grade V2Enum_Grade)
         {
-            return _gambleLocalTable.GetGambleSkillProbs(v2Enum_ARR_Card, V2Enum_Grade);
+            return _gambleLocalTable.GetGambleSkillProbs(Enum_Card, V2Enum_Grade);
         }
         //------------------------------------------------------------------------------------
-        public static Dictionary<V2Enum_ARR_GambleSlotType, List<GambleSlotProbData>> GetGambleSlotProbData_Dic()
+        public static Dictionary<Enum_GambleSlotType, List<GambleSlotProbData>> GetGambleSlotProbData_Dic()
         {
             return _gambleLocalTable.GetGambleSlotProbData_Dic();
         }
@@ -71,9 +71,9 @@ namespace GameBerry
             return _gambleLocalTable.GetGambleProbChanceData();
         }
         //------------------------------------------------------------------------------------
-        public static GambleCostData GetGambleCostData(V2Enum_ARR_GambleType v2Enum_ARR_GambleType)
+        public static GambleCostData GetGambleCostData(Enum_GambleType Enum_GambleType)
         {
-            return _gambleLocalTable.GetGambleCostData(v2Enum_ARR_GambleType);
+            return _gambleLocalTable.GetGambleCostData(Enum_GambleType);
         }
         //------------------------------------------------------------------------------------
     }

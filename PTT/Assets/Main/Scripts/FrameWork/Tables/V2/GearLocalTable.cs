@@ -13,7 +13,7 @@ namespace GameBerry
         public ObscuredInt ResourceIndex;
 
         public V2Enum_GearType GearType;
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public V2Enum_Grade Grade;
 
@@ -66,7 +66,7 @@ namespace GameBerry
 
         public V2Enum_GearType GearType;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public Dictionary<V2Enum_Grade, ObscuredInt> GearSkills = new Dictionary<V2Enum_Grade, ObscuredInt>();
     }
@@ -82,7 +82,7 @@ namespace GameBerry
         
         private Dictionary<V2Enum_Grade, GearCombineData> _synergyRuneCombineDatas_Dic = new Dictionary<V2Enum_Grade, GearCombineData>();
 
-        private Dictionary<V2Enum_GearType, Dictionary<V2Enum_ARR_SynergyType, GearOptionData>> _gearOptionData_Dic = new Dictionary<V2Enum_GearType, Dictionary<V2Enum_ARR_SynergyType, GearOptionData>>();
+        private Dictionary<V2Enum_GearType, Dictionary<Enum_SynergyType, GearOptionData>> _gearOptionData_Dic = new Dictionary<V2Enum_GearType, Dictionary<Enum_SynergyType, GearOptionData>>();
 
         //------------------------------------------------------------------------------------
         public override async UniTask InitData_Async()
@@ -103,7 +103,7 @@ namespace GameBerry
                 gearData.ResourceIndex = rows[i]["ResourceIndex"].ToString().ToInt();
 
                 gearData.GearType = rows[i]["GearType"].ToString().ToInt().IntToEnum32<V2Enum_GearType>();
-                gearData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                gearData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
 
                 gearData.Grade = rows[i]["Grade"].ToString().ToInt().IntToEnum32<V2Enum_Grade>();
 
@@ -220,7 +220,7 @@ namespace GameBerry
                 gearOptionData.Index = rows[i]["Index"].ToString().ToInt();
 
                 gearOptionData.GearType = rows[i]["GearType"].ToString().ToInt().IntToEnum32<V2Enum_GearType>();
-                gearOptionData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                gearOptionData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
 
                 for (int grade = V2Enum_Grade.C.Enum32ToInt(); grade <= V2Enum_Grade.SS.Enum32ToInt(); ++grade)
                 {
@@ -239,7 +239,7 @@ namespace GameBerry
                 }
 
                 if (_gearOptionData_Dic.ContainsKey(gearOptionData.GearType) == false)
-                    _gearOptionData_Dic.Add(gearOptionData.GearType, new Dictionary<V2Enum_ARR_SynergyType, GearOptionData>());
+                    _gearOptionData_Dic.Add(gearOptionData.GearType, new Dictionary<Enum_SynergyType, GearOptionData>());
 
                 if (_gearOptionData_Dic[gearOptionData.GearType].ContainsKey(gearOptionData.SynergyType) == false)
                     _gearOptionData_Dic[gearOptionData.GearType][gearOptionData.SynergyType] = gearOptionData;
@@ -296,7 +296,7 @@ namespace GameBerry
             return null;
         }
         //------------------------------------------------------------------------------------
-        public GearOptionData GetGearOptionData(V2Enum_GearType grade, V2Enum_ARR_SynergyType gearNumber)
+        public GearOptionData GetGearOptionData(V2Enum_GearType grade, Enum_SynergyType gearNumber)
         {
             if (_gearOptionData_Dic.ContainsKey(grade) == false)
                 return null;

@@ -56,9 +56,9 @@ namespace GameBerry.Managers
 
             if (SynergyRuneContainer.SynergyEquip_Dic.Count == 0)
             {
-                //for (int synergy = V2Enum_ARR_SynergyType.Red.Enum32ToInt(); synergy < V2Enum_ARR_SynergyType.Max.Enum32ToInt(); ++synergy)
+                //for (int synergy = Enum_SynergyType.Red.Enum32ToInt(); synergy < Enum_SynergyType.Max.Enum32ToInt(); ++synergy)
                 //{
-                //    V2Enum_ARR_SynergyType v2Enum_Stat = synergy.IntToEnum32<V2Enum_ARR_SynergyType>();
+                //    Enum_SynergyType v2Enum_Stat = synergy.IntToEnum32<Enum_SynergyType>();
                 //    SynergyRuneContainer.SynergyEquip_Dic.Add(v2Enum_Stat, new Dictionary<ObscuredInt, ObscuredInt>());
 
                 //    for (int slot = 1; slot <= 8; ++slot)
@@ -723,8 +723,8 @@ namespace GameBerry.Managers
 
                 fakeRuneLevelInfo.Level = Managers.JobManager.Instance.GetJobAddBuff_Rune(descendData.SynergyType);
 
-                if (mainSkillData.MainSkillType == V2Enum_ARR_MainSkillType.SkillEnforge
-                    || mainSkillData.MainSkillType == V2Enum_ARR_MainSkillType.AfterSkill)
+                if (mainSkillData.MainSkillType == Enum_MainSkillType.SkillEnforge
+                    || mainSkillData.MainSkillType == Enum_MainSkillType.AfterSkill)
                 {
                     if (_targetAfterSkill.ContainsKey(mainSkillData.MainSkillTypeParam2) == false)
                         _targetAfterSkill.Add(mainSkillData.MainSkillTypeParam2, new List<MainSkillData>());

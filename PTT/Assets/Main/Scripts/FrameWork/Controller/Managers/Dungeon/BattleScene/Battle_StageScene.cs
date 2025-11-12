@@ -231,18 +231,6 @@ namespace GameBerry
 
             PlayNextWaveDelay(_currentFoeWaveData).Forget();
 
-            if (MapContainer.PlayingStage == Define.TestDefence_Stage)
-                Contents.GlobalContent.ShowGlobalNotice(string.Format(Managers.LocalStringManager.Instance.GetLocalString("stage/mapconcept/1"), Define.TestDefence_Wave, Define.TestDefence_HpRatio * 100, Define.TestDefence_Value), 3.0f);
-            else if (MapContainer.PlayingStage == Define.TestDamage_Stage)
-            { 
-                Contents.GlobalContent.ShowGlobalNotice(string.Format(Managers.LocalStringManager.Instance.GetLocalString("stage/mapconcept/2"), Define.TestDamage_SynergyLevel, Define.TestDamage_Value), 3.0f);
-                List<SynergyEffectData> synergyEffectData = Managers.SynergyManager.Instance.GetInGameEquipSynergyEffectData(V2Enum_ARR_SynergyType.Blue);
-                if (synergyEffectData.Count > Define.TestDamage_SynergyLevel - 1)
-                {
-                    Managers.SynergyManager.Instance.AddARRRSynergySkill(synergyEffectData[Define.TestDamage_SynergyLevel - 1], false);
-                }
-
-            }
 
             if (_currentMapData != null)
             {
@@ -335,7 +323,7 @@ namespace GameBerry
             {
                 if (foeWaveData.WaveStep == 0)
                     PlayCardGamblePlayTutorial(3000).Forget();
-                else if (foeWaveData.WaveStep == 1 && Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card) == 1)
+                else if (foeWaveData.WaveStep == 1 && Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card) == 1)
                 {
                     PlayCardGamblePlayTutorial2().Forget();
                 }
@@ -379,7 +367,7 @@ namespace GameBerry
 
             Managers.GoodsManager.Instance.AddGoodsAmount(V2Enum_Goods.Point.Enum32ToInt(), V2Enum_Point.InGameGold.Enum32ToInt(), 30);
 
-            _playARRRTutorialMsg.v2Enum_ARR_GambleType = V2Enum_EventType.TutoGambleCard;
+            _playARRRTutorialMsg.Enum_GambleType = V2Enum_EventType.TutoGambleCard;
             Message.Send(_playARRRTutorialMsg);
         }
         //------------------------------------------------------------------------------------
@@ -387,11 +375,11 @@ namespace GameBerry
         {
             await UniTask.Delay(1000, false, PlayerLoopTiming.Update, disableCancellation.Token);
 
-            if (Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card) == 1)
+            if (Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card) == 1)
             {
                 //Managers.GoodsManager.Instance.AddGoodsAmount(V2Enum_Goods.Point.Enum32ToInt(), V2Enum_Point.InGameGold.Enum32ToInt(), 20);
 
-                _playARRRTutorialMsg.v2Enum_ARR_GambleType = V2Enum_EventType.TutoGambleCard;
+                _playARRRTutorialMsg.Enum_GambleType = V2Enum_EventType.TutoGambleCard;
                 Message.Send(_playARRRTutorialMsg);
             }
         }
@@ -442,7 +430,7 @@ namespace GameBerry
 
             Managers.GuideInteractorManager.Instance.PlayGameSpeedTutorial = true;
 
-            _playARRRTutorialMsg.v2Enum_ARR_GambleType = V2Enum_EventType.SpeedUp;
+            _playARRRTutorialMsg.Enum_GambleType = V2Enum_EventType.SpeedUp;
             Message.Send(_playARRRTutorialMsg);
         }
         //------------------------------------------------------------------------------------
@@ -465,7 +453,7 @@ namespace GameBerry
             if (_isPlay == false)
                 return;
 
-            Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.x1);
+            Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.x1);
             _isPlay = false;
 
             UI.IDialog.RequestDialogExit<UI.InGameGambleDialog>();
@@ -503,7 +491,7 @@ namespace GameBerry
                 await UniTask.NextFrame();
             }
 
-            _resultBattleStageMsg.v2Enum_Dungeon = V2Enum_Dungeon.StageScene;
+            _resultBattleStageMsg.EnumDungeon = Enum_Dungeon.StageScene;
             _resultBattleStageMsg.Win = win;
             _resultBattleStageMsg.PlayTime = Time.time - _playStartTime;
             _resultBattleStageMsg.WaveRewardList.Clear();
@@ -595,7 +583,7 @@ namespace GameBerry
 
             GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.StageChallenge, 1);
             GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.MonterKillCount, _monsterKillCount);
-            GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.CardGambleCount, Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card));
+            GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.CardGambleCount, Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card));
             GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.SynergyCombineClear, Managers.SynergyManager.Instance.GetCombineClearCount());
 
             GameBerry.Managers.PassManager.Instance.AddMonsterKillCount(_monsterKillCount);
@@ -642,7 +630,7 @@ namespace GameBerry
 
                 CreatureController creatureController = SpawnCreature(
                     Managers.CreatureManager.Instance.GetCreatureData(monsterSetCreatureData.MonsterIndex),
-                    level + monsterSetCreatureData.MonsterCorrectLevel, pos, IFFType.IFF_Foe, Enum_ARR_LookDirection.Left
+                    level + monsterSetCreatureData.MonsterCorrectLevel, pos, IFFType.IFF_Foe, Enum_LookDirection.Left
                     , addDefaultStat);
                 creatureController.ReadyCreature();
                 //creatureController.PlayCreature();
@@ -651,8 +639,8 @@ namespace GameBerry
             _remainFoeCount = monsterSetData.MonsterSetCreatureDatas.Count;
         }
         //------------------------------------------------------------------------------------
-        private V2Enum_ARR_GambleType currentGuide = V2Enum_ARR_GambleType.Max;
-        private V2Enum_ARR_GambleType completeGuilde = V2Enum_ARR_GambleType.Max;
+        private Enum_GambleType currentGuide = Enum_GambleType.Max;
+        private Enum_GambleType completeGuilde = Enum_GambleType.Max;
         //------------------------------------------------------------------------------------
         public override void CallDeadCreature(CreatureController creatureController)
         {
@@ -684,7 +672,7 @@ namespace GameBerry
                     }
                     else
                     {
-                        V2Enum_ARR_RoomType v2Enum_ARR_RoomType = _currentFoeWaveData.MapWaveData.RoomType;
+                        Enum_RoomType Enum_RoomType = _currentFoeWaveData.MapWaveData.RoomType;
 
                         _currentWaveRewardData = Managers.MapManager.Instance.GetWaveRewardData(_currentFoeWaveData.MapWaveData.StageNumber, _currentFoeWaveData.MapWaveData.WaveNumber);
 
@@ -705,7 +693,7 @@ namespace GameBerry
                             if (_myARRRControllers != null)
                                 _myARRRControllers.SkillActiveController.AddWaveClearCount(1);
 
-                            if (v2Enum_ARR_RoomType == V2Enum_ARR_RoomType.Slot)
+                            if (Enum_RoomType == Enum_RoomType.Slot)
                                 PlayFreeSlot().Forget();
 
                             Managers.GoodsManager.Instance.AddGoodsAmount(V2Enum_Goods.Point.Enum32ToInt(), V2Enum_Point.InGameGas.Enum32ToInt(), gasAmount);

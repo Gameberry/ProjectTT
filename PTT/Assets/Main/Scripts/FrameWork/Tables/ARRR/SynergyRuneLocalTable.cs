@@ -12,7 +12,7 @@ namespace GameBerry
 
         public ObscuredInt ResourceIndex;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public V2Enum_Grade Grade;
 
@@ -28,7 +28,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
         public ObscuredInt SlotNumber;
 
         public V2Enum_OpenConditionType OpenConditionType;
@@ -73,7 +73,7 @@ namespace GameBerry
 
                 synergyRuneData.ResourceIndex = rows[i]["ResourceIndex"].ToString().ToInt();
 
-                synergyRuneData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                synergyRuneData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
 
                 synergyRuneData.Grade = rows[i]["Grade"].ToString().ToInt().IntToEnum32<V2Enum_Grade>();
 
@@ -108,7 +108,7 @@ namespace GameBerry
 
                 synergyRuneOpenconditionData.Index = rows[i]["Index"].ToString().ToInt();
 
-                //synergyRuneOpenconditionData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                //synergyRuneOpenconditionData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
 
                 synergyRuneOpenconditionData.SlotNumber = rows[i]["SlotNumber"].ToString().ToInt();
 

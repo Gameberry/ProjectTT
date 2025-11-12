@@ -19,12 +19,12 @@ namespace GameBerry
             effectPoolElement = StaticResource.Instance.GetSpriteEffectPoolElement();
         }
         //------------------------------------------------------------------------------------
-        public void PlaySpriteEffect(string effectName, Vector3 effectpos, Enum_ARR_LookDirection lookdirection = Enum_ARR_LookDirection.Right)
+        public void PlaySpriteEffect(string effectName, Vector3 effectpos, Enum_LookDirection lookdirection = Enum_LookDirection.Right)
         {
 
         }
         //------------------------------------------------------------------------------------
-        public void PlaySpriteEffect(string anikey, int varnum, string SpriteAnimationName, Vector3 effectpos, Enum_ARR_LookDirection lookdirection = Enum_ARR_LookDirection.Right)
+        public void PlaySpriteEffect(string anikey, int varnum, string SpriteAnimationName, Vector3 effectpos, Enum_LookDirection lookdirection = Enum_LookDirection.Right)
         {
             AnimationSpriteLibraryAsset animationSpriteLibraryAsset = Managers.AnimationSpriteManager.Instance.GetAnimationSpriteLibraryAsset(anikey, varnum);
             SpriteAnimation spriteAnimation = m_animationTableAsset.GetAniData(anikey, SpriteAnimationName);
@@ -35,7 +35,7 @@ namespace GameBerry
             PlaySpriteEffect(spriteAnimation, animationSpriteLibraryAsset, effectpos, lookdirection);
         }
         //------------------------------------------------------------------------------------
-        public void PlaySpriteEffect(SpriteAnimation spriteAnimation, AnimationSpriteLibraryAsset animationSpriteLibraryAsset, Vector3 effectpos, Enum_ARR_LookDirection lookdirection = Enum_ARR_LookDirection.Right)
+        public void PlaySpriteEffect(SpriteAnimation spriteAnimation, AnimationSpriteLibraryAsset animationSpriteLibraryAsset, Vector3 effectpos, Enum_LookDirection lookdirection = Enum_LookDirection.Right)
         {
             if (spriteEffectPoolElements.Count <= 0)
                 AddSpriteEffectPool();

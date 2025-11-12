@@ -49,17 +49,17 @@ namespace GameBerry
             _speed = _skillManageInfo.SkillBaseData.SkillDamageIndex.DamageParam;
             _goalPos = _targetPosition;
 
-            Enum_ARR_LookDirection stageGenerateDirections = _startPos.x < _goalPos.x ? Enum_ARR_LookDirection.Right : Enum_ARR_LookDirection.Left;
+            Enum_LookDirection stageGenerateDirections = _startPos.x < _goalPos.x ? Enum_LookDirection.Right : Enum_LookDirection.Left;
 
             _startPos = transform.position;
 
-            //if (stageGenerateDirections == Enum_ARR_LookDirection.Right)
+            //if (stageGenerateDirections == Enum_LookDirection.Right)
             //{
             //    Vector3 rotate = transform.eulerAngles;
             //    rotate.y = 0.0f;
             //    transform.eulerAngles = rotate;
             //}
-            //else if (stageGenerateDirections == Enum_ARR_LookDirection.Left)
+            //else if (stageGenerateDirections == Enum_LookDirection.Left)
             //{
             //    Vector3 rotate = transform.eulerAngles;
             //    rotate.y = 180.0f;

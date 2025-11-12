@@ -23,9 +23,9 @@ namespace GameBerry
 
     public class CharacterControllerBase : MonoBehaviour
     {
-        public Enum_ARR_LookDirection LookDirection { get { return _lookDirection; } }
+        public Enum_LookDirection LookDirection { get { return _lookDirection; } }
         [SerializeField]
-        protected Enum_ARR_LookDirection _lookDirection = Enum_ARR_LookDirection.Right;
+        protected Enum_LookDirection _lookDirection = Enum_LookDirection.Right;
 
         [SerializeField]
         protected IFFType _iFFType = IFFType.IFF_None;
@@ -38,14 +38,14 @@ namespace GameBerry
 
         protected float _minTraceRange = 1.0f;
 
-        protected Enum_ARR_TargetConditionType _defaultSearchType = Enum_ARR_TargetConditionType.RangeAll;
+        protected Enum_TargetConditionType _defaultSearchType = Enum_TargetConditionType.RangeAll;
 
-        protected Enum_ARR_TargetConditionType _mySearchType;
-        public Enum_ARR_TargetConditionType MySearchType { get { return _mySearchType; } }
+        protected Enum_TargetConditionType _mySearchType;
+        public Enum_TargetConditionType MySearchType { get { return _mySearchType; } }
 
         protected bool _isMonster = false;
-        protected V2Enum_ARR_MonsterGradeType _monsterGradeType = V2Enum_ARR_MonsterGradeType.Normal;
-        public V2Enum_ARR_MonsterGradeType MonsterGradeType { get { return _monsterGradeType; } }
+        protected Enum_MonsterGradeType _monsterGradeType = Enum_MonsterGradeType.Normal;
+        public Enum_MonsterGradeType MonsterGradeType { get { return _monsterGradeType; } }
 
         private Dictionary<ParticlePoolElement, ParticlePoolElement> _aliveParticle = new Dictionary<ParticlePoolElement, ParticlePoolElement>();
 
@@ -183,9 +183,9 @@ namespace GameBerry
         protected Dictionary<V2Enum_Grade, LinkedList<SkillBaseData>> _gradeAfterSkill = new Dictionary<V2Enum_Grade, LinkedList<SkillBaseData>>();
         protected LinkedList<SkillBaseData> _allDamageAfterSkill = new LinkedList<SkillBaseData>();
 
-        protected Dictionary<V2Enum_ARR_SynergyType, LinkedList<SkillBaseData>> _synergyAfterSkill = new Dictionary<V2Enum_ARR_SynergyType, LinkedList<SkillBaseData>>();
+        protected Dictionary<Enum_SynergyType, LinkedList<SkillBaseData>> _synergyAfterSkill = new Dictionary<Enum_SynergyType, LinkedList<SkillBaseData>>();
 
-        protected Dictionary<V2Enum_ARR_SynergyType, LinkedList<SkillModuleData>> _synergySkillModule = new Dictionary<V2Enum_ARR_SynergyType, LinkedList<SkillModuleData>>();
+        protected Dictionary<Enum_SynergyType, LinkedList<SkillModuleData>> _synergySkillModule = new Dictionary<Enum_SynergyType, LinkedList<SkillModuleData>>();
 
 
         protected double _interestAmount = 0;
@@ -202,17 +202,17 @@ namespace GameBerry
 
         protected double _increaseHealEffect = 0;
 
-        protected Dictionary<V2Enum_ARR_SynergyType, double> _synergyVampiricDmg = new Dictionary<V2Enum_ARR_SynergyType, double>();
+        protected Dictionary<Enum_SynergyType, double> _synergyVampiricDmg = new Dictionary<Enum_SynergyType, double>();
         protected double _outputSynergyVampiricDmg = 0;
 
-        protected Dictionary<V2Enum_ARR_SynergyType, double> _synergyDescendDmg = new Dictionary<V2Enum_ARR_SynergyType, double>();
+        protected Dictionary<Enum_SynergyType, double> _synergyDescendDmg = new Dictionary<Enum_SynergyType, double>();
         protected double _outputSynergyDescendDmg = 0;
 
 
-        protected Dictionary<V2Enum_ARR_SynergyType, int> _synergyAmount = new Dictionary<V2Enum_ARR_SynergyType, int>();
-        protected Dictionary<V2Enum_ARR_SynergyType, double> _synergyIncreaseAtt = new Dictionary<V2Enum_ARR_SynergyType, double>();
-        protected Dictionary<V2Enum_ARR_SynergyType, double> _synergyIncreaseDef = new Dictionary<V2Enum_ARR_SynergyType, double>();
-        protected Dictionary<V2Enum_ARR_SynergyType, double> _synergyIncreaseHp = new Dictionary<V2Enum_ARR_SynergyType, double>();
+        protected Dictionary<Enum_SynergyType, int> _synergyAmount = new Dictionary<Enum_SynergyType, int>();
+        protected Dictionary<Enum_SynergyType, double> _synergyIncreaseAtt = new Dictionary<Enum_SynergyType, double>();
+        protected Dictionary<Enum_SynergyType, double> _synergyIncreaseDef = new Dictionary<Enum_SynergyType, double>();
+        protected Dictionary<Enum_SynergyType, double> _synergyIncreaseHp = new Dictionary<Enum_SynergyType, double>();
 
 
 
@@ -346,7 +346,7 @@ namespace GameBerry
                 if (_skillEffectController.IsAppliedCC(V2Enum_SkillEffectType.Invincible) == true)
                 {
                     Managers.HPMPVarianceManager.Instance.ShowVarianceText(HpMpVarianceType.Block, 0.0, _varianceTransform);
-                    _skillEffectController.PlayApplyCC(damage.v2CCDatas);
+                    _skillEffectController.PlayApplyCC(damage.CcDatas);
                     return 0.0;
                 }
             }
@@ -358,7 +358,7 @@ namespace GameBerry
 
             for(int hit = 0; hit < damage.HitCount; ++hit)
             {
-                V2DamageData v2DamageData = damage.v2DamageDatas;
+                V2DamageData v2DamageData = damage.DamageData;
 
                 if (v2DamageData.AttackValue > 0)
                 {
@@ -429,7 +429,7 @@ namespace GameBerry
                             damage.characterControllerBase.SkillActiveController.AddAttackCount(hitcount);
                             if (_isMonster == true)
                             {
-                                if (_monsterGradeType == V2Enum_ARR_MonsterGradeType.Normal)
+                                if (_monsterGradeType == Enum_MonsterGradeType.Normal)
                                     damage.characterControllerBase.SkillActiveController.AddNormalHitCount(hitcount);
                                 else
                                     damage.characterControllerBase.SkillActiveController.AddBossHitCount(hitcount);
@@ -550,26 +550,26 @@ namespace GameBerry
             if (CharacterState == CharacterState.Dead)
                 return resultdamage;
 
-            if (damage.v2CCDatas != null)
+            if (damage.CcDatas != null)
             {
-                for (int i = 0; i < damage.v2CCDatas.Count; ++i)
+                for (int i = 0; i < damage.CcDatas.Count; ++i)
                 {
-                    if (damage.v2CCDatas[i].CCTypeEnum == V2Enum_SkillEffectType.BurnDOT)
+                    if (damage.CcDatas[i].CCTypeEnum == V2Enum_SkillEffectType.BurnDOT)
                     {
                         V2CCData v2CCData = new V2CCData();
-                        v2CCData.CCTypeEnum = damage.v2CCDatas[i].CCTypeEnum;
+                        v2CCData.CCTypeEnum = damage.CcDatas[i].CCTypeEnum;
 
-                        v2CCData.TargetCondition = damage.v2CCDatas[i].TargetCondition;
+                        v2CCData.TargetCondition = damage.CcDatas[i].TargetCondition;
 
-                        v2CCData.CCTime = damage.v2CCDatas[i].CCTime;
-                        v2CCData.CCValue = resultdamage * damage.v2CCDatas[i].CCValue;
-                        v2CCData.CCProb = damage.v2CCDatas[i].CCProb;
+                        v2CCData.CCTime = damage.CcDatas[i].CCTime;
+                        v2CCData.CCValue = resultdamage * damage.CcDatas[i].CCValue;
+                        v2CCData.CCProb = damage.CcDatas[i].CCProb;
 
-                        v2CCData.AttackerPos = damage.v2CCDatas[i].AttackerPos;
+                        v2CCData.AttackerPos = damage.CcDatas[i].AttackerPos;
                         ApplyCC(v2CCData);
                     }
                     else
-                        ApplyCC(damage.v2CCDatas[i]);
+                        ApplyCC(damage.CcDatas[i]);
                 }
             }
 
@@ -642,9 +642,9 @@ namespace GameBerry
                     }
                 case V2Enum_SkillEffectType.RandomSynergyGain:
                     {
-                        int synergy = Random.Range(V2Enum_ARR_SynergyType.Red.Enum32ToInt(), V2Enum_ARR_SynergyType.Max.Enum32ToInt());
+                        int synergy = Random.Range(Enum_SynergyType.Red.Enum32ToInt(), Enum_SynergyType.Max.Enum32ToInt());
 
-                        Managers.SynergyManager.Instance.AddSkillSynergy(synergy.IntToEnum32<V2Enum_ARR_SynergyType>(), (int)v2CCData.CCValue);
+                        Managers.SynergyManager.Instance.AddSkillSynergy(synergy.IntToEnum32<Enum_SynergyType>(), (int)v2CCData.CCValue);
                         return;
                     }
                 case V2Enum_SkillEffectType.GetSameSynergy:
@@ -665,22 +665,22 @@ namespace GameBerry
 
                 case V2Enum_SkillEffectType.GetSynergyFire:
                     {
-                        Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.Red, (int)v2CCData.CCValue);
+                        Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.Red, (int)v2CCData.CCValue);
                         return;
                     }
                 case V2Enum_SkillEffectType.GetSynergyGold:
                     {
-                        Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.Yellow, (int)v2CCData.CCValue);
+                        Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.Yellow, (int)v2CCData.CCValue);
                         return;
                     }
                 case V2Enum_SkillEffectType.GetSynergyWater:
                     {
-                        Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.Blue, (int)v2CCData.CCValue);
+                        Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.Blue, (int)v2CCData.CCValue);
                         return;
                     }
                 case V2Enum_SkillEffectType.GetSynergyThunder:
                     {
-                        Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.White, (int)v2CCData.CCValue);
+                        Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.White, (int)v2CCData.CCValue);
                         return;
                     }
                 case V2Enum_SkillEffectType.Shield:
@@ -695,7 +695,7 @@ namespace GameBerry
                     }
                 case V2Enum_SkillEffectType.SheildFireCount:
                     {
-                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(V2Enum_ARR_SynergyType.Red);
+                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(Enum_SynergyType.Red);
 
                         V2CCData shilddata = v2CCData;
                         shilddata.CCValue = shildValue;
@@ -705,7 +705,7 @@ namespace GameBerry
                     }
                 case V2Enum_SkillEffectType.SheildGoldCount:
                     {
-                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(V2Enum_ARR_SynergyType.Yellow);
+                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(Enum_SynergyType.Yellow);
 
                         V2CCData shilddata = v2CCData;
                         shilddata.CCValue = shildValue;
@@ -715,7 +715,7 @@ namespace GameBerry
                     }
                 case V2Enum_SkillEffectType.SheildWaterCount:
                     {
-                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(V2Enum_ARR_SynergyType.Blue);
+                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(Enum_SynergyType.Blue);
 
                         V2CCData shilddata = v2CCData;
                         shilddata.CCValue = shildValue;
@@ -725,7 +725,7 @@ namespace GameBerry
                     }
                 case V2Enum_SkillEffectType.SheildThunderCount:
                     {
-                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(V2Enum_ARR_SynergyType.White);
+                        double shildValue = v2CCData.CCValue * Managers.SynergyManager.Instance.GetSynergyStack(Enum_SynergyType.White);
 
                         V2CCData shilddata = v2CCData;
                         shilddata.CCValue = shildValue;
@@ -754,29 +754,29 @@ namespace GameBerry
 
             switch (v2CCData.TargetCondition)
             {
-                case Enum_ARR_TargetStateType.All:
+                case Enum_TargetStateType.All:
                     return true;
-                case Enum_ARR_TargetStateType.HPPercentOver:
+                case Enum_TargetStateType.HPPercentOver:
                     {
                         return IsHalfOver() == true;
                     }
-                case Enum_ARR_TargetStateType.HPPercentBelow:
+                case Enum_TargetStateType.HPPercentBelow:
                     {
                         return IsHalfOver() == false;
                     }
-                case Enum_ARR_TargetStateType.BossMonster:
+                case Enum_TargetStateType.BossMonster:
                     {
                         if (_isMonster == false)
                             return false;
 
-                        return _monsterGradeType == V2Enum_ARR_MonsterGradeType.Boss || _monsterGradeType == V2Enum_ARR_MonsterGradeType.Named;
+                        return _monsterGradeType == Enum_MonsterGradeType.Boss || _monsterGradeType == Enum_MonsterGradeType.Named;
                     }
-                case Enum_ARR_TargetStateType.NormalMonster:
+                case Enum_TargetStateType.NormalMonster:
                     {
                         if (_isMonster == false)
                             return false;
 
-                        return _monsterGradeType == V2Enum_ARR_MonsterGradeType.Normal;
+                        return _monsterGradeType == Enum_MonsterGradeType.Normal;
                     }
                 default:
                     return true;
@@ -1082,24 +1082,6 @@ namespace GameBerry
             double beforeHp = _currentHP;
 
             SetHP(_currentHP - decreaseValue);
-
-            if (_isMonster == false)
-                return;
-
-            if (MapContainer.PlayingStage == Define.TestDefence_Stage
-                && MapContainer.PlayingWave + 1 >= Define.TestDefence_Wave)
-            {
-                if (_characterState != CharacterState.Dead && _currentHP > 0.0)
-                {
-                    if ((beforeHp / _maxHP) >= Define.TestDefence_HpRatio
-                        && (_currentHP / _maxHP) < Define.TestDefence_HpRatio)
-                    {
-                        double defence = _characterStatOperator.GetDefaultValue(V2Enum_Stat.Defence);
-                        _characterStatOperator.SetDefaultStat(V2Enum_Stat.Defence, defence + Define.TestDefence_Value);
-                        _characterStatOperator.RefreshOutputStatValue(V2Enum_Stat.Defence);
-                    }
-                }
-            }
         }
         //------------------------------------------------------------------------------------
         protected void SetHP(double hp)
@@ -1184,11 +1166,6 @@ namespace GameBerry
 
 
                 InCreaseHP(ratio * MaxHP * Time.deltaTime);
-
-                if (MapContainer.PlayingStage == Define.TestDamage_Stage)
-                {
-                    DeCreaseHP(Define.TestDamage_Value * Time.deltaTime);
-                }
             }
         }
         //------------------------------------------------------------------------------------
@@ -1427,7 +1404,7 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
-        public void ChangeCharacterLookAtDirection(Enum_ARR_LookDirection direction)
+        public void ChangeCharacterLookAtDirection(Enum_LookDirection direction)
         {
             if (direction == _lookDirection)
                 return;
@@ -1437,7 +1414,7 @@ namespace GameBerry
 
             float selectRatote = 0.0f;
 
-            if (_lookDirection == Enum_ARR_LookDirection.Left)
+            if (_lookDirection == Enum_LookDirection.Left)
                 selectRatote = 180.0f;
 
             rotate.y = selectRatote;
@@ -1469,7 +1446,7 @@ namespace GameBerry
             Vector2 direction = targetTrans.transform.position - transform.position;
             direction.Normalize();
 
-            ChangeCharacterLookAtDirection(direction.x < 0 ? Enum_ARR_LookDirection.Left : Enum_ARR_LookDirection.Right);
+            ChangeCharacterLookAtDirection(direction.x < 0 ? Enum_LookDirection.Left : Enum_LookDirection.Right);
         }
         //------------------------------------------------------------------------------------
         public virtual double GetOutPutMyStat(V2Enum_Stat v2Enum_Stat)
@@ -1692,21 +1669,21 @@ namespace GameBerry
             if (_isMonster == true)
                 return;
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+            Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
             if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.VampiricDmgFire)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+                Enum_SynergyType = Enum_SynergyType.Red;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.VampiricDmgGold)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Yellow;
+                Enum_SynergyType = Enum_SynergyType.Yellow;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.VampiricDmgWater)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Blue;
+                Enum_SynergyType = Enum_SynergyType.Blue;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.VampiricDmgThunder)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.White;
+                Enum_SynergyType = Enum_SynergyType.White;
 
-            if (_synergyVampiricDmg.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyVampiricDmg.Add(v2Enum_ARR_SynergyType, 0);
+            if (_synergyVampiricDmg.ContainsKey(Enum_SynergyType) == false)
+                _synergyVampiricDmg.Add(Enum_SynergyType, 0);
 
-            _synergyVampiricDmg[v2Enum_ARR_SynergyType] += v2CCData.CCValue;
+            _synergyVampiricDmg[Enum_SynergyType] += v2CCData.CCValue;
 
             RefreshOutputSynergyVampiricDmg();
         }
@@ -1726,21 +1703,21 @@ namespace GameBerry
             if (_isMonster == true)
                 return;
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+            Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
             if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.DescendDmgFireCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+                Enum_SynergyType = Enum_SynergyType.Red;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.DescendDmgGoldCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Yellow;
+                Enum_SynergyType = Enum_SynergyType.Yellow;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.DescendDmgWaterCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Blue;
+                Enum_SynergyType = Enum_SynergyType.Blue;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.DescendDmgThunderCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.White;
+                Enum_SynergyType = Enum_SynergyType.White;
 
-            if (_synergyDescendDmg.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyDescendDmg.Add(v2Enum_ARR_SynergyType, 0);
+            if (_synergyDescendDmg.ContainsKey(Enum_SynergyType) == false)
+                _synergyDescendDmg.Add(Enum_SynergyType, 0);
 
-            _synergyDescendDmg[v2Enum_ARR_SynergyType] += v2CCData.CCValue;
+            _synergyDescendDmg[Enum_SynergyType] += v2CCData.CCValue;
 
             RefreshOutputSynergyDescendDmg();
         }
@@ -1760,21 +1737,21 @@ namespace GameBerry
             if (_isMonster == true)
                 return;
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+            Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
             if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseAttFireCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+                Enum_SynergyType = Enum_SynergyType.Red;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseAttGoldCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Yellow;
+                Enum_SynergyType = Enum_SynergyType.Yellow;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseAttWaterCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Blue;
+                Enum_SynergyType = Enum_SynergyType.Blue;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseAttThunderCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.White;
+                Enum_SynergyType = Enum_SynergyType.White;
 
-            if (_synergyIncreaseAtt.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyIncreaseAtt.Add(v2Enum_ARR_SynergyType, 0);
+            if (_synergyIncreaseAtt.ContainsKey(Enum_SynergyType) == false)
+                _synergyIncreaseAtt.Add(Enum_SynergyType, 0);
 
-            _synergyIncreaseAtt[v2Enum_ARR_SynergyType] += v2CCData.CCValue;
+            _synergyIncreaseAtt[Enum_SynergyType] += v2CCData.CCValue;
         }
         //------------------------------------------------------------------------------------
         public void AddSynergyStatBuff_Def(V2CCData v2CCData)
@@ -1782,21 +1759,21 @@ namespace GameBerry
             if (_isMonster == true)
                 return;
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+            Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
             if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseDefFireCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+                Enum_SynergyType = Enum_SynergyType.Red;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseDefGoldCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Yellow;
+                Enum_SynergyType = Enum_SynergyType.Yellow;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseDefWaterCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Blue;
+                Enum_SynergyType = Enum_SynergyType.Blue;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseDefThunderCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.White;
+                Enum_SynergyType = Enum_SynergyType.White;
 
-            if (_synergyIncreaseDef.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyIncreaseDef.Add(v2Enum_ARR_SynergyType, 0);
+            if (_synergyIncreaseDef.ContainsKey(Enum_SynergyType) == false)
+                _synergyIncreaseDef.Add(Enum_SynergyType, 0);
 
-            _synergyIncreaseDef[v2Enum_ARR_SynergyType] += v2CCData.CCValue;
+            _synergyIncreaseDef[Enum_SynergyType] += v2CCData.CCValue;
         }
         //------------------------------------------------------------------------------------
         public void AddSynergyStatBuff_Hp(V2CCData v2CCData)
@@ -1804,103 +1781,103 @@ namespace GameBerry
             if (_isMonster == true)
                 return;
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+            Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
             if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseHpFireCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+                Enum_SynergyType = Enum_SynergyType.Red;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseHpGoldCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Yellow;
+                Enum_SynergyType = Enum_SynergyType.Yellow;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseHpWaterCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Blue;
+                Enum_SynergyType = Enum_SynergyType.Blue;
             else if (v2CCData.CCTypeEnum == V2Enum_SkillEffectType.IncreaseHpThunderCount)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.White;
+                Enum_SynergyType = Enum_SynergyType.White;
 
-            if (_synergyIncreaseHp.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyIncreaseHp.Add(v2Enum_ARR_SynergyType, 0);
+            if (_synergyIncreaseHp.ContainsKey(Enum_SynergyType) == false)
+                _synergyIncreaseHp.Add(Enum_SynergyType, 0);
 
-            _synergyIncreaseHp[v2Enum_ARR_SynergyType] += v2CCData.CCValue;
+            _synergyIncreaseHp[Enum_SynergyType] += v2CCData.CCValue;
         }
         //------------------------------------------------------------------------------------
         public void AllRefreshSynergyStat()
         {
-            for (int i = V2Enum_ARR_SynergyType.Red.Enum32ToInt(); i < V2Enum_ARR_SynergyType.Max.Enum32ToInt(); ++i)
+            for (int i = Enum_SynergyType.Red.Enum32ToInt(); i < Enum_SynergyType.Max.Enum32ToInt(); ++i)
             {
-                V2Enum_ARR_SynergyType v2Enum_Stat = i.IntToEnum32<V2Enum_ARR_SynergyType>();
+                Enum_SynergyType v2Enum_Stat = i.IntToEnum32<Enum_SynergyType>();
                 InCreaseSynergyBuffStat(v2Enum_Stat);
             }
         }
         //------------------------------------------------------------------------------------
-        public void InCreaseSynergyBuffStat(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public void InCreaseSynergyBuffStat(Enum_SynergyType Enum_SynergyType)
         {
-            if (_synergyAmount.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergyAmount.ContainsKey(Enum_SynergyType) == false)
                 return;
 
-            int amount = _synergyAmount[v2Enum_ARR_SynergyType];
+            int amount = _synergyAmount[Enum_SynergyType];
 
-            if (_synergyIncreaseAtt.ContainsKey(v2Enum_ARR_SynergyType) == true)
+            if (_synergyIncreaseAtt.ContainsKey(Enum_SynergyType) == true)
             {
-                double effectValue = _synergyIncreaseAtt[v2Enum_ARR_SynergyType];
+                double effectValue = _synergyIncreaseAtt[Enum_SynergyType];
                 double buffvalue = effectValue * amount;
                 InCreaseBuffStat(V2Enum_Stat.Attack, buffvalue);
             }
             
-            if (_synergyIncreaseDef.ContainsKey(v2Enum_ARR_SynergyType) == true)
+            if (_synergyIncreaseDef.ContainsKey(Enum_SynergyType) == true)
             {
-                double effectValue = _synergyIncreaseDef[v2Enum_ARR_SynergyType];
+                double effectValue = _synergyIncreaseDef[Enum_SynergyType];
                 double buffvalue = effectValue * amount;
                 InCreaseBuffStat(V2Enum_Stat.Defence, buffvalue);
             }
 
-            if (_synergyIncreaseHp.ContainsKey(v2Enum_ARR_SynergyType) == true)
+            if (_synergyIncreaseHp.ContainsKey(Enum_SynergyType) == true)
             {
-                double effectValue = _synergyIncreaseHp[v2Enum_ARR_SynergyType];
+                double effectValue = _synergyIncreaseHp[Enum_SynergyType];
                 double buffvalue = effectValue * amount;
                 InCreaseBuffStat(V2Enum_Stat.HP, buffvalue);
             }
         }
         //------------------------------------------------------------------------------------
-        public void DeCreaseGoldIncreaseBuffStat(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public void DeCreaseGoldIncreaseBuffStat(Enum_SynergyType Enum_SynergyType)
         {
-            if (_synergyAmount.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergyAmount.ContainsKey(Enum_SynergyType) == false)
                 return;
 
-            int amount = _synergyAmount[v2Enum_ARR_SynergyType];
+            int amount = _synergyAmount[Enum_SynergyType];
 
-            if (_synergyIncreaseAtt.ContainsKey(v2Enum_ARR_SynergyType) == true)
+            if (_synergyIncreaseAtt.ContainsKey(Enum_SynergyType) == true)
             {
-                double effectValue = _synergyIncreaseAtt[v2Enum_ARR_SynergyType];
+                double effectValue = _synergyIncreaseAtt[Enum_SynergyType];
                 double buffvalue = effectValue * amount;
                 DeCreaseBuffStat(V2Enum_Stat.Attack, buffvalue);
             }
 
-            if (_synergyIncreaseDef.ContainsKey(v2Enum_ARR_SynergyType) == true)
+            if (_synergyIncreaseDef.ContainsKey(Enum_SynergyType) == true)
             {
-                double effectValue = _synergyIncreaseDef[v2Enum_ARR_SynergyType];
+                double effectValue = _synergyIncreaseDef[Enum_SynergyType];
                 double buffvalue = effectValue * amount;
                 DeCreaseBuffStat(V2Enum_Stat.Defence, buffvalue);
             }
 
-            if (_synergyIncreaseHp.ContainsKey(v2Enum_ARR_SynergyType) == true)
+            if (_synergyIncreaseHp.ContainsKey(Enum_SynergyType) == true)
             {
-                double effectValue = _synergyIncreaseHp[v2Enum_ARR_SynergyType];
+                double effectValue = _synergyIncreaseHp[Enum_SynergyType];
                 double buffvalue = effectValue * amount;
                 DeCreaseBuffStat(V2Enum_Stat.HP, buffvalue);
             }
         }
         //------------------------------------------------------------------------------------
-        public void RefreshSynergy(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int stack)
+        public void RefreshSynergy(Enum_SynergyType Enum_SynergyType, int stack)
         {
-            if (_synergyAmount.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyAmount.Add(v2Enum_ARR_SynergyType, 0);
+            if (_synergyAmount.ContainsKey(Enum_SynergyType) == false)
+                _synergyAmount.Add(Enum_SynergyType, 0);
 
-            if (_synergyAmount[v2Enum_ARR_SynergyType] == stack)
+            if (_synergyAmount[Enum_SynergyType] == stack)
                 return;
 
-            DeCreaseGoldIncreaseBuffStat(v2Enum_ARR_SynergyType);
+            DeCreaseGoldIncreaseBuffStat(Enum_SynergyType);
 
-            _synergyAmount[v2Enum_ARR_SynergyType] = stack;
+            _synergyAmount[Enum_SynergyType] = stack;
 
-            InCreaseSynergyBuffStat(v2Enum_ARR_SynergyType);
+            InCreaseSynergyBuffStat(Enum_SynergyType);
 
             // »Ì«˜¿∫ ¿Ã∞…∑Œ ∂Ø
             RefreshOutputSynergyVampiricDmg();
@@ -2025,7 +2002,7 @@ namespace GameBerry
         {
             SkillBaseData skillBaseData = skillManageInfo.SkillBaseData;
 
-            if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Self)
+            if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Self)
             {
                 int skillLevel = skillManageInfo.GetSkillLevel();
 
@@ -2048,9 +2025,9 @@ namespace GameBerry
             }
             else
             {
-                if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+                if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Friendly)
                     Managers.BattleSceneManager.Instance.SetBuff(skillManageInfo, _iFFType);
-                else if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Enemy)
+                else if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Enemy)
                 {
                     IFFType iFFType = _iFFType == IFFType.IFF_Friend ? IFFType.IFF_Foe : IFFType.IFF_Friend;
                     Managers.BattleSceneManager.Instance.SetBuff(skillManageInfo, iFFType);
@@ -2063,7 +2040,7 @@ namespace GameBerry
         {
             SkillBaseData skillBaseData = skillManageInfo.SkillBaseData;
 
-            if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Self)
+            if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Self)
             {
                 int skillLevel = skillManageInfo.GetSkillLevel();
 
@@ -2086,9 +2063,9 @@ namespace GameBerry
             }
             else
             {
-                if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+                if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Friendly)
                     Managers.BattleSceneManager.Instance.ReleaseBuff(skillManageInfo, _iFFType);
-                else if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Enemy)
+                else if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Enemy)
                 {
                     IFFType iFFType = _iFFType == IFFType.IFF_Friend ? IFFType.IFF_Foe : IFFType.IFF_Friend;
                     Managers.BattleSceneManager.Instance.ReleaseBuff(skillManageInfo, iFFType);
@@ -2107,22 +2084,22 @@ namespace GameBerry
             {
                 if (isAfterSkill == true)
                 {
-                    if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Projectile)
+                    if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Projectile)
                     {
                         PlayProjectile(skillManageInfo, _attackTarget);
                         return;
                     }
-                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Pierce)
+                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Pierce)
                     {
                         PlayPierce(skillManageInfo, _attackTarget);
                         return;
                     }
-                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Void)
+                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Void)
                     {
                         PlayVoid(skillManageInfo, _attackTarget);
                         return;
                     }
-                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.RepeatAttack)
+                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.RepeatAttack)
                     {
                         PlayRepeatAttack(skillManageInfo, _attackTarget);
                         return;
@@ -2169,15 +2146,15 @@ namespace GameBerry
                 PlayParticlePlayer(skillBaseData.ResourceIndex, skillManageInfo.OnTimePlayCount, null);
             else
             {
-                if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Direct)
+                if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Direct)
                     PlayParticlePlayer(skillBaseData.ResourceIndex, skillManageInfo.OnTimePlayCount, null);
-                else if(skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Sunken)
+                else if(skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Sunken)
                     PlayParticlePlayer(skillBaseData.ResourceIndex, skillManageInfo.OnTimePlayCount, target);
             }
 
-            if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Self)
+            if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Self)
                 OnDamage(damageData);
-            else if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+            else if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Friendly)
             {
                 if (Managers.BattleSceneManager.Instance.CurrentBattleScene != null)
                     Managers.BattleSceneManager.Instance.CurrentBattleScene.TargetAllDamage(IFFType, damageData);
@@ -2204,9 +2181,9 @@ namespace GameBerry
             {
                 SKillEffectInfo skillEffectData = skillManageInfo.OtherSkillEffectDatas[i];
                 V2CCData v2CCData = Managers.SkillManager.Instance.GetV2CCData(skillManageInfo.GetSkillLevel(), skillEffectData, actorPosition);
-                if (skillEffectData.TargetCheckType == Enum_ARR_TargetCheckType.Self)
+                if (skillEffectData.TargetCheckType == Enum_TargetCheckType.Self)
                     ApplyCC(v2CCData);
-                else if (skillEffectData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+                else if (skillEffectData.TargetCheckType == Enum_TargetCheckType.Friendly)
                 {
                     if (Managers.BattleSceneManager.Instance.CurrentBattleScene != null)
                         Managers.BattleSceneManager.Instance.CurrentBattleScene.TargetAllEffect(IFFType, v2CCData);
@@ -2236,22 +2213,22 @@ namespace GameBerry
             {
                 if (isAfterSkill == true)
                 {
-                    if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Projectile)
+                    if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Projectile)
                     {
                         PlayProjectile(skillManageInfo, _attackTarget);
                         return;
                     }
-                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Pierce)
+                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Pierce)
                     {
                         PlayPierce(skillManageInfo, _attackTarget);
                         return;
                     }
-                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Void)
+                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Void)
                     {
                         PlayVoid(skillManageInfo, _attackTarget);
                         return;
                     }
-                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.RepeatAttack)
+                    else if (skillManageInfo.SkillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.RepeatAttack)
                     {
                         PlayRepeatAttack(skillManageInfo, _attackTarget);
                         return;
@@ -2298,15 +2275,15 @@ namespace GameBerry
                 PlayParticlePlayer(skillBaseData.ResourceIndex, skillManageInfo.OnTimePlayCount, null);
             else
             {
-                if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Direct)
+                if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Direct)
                     PlayParticlePlayer(skillBaseData.ResourceIndex, skillManageInfo.OnTimePlayCount, null);
-                else if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Sunken)
+                else if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Sunken)
                     PlayParticlePlayer(skillBaseData.ResourceIndex, skillManageInfo.OnTimePlayCount, target);
             }
 
-            if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Self)
+            if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Self)
                 OnDamage(damageData);
-            else if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+            else if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Friendly)
             {
                 if (Managers.BattleSceneManager.Instance.CurrentBattleScene != null)
                     Managers.BattleSceneManager.Instance.CurrentBattleScene.TargetAllDamage(IFFType, damageData);
@@ -2321,9 +2298,9 @@ namespace GameBerry
             {
                 SKillEffectInfo skillEffectData = skillManageInfo.OtherSkillEffectDatas[i];
                 V2CCData v2CCData = Managers.SkillManager.Instance.GetV2CCData(skillManageInfo.GetSkillLevel(), skillEffectData, actorPosition);
-                if (skillEffectData.TargetCheckType == Enum_ARR_TargetCheckType.Self)
+                if (skillEffectData.TargetCheckType == Enum_TargetCheckType.Self)
                     ApplyCC(v2CCData);
-                else if (skillEffectData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+                else if (skillEffectData.TargetCheckType == Enum_TargetCheckType.Friendly)
                 {
                     if (Managers.BattleSceneManager.Instance.CurrentBattleScene != null)
                         Managers.BattleSceneManager.Instance.CurrentBattleScene.TargetAllEffect(IFFType, v2CCData);
@@ -2479,16 +2456,16 @@ namespace GameBerry
             _myDamage = GetOutPutMyStat(V2Enum_Stat.Attack);
         }
         //------------------------------------------------------------------------------------
-        public void AddGambleSkill(MainSkillData gambleSkillData, V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, SkillInfo skillInfo = null)
+        public void AddGambleSkill(MainSkillData gambleSkillData, Enum_SynergyType Enum_SynergyType, SkillInfo skillInfo = null)
         {
             switch (gambleSkillData.MainSkillType)
             {
-                case V2Enum_ARR_MainSkillType.AddSkill:
+                case Enum_MainSkillType.AddSkill:
                     {
                         SkillBaseData skillBaseData = Managers.SkillManager.Instance.GetSkillBaseData(gambleSkillData.MainSkillTypeParam1);
                         if (skillBaseData != null)
                         {
-                            _skillActiveController.AddGambleSkillBaseData(gambleSkillData, v2Enum_ARR_SynergyType, skillInfo);
+                            _skillActiveController.AddGambleSkillBaseData(gambleSkillData, Enum_SynergyType, skillInfo);
 
                             if (skillBaseData.SkillDamageIndex != null)
                             {
@@ -2509,19 +2486,19 @@ namespace GameBerry
                                 }
                             }
 
-                            if (v2Enum_ARR_SynergyType != V2Enum_ARR_SynergyType.Max)
+                            if (Enum_SynergyType != Enum_SynergyType.Max)
                             {
-                                if (_synergyAfterSkill.ContainsKey(v2Enum_ARR_SynergyType) == true)
+                                if (_synergyAfterSkill.ContainsKey(Enum_SynergyType) == true)
                                 {
-                                    foreach (var node in _synergyAfterSkill[v2Enum_ARR_SynergyType])
+                                    foreach (var node in _synergyAfterSkill[Enum_SynergyType])
                                     {
                                         _skillActiveController.AddAfterData(skillBaseData, node);
                                     }
                                 }
 
-                                if (_synergySkillModule.ContainsKey(v2Enum_ARR_SynergyType) == true)
+                                if (_synergySkillModule.ContainsKey(Enum_SynergyType) == true)
                                 {
-                                    foreach (var node in _synergySkillModule[v2Enum_ARR_SynergyType])
+                                    foreach (var node in _synergySkillModule[Enum_SynergyType])
                                     {
                                         _skillActiveController.AddModuleData(skillBaseData, node);
                                     }
@@ -2531,7 +2508,7 @@ namespace GameBerry
 
                         break;
                     }
-                case V2Enum_ARR_MainSkillType.SkillEnforge:
+                case Enum_MainSkillType.SkillEnforge:
                     {
                         SkillModuleData skillModuleData = Managers.SkillManager.Instance.GetSkillModuleData(gambleSkillData.MainSkillTypeParam1);
                         if (skillModuleData == null)
@@ -2543,7 +2520,7 @@ namespace GameBerry
 
                         break;
                     }
-                case V2Enum_ARR_MainSkillType.AfterSkill:
+                case Enum_MainSkillType.AfterSkill:
                     {
                         SkillBaseData AfterSkill = Managers.SkillManager.Instance.GetSkillBaseData(gambleSkillData.MainSkillTypeParam1);
                         if (AfterSkill == null)
@@ -2555,7 +2532,7 @@ namespace GameBerry
 
                         break;
                     }
-                case V2Enum_ARR_MainSkillType.AfterGroupSkill:
+                case Enum_MainSkillType.AfterGroupSkill:
                     {
                         SkillBaseData AfterSkill = Managers.SkillManager.Instance.GetSkillBaseData(gambleSkillData.MainSkillTypeParam1);
                         SkillManageInfo skillManageInfo = _skillActiveController.AddNewSkillManageInfo(AfterSkill, skillInfo);
@@ -2614,7 +2591,7 @@ namespace GameBerry
 
                             case 15:
                                 {
-                                    V2Enum_ARR_SynergyType synergy = gambleSkillData.MainSkillTypeParam3.GetDecrypted().IntToEnum32<V2Enum_ARR_SynergyType>();
+                                    Enum_SynergyType synergy = gambleSkillData.MainSkillTypeParam3.GetDecrypted().IntToEnum32<Enum_SynergyType>();
 
                                     foreach (var pair in _skillActiveController.SkillLibrary)
                                     {
@@ -2634,7 +2611,7 @@ namespace GameBerry
                         }
                         break;
                     }
-                case V2Enum_ARR_MainSkillType.SkillEnforgeGroupSkill:
+                case Enum_MainSkillType.SkillEnforgeGroupSkill:
                     {
                         SkillModuleData skillModuleData = Managers.SkillManager.Instance.GetSkillModuleData(gambleSkillData.MainSkillTypeParam1);
                         if (skillModuleData == null)
@@ -2644,7 +2621,7 @@ namespace GameBerry
                         {
                             case 15:
                                 {
-                                    V2Enum_ARR_SynergyType synergy = gambleSkillData.MainSkillTypeParam3.GetDecrypted().IntToEnum32<V2Enum_ARR_SynergyType>();
+                                    Enum_SynergyType synergy = gambleSkillData.MainSkillTypeParam3.GetDecrypted().IntToEnum32<Enum_SynergyType>();
 
                                     foreach (var pair in _skillActiveController.SkillLibrary)
                                     {

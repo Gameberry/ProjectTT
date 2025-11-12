@@ -11,7 +11,7 @@ namespace GameBerry
         IFF_Foe, // 상대팀
     }
 
-    public enum V2Enum_Dungeon
+    public enum Enum_Dungeon
     {
         None = 0,
         LobbyScene,
@@ -19,36 +19,16 @@ namespace GameBerry
 
         DiamondDungeon = 11,
         TowerDungeon = 12,
-        GoldDungeon = 13,
-        SoulStoneDungeon = 14,
-        RuneDungeon = 15,
-        HellDungeon = 16,
-        GuildRaidDungeonNormal = 17,
-        GuildRaidDungeonRank = 18,
-
-        CrackDungeon = 101,
-
-        GoddessDungeon = 201,
-
-        RedBullDungeon = 301,
-
-        RotationDungeon = 401,
-
-        UrsulaDungeon = 501,
-
-        KingSlimeDungeon = 601,
-
-        AllyArenaDungeon = 1001,
     }
 
-    public enum Enum_ARR_LookDirection
+    public enum Enum_LookDirection
     {
         None = 0,
         Left,
         Right,
     }
 
-    public enum V2Enum_ARR_MonsterRoleType
+    public enum V2Enum_MonsterRoleType
     {
         Warrior = 11, //전사
         Assassin = 12, //암살
@@ -61,7 +41,7 @@ namespace GameBerry
     }
 
 
-    public enum V2Enum_ARR_MonsterGradeType
+    public enum Enum_MonsterGradeType
     {
         Normal = 11, //일반 몬스터
         Named = 12, //네임드 몬스터
@@ -70,7 +50,7 @@ namespace GameBerry
         Max
     }
 
-    public enum V2Enum_ARR_RoomType
+    public enum Enum_RoomType
     {
         Normal = 0, //일반 몬스터
         Slot = 11, //슬롯 이벤트가 출현하는 웨이브
@@ -94,7 +74,7 @@ namespace GameBerry
     }
 
     // 트리거
-    public enum V2Enum_ARR_CoolTimeType
+    public enum Enum_CoolTimeType
     {
         Default = 0, // 메인 캐릭터 스킬 쿨타임
         GamebleCoolTime = 11, // 겜블 스킬 쿨타임
@@ -128,7 +108,7 @@ namespace GameBerry
 
 
     // 트리거
-    public enum V2Enum_ARR_TriggerType
+    public enum Enum_TriggerType
     {
         Active = 11,
         Passive = 12,
@@ -137,7 +117,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_ARR_TargetAttackType
+    public enum Enum_TargetAttackType
     {
         None = 0,
         Circle = 11,
@@ -146,7 +126,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum Enum_ARR_TargetCheckType
+    public enum Enum_TargetCheckType
     {
         Self = 11,
         Friendly = 12,
@@ -156,7 +136,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum Enum_ARR_TargetStateType
+    public enum Enum_TargetStateType
     {
         All = 11, //모든 상황에
         HPPercentOver = 12, //현재 HP가 50% 이상
@@ -168,7 +148,7 @@ namespace GameBerry
     }
 
     // 대상탐색
-    public enum Enum_ARR_TargetConditionType
+    public enum Enum_TargetConditionType
     {
         Range = 11,
         RangeAll = 12,
@@ -177,15 +157,13 @@ namespace GameBerry
         AtkHigh = 15,
         Far = 16, // 먼
         Near = 17, // 가까운
-        HPPercentOver = 18, // 현재 HP가 50% 이상
-        HPPercentBelow = 19, // 현재 HP가 50% 미만
 
         RangeNear = 20,
 
         Max,
     }
 
-    public enum Enum_ARR_PowerType
+    public enum Enum_PowerType
     {
         Stat = 11, // Stat값 파싱
         Synergy = 12, // 시너지
@@ -193,7 +171,7 @@ namespace GameBerry
         Relic = 14, // 유물
     }
 
-    public enum Enum_ARR_SynergyPowerType
+    public enum Enum_SynergyPowerType
     {
         LevelUpSynergy = 11, // 시너지 1 레벨업
         GetCSynergyRune = 12, // C등급 룬 획득
@@ -202,20 +180,20 @@ namespace GameBerry
         GetSSynergyRune = 15, // S등급 룬 획득
     }
 
-    public enum Enum_ARR_RelicPowerType
+    public enum Enum_RelicPowerType
     {
         GetRelic = 11, // 유물 최초 획득
         LevelUpRelic = 12, // 유물 레벨업
     }
 
-    public enum Enum_ARR_DescendPowerType
+    public enum Enum_DescendPowerType
     {
         GetDescend = 11, // 강림 획득
         LevelupDescend = 12, // 강림 레벨업
     }
 
     // 대미지
-    public enum V2Enum_ARR_DamageType
+    public enum Enum_DamageType
     {
         Direct = 11,
         Projectile = 12,
@@ -228,7 +206,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_ARR_SynergyType
+    public enum Enum_SynergyType
     {
         Red = 11, // 공격형 증강체
         Yellow = 12, // 자원형 증강체
@@ -238,7 +216,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_ARRR_TotalLevelType
+    public enum Enum_ARRR_TotalLevelType
     {
         BasicStat = 11, // 일반 스테이터스
         SynergyUnlock = 12, // 시너지 레벨 해금
@@ -247,7 +225,7 @@ namespace GameBerry
         DescendSlotOpen = 15, // 강림 슬롯 오픈
     }
 
-    public enum V2Enum_ARR_DescendType
+    public enum Enum_DescendType
     {
         DescendSkill = 11, // 쿨타임마다 나와서 액티브 하는 형태
         DescendPassive = 12, // 지속적으로 영향을 미치는 형태 (아바타 타입)
@@ -255,7 +233,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_ARR_MainSkillType
+    public enum Enum_MainSkillType
     {
         AddSkill = 11, // 새로운 겜블 스킬 추가
         SkillEnforge = 12, // 특정 스킬 모듈 추가
@@ -268,7 +246,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_ARR_GambleSlotType
+    public enum Enum_GambleSlotType
     {
         SlotStat = 11, // 스테이터스 관련 슬롯
         SlotValue = 12, // 수치 관련 슬롯
@@ -276,7 +254,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_ARR_GambleSlotGrade
+    public enum Enum_GambleSlotGrade
     {
         One = 11, // 슬롯 숫자 1
         Two = 12, // 슬롯 숫자 2
@@ -289,7 +267,7 @@ namespace GameBerry
     }
 
 
-    public enum V2Enum_ARR_GambleType
+    public enum Enum_GambleType
     {
         Card = 11, // 짝맞추기
         Slot = 12, // 슬롯
@@ -299,7 +277,7 @@ namespace GameBerry
     }
 
 
-    public enum V2Enum_ARR_BattleSpeed
+    public enum Enum_BattleSpeed
     {
         x1 = 11,
         x1Dot5 = 12,
@@ -447,20 +425,6 @@ namespace GameBerry
         FreeGoodsSaveIncrease = 29, // 무료 지급 연구 재화 최대치 증가
 
         Max,
-    }
-
-    public enum V2Enum_GuildGoods
-    {
-        //GuildContribution = 176010001, // 길드 기여도 삭제
-        GuildExp = 176010002, // 길드 경험치
-        GuildRaidPoint = 176010003, // 레이드 포인트
-    }
-
-    public enum V2Enum_GuildPosition
-    {
-        Master = 0,
-        ViceMaster,
-        Member,
     }
 
     public enum V2Enum_Skin
@@ -616,27 +580,6 @@ namespace GameBerry
         Max,
     }
 
-    // 직업
-    public enum V2Enum_JobType
-    {
-        Ghost = 11,
-        Soldier = 12,
-        AssaultWarrior = 13,
-        Mage = 14,
-        Beast = 15,
-        Scientist = 16,
-        Bandit = 17,
-        Summons = 18,
-        Slime = 19,
-        Undead = 20,
-        Castellan = 21,
-        Wizard = 22,
-        Insect = 23,
-        Plant = 24,
-        Hunter = 25,
-
-        Max
-    }
 
     // 군중제어
     public enum V2Enum_SkillEffectType
@@ -857,16 +800,6 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_ButtnLightType
-    {
-        Equip = 11,
-        Enhance,
-        Promo,
-        Ad,
-
-        Max,
-    }
-
     public enum V2Enum_SummonType
     {
         SummonGear = 11,
@@ -922,17 +855,6 @@ namespace GameBerry
         GoldCharging = 18, // 	골드 구매
         Research = 19, // 연구 상점
         Synergy = 20, // 속성 상점
-
-        Max,
-    }
-
-    public enum V2Enum_ShopTagType
-    {
-        New = 11, // 신규
-        Hot = 12, // 인기
-        Best = 13, // 추천
-        Efficiency = 14, // n배 효율! 태그
-        Discount = 15, // n% 할인 태그
 
         Max,
     }
@@ -1118,20 +1040,6 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_EventKindType
-    {
-        EventRoulette = 11, //이벤트 룰렛
-        EventDungeon = 12, //이벤트 던전
-        EventHealDungeon = 13, //이벤트 힐 던전
-        EventRedBullDungeon = 14, //이벤트 레드불 던전
-        EventUrsulaDungeon = 15, //이벤트 우르슬라 던전
-        EventDig = 16, //이벤트 뽑기
-        EventMathRpg = 17, //이벤트 사칙연산
-        EventKingSlime = 18, //이벤트 킹슬라임 던전
-
-        RotationEvent = 99, //로테이션 이벤트
-    }
-
     public enum V2Enum_QuestType
     { 
         Daily = 11,
@@ -1183,16 +1091,6 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_Enum_MissionRarityType
-    {
-        Normal = 11, //일반
-        Advanced = 12, //고급
-        Rare = 13, //희귀
-        Elite = 14, //정예
-        Special = 15, //특수
-
-        Max,
-    }
 
     public enum V2Enum_DungeonDifficultyType
     {
@@ -1249,40 +1147,9 @@ namespace GameBerry
         Dungeon = 3000,
         DungeonDiamond,
         DungeonTower,
-        DungeonGold,
-        DungeonSoulStone,
-        DungeonRune,
-        DungeonHell,
 
-        ClanAllyArena = 4400,
-        ClanAllyArenaMission = 4410,
-        ClanAllyArenaBattleShop = 4420,
-        ClanAllyArenaHonorShop = 4430,
-        ClanAllyArenaRank = 4440,
 
         Guild = 4500,
-        Guild_List = 4510,
-        Guild_Mission = 4520,
-        Guild_MissionDaily = 4521,
-        Guild_MissionWeekly = 4522,
-        Guild_CoinShop = 4530,
-        Guild_RaidShop = 4540,
-        Guild_RaidShopDia = 4541,
-        Guild_RaidShopIAP = 4542,
-        Guild_Purchase = 4550,
-        Guild_CheckIn = 4560,
-        Guild_RaidEntrance = 4570,
-        Guild_RaidEntrance_Normal = 4571,
-        Guild_RaidEntrance_Rank = 4572,
-        Guild_Option = 4580,
-        Guild_Option_Member = 4581,
-        Guild_Option_Notice = 4582,
-        Guild_Option_Option = 4583,
-        Guild_Option_RankRaid = 4584,
-        Guild_Option_RankMember = 4585,
-        Guild_Option_RankGlobal = 4586,
-        Guild_Option_AcceptList = 4587,
-
 
         Shop = 5000,
 
@@ -1333,11 +1200,6 @@ namespace GameBerry
         PassMonsterKill, //몬스터 처치
 
         AdBuff = 8000,
-        AdBuffAtk,
-        AdBuffGold,
-        AdBuffAttackSpeed,
-
-        Raid = 9000,
 
         CheckIn = 10000,
 
@@ -1355,89 +1217,31 @@ namespace GameBerry
         Rank_Stage = 14100,
         Rank_CombatPower = 14200,
 
-        EventRoulette = 15000,
-        EventRoulette_Mission = 15100,
 
 
-        EventDungeon = 16000,
-        EventDungeon_Mission = 16100,
-        EventDungeon_Shop = 16200,
-        EventDungeon_ShopSpecial = 16300,
 
         StageMap = 17000,
-        StageMap_StageChange = 17100,
-        StageMap_DevilCastlePopup = 17200,
-        StageMap_TrialTowerPopup = 17300,
-
-        EventDungeonGoddess = 18000,
-        EventDungeonGoddess_Mission = 18100,
-        EventDungeonGoddess_Shop = 18200,
-        EventDungeonGoddess_Pass = 18300,
 
         Inventory = 19000,
         Inventory_Item = 19100,
         Inventory_Point = 19200,
 
-        EventRedBull = 20000,
-        EventRedBull_Mission = 20100,
-        EventRedBull_Shop = 20200,
-        EventRedBull_Pass = 20300,
-
-
-        EventPass = 21000,
-        EventPass_Reward = 21100,
-        EventPass_Mission = 21200,
-
-        RotationEvent = 22000,
-        RotationEvent_Mission = 22100,
-        RotationEvent_Shop = 22200,
-        RotationEvent_ShopSpecial = 22300,
-
-        Event = 23000,
-
-        EventUrsula = 24000,
-        EventUrsula_Mission = 24100,
-        EventUrsula_Shop = 24200,
-        EventUrsula_Pass = 24300,
-
-        EventDig = 25000,
         EventDig_Shop = 25200,
-        EventDig_Pass = 25300,
 
-        EventMathRpg = 26000,
-        EventMathRpg_Shop = 26200,
-        EventMathRpg_Pass = 26300,
-        EventMathRpg_Stage = 26400,
-        EventMathRpg_Roulette = 26500,
-
-        EventDungeonKingSlime = 27000,
-        EventDungeonKingSlime_Mission = 27100,
-        EventDungeonKingSlime_Shop = 27200,
-        EventDungeonKingSlime_Pass = 27300,
-
-        SevenDayMission = 28000,
-        SevenDayMission_Day1 = 28100,
-        SevenDayMission_Day2 = 28200,
-        SevenDayMission_Day3 = 28300,
-        SevenDayMission_Day4 = 28400,
-        SevenDayMission_Day5 = 28500,
-        SevenDayMission_Day6 = 28600,
-        SevenDayMission_Day7 = 28700,
 
         Notice = 99000,
     }
 
     public struct V2SkillAttackData
     {
-        public V2DamageData v2DamageDatas;
-        public List<V2CCData> v2CCDatas;
+        public V2DamageData DamageData;
+        public List<V2CCData> CcDatas;
 
         public SkillBaseData skillBaseData;
         public CharacterControllerBase characterControllerBase;
         public Vector3 HitPos;
         public int HitCount;
 
-        // V2Enum_SkillEffectType.ResetUsedSkillCooltime
         public List<V2CCData> SelfEffecter;
 
         public List<V2CCData> AddDamageEffecter;
@@ -1466,7 +1270,7 @@ namespace GameBerry
     {
         public V2Enum_SkillEffectType CCTypeEnum;
 
-        public Enum_ARR_TargetStateType TargetCondition;
+        public Enum_TargetStateType TargetCondition;
 
         public float CCTime;
         public double CCValue;
@@ -1485,7 +1289,7 @@ namespace GameBerry
 
     public struct SynergyViewDirectionOrderData
     {
-        public V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType;
+        public Enum_SynergyType Enum_SynergyType;
         public Vector3 startpos;
         public ARR_CardGambleData gambleSkillData;
 
@@ -1501,7 +1305,7 @@ namespace GameBerry
     {
         public V2Enum_Grade SynergyGrade;
         public ObscuredInt SynergyStack;
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
     }
 
     public enum V2Enum_ObjectType
@@ -1541,11 +1345,7 @@ namespace GameBerry
     {
         public static double CriticalDamageValue = 2.0f;
 
-        public static double DamageReductionValue = 10.0f;
-
         public const int DisplayMapDataCount = 5;
-
-        public const int DisplayGambleCardCount = 10;
 
         public const int DisplayGambleSkillCount = 2;
 
@@ -1606,12 +1406,6 @@ namespace GameBerry
 
         //PlayerPrefs
         public static readonly string LoginTypeKey = "loginKey";
-        public static readonly string SocialTypeKey = "socialKey";
-        public static readonly string CurrentDungeonKey = "currentdungeonKey";
-        public static readonly string StoryDungeonKey = "storydungeonKey";
-        public static readonly string OpenSkillListKey = "openskilllistKey";
-        public static readonly string OpenSkillSlotCountKey = "openskillslotcountKey";
-        public static readonly string EquipSkillKey = "equipskillKey";
         public static readonly string EquipPetKey = "equipskillKey";
         public static readonly string NewSynergyKey = "newsynergyKey";
         public static readonly string NewSynergyBreakKey = "newsynergybreakKey";
@@ -1624,24 +1418,12 @@ namespace GameBerry
 
         //CharacterInfoTableKey
         public const string PlayerInfoTable = "PlayerInfo";
-        public const string PlayerFame = "PlayerFame";
         public const string PlayerAdFree = "PlayerAdFree";
-        public const string PlayerBuffFree = "PlayerBuffFree";
-        public const string PlayerServerKind = "PlayerServerKind";
-        public const string PlayerServerNum = "PlayerServerNum";
         public const string PlayerCheatingCheck = "PlayerCheatingCheck";
         public const string PlayerDontSearchCheat = "PlayerDontSearchCheat";
         public const string PlayerProfile = "PlayerProfile";
         public const string PlayerRecvLaunchReward = "PlayerRecvLaunchReward";
         public const string PlayerRecvPreReward = "PlayerRecvPreReward";
-
-        public const string PlayerRouletteInitTime = "RouletteInitTime";
-        public const string PlayerRouletteActionTime = "RouletteActionTime";
-        public const string PlayerRouletteActionCount = "RouletteActionCount";
-
-        //CharacterInfoTableKey
-        public const string PlayerSocialInfoTable = "PlayerSocialInfo";
-        public const string PlayerGuildSupportAllyInfo = "GuildSupportAlly";
 
         //CharacterInfoTableKey
         public const string PlayerARRRInfoTable = "ARRRInfo";
@@ -1728,8 +1510,6 @@ namespace GameBerry
         public const string PlayerSkillInfoTable = "SkillInfo";
         public const string PlayerSkillInfo = "skillinfo";
         public const string PlayerSkillSlotInfo = "skillslotinfo";
-        public const string PlayerSkillSlotPage = "skillslotpage";
-        public const string PlayerSkillOpenSlotCount = "skillopenslotcount";
 
         //MapInfo
         public const string PlayerMapInfoTable = "MapInfo";
@@ -1744,31 +1524,11 @@ namespace GameBerry
         //DungeonInfo
         public const string PlayerDungeonInfoTable = "DungeonInfo";
 
-        public const string PlayerAutoBossChallenge = "AutoBossChallenge";
-
    
         public const string PlayerDiamondDungeonMaxClear = "DiamondDungeonMaxClear";
         public const string PlayerTowerDungeonMaxClear = "TowerDungeonMaxClear";
 
         public const string PlayerDungeonInitInfo = "DungeonInitInfo";
-
-
-        //PlayerAllyInfo
-        public const string PlayerAllyInfoTable = "AllyInfo";
-        public const string PlayerAllyInfo = "AllyInfo";
-        public const string PlayerAllySlotInfo = "AllySlotInfo";
-
-        //PlayerAllyJewelryInfo
-        public const string PlayerAllyJewelryInfoTable = "PlayerAllyJewelryInfo";
-        public const string PlayerAllyJewelryInfo = "AllyJewelryInfo";
-        public const string PlayerAllyEquipJewelryInfo = "AllyEquipJewelryInfo";
-        public const string PlayerAllyJewelryMaxStorage = "AllyJewelryMaxStorage";
-        public const string PlayerAllyJewelryValuePatch = "JewelryValuePatch";
-
-        //PlayerRuneInfo
-        public const string PlayerRuneInfoTable = "PlayerRuneInfo";
-        public const string PlayerRuneInfo = "RuneInfo";
-        public const string PlayerRuneEquipInfo = "RuneEquipInfo";
 
         //PlayerResearchInfo
         public const string PlayerResearchInfoTable = "ResearchInfo";
@@ -1780,15 +1540,9 @@ namespace GameBerry
         public const string PlayerResearchLastCharge = "lastchargetime";
         public const string PlayerResearchViewQueue = "viewqueue";
 
-        //PlayerTraitInfo
-        public const string PlayerTraitInfoTable = "PlayerTraitInfo";
-        public const string PlayerTraitInfo = "TraitInfo";
-        public const string PlayerTraitSlotPage = "TraitSlotPage";
-
         //SummonInfo
         public const string PlayerSummonInfoTable = "SummonInfo";
         public const string PlayerSummonInfo = "SummonInfo";
-        public const string PlayerAllySummonMileage = "AllySummonMileage";
 
         //TimeInfo
         public const string PlayerTimeInfoTable = "TimeInfo";
@@ -1850,315 +1604,9 @@ namespace GameBerry
         public const string PlayerRankCombatPower = "CombatPower";
         public const string PlayerStage = "Stage";
         public const string PlayerEvent = "Event";
-        public const string PlayerEventDamage = "EventDamage";
-        public const string PlayerAllyArena = "AllyArena";
-        public const string PlayerEventGod = "EventGod";
-        public const string PlayerEventBull = "EventBull";
-        public const string PlayerEventRot = "EventRot";
-        public const string PlayerEventUrs = "EventUrs";
-        public const string PlayerEventRpg = "EventRpg";
-        public const string PlayerEventKing = "EventKing";
-        public const string PlayerDetail = "Detail";
-
-        //ClanLevelInfo
-        public const string PlayerClanInfoTable = "PlayerClanInfo";
-        public const string PlayerClanLevel = "ClanLevel";
-
-        //ClanMIssionInfo
-        public const string PlayerClanMissionInfoTable = "PlayerClanMissionInfo";
-
-        public const string PlayerClanMissionLevel = "MissionLevel";
-
-        public const string PlayerClanMissionExp = "Exp";
-        public const string PlayerClanMissionAccumExp = "AccumExp";
-
-        public const string PlayerCompassToDayAdViewCount = "AdViewCount";
-        public const string PlayerCompassRechargeInitTimeStemp = "AdInitTimeStemp";
-
-        public const string PlayerDisPlayMissionData = "MissionData";
-
-        public const string PlayerAutoDispatch = "AutoDispatch";
-        public const string PlayerAutoDispatchRarity = "AutoDispatchRarity";
-
-        //BerserkerModeInfo
-        public const string PlayerBerserkerModeInfoTable = "PlayerBerserkerModeInfo";
-
-        public const string PlayerBerserkerModeSlotLevel = "SlotLevel";
-        public const string PlayerBerserkerModeMonsterKillCount = "KillCount";
-
-        //AllyArenaInfo
-        public const string PlayerAllyArenaInfoTable = "PlayerAllyArenaInfo";
-
-        public const string PlayerAllyArenaDeck = "Deck";
-        public const string PlayerAllyArenaInitTimeStemp = "InitTime";
-        public const string PlayerAllyArenaTestBattleCount = "TestCount";
-        public const string PlayerAllyArenaTestOrder = "TestBotOrder";
-        public const string PlayerAllyArenaPoint = "ArenaPoint";
-        public const string PlayerAllyArenaAccumPlay = "AccumPlay";
-        public const string PlayerAllyArenaRecvedOnceReward = "OnceReward";
-        public const string PlayerAllyArenaMIssionInfo = "MissionInfo";
-
-        public const string PlayerAllyArenaDailyInitTime = "DailyInitTime";
-        public const string PlayerAllyArenaBuyHonorShopInfo = "HonorBuy";
-        public const string PlayerAllyArenaHonorShopDisPlayList = "HonorDisplay";
-        public const string PlayerAllyArenaHonorRefreshCount = "HonorRefresh";
-
-        public const string PlayerAllyArenaAdViewCount = "AdView";
-
-        //BerserkerModeInfo
-        public const string PlayerForgeInfoTable = "PlayerForgeInfo";
-
-        public const string PlayerForgeInfo = "Forge";
-        public const string PlayerForgeCollectionInfo = "Collection";
-
-        public const string PlayerForgeInitTimeStemp = "InitTime"; // 일일초기화
-
-        public const string PlayerForgeToDayDigAdCount = "ToDayAd";
-        public const string PlayerForgeToDayDigDiaBuyCount = "ToDayDigDia";
-
-        //EventRouletteInfo
-        public const string PlayerEventRouletteTable = "PlayerEventRouletteInfo";
-        public const string PlayerEventRouletteVersion = "Version";
-
-        public const string PlayerEventRouletteAccumEventCount = "AccumCount";
-        public const string PlayerEventRouletteRecvedAccumReward = "RecvedAccumReward";
-
-        public const string PlayerEventRouletteLimitRewardPickRecord = "LimitRewardPickRecord";
-        public const string PlayerEventRouletteResetRewardPickRecord = "ResetRewardPickRecord";
-
-        public const string PlayerEventRouletteLimitedRewardCount = "LimitedRewardCount";
-        public const string PlayerEventRouletteRouletteMissionInfo = "MissionInfo";
-
-
-        //EventDungeonInfo
-        public const string PlayerEventDungeonTable = "PlayerEventDungeonInfo";
-        public const string PlayerEventDungeonVersion = "Version";
-
-        public const string PlayerEventDungeonAccumEventCount = "AccumCount";
-        public const string PlayerEventDungeonRecvedOnceReward = "RecvedOnceReward";
-        public const string PlayerEventDungeonRecvedRepeatReward = "RecvedRepeatReward";
-        public const string PlayerEventDungeonDamageScore = "DamageScore";
-        public const string PlayerEventDungeonDamageBast = "DamageBest";
-
-        public const string PlayerEventDungeonMissionInfo = "MissionInfo";
-
-
-        //EventDungeonGoddessInfo
-        public const string PlayerEventDungeonGoddessTable = "PlayerEventDungeonGoddessInfo";
-        public const string PlayerEventDungeonGoddessVersion = "Version";
-
-        public const string PlayerEventDungeonGoddessInitTimeStemp = "InitTime"; // 일일초기화
-
-        public const string PlayerEventDungeonGoddessAccumEventCount = "AccumCount";
-        public const string PlayerEventDungeonGoddessDoDiaSummon = "DoDiaCount";
-        public const string PlayerEventDungeonGoddessRecvedOnceReward = "RecvedOnceReward";
-        public const string PlayerEventDungeonGoddessSummonPickRewardCount = "PickRewardCount";
-
-        public const string PlayerEventDungeonGoddessToDayEnterCount = "DungeonToDayEnterCount";
-        public const string PlayerEventDungeonGoddessEnterCount = "DungeonEnterCount";
-        public const string PlayerEventDungeonGoddessEnterReward = "DungeonEnterReward";
-
-        public const string PlayerEventDungeonGoddessAttainPromo = "AttainPromo";
-        public const string PlayerEventDungeonGoddessRecvedFree = "RecvedFree";
-
-        public const string PlayerEventDungeonGoddessMissionInfo = "MissionInfo";
-
-
-        //EventRedBullInfo
-        public const string PlayerEventRedBullTable = "PlayerEventRedBullInfo";
-        public const string PlayerEventRedBullVersion = "Version";
-
-        public const string PlayerEventRedBullInitTimeStemp = "InitTime"; // 일일초기화
-
-        public const string PlayerEventRedBullAccumEventCount = "AccumCount";
-        public const string PlayerEventRedBullDoDiaSummon = "DoDiaCount";
-        public const string PlayerEventRedBullRecvedOnceReward = "RecvedOnceReward";
-        public const string PlayerEventRedBullSummonPickRewardCount = "PickRewardCount";
-
-        public const string PlayerEventRedBullToDayEnterCount = "DungeonToDayEnterCount";
-        public const string PlayerEventRedBullEnterCount = "DungeonEnterCount";
-        public const string PlayerEventRedBullEnterReward = "DungeonEnterReward";
-        public const string PlayerEventRedBullAccumDamage = "AccumDamage";
-        public const string PlayerEventRedBullToDayDiaChargeCount = "DiaChargeCount";
-
-        public const string PlayerEventRedBullAttainPromo = "AttainPromo";
-        public const string PlayerEventRedBullRecvedFree = "RecvedFree";
-
-        public const string PlayerEventRedBullMissionInfo = "MissionInfo";
-
-
-        //EventPassInfo
-        public const string PlayerEventPassTable = "PlayerEventPassInfo";
-        public const string PlayerEventPassInfo = "EventPassInfo";
-        public const string PlayerEventDailyInitTimeStemp = "DailyInitTime";
-        public const string PlayerEventWeeklyInitTimeStemp = "WeeklyInitTime";
-
-
-
-        //RotationEventInfo
-        public const string PlayerRotationEventTable = "PlayerRotationEventInfo";
-
-        public const string PlayerRotationEventInitTime = "InitTime";
-        public const string PlayerRotationEventOrder = "EventOrder";
-
-        public const string PlayerRotationEventAccumEventCount = "AccumCount";
-        public const string PlayerRotationEventRecvedOnceReward = "RecvedOnceReward";
-        public const string PlayerRotationEventRecvedRepeatReward = "RecvedRepeatReward";
-        public const string PlayerRotationEventDamageScore = "DamageScore";
-        public const string PlayerRotationEventDamageBast = "DamageBest";
-
-        public const string PlayerRotationEventMissionInfo = "MissionInfo";
-
-
-
-
-        //EventUrsulaInfo
-        public const string PlayerEventUrsulaTable = "PlayerEventUrsulaInfo";
-        public const string PlayerEventUrsulaVersion = "Version";
-
-        public const string PlayerEventUrsulaInitTimeStemp = "InitTime"; // 일일초기화
-
-        public const string PlayerEventUrsulaAccumEventCount = "AccumCount";
-        public const string PlayerEventUrsulaDoDiaSummon = "DoDiaCount";
-        public const string PlayerEventUrsulaRecvedOnceReward = "RecvedOnceReward";
-        public const string PlayerEventUrsulaSummonPickRewardCount = "PickRewardCount";
-
-        public const string PlayerEventUrsulaToDayEnterCount = "DungeonToDayEnterCount";
-        public const string PlayerEventUrsulaEnterCount = "DungeonEnterCount";
-        public const string PlayerEventUrsulaEnterReward = "DungeonEnterReward";
-        public const string PlayerEventUrsulaAccumDamage = "AccumDamage";
-        public const string PlayerEventUrsulaToDayDiaChargeCount = "DiaChargeCount";
-
-        public const string PlayerEventUrsulaAttainPromo = "AttainPromo";
-        public const string PlayerEventUrsulaRecvedFree = "RecvedFree";
-
-        public const string PlayerEventUrsulaMissionInfo = "MissionInfo";
-
-
-
-        //EventDigInfo
-        public const string PlayerEventDigTable = "PlayerEventDigInfo";
-        public const string PlayerEventDigVersion = "Version";
-
-        public const string PlayerEventDigInitTimeStemp = "InitTime"; // 일일초기화
-
-        public const string PlayerEventDigToDayDigAdCount = "ToDayAd";
-        public const string PlayerEventDigToDayDigDiaBuyCount = "ToDayDigDia";
-
-        public const string PlayerEventDigAccumCarrot = "AccumCarrot";
-        public const string PlayerEventDigRecvedDigOnceReward = "RecvedOnceReward";
-
-        public const string PlayerEventDigAccumDig = "AccumDig";
-
-        public const string PlayerEventDigTargetIndex = "TargetIndex";
-
-        public const string PlayerEventDigOpenIndex = "OpenIndex";
-        public const string PlayerEventDigFailList = "FailList";
-
-        public const string PlayerEventDigPassLevel = "PassLevel";
-        public const string PlayerEventDigPassExp = "PassExp";
-
-        public const string PlayerEventDigPassRecvedLevel = "PassRecvedLevel";
-
-        public const string PlayerEventDigEnablePaidPass = "EnablePaidPass";
-
-        //EventMathRpgInfo
-        public const string PlayerEventMathRpgTable = "PlayerEventMathRpgInfo";
-        public const string PlayerEventMathRpgVersion = "Version";
-
-        public const string PlayerEventMathRpgBattlePower = "Power";
-
-        public const string PlayerEventMathRpgStageStep = "Step";
-        public const string PlayerEventMathRpgStageStepBrickIdx = "BrickIdx";
-        public const string PlayerEventMathRpgClearPhase = "Phase";
-
-        public const string PlayerEventMathRpgCharacterExp = "Exp";
-        public const string PlayerEventMathRpgCharacterLevel = "Level";
-
-        public const string PlayerEventMathRpgAccumReward = "AccumReward";
-
-        public const string PlayerEventMathRpgBoostGauge = "Boost";
-        public const string PlayerEventMathRpgBoostGaugeResetTime = "BoostReset";
-
-        public const string PlayerEventMathRpgPassLevel = "PassLevel";
-        public const string PlayerEventMathRpgPassExp = "PassExp";
-        public const string PlayerEventMathRpgPassRecvedLevel = "PassRecvedLevel";
-
-        public const string PlayerEventMathRpgEnablePaidPass = "EnablePaidPass";
-
-        public const string PlayerEventMathRpgCoinLastChargeTime = "LastChargeTime";
-
-
-        //EventDungeonKingSlimeInfo
-        public const string PlayerEventDungeonKingSlimeTable = "PlayerEventDungeonKingSlimeInfo";
-        public const string PlayerEventDungeonKingSlimeVersion = "Version";
-
-        public const string PlayerEventDungeonKingSlimeInitTimeStemp = "InitTime"; // 일일초기화
-
-        public const string PlayerEventDungeonKingSlimeAccumEventCount = "AccumCount";
-        public const string PlayerEventDungeonKingSlimeDoDiaSummon = "DoDiaCount";
-        public const string PlayerEventDungeonKingSlimeRecvedOnceReward = "RecvedOnceReward";
-        public const string PlayerEventDungeonKingSlimeSummonPickRewardCount = "PickRewardCount";
-
-        public const string PlayerEventDungeonKingSlimeToDayEnterCount = "DungeonToDayEnterCount";
-        public const string PlayerEventDungeonKingSlimeEnterCount = "DungeonEnterCount";
-        public const string PlayerEventDungeonKingSlimeEnterReward = "DungeonEnterReward";
-        public const string PlayerEventDungeonKingSlimeAccumMonsterKillCount = "KillCount";
-        public const string PlayerEventDungeonKingSlimeToDayDiaChargeCount = "DiaChargeCount";
-
-        public const string PlayerEventDungeonKingSlimeAttainPromo = "AttainPromo";
-        public const string PlayerEventDungeonKingSlimeRecvedFree = "RecvedFree";
-
-        public const string PlayerEventDungeonKingSlimeMissionInfo = "MissionInfo";
-
-        //EventPassInfo
-        public const string PlayerGuildTable = "PlayerGuildInfo";
-
-        public const string PlayerGuildWithdrawTimeStemp = "WithdrawTime";
-
-        public const string PlayerGuildDailyInitTimeStemp = "DailyInitTime";
-        public const string PlayerGuildWeeklyInitTimeStemp = "WeeklyInitTime";
-
-        public const string PlayerGuildMissionInfo = "MissionInfo";
-
-        public const string PlayerGuildCoinShopInfo = "CoinShop";
-
-        public const string PlayerGuildCheckInCountInfo = "CheckInCount";
-        public const string PlayerGuildCheckInRecvInfo = "CheckInRecv";
-
-        public const string PlayerGuildCheckInCostInfo = "CheckInCost";
-
-        public const string PlayerGuildGetPurchaseCoinInfo = "PurchaseCoin";
-        public const string PlayerGuildRecvPurchaseInfo = "RecvPurchase";
-
-        public const string PlayerGuildDiaShopInfo = "DiaShop";
-
-        public const string PlayerGuildDoSupportCountInfo = "SupportCount";
-
-        public const string PlayerGuildRaidNormalDamageInfo = "NormalDamage";
-
-        public const string PlayerGuildRaidNormalRewardInfo = "NormalReward";
-        public const string PlayerGuildRaidNormalEnterInfo = "NormalEnter";
-
-
-        public const string PlayerGuildRaidToDayEnterRankInfo = "RankToday";
-        public const string PlayerGuildRaidToDayChargeRankInfo = "RankCharge";
-
-        public const string PlayerGuildCoinWeekAccumAddCountInfo = "CoinWeekAccum";
-
-        //SevenDayInfo
-        public const string PlayerSevenDayTable = "PlayerSevenDayInfo";
-
-        public const string PlayerSevenDayGroupInfo = "Group";
-        public const string PlayerSevenDayMissionInfo = "MissionInfo";
-        public const string PlayerSevenDayRecvedOnceReward = "RecvedOnceReward";
-        public const string PlayerSevenDayAccumMissionClearCount = "AccumCount";
-        public const string PlayerSevenDayClose = "Close";
 
         //ViewData
         public const string PlayerViewDataTable = "PlayerViewDataInfo";
-        public const string PlayerViewDataSummon = "Summon";
-        public const string PlayerViewDataJewelryTLv = "JewelryTLv";
         public const string PlayerViewDataBuyPrice = "Buy";
 
         //CharacterDefaultSetting
@@ -2171,34 +1619,6 @@ namespace GameBerry
         public static readonly int PlayerJobDefaultLevel = 1;
 
         public static readonly int CreatureDefaultLevel = 1;
-
-        public static readonly int CombineGoodsAmount = 5;
-
-        public static readonly int GearRingSlotTotalCount = 5;
-
-        public static readonly int SkillSlotTotalPage = 5;
-        public static readonly int AllySlotTotalPage = 5;
-        public static readonly int TraitSlotTotalPage = 5;
-
-        public static readonly int AllyComposeMaterialCount = 6;
-
-        public static readonly int AllyJewelrySlotTotalCount = 4;
-        public static readonly int AllyJewelryCombineMaterialCount = 5;
-
-        public static readonly int AllyJewelryTranscendMaterialCount = 1;
-
-        public static V2Enum_Grade AllyJewelryPossibleTranscendGrade = V2Enum_Grade.SS;
-
-        public static V2Enum_Goods RuneGachaGoodType = V2Enum_Goods.Point;
-        public static V2Enum_Point RuneGachaPointType = V2Enum_Point.Dia;
-
-        public static V2Enum_Point MasteryInitPointType = V2Enum_Point.InGameGold;
-        public static double MasteryInitPointPrice = 10.0;
-
-        public static V2Enum_Goods TraitGachaGoodType = V2Enum_Goods.Point;
-        public static V2Enum_Point TraitGachaPointType = V2Enum_Point.SynergyLimitFire;
-        public static double TraitGachaBasePrice = 1.0;
-        public static double TraitGachaLockAddPrice = 1.0;
 
         public static double StageCoolTimeRewardTimeGab = 60.0;
         public static double StageCooltimeRewardMaxSecond = 7200;
@@ -2223,8 +1643,6 @@ namespace GameBerry
         public static double DefaultGainGold = 100; // 스테이지를 클리어하지 않았을 때 기본으로 제공되는 보상
 
         public static int NexusMonsterIndex = 100; // 넥서스용 몬스터 인덱스
-        public static List<int> NewCharacterSkill = new List<int>(); // 신규 캐릭터 생성 시 지급되는 캐릭터 스킬 인덱스
-        public static List<int> NewCharacterEquipSkill = new List<int>(); // 신규 캐릭터 생성 시 자동 장착되는 스킬 인덱스
         public static double StageStartGold = 30; // 스테이지 시작 시 지급되는 골드
 
         public static double StaminaChargeTime = 60; // 행동력 1 충전에 필요한 시간 (초)
@@ -2332,220 +1750,9 @@ namespace GameBerry
 
         public static double NickNameChangeDiaCost = 500.0;
 
-        public static int ExtensionSummonMultiplyValue = 10;
-
-        public static string ServerKind = "GO";
-        public static int ServerNum = 108;
-
-        //public static double HurdleIncreaseFactor1 = 0.26;
-        //public static double HurdleIncreaseFactor2 = 0.35;
-
-        public static int HurdleIncreaseFactor1 = 1;
-        public static int HurdleIncreaseFactor2 = 1;
-
-        public static ObscuredInt ClanMissionResetTicketDailyRecharge;
-
-        public static List<int> HellDungeonClearRewardGroup = new List<int>();
-
-        public static ObscuredFloat PenaltySkillIntervalStart;
-        public static ObscuredFloat PenaltySkillIntervalDecrease;
-        public static ObscuredFloat PenaltySkillIntervalMin;
-
-
-
-        public static ObscuredInt EventRouletteLimitedRewardDrawCount = 100;
-        public static ObscuredInt EventRouletteFinalRewardDrawCount = 500;
-
-        public static ObscuredInt EnemyBoostValueOnBerserker = 2;
-
-        public static ObscuredFloat BerserkerStageWaveInterval = 0.3f;
-
-
-        public static ObscuredInt AllyArenaSearchingCountBottom = 15;
-        public static ObscuredInt AllyArenaSearchingCountTop = 5;
-
-        public static ObscuredLong AllyArenaRankPointMaxForWin = 2215;
-        public static ObscuredLong AllyArenaRankPointBaseForWin = 1000;
-        public static ObscuredLong AllyArenaRankPointMinForWin = 250;
-
-        public static ObscuredLong AllyArenaRankPointMaxForLose = 1000;
-        public static ObscuredLong AllyArenaRankPointBaseForLose = 850;
-        public static ObscuredLong AllyArenaRankPointMinForLose = 100;
-
-        public static ObscuredInt HonorCoinRewardAmountForAllyArenaWin = 1;
-
-        public static ObscuredInt HonorShopProductDisplayAmount = 9;
-        public static ObscuredInt HonorShopAutoResetInterval = 86400;
-        public static ObscuredInt HonorShopManualResetDiaCostBase = 500;
-        public static ObscuredInt HonorShopManualResetDiaCostAdd = 250;
-
-        public static ObscuredDouble AllyArenaStatModForResistance = 0.5;
-        public static ObscuredDouble AllyArenaStatModForHp = 0.1;
-
-        public static ObscuredInt AllyArenaTestBattleCount = 6;
-        public static ObscuredInt AllyArenaTicketDailyRechargeCount = 3;
-
-        public static ObscuredFloat AllyArenaTimeLimit = 59;
-
-        public static ObscuredInt JewelSurpassResetCost = 1;
-
-        public static ObscuredInt HealDungeonFinalRewardCombatCount = 15; // 우리엘 지급 조건 (여신던전 누적 전투)
-        public static ObscuredInt HealDungeonFinalRewardSummonCount = 200; // 우리엘 지급 조건 (여신던전 누적 소환)
-        public static ObscuredInt HealDungeonDiaSummonDailyLimit = 10; // 여신던전 다이아 소환 일일 제한
-        public static ObscuredDouble HealDungeonDiaSummonCostForOne = 500; // 여신던전 1회 소환 다이아 비용
-        public static ObscuredDouble HealDungeonDiaSummonCostForTen = 4500; // 여신던전 10회 소환 다이아 비용
-        public static ObscuredInt HealDungeonDailyEnterCount = 5; // 여신던전 일일 입장제한 횟수
-        public static ObscuredInt HealDungeonEventTargetAlly = 104010064; // 여신던전 타깃 동료 (일련번호)
-        public static ObscuredFloat HealDungeonTimeLimit = 29;
-
-        public static ObscuredInt LuckyRouletteDailySpinMaxCount = 5; // 행운룰렛 일일스핀 최대횟수
-        public static ObscuredInt LuckyRouletteSpinInterval = 300; // 행운룰렛 스핀 인터벌 (초)
-
-        public static ObscuredFloat RedBullKnockBackInterval = 2.0f; // 레드불 넉백 인터벌
-
-        public static ObscuredFloat DiamondDungeonTimeLimit = 59.0f; // 레드불 넉백 인터벌
-        public static ObscuredFloat GoldDungeonTimeLimit = 29.0f; // 레드불 넉백 인터벌
-        public static ObscuredFloat RuneDungeonTimeLimit = 59.0f; // 레드불 넉백 인터벌
-
-        public static ObscuredDouble ForgeHammerRechargeInterval = 300.0; // 단조 망치 충전주기 (초)
-        public static ObscuredDouble ForgeHammerRechargeAmount = 1; // 단조 망치 충전량 (개수)
-        public static ObscuredDouble ForgeHammerRechargeAmountMax = 720; // 단조 망치 최대 충전량 (개수)
-
-        public static ObscuredDouble ForgeHammerDiaRechargeCostBase = 500; // 망치 다이아 충전 기본값
-        public static ObscuredDouble ForgeHammerDiaRechargeAmount = 10; // 망치 구매 시 충전량
-        public static ObscuredInt ForgeHammerAdvertiseCount = 1; // 망치 광고 보상 획득가능 횟수
-        public static ObscuredDouble ForgeHammerAdvertiseRechargeAmount = 10; // 광고로 획득 할 수 있는 망치 개수
-
-
-        public static ObscuredDouble LevelUpStatCharacter = 1; // 강화로 인한 스테이터스 캐릭터 상수
-        public static ObscuredDouble LevelUpStatMonster = 0.7; // 강화로 인한 스테이터스 몬스터 상수
-        public static ObscuredDouble GambleProbMInimum = 0; // 도박 확률 최소 보정치
 
         public static ObscuredFloat MaxEffectiveMoveSpeedValue = 15.0f;
 
-        public static ObscuredInt RedBullDungeonFinalRewardCombatCount = 15; // 레드불 지급 조건 (레드불던전 누적 전투)
-        public static ObscuredInt RedBullDungeonFinalRewardSummonCount = 200; // 레드불 지급 조건 (레드불던전 누적 소환)
-        public static ObscuredInt RedBullDungeonDiaSummonDailyLimit = 10; // 레드불던전 다이아 소환 일일 제한
-        public static ObscuredDouble RedBullDungeonDiaSummonCostForOne = 500; // 레드불던전 1회 소환 다이아 비용
-        public static ObscuredDouble RedBullDungeonDiaSummonCostForTen = 4500; // 레드불던전 10회 소환 다이아 비용
-        public static ObscuredInt RedBullDungeonDailyEnterCount = 5; // 레드불던전 일일 입장제한 횟수
-        public static ObscuredInt RedBullDungeonEventTargetAlly = 104010065; // 레드불던전 타깃 동료 (일련번호)
-        public static ObscuredFloat RedBullDungeonTimeLimit = 29;
-        public static ObscuredDouble RedBullDungeonDiaEnterCostBase = 500;
-
-        public static ObscuredDouble RotationEventInitialTime = 0; // 로테이션 이벤트 최초 시작 시간
-        public static ObscuredFloat RotationEventDungeonTimeLimit = 29.0f; // 로테이션던전 제한시간 (초)
-
-
-        public static ObscuredInt UrsulaDungeonFinalRewardCombatCount = 15; // 우르슬라 지급 조건 (우르슬라던전 누적 전투)
-        public static ObscuredInt UrsulaDungeonFinalRewardSummonCount = 200; // 우르슬라 지급 조건 (우르슬라던전 누적 소환)
-        public static ObscuredInt UrsulaDungeonDiaSummonDailyLimit = 10; // 우르슬라던전 다이아 소환 일일 제한
-        public static ObscuredDouble UrsulaDungeonDiaSummonCostForOne = 500; // 우르슬라던전 1회 소환 다이아 비용
-        public static ObscuredDouble UrsulaDungeonDiaSummonCostForTen = 4500; // 우르슬라던전 10회 소환 다이아 비용
-        public static ObscuredInt UrsulaDungeonDailyEnterCount = 5; // 우르슬라던전 일일 입장제한 횟수
-        public static ObscuredInt UrsulaDungeonEventTargetAlly = 104010066; // 우르슬라던전 타깃 동료 (일련번호)
-        public static ObscuredFloat UrsulaDungeonTimeLimit = 29;
-        public static ObscuredDouble UrsulaDungeonDiaEnterCostBase = 500;
-
-        public static ObscuredInt ShovelDailyRechargeAmount = 3; // 모종삽 일일 충전량
-        public static ObscuredDouble ShovelDiaRechargeCostBase = 500; // 모종삽 다이아 충전 기본값
-        public static ObscuredDouble ShovelDiaRechargeAmount = 3; // 모종삽 충전량
-
-        public static ObscuredDouble MathRpgCoinRechargeInterval = 60.0;
-        public static ObscuredDouble MathRpgCharacterBasePower = 500;
-        public static ObscuredDouble MathRpgPowerModifier = 1.25;
-        public static ObscuredDouble MathRPGBoostTime = 1800;
-        public static ObscuredInt MathRPGBoostRequireJewel = 40;
-
-        public static ObscuredInt KingSlimeDungeonFinalRewardCombatCount = 15; // 킹슬라임 지급 조건 (킹슬라임 누적 전투)
-        public static ObscuredInt KingSlimeDungeonFinalRewardSummonCount = 200; // 킹슬라임 지급 조건 (킹슬라임 누적 소환)
-        public static ObscuredInt KingSlimeDungeonDiaSummonDailyLimit = 10; // 킹슬라임 다이아 소환 일일 제한
-        public static ObscuredDouble KingSlimeDungeonDiaSummonCostForOne = 500; // 킹슬라임 1회 소환 다이아 비용
-        public static ObscuredDouble KingSlimeDungeonDiaSummonCostForTen = 4500; // 킹슬라임 10회 소환 다이아 비용
-        public static ObscuredInt KingSlimeDungeonDailyEnterCount = 5; // 킹슬라임 일일 입장제한 횟수
-        public static ObscuredInt KingSlimeDungeonEventTargetAlly = 104010067; // 킹슬라임 타깃 동료 (일련번호)
-        public static ObscuredFloat KingSlimeDungeonTimeLimit = 29;
-        public static ObscuredDouble KingSlimeDungeonDiaEnterCostBase = 500;
-
-        // Guild
-        public static ObscuredDouble GuildFoundateDiaCost = 50000; // 길드 생성 비용 (다이아)
-        public static ObscuredDouble GuildRaidRankDungeonDiaEnterCostBase = 500; // 길드 레이드던전 랭크모드 다이아 입장 기본값 (다이아)
-        public static ObscuredInt GuildRaidSupportUseDailyLimit = 1;
-
-        // Event
-        public static ObscuredDouble EventRouletteStartTime;
-        public static ObscuredDouble EventRouletteEndTime;
-        public static ObscuredDouble EventRouletteDisPlayTime;
-        public static ObscuredLong EventRouletteDisPlaySecond;
-
-        public static ObscuredInt EventNumber = -1;
-
-
-        public static ObscuredDouble EventDungeonStartTime;
-        public static ObscuredDouble EventDungeonEndTime;
-        public static ObscuredDouble EventDungeonDisPlayTime;
-        public static ObscuredLong EventDungeonDisPlaySecond;
-
-        public static ObscuredInt EventDungeonNumber = -1;
-
-
-        public static ObscuredDouble EventHealDungeonStartTime;
-        public static ObscuredDouble EventHealDungeonEndTime;
-        public static ObscuredDouble EventHealDungeonDisPlayTime;
-        public static ObscuredLong EventHealDungeonDisPlaySecond;
-
-        public static ObscuredInt EventHealDungeonNumber = -1;
-
-
-
-        public static ObscuredDouble EventRedBullStartTime;
-        public static ObscuredDouble EventRedBullEndTime;
-        public static ObscuredDouble EventRedBullDisPlayTime;
-        public static ObscuredLong EventRedBullDisPlaySecond;
-
-        public static ObscuredInt EventRedBullNumber = -1;
-
-
-        public static ObscuredDouble EventUrsulaStartTime;
-        public static ObscuredDouble EventUrsulaEndTime;
-        public static ObscuredDouble EventUrsulaDisPlayTime;
-        public static ObscuredLong EventUrsulaDisPlaySecond;
-
-        public static ObscuredInt EventUrsulaNumber = -1;
-
-
-        public static ObscuredDouble EventDigStartTime;
-        public static ObscuredDouble EventDigEndTime;
-        public static ObscuredDouble EventDigDisPlayTime;
-        public static ObscuredLong EventDigDisPlaySecond;
-
-        public static ObscuredInt EventDigNumber = -1;
-
-
-        public static ObscuredDouble EventMathRpgStartTime;
-        public static ObscuredDouble EventMathRpgEndTime;
-        public static ObscuredDouble EventMathRpgDisPlayTime;
-        public static ObscuredLong EventMathRpgDisPlaySecond;
-
-        public static ObscuredInt EventMathRpgNumber = -1;
-
-
-        public static ObscuredDouble EventKingSlimeDungeonStartTime;
-        public static ObscuredDouble EventKingSlimeDungeonEndTime;
-        public static ObscuredDouble EventKingSlimeDungeonDisPlayTime;
-        public static ObscuredLong EventKingSlimeDungeonDisPlaySecond;
-
-        public static ObscuredInt EventKingSlimeDungeonNumber = -1;
-
-
-
-        // GameDeckKey
-        public static readonly string SaveCurrentSkillDeckKey = "SaveCurrentSkillDeck";
-        public static readonly string SaveCurrentAllyDeckKey = "SaveCurrentAllyDeck";
-
-
-        //기본 오토모드 설정
-        public static readonly bool AwakeAutoMode = true;
 
         //시스템챗 이름
         public static readonly string SystemChatName = "System";
@@ -2553,19 +1760,11 @@ namespace GameBerry
 
         public static readonly double PerStatRecoverValue = 0.0001;
         
-        public static readonly double PerSkillRecoverValue = 0.0001;
         public static readonly double PerSkillEffectRecoverValue = 0.000001;
-        public static readonly double PerGambleSlotStatRecoverValue = 0.0001;
         public static readonly double PerStatPrintRecoverValue = 0.01;
         public static readonly double PerStatPrintRecoverValueTemp = 0.0001;
 
         public static readonly double PercentageRecoverValue = 0.01; // 백분율
-        public static readonly double PerTenThousandRecoverValue = 0.0001; // 만분율
-        //public static readonly double PerStatRecoverValue = 0.01;
-
-        public static readonly string AutoBossChallengeModeKey = "AutoBossChallengeModeKey";
-
-        public static readonly float CharacterDirectionRunDuration = 0.5f; // 만분율
 
         public const string DayLocalKey = "time/day";
         public const string HourLocalKey = "time/hour";
@@ -2602,21 +1801,6 @@ namespace GameBerry
         public static ObscuredBool OpenResearchSlot = false;
         public static ObscuredBool IsAdBuffAlways = false;
         public static ObscuredBool IsSweepUnlimited = false;
-
-        public static double Skill_Element_Damage = 0.3; //속성 상성에 따른 데미지 변화량
-        public static int Player_NameReset_Cost_Gem_Count = 1000;
-
-
-        public static int TestDefence_Stage = 999999;
-        public static int TestDefence_Wave = 23;
-        public static double TestDefence_HpRatio = 0.3;
-        public static double TestDefence_Value = 200;
-
-        public static int TestDamage_Stage = 999999;
-        public static int TestDamage_SynergyLevel = 5;
-        public static double TestDamage_Value = 1;
-
-
 
         public static readonly ObscuredInt SynergyDungeonCharge = 50;
     }

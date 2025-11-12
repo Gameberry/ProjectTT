@@ -60,9 +60,9 @@ namespace GameBerry.Managers
             {
                 DescendData synergyEffectData = pair.Value;
 
-                if (synergyEffectData.DescendType == V2Enum_ARR_DescendType.DescendSkill)
+                if (synergyEffectData.DescendType == Enum_DescendType.DescendSkill)
                     synergyEffectData.SynergySkillData = SkillManager.Instance.GetMainSkillData(synergyEffectData.DescendParam1);
-                else if (synergyEffectData.DescendType == V2Enum_ARR_DescendType.DescendPassive)
+                else if (synergyEffectData.DescendType == Enum_DescendType.DescendPassive)
                     synergyEffectData.PetData = PetManager.Instance.GetPetData(synergyEffectData.DescendParam1);
 
                 if (synergyEffectData.SynergyRuneList != null)
@@ -1250,11 +1250,11 @@ namespace GameBerry.Managers
                 if (skillInfo != null)
                     skillInfo.descend = descendData;
 
-                if (descendData.DescendType == V2Enum_ARR_DescendType.DescendSkill)
+                if (descendData.DescendType == Enum_DescendType.DescendSkill)
                 {
-                    Managers.BattleSceneManager.Instance.AddGambleSkill(descendData.SynergySkillData, V2Enum_ARR_SynergyType.Max, skillInfo);
+                    Managers.BattleSceneManager.Instance.AddGambleSkill(descendData.SynergySkillData, Enum_SynergyType.Max, skillInfo);
                 }
-                else if (descendData.DescendType == V2Enum_ARR_DescendType.DescendPassive)
+                else if (descendData.DescendType == Enum_DescendType.DescendPassive)
                 { 
                     Managers.BattleSceneManager.Instance.AddPet(descendData.PetData, skillInfo);
                 }
@@ -1271,9 +1271,9 @@ namespace GameBerry.Managers
                             MainSkillData mainSkillData = descendData.SynergyRuneList[j].SynergySkillData;
                             if (mainSkillData != null)
                             {
-                                if (descendData.DescendType == V2Enum_ARR_DescendType.DescendSkill)
-                                    Managers.BattleSceneManager.Instance.AddGambleSkill(mainSkillData, V2Enum_ARR_SynergyType.Max, skillInfo);
-                                else if (descendData.DescendType == V2Enum_ARR_DescendType.DescendPassive)
+                                if (descendData.DescendType == Enum_DescendType.DescendSkill)
+                                    Managers.BattleSceneManager.Instance.AddGambleSkill(mainSkillData, Enum_SynergyType.Max, skillInfo);
+                                else if (descendData.DescendType == Enum_DescendType.DescendPassive)
                                     Managers.BattleSceneManager.Instance.AddPetAfterSkill(descendData.PetData, mainSkillData, skillInfo);
                             }
                         }
@@ -1343,11 +1343,11 @@ namespace GameBerry.Managers
             //                if (mainSkillData == null)
             //                    continue;
 
-            //                if (descendData.DescendType == V2Enum_ARR_DescendType.DescendSkill)
+            //                if (descendData.DescendType == Enum_DescendType.DescendSkill)
             //                {
             //                    Managers.BattleSceneManager.Instance.AddGambleSkill(mainSkillData);
             //                }
-            //                else if (descendData.DescendType == V2Enum_ARR_DescendType.DescendPassive)
+            //                else if (descendData.DescendType == Enum_DescendType.DescendPassive)
             //                    Managers.BattleSceneManager.Instance.AddPetAfterSkill(descendData.PetData, mainSkillData);
             //            }
             //        }
@@ -1473,11 +1473,11 @@ namespace GameBerry.Managers
                 if (skillInfo != null)
                     skillInfo.descend = descendData;
 
-                if (descendData.DescendType == V2Enum_ARR_DescendType.DescendSkill)
+                if (descendData.DescendType == Enum_DescendType.DescendSkill)
                 {
-                    Managers.BattleSceneManager.Instance.AddGambleSkill(mainSkillData, V2Enum_ARR_SynergyType.Max, skillInfo);
+                    Managers.BattleSceneManager.Instance.AddGambleSkill(mainSkillData, Enum_SynergyType.Max, skillInfo);
                 }
-                else if (descendData.DescendType == V2Enum_ARR_DescendType.DescendPassive)
+                else if (descendData.DescendType == Enum_DescendType.DescendPassive)
                     Managers.BattleSceneManager.Instance.AddPetAfterSkill(descendData.PetData, mainSkillData, skillInfo);
             }
 

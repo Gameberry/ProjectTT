@@ -73,8 +73,8 @@ namespace GameBerry
                     Managers.RedDotManager.Instance.ShowRedDot(ContentDetailList.LobbyResearch);
             }
 
-            if (Managers.BattleSceneManager.Instance._prevBattleType == V2Enum_Dungeon.DiamondDungeon
-                || Managers.BattleSceneManager.Instance._prevBattleType == V2Enum_Dungeon.TowerDungeon)
+            if (Managers.BattleSceneManager.Instance._prevBattleType == Enum_Dungeon.DiamondDungeon
+                || Managers.BattleSceneManager.Instance._prevBattleType == Enum_Dungeon.TowerDungeon)
                 UI.IDialog.RequestDialogEnter<UI.DungeonContentDialog>();
 
             Managers.GearManager.Instance.RefreshSynergyRedDot();
@@ -112,7 +112,7 @@ namespace GameBerry
             //{
             //    Transform pos = InGamePositionContainer.Instance.GetBattleFoeSpawnPos(i + 1);
 
-            //    CreatureController creatureController = SpawnCreature(Managers.CreatureManager.Instance.GetCreatureData(Random.Range(109010031, 109010035)), 1, pos, IFFType.IFF_Foe, Enum_ARR_LookDirection.Left);
+            //    CreatureController creatureController = SpawnCreature(Managers.CreatureManager.Instance.GetCreatureData(Random.Range(109010031, 109010035)), 1, pos, IFFType.IFF_Foe, Enum_LookDirection.Left);
             //    creatureController.ReadyCreature();
             //    creatureController.PlayCreature();
             //}

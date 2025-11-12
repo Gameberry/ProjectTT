@@ -43,7 +43,7 @@ namespace GameBerry.UI
 
         private SynergyRuneData currentSynergyRuneData;
         private bool isEquipState = false;
-        private V2Enum_ARR_SynergyType currentV2Enum_ARR_SynergyType;
+        private Enum_SynergyType currentEnum_SynergyType;
         private int currentSlotidx;
 
         private bool onEquip = false;
@@ -129,9 +129,9 @@ namespace GameBerry.UI
             ElementExit();
         }
         //------------------------------------------------------------------------------------
-        public void SetSlotState(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int slotidx)
+        public void SetSlotState(Enum_SynergyType Enum_SynergyType, int slotidx)
         {
-            currentV2Enum_ARR_SynergyType = v2Enum_ARR_SynergyType;
+            currentEnum_SynergyType = Enum_SynergyType;
             currentSlotidx = slotidx;
         }
         //------------------------------------------------------------------------------------

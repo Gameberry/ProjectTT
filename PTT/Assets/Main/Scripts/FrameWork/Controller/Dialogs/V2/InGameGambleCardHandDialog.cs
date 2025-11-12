@@ -69,7 +69,7 @@ namespace GameBerry.UI
 
         private Queue<ObscuredInt> _minorJokerQueue = new Queue<ObscuredInt>();
 
-        private V2Enum_ARR_SynergyType _gasSynergyTutorialType = V2Enum_ARR_SynergyType.Max;
+        private Enum_SynergyType _gasSynergyTutorialType = Enum_SynergyType.Max;
 
         private UIGambleChoiceSkillElement forceReleaseElement = null;
 
@@ -99,7 +99,7 @@ namespace GameBerry.UI
 
             foreach (var pair in Managers.SynergyManager.Instance.SynergySortView)
             {
-                V2Enum_ARR_SynergyType v2Enum_Stat = pair;
+                Enum_SynergyType v2Enum_Stat = pair;
 
                 UIGambleChoiceSkillElement uIGambleChoiceSkillElement = null;
 
@@ -141,11 +141,11 @@ namespace GameBerry.UI
             {
                 bool needlevel = false;
 
-                for (int i = V2Enum_ARR_SynergyType.Red.Enum32ToInt(); i < V2Enum_ARR_SynergyType.Max.Enum32ToInt(); ++i)
+                for (int i = Enum_SynergyType.Red.Enum32ToInt(); i < Enum_SynergyType.Max.Enum32ToInt(); ++i)
                 {
-                    V2Enum_ARR_SynergyType v2Enum_Stat = i.IntToEnum32<V2Enum_ARR_SynergyType>();
+                    Enum_SynergyType v2Enum_Stat = i.IntToEnum32<Enum_SynergyType>();
 
-                    if (v2Enum_Stat == V2Enum_ARR_SynergyType.Yellow)
+                    if (v2Enum_Stat == Enum_SynergyType.Yellow)
                     {
                         if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == false)
                         {
@@ -153,7 +153,7 @@ namespace GameBerry.UI
                         }
                     }
 
-                    if (v2Enum_Stat == V2Enum_ARR_SynergyType.White)
+                    if (v2Enum_Stat == Enum_SynergyType.White)
                     {
                         if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == false)
                         {
@@ -360,7 +360,7 @@ namespace GameBerry.UI
 
             if (Managers.MapManager.Instance.NeedTutotial1() == true)
             {
-                if (Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card) == 1)
+                if (Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card) == 1)
                 {
                     if (_tutorialBlack != null)
                         _tutorialBlack.gameObject.SetActive(true);
@@ -368,7 +368,7 @@ namespace GameBerry.UI
                     if (_tutorialText != null)
                         Managers.LocalStringManager.Instance.SetLocalizeText(_tutorialText, "guide/gamblecard2");
 
-                    Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+                    Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
                 }
 
                 if (Managers.GuideInteractorManager.Instance.PlayJokerTutorial == true)
@@ -379,7 +379,7 @@ namespace GameBerry.UI
                     if (_tutorialText != null)
                         Managers.LocalStringManager.Instance.SetLocalizeText(_tutorialText, "guide/gamblecardjoker1");
 
-                    Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+                    Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
                 }
             }
 
@@ -401,16 +401,16 @@ namespace GameBerry.UI
             float EndTime = Time.unscaledTime + GambleSkillTimer2;
             Vector3 rot = Vector3.zero;
 
-            _gasSynergyTutorialType = V2Enum_ARR_SynergyType.Max;
+            _gasSynergyTutorialType = Enum_SynergyType.Max;
 
             if (Managers.MapManager.Instance.NeedTutotial1() == true)
             {
                 if (Managers.GuideInteractorManager.Instance.PlayGasSynergyTutorial == true)
                 {
-                    if (Managers.SynergyManager.Instance.GetSynergyStack(V2Enum_ARR_SynergyType.Red) > 0)
-                        _gasSynergyTutorialType = V2Enum_ARR_SynergyType.Red;
+                    if (Managers.SynergyManager.Instance.GetSynergyStack(Enum_SynergyType.Red) > 0)
+                        _gasSynergyTutorialType = Enum_SynergyType.Red;
                     else
-                        _gasSynergyTutorialType = V2Enum_ARR_SynergyType.Blue;
+                        _gasSynergyTutorialType = Enum_SynergyType.Blue;
 
                     if (_gasSynergyJokerBalck != null)
                         _gasSynergyJokerBalck.gameObject.SetActive(true);
@@ -456,7 +456,7 @@ namespace GameBerry.UI
                     forceReleaseElement = uIGambleChoiceSkillElement;
 
 
-                    if (aRR_CardGambleData.SynergyType == V2Enum_ARR_SynergyType.Yellow)
+                    if (aRR_CardGambleData.SynergyType == Enum_SynergyType.Yellow)
                     {
                         if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == false)
                         {
@@ -464,7 +464,7 @@ namespace GameBerry.UI
                             continue;
                         }
                     }
-                    else if (aRR_CardGambleData.SynergyType == V2Enum_ARR_SynergyType.White)
+                    else if (aRR_CardGambleData.SynergyType == Enum_SynergyType.White)
                     {
                         if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == false)
                         {
@@ -501,7 +501,7 @@ namespace GameBerry.UI
                     if (_gasSynergyJokerBalck_Text != null)
                         Managers.LocalStringManager.Instance.SetLocalizeText(_gasSynergyJokerBalck_Text, "guide/gassynergy2");
 
-                    Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+                    Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
 
                     Managers.GuideInteractorManager.Instance.StartGuideInteractor(V2Enum_EventType.TutoGambleGasSynergyPick);
                 }
@@ -514,7 +514,7 @@ namespace GameBerry.UI
                     if (_tutorialText != null)
                         Managers.LocalStringManager.Instance.SetLocalizeText(_tutorialText, "guide/gamblecardjoker2");
 
-                    Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+                    Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
                 }
             }
 
@@ -545,12 +545,12 @@ namespace GameBerry.UI
                 bool allMax = true;
                 for (int i = 0; i < Managers.GambleManager.Instance.AutoGambleOrder.Count; ++i)
                 {
-                    V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
-                    if (Managers.SynergyManager.Instance.GetInGameSynergyUnlockTier(v2Enum_ARR_SynergyType) <= Managers.SynergyManager.Instance.GetSynergyLevel(v2Enum_ARR_SynergyType))
+                    Enum_SynergyType Enum_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
+                    if (Managers.SynergyManager.Instance.GetInGameSynergyUnlockTier(Enum_SynergyType) <= Managers.SynergyManager.Instance.GetSynergyLevel(Enum_SynergyType))
                         continue;
 
                     UIGambleChoiceSkillElement uIGambleChoiceSkillElement = uIGambleChoiceSkillElements.Find(x => x.gameObject.activeSelf == true
-                    && x.GetGambleSkillData().SynergyType == v2Enum_ARR_SynergyType);
+                    && x.GetGambleSkillData().SynergyType == Enum_SynergyType);
                     if (uIGambleChoiceSkillElement != null)
                     {
                         allMax = false;
@@ -565,10 +565,10 @@ namespace GameBerry.UI
                 {
                     for (int i = 0; i < Managers.GambleManager.Instance.AutoGambleOrder.Count; ++i)
                     {
-                        V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
+                        Enum_SynergyType Enum_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
 
                         UIGambleChoiceSkillElement uIGambleChoiceSkillElement = uIGambleChoiceSkillElements.Find(x => x.gameObject.activeSelf == true
-                        && x.GetGambleSkillData().SynergyType == v2Enum_ARR_SynergyType);
+                        && x.GetGambleSkillData().SynergyType == Enum_SynergyType);
                         if (uIGambleChoiceSkillElement != null)
                         {
                             _autoGambleSet = null;
@@ -605,12 +605,12 @@ namespace GameBerry.UI
                 bool allMax = true;
                 for (int i = 0; i < Managers.GambleManager.Instance.AutoGambleOrder.Count; ++i)
                 {
-                    V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
-                    if (Managers.SynergyManager.Instance.GetInGameSynergyUnlockTier(v2Enum_ARR_SynergyType) <= Managers.SynergyManager.Instance.GetSynergyLevel(v2Enum_ARR_SynergyType))
+                    Enum_SynergyType Enum_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
+                    if (Managers.SynergyManager.Instance.GetInGameSynergyUnlockTier(Enum_SynergyType) <= Managers.SynergyManager.Instance.GetSynergyLevel(Enum_SynergyType))
                         continue;
 
                     UIGambleChoiceSkillElement uIGambleChoiceSkillElement = uIGambleChoiceSkillElements.Find(x => x.gameObject.activeSelf == true
-                    && x.GetGambleSkillData().SynergyType == v2Enum_ARR_SynergyType);
+                    && x.GetGambleSkillData().SynergyType == Enum_SynergyType);
                     if (uIGambleChoiceSkillElement != null)
                     {
                         allMax = false;
@@ -625,10 +625,10 @@ namespace GameBerry.UI
                 {
                     for (int i = 0; i < Managers.GambleManager.Instance.AutoGambleOrder.Count; ++i)
                     {
-                        V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
+                        Enum_SynergyType Enum_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
 
                         UIGambleChoiceSkillElement uIGambleChoiceSkillElement = uIGambleChoiceSkillElements.Find(x => x.gameObject.activeSelf == true
-                        && x.GetGambleSkillData().SynergyType == v2Enum_ARR_SynergyType);
+                        && x.GetGambleSkillData().SynergyType == Enum_SynergyType);
                         if (uIGambleChoiceSkillElement != null)
                         {
                             _autoGambleSet = null;
@@ -653,7 +653,7 @@ namespace GameBerry.UI
                 _autoGambleSet = null;
             }
 
-            if (Managers.MapManager.Instance.NeedTutotial1() == true && Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card) == 1)
+            if (Managers.MapManager.Instance.NeedTutotial1() == true && Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card) == 1)
             {
                 if (_tutorialBlack != null)
                     _tutorialBlack.gameObject.SetActive(false);
@@ -695,7 +695,7 @@ namespace GameBerry.UI
             }
 
 
-            if (gambleSkillData.SynergyType == V2Enum_ARR_SynergyType.Max)
+            if (gambleSkillData.SynergyType == Enum_SynergyType.Max)
             {
                 AllHideGambleUI();
 

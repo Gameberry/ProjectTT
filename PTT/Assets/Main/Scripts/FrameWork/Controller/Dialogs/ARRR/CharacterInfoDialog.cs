@@ -415,8 +415,8 @@ namespace GameBerry.UI
 
             //    if (_uISkillDetail_CoolTime != null)
             //    {
-            //        if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Default
-            //            || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GamebleCoolTime)
+            //        if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Default
+            //            || skillBaseData.CoolTimeType == Enum_CoolTimeType.GamebleCoolTime)
             //            _uISkillDetail_CoolTime.SetText("{0}s");
             //        else
             //            _uISkillDetail_CoolTime.SetText("-");

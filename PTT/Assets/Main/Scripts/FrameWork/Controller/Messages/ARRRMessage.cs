@@ -84,7 +84,7 @@ namespace GameBerry.Event
 
     public class AddSkillSynergyMsg : Message
     {
-        public V2Enum_ARR_SynergyType V2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+        public Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
         public SynergyEffectData BeforeData;
         public int BeforeStack;
@@ -102,7 +102,7 @@ namespace GameBerry.Event
 
     public class RefreshGambleSynergyMsg : Message
     {
-        public V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType = V2Enum_ARR_SynergyType.Max;
+        public Enum_SynergyType Enum_GambleSynergyType = Enum_SynergyType.Max;
     }
 
     public class RefreshGambleSynergyCombineSkillMsg : Message
@@ -123,7 +123,7 @@ namespace GameBerry.Event
     public class ShowGambleSynergyDetailMsg : Message
     {
         public SynergyEffectData FocusData;
-        public V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType = V2Enum_ARR_SynergyType.Max;
+        public Enum_SynergyType Enum_GambleSynergyType = Enum_SynergyType.Max;
     }
 
     public class ChangeEquipSynergyMsg : Message
@@ -190,7 +190,7 @@ namespace GameBerry.Event
 
     public class ResultBattleStageMsg : Message
     {
-        public V2Enum_Dungeon v2Enum_Dungeon;
+        public Enum_Dungeon EnumDungeon;
         public bool Win = false;
         public float PlayTime = 0.0f;
         public List<RewardData> WaveRewardList = new List<RewardData>();
@@ -202,7 +202,7 @@ namespace GameBerry.Event
 
     public class RefreshResultBattleStage_DoubleRewardMsg : Message
     {
-        public V2Enum_Dungeon v2Enum_Dungeon;
+        public Enum_Dungeon EnumDungeon;
         public List<RewardData> WaveRewardList = new List<RewardData>();
     }
 
@@ -228,7 +228,7 @@ namespace GameBerry.Event
 
     public class PlayARRRTutorialMsg : Message
     {
-        public V2Enum_EventType v2Enum_ARR_GambleType = V2Enum_EventType.Max;
+        public V2Enum_EventType Enum_GambleType = V2Enum_EventType.Max;
     }
 
     public class PlaySlotTutorialMsg : Message

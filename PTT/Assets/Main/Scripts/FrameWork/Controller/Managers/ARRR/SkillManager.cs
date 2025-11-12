@@ -143,7 +143,7 @@ namespace GameBerry.Managers
 
             if (skillBaseData == null)
             {
-                v2SkillAttackData.v2DamageDatas = new V2DamageData();
+                v2SkillAttackData.DamageData = new V2DamageData();
                 v2SkillAttackData.actorType = IFFType.IFF_None;
 
                 return v2SkillAttackData;
@@ -157,21 +157,21 @@ namespace GameBerry.Managers
 
             double attackValue = creatureController.GetOutPutMyStat(V2Enum_Stat.Attack);
 
-            v2SkillAttackData.v2DamageDatas = new V2DamageData();
-            v2SkillAttackData.v2DamageDatas.SkillValue = skillManageInfo.GetDamageFactor();
+            v2SkillAttackData.DamageData = new V2DamageData();
+            v2SkillAttackData.DamageData.SkillValue = skillManageInfo.GetDamageFactor();
             if (skillManageInfo.myDescend != null)
             {
-                v2SkillAttackData.v2DamageDatas.SkillValue += v2SkillAttackData.v2DamageDatas.SkillValue * (Managers.DescendManager.Instance.GetInGameDescendDamageRatio(skillManageInfo.myDescend) * 0.01);
+                v2SkillAttackData.DamageData.SkillValue += v2SkillAttackData.DamageData.SkillValue * (Managers.DescendManager.Instance.GetInGameDescendDamageRatio(skillManageInfo.myDescend) * 0.01);
 
-                v2SkillAttackData.v2DamageDatas.SkillValue += v2SkillAttackData.v2DamageDatas.SkillValue * Managers.BattleSceneManager.Instance.CurrentBattleScene.MyARRRControllers.GetOutputSynergyDescendDmg();
+                v2SkillAttackData.DamageData.SkillValue += v2SkillAttackData.DamageData.SkillValue * Managers.BattleSceneManager.Instance.CurrentBattleScene.MyARRRControllers.GetOutputSynergyDescendDmg();
             }
 
-            v2SkillAttackData.v2DamageDatas.AttackValue = attackValue;
+            v2SkillAttackData.DamageData.AttackValue = attackValue;
 
 
             if (skillManageInfo.MotherTargetEffectDatas != null && skillManageInfo.MotherTargetEffectDatas.Count > 0)
             {
-                v2SkillAttackData.v2CCDatas = new List<V2CCData>();
+                v2SkillAttackData.CcDatas = new List<V2CCData>();
 
                 List<SKillEffectInfo> characterSkillDataBaseList = skillManageInfo.MotherTargetEffectDatas;
 
@@ -218,12 +218,12 @@ namespace GameBerry.Managers
                             v2SkillAttackData.DamageBoost += v2CCData.CCValue;
                         }
                         else
-                            v2SkillAttackData.v2CCDatas.Add(v2CCData);
+                            v2SkillAttackData.CcDatas.Add(v2CCData);
                     }
                 }
             }
             else
-                v2SkillAttackData.v2CCDatas = null;
+                v2SkillAttackData.CcDatas = null;
 
             v2SkillAttackData.characterControllerBase = creatureController;
             v2SkillAttackData.criticalChance = creatureController.GetOutPutMyStat(V2Enum_Stat.CritChance);

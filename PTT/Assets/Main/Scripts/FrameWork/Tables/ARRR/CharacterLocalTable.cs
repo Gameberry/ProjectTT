@@ -60,7 +60,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_MonsterRoleType RoleType;
+        public V2Enum_MonsterRoleType RoleType;
         public ObscuredInt LimitLevel;
 
         public List<CharacterLevelUpLimitCost> LimitCostGoods = new List<CharacterLevelUpLimitCost>();
@@ -110,9 +110,9 @@ namespace GameBerry
         private Dictionary<V2Enum_Grade, LevelUpCostData> _skillLevelUpCostDatas_Dic = new Dictionary<V2Enum_Grade, LevelUpCostData>();
 
         private Dictionary<V2Enum_Stat, ObscuredDouble> _statPowerDatas_Dic = new Dictionary<V2Enum_Stat, ObscuredDouble>();
-        private Dictionary<Enum_ARR_SynergyPowerType, ObscuredDouble> _synergyPowerDatas_Dic = new Dictionary<Enum_ARR_SynergyPowerType, ObscuredDouble>();
-        private Dictionary<Enum_ARR_RelicPowerType, ObscuredDouble> _relicPowerDatas_Dic = new Dictionary<Enum_ARR_RelicPowerType, ObscuredDouble>();
-        private Dictionary<Enum_ARR_DescendPowerType, ObscuredDouble> _descendPowerDatas_Dic = new Dictionary<Enum_ARR_DescendPowerType, ObscuredDouble>();
+        private Dictionary<Enum_SynergyPowerType, ObscuredDouble> _synergyPowerDatas_Dic = new Dictionary<Enum_SynergyPowerType, ObscuredDouble>();
+        private Dictionary<Enum_RelicPowerType, ObscuredDouble> _relicPowerDatas_Dic = new Dictionary<Enum_RelicPowerType, ObscuredDouble>();
+        private Dictionary<Enum_DescendPowerType, ObscuredDouble> _descendPowerDatas_Dic = new Dictionary<Enum_DescendPowerType, ObscuredDouble>();
 
 
 
@@ -418,34 +418,34 @@ namespace GameBerry
 
             for (int i = 0; i < rows.Count; ++i)
             {
-                Enum_ARR_PowerType powerType = rows[i]["PowerType"].ToString().ToInt().IntToEnum32<Enum_ARR_PowerType>();
+                Enum_PowerType powerType = rows[i]["PowerType"].ToString().ToInt().IntToEnum32<Enum_PowerType>();
 
                 double BattlePowerConvertValue = rows[i]["BattlePowerConvertValue"].ToString().ToDouble();
 
                 int powerenum = rows[i]["PowerEnum"].ToString().ToInt();
                 
 
-                if (powerType == Enum_ARR_PowerType.Stat)
+                if (powerType == Enum_PowerType.Stat)
                 {
                     V2Enum_Stat PowerEnum = powerenum.IntToEnum32<V2Enum_Stat>();
                     if (_statPowerDatas_Dic.ContainsKey(PowerEnum) == false)
                         _statPowerDatas_Dic.Add(PowerEnum, BattlePowerConvertValue);
                 }
-                else if (powerType == Enum_ARR_PowerType.Synergy)
+                else if (powerType == Enum_PowerType.Synergy)
                 {
-                    Enum_ARR_SynergyPowerType PowerEnum = powerenum.IntToEnum32<Enum_ARR_SynergyPowerType>();
+                    Enum_SynergyPowerType PowerEnum = powerenum.IntToEnum32<Enum_SynergyPowerType>();
                     if (_synergyPowerDatas_Dic.ContainsKey(PowerEnum) == false)
                         _synergyPowerDatas_Dic.Add(PowerEnum, BattlePowerConvertValue);
                 }
-                else if (powerType == Enum_ARR_PowerType.Relic)
+                else if (powerType == Enum_PowerType.Relic)
                 {
-                    Enum_ARR_RelicPowerType PowerEnum = powerenum.IntToEnum32<Enum_ARR_RelicPowerType>();
+                    Enum_RelicPowerType PowerEnum = powerenum.IntToEnum32<Enum_RelicPowerType>();
                     if (_relicPowerDatas_Dic.ContainsKey(PowerEnum) == false)
                         _relicPowerDatas_Dic.Add(PowerEnum, BattlePowerConvertValue);
                 }
-                else if (powerType == Enum_ARR_PowerType.Descend)
+                else if (powerType == Enum_PowerType.Descend)
                 {
-                    Enum_ARR_DescendPowerType PowerEnum = powerenum.IntToEnum32<Enum_ARR_DescendPowerType>();
+                    Enum_DescendPowerType PowerEnum = powerenum.IntToEnum32<Enum_DescendPowerType>();
                     if (_descendPowerDatas_Dic.ContainsKey(PowerEnum) == false)
                         _descendPowerDatas_Dic.Add(PowerEnum, BattlePowerConvertValue);
                 }
@@ -565,7 +565,7 @@ namespace GameBerry
             return 0;
         }
         //------------------------------------------------------------------------------------
-        public double GetBattlePowerConvertValue(Enum_ARR_SynergyPowerType v2Enum_Stat)
+        public double GetBattlePowerConvertValue(Enum_SynergyPowerType v2Enum_Stat)
         {
             if (_synergyPowerDatas_Dic.ContainsKey(v2Enum_Stat) == true)
                 return _synergyPowerDatas_Dic[v2Enum_Stat];
@@ -573,7 +573,7 @@ namespace GameBerry
             return 0;
         }
         //------------------------------------------------------------------------------------
-        public double GetBattlePowerConvertValue(Enum_ARR_RelicPowerType v2Enum_Stat)
+        public double GetBattlePowerConvertValue(Enum_RelicPowerType v2Enum_Stat)
         {
             if (_relicPowerDatas_Dic.ContainsKey(v2Enum_Stat) == true)
                 return _relicPowerDatas_Dic[v2Enum_Stat];
@@ -581,7 +581,7 @@ namespace GameBerry
             return 0;
         }
         //------------------------------------------------------------------------------------
-        public double GetBattlePowerConvertValue(Enum_ARR_DescendPowerType v2Enum_Stat)
+        public double GetBattlePowerConvertValue(Enum_DescendPowerType v2Enum_Stat)
         {
             if (_descendPowerDatas_Dic.ContainsKey(v2Enum_Stat) == true)
                 return _descendPowerDatas_Dic[v2Enum_Stat];

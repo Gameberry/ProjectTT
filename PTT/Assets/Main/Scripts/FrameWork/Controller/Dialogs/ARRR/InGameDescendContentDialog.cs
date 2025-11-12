@@ -144,7 +144,7 @@ namespace GameBerry.UI
                     continue;
 
                 UIInGameDescendElement uIInGameDescendElement = _uIInGameDescendElement_dic[descendData.Index];
-                if (descendData.DescendType == V2Enum_ARR_DescendType.DescendPassive)
+                if (descendData.DescendType == Enum_DescendType.DescendPassive)
                     uIInGameDescendElement.SetSkillManageInfo(null);
                 else
                 {

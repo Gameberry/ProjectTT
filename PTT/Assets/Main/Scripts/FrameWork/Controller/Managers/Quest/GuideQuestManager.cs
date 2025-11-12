@@ -44,10 +44,8 @@ namespace GameBerry.Managers
             m_changeInfoSkillUpdate.Add(Define.PlayerSkillInfoTable);
 
             m_changeInfoAllyUpdate.Add(Define.PlayerQuestInfoTable);
-            m_changeInfoAllyUpdate.Add(Define.PlayerAllyInfoTable);
 
             m_changeInfoJewelryUpdate.Add(Define.PlayerQuestInfoTable);
-            m_changeInfoJewelryUpdate.Add(Define.PlayerAllyJewelryInfoTable);
 
             m_guideQuestLocalTable = TableManager.Instance.GetTableClass<GuideQuestLocalTable>();
             m_guideQuestDatas = m_guideQuestLocalTable.GetDatas();
@@ -411,7 +409,7 @@ namespace GameBerry.Managers
 
                 //case V2Enum_EventType.DiamondDungeonClear:
                 //    {
-                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(V2Enum_Dungeon.DiamondDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
+                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(Enum_Dungeon.DiamondDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
                 //        break;
                 //    }
                 //case V2Enum_EventType.MasteryDungeonClear:
@@ -421,17 +419,17 @@ namespace GameBerry.Managers
                 //    }
                 //case V2Enum_EventType.GoldDungeonClear:
                 //    {
-                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(V2Enum_Dungeon.GoldDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
+                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(Enum_Dungeon.GoldDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
                 //        break;
                 //    }
                 //case V2Enum_EventType.SoulStoneDungeonClear:
                 //    {
-                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(V2Enum_Dungeon.SoulStoneDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
+                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(Enum_Dungeon.SoulStoneDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
                 //        break;
                 //    }
                 //case V2Enum_EventType.RuneDungeonClear:
                 //    {
-                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(V2Enum_Dungeon.RuneDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
+                //        eventValue = DungeonDataManager.Instance.GetDungeonRecord(Enum_Dungeon.RuneDungeon, V2Enum_DungeonDifficultyType.Normal).ToInt();
                 //        break;
                 //    }
 

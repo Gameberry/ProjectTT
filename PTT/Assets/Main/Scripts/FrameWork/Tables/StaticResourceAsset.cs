@@ -163,7 +163,7 @@ namespace GameBerry
     [System.Serializable]
     public class GambleCardSprite
     {
-        public V2Enum_ARR_SynergyType CardType;
+        public Enum_SynergyType CardType;
 
         public Sprite SynergyIcon;
 
@@ -187,7 +187,7 @@ namespace GameBerry
     [System.Serializable]
     public class TotalLevelEffectColorData
     {
-        public V2Enum_ARRR_TotalLevelType EffectType;
+        public Enum_ARRR_TotalLevelType EffectType;
         public Color EffectColor = Color.white;
     }
 

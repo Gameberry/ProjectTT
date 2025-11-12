@@ -59,7 +59,7 @@ namespace GameBerry.UI
 
             if (_skillTriggerTypeText != null)
             {
-                _skillTriggerTypeText.text = characterSkillData.TriggerType == V2Enum_ARR_TriggerType.Active ? "A" : "P";
+                _skillTriggerTypeText.text = characterSkillData.TriggerType == Enum_TriggerType.Active ? "A" : "P";
                 if (v2SkillTriggerColorData != null)
                 {
                     _skillTriggerTypeText.color = v2SkillTriggerColorData.TextColor;
@@ -93,7 +93,7 @@ namespace GameBerry.UI
 
             //if (_skillTriggerTypeText != null)
             //{
-            //    _skillTriggerTypeText.text = characterSkillData.TriggerType == V2Enum_ARR_TriggerType.Active ? "A" : "P";
+            //    _skillTriggerTypeText.text = characterSkillData.TriggerType == Enum_TriggerType.Active ? "A" : "P";
             //    if (v2SkillTriggerColorData != null)
             //    {
             //        _skillTriggerTypeText.color = v2SkillTriggerColorData.TextColor;

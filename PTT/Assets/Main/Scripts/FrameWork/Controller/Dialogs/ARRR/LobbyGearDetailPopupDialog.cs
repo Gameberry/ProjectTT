@@ -142,7 +142,7 @@ namespace GameBerry.UI
 
         private GearData currentSynergyRuneData;
         private bool isEquipState = false;
-        private V2Enum_GearType currentV2Enum_ARR_SynergyType;
+        private V2Enum_GearType currentEnum_SynergyType;
 
         private bool onEquip = false;
 
@@ -327,7 +327,7 @@ namespace GameBerry.UI
                 _directionValues.Add(Managers.GearManager.Instance.GetStatValue(currentSynergyRuneData, operatorOverrideStat));
             }
 
-            if (Managers.GearManager.Instance.EnhanceSynergy(currentV2Enum_ARR_SynergyType))
+            if (Managers.GearManager.Instance.EnhanceSynergy(currentEnum_SynergyType))
             { 
                 RefreshEnhanceBtn();
                 //SetBaseStatView();
@@ -348,11 +348,11 @@ namespace GameBerry.UI
 
                 PlayLevelUpEffect(SerializeString.ToString());
 
-                PlaySynergyChangeTutorial(Managers.GearManager.Instance.GetSlotLevel(currentV2Enum_ARR_SynergyType)).Forget();
+                PlaySynergyChangeTutorial(Managers.GearManager.Instance.GetSlotLevel(currentEnum_SynergyType)).Forget();
 
                 if (_slotLevelText != null)
                 {
-                    int level = Managers.GearManager.Instance.GetSlotLevel(currentV2Enum_ARR_SynergyType);
+                    int level = Managers.GearManager.Instance.GetSlotLevel(currentEnum_SynergyType);
                     if (level <= 0)
                         _slotLevelText.gameObject.SetActive(false);
                     else
@@ -362,7 +362,7 @@ namespace GameBerry.UI
                     }
                 }
 
-                int costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex1(currentV2Enum_ARR_SynergyType);
+                int costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex1(currentEnum_SynergyType);
 
                 if (_uIItemIconAndAmount != null)
                     _uIItemIconAndAmount.SetSetting_NotConnectRefreshEvent(costIndex.IntToEnum32<V2Enum_Point>());
@@ -439,14 +439,14 @@ namespace GameBerry.UI
                 Managers.LocalStringManager.Instance.GetLocalString("ui/reset/gear/desc"),
                 () =>
                 {
-                    if (Managers.GearManager.Instance.ResetSlot(currentV2Enum_ARR_SynergyType))
+                    if (Managers.GearManager.Instance.ResetSlot(currentEnum_SynergyType))
                     {
                         RefreshEnhanceBtn();
                         SetBaseStatView();
 
                         if (_slotLevelText != null)
                         {
-                            int level = Managers.GearManager.Instance.GetSlotLevel(currentV2Enum_ARR_SynergyType);
+                            int level = Managers.GearManager.Instance.GetSlotLevel(currentEnum_SynergyType);
                             if (level <= 0)
                                 _slotLevelText.gameObject.SetActive(false);
                             else
@@ -456,7 +456,7 @@ namespace GameBerry.UI
                             }
                         }
 
-                        int costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex1(currentV2Enum_ARR_SynergyType);
+                        int costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex1(currentEnum_SynergyType);
 
                         if (_uIItemIconAndAmount != null)
                             _uIItemIconAndAmount.SetSetting_NotConnectRefreshEvent(costIndex.IntToEnum32<V2Enum_Point>());
@@ -469,14 +469,14 @@ namespace GameBerry.UI
         private void OnClick_SynergyRuneUnEquip()
         {
             Managers.GearManager.Instance.UnEquipSkillSlot(
-                currentV2Enum_ARR_SynergyType);
+                currentEnum_SynergyType);
 
             ElementExit();
         }
         //------------------------------------------------------------------------------------
-        public void SetSlotState(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public void SetSlotState(V2Enum_GearType Enum_SynergyType)
         {
-            currentV2Enum_ARR_SynergyType = v2Enum_ARR_SynergyType;
+            currentEnum_SynergyType = Enum_SynergyType;
 
         }
         //------------------------------------------------------------------------------------
@@ -522,7 +522,7 @@ namespace GameBerry.UI
             {
                 if (_slotLevelText != null)
                 {
-                    int level = Managers.GearManager.Instance.GetSlotLevel(currentV2Enum_ARR_SynergyType);
+                    int level = Managers.GearManager.Instance.GetSlotLevel(currentEnum_SynergyType);
                     if (level <= 0)
                         _slotLevelText.gameObject.SetActive(false);
                     else
@@ -588,7 +588,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void RefreshEnhanceBtn()
         {
-            bool isMax = Managers.GearManager.Instance.IsMaxLevelSynergy(currentV2Enum_ARR_SynergyType);
+            bool isMax = Managers.GearManager.Instance.IsMaxLevelSynergy(currentEnum_SynergyType);
 
             if (_synergyEffect_Enhance != null)
                 _synergyEffect_Enhance.gameObject.SetActive(isMax == false);
@@ -610,11 +610,11 @@ namespace GameBerry.UI
             else
             {
 
-                int costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex1(currentV2Enum_ARR_SynergyType);
+                int costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex1(currentEnum_SynergyType);
 
                 int currentCount = (int)Managers.GoodsManager.Instance.GetGoodsAmount(costIndex);
 
-                int needCount = Managers.GearManager.Instance.GetSynergyEnhance_NeedCount1(currentV2Enum_ARR_SynergyType);
+                int needCount = Managers.GearManager.Instance.GetSynergyEnhance_NeedCount1(currentEnum_SynergyType);
 
                 bool readyEnhance = currentCount >= needCount;
 
@@ -638,11 +638,11 @@ namespace GameBerry.UI
                 }
 
 
-                costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex2(currentV2Enum_ARR_SynergyType);
+                costIndex = Managers.GearManager.Instance.GetSynergyEnhanceCostGoodsIndex2(currentEnum_SynergyType);
 
                 currentCount = (int)Managers.GoodsManager.Instance.GetGoodsAmount(costIndex);
 
-                needCount = Managers.GearManager.Instance.GetSynergyEnhance_NeedCount2(currentV2Enum_ARR_SynergyType);
+                needCount = Managers.GearManager.Instance.GetSynergyEnhance_NeedCount2(currentEnum_SynergyType);
 
                 readyEnhance = currentCount >= needCount;
 

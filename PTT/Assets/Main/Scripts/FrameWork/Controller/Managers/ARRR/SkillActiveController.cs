@@ -6,8 +6,8 @@ namespace GameBerry
 {
     public class SKillEffectInfo
     {
-        public Enum_ARR_TargetCheckType TargetCheckType;
-        public Enum_ARR_TargetStateType TargetState;
+        public Enum_TargetCheckType TargetCheckType;
+        public Enum_TargetStateType TargetState;
 
         public V2Enum_SkillEffectType SkillEffectType;
 
@@ -89,7 +89,7 @@ namespace GameBerry
 
         public int OnTimePlayCount = 0;
 
-        public V2Enum_ARR_SynergyType SynergyType = V2Enum_ARR_SynergyType.Max;
+        public Enum_SynergyType SynergyType = Enum_SynergyType.Max;
 
         public bool SetSkillBaseData(SkillBaseData skillBaseData, SkillInfo skillInfo, V2Enum_Grade skillGrade)
         {
@@ -186,9 +186,9 @@ namespace GameBerry
             return needCheckSkillEffect;
         }
 
-        public void SetSynergyType(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public void SetSynergyType(Enum_SynergyType Enum_SynergyType)
         {
-            SynergyType = v2Enum_ARR_SynergyType;
+            SynergyType = Enum_SynergyType;
         }
 
         public void SetMainSkill(bool isMainSkill)
@@ -300,7 +300,7 @@ namespace GameBerry
         {
             List<SKillEffectInfo> selectinfo = null;
 
-            if (skillEffectData.TargetCheckType == Enum_ARR_TargetCheckType.Mother
+            if (skillEffectData.TargetCheckType == Enum_TargetCheckType.Mother
                 || skillEffectData.TargetCheckType == SkillBaseData.TargetCheckType)
                 selectinfo = MotherTargetEffectDatas;
             else
@@ -356,8 +356,8 @@ namespace GameBerry
             {
                 return RemainCount;
             }
-            else if (_skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentOver
-                || _skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentBelow)
+            else if (_skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentOver
+                || _skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentBelow)
             {
                 return IsReady == true ? 0.0f : 1.0f;
             }
@@ -369,8 +369,8 @@ namespace GameBerry
 
         public float GetRemainCoolRatio()
         {
-            if (_skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentOver
-                || _skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentBelow)
+            if (_skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentOver
+                || _skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentBelow)
             {
                 return 1.0f;
             }
@@ -439,7 +439,7 @@ namespace GameBerry
             SkillGrade = V2Enum_Grade.Max;
             OnTimePlayCount = 0;
 
-            SynergyType = V2Enum_ARR_SynergyType.Max;
+            SynergyType = Enum_SynergyType.Max;
         }
 
         public void SetOriginRemainTime(float cooltime)
@@ -482,28 +482,28 @@ namespace GameBerry
 
         public bool IsApplySkill = false;
 
-        public static bool IsCountCoolTime(V2Enum_ARR_CoolTimeType v2Enum_ARR_CoolTimeType)
+        public static bool IsCountCoolTime(Enum_CoolTimeType Enum_CoolTimeType)
         {
-            if (v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.AttackCount
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.KillingCount
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.HitCount
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.CriticalAttack
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.IsBoss
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.IsNormal
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.Interest
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.WaveClear
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.WaveStart
+            if (Enum_CoolTimeType == Enum_CoolTimeType.AttackCount
+                    || Enum_CoolTimeType == Enum_CoolTimeType.KillingCount
+                    || Enum_CoolTimeType == Enum_CoolTimeType.HitCount
+                    || Enum_CoolTimeType == Enum_CoolTimeType.CriticalAttack
+                    || Enum_CoolTimeType == Enum_CoolTimeType.IsBoss
+                    || Enum_CoolTimeType == Enum_CoolTimeType.IsNormal
+                    || Enum_CoolTimeType == Enum_CoolTimeType.Interest
+                    || Enum_CoolTimeType == Enum_CoolTimeType.WaveClear
+                    || Enum_CoolTimeType == Enum_CoolTimeType.WaveStart
 
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardReward
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.FailGasGamble
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.GainGasReward
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.MissionComplete
+                    || Enum_CoolTimeType == Enum_CoolTimeType.GambleCardReward
+                    || Enum_CoolTimeType == Enum_CoolTimeType.FailGasGamble
+                    || Enum_CoolTimeType == Enum_CoolTimeType.GainGasReward
+                    || Enum_CoolTimeType == Enum_CoolTimeType.MissionComplete
 
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardFire
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardGold
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardWater
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardThunder
-                    || v2Enum_ARR_CoolTimeType == V2Enum_ARR_CoolTimeType.Revive
+                    || Enum_CoolTimeType == Enum_CoolTimeType.GambleCardRewardFire
+                    || Enum_CoolTimeType == Enum_CoolTimeType.GambleCardRewardGold
+                    || Enum_CoolTimeType == Enum_CoolTimeType.GambleCardRewardWater
+                    || Enum_CoolTimeType == Enum_CoolTimeType.GambleCardRewardThunder
+                    || Enum_CoolTimeType == Enum_CoolTimeType.Revive
                     )
             {
                 return true;
@@ -584,8 +584,8 @@ namespace GameBerry
         private int NeedOperGambleCardRewardThunder = 0;
         private int NeedOperRevive = 0;
 
-        private V2Enum_ARR_SynergyType _lastChoice_SynergyType = V2Enum_ARR_SynergyType.Max;
-        public V2Enum_ARR_SynergyType LastChoice_SynergyType { get { return _lastChoice_SynergyType; } }
+        private Enum_SynergyType _lastChoice_SynergyType = Enum_SynergyType.Max;
+        public Enum_SynergyType LastChoice_SynergyType { get { return _lastChoice_SynergyType; } }
 
         public System.Action<MainSkillData> AddGambleSkillAction;
         public System.Action RefreshCoolTimeAction;
@@ -621,7 +621,7 @@ namespace GameBerry
             AddGambleSkillAction?.Invoke(gambleSkillData);
         }
         //------------------------------------------------------------------------------------
-        public void AddGambleSkillBaseData(MainSkillData gambleSkillData, V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, SkillInfo skillInfo)
+        public void AddGambleSkillBaseData(MainSkillData gambleSkillData, Enum_SynergyType Enum_SynergyType, SkillInfo skillInfo)
         {
             SkillBaseData skillBaseData = Managers.SkillManager.Instance.GetSkillBaseData(gambleSkillData.MainSkillTypeParam1);
 
@@ -633,9 +633,9 @@ namespace GameBerry
             }
 
             SkillManageInfo addSkillManageInfo = AddSkillData(skillBaseData, false, skillInfo, gambleSkillData.MainSkillGrade);
-            addSkillManageInfo.SetSynergyType(v2Enum_ARR_SynergyType);
-            if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Default
-                || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GamebleCoolTime)
+            addSkillManageInfo.SetSynergyType(Enum_SynergyType);
+            if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Default
+                || skillBaseData.CoolTimeType == Enum_CoolTimeType.GamebleCoolTime)
                 addSkillManageInfo.RemainTime = 0.1f;
         }
         //------------------------------------------------------------------------------------
@@ -759,8 +759,8 @@ namespace GameBerry
             }
             else
             {
-                if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentOver
-                    || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentBelow)
+                if (skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentOver
+                    || skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentBelow)
                     _checkHPPercentCoolTime.AddLast(skillManageInfo);
                 else
                 {
@@ -819,7 +819,7 @@ namespace GameBerry
         {
             skillManageInfo.OnTimePlayCount = 0;
 
-            if (skillManageInfo.SkillBaseData.TriggerType == V2Enum_ARR_TriggerType.Passive)
+            if (skillManageInfo.SkillBaseData.TriggerType == Enum_TriggerType.Passive)
             {
                 PlayPassiveSkill(skillManageInfo);
                 return;
@@ -868,23 +868,23 @@ namespace GameBerry
                 if (_attackTarget == null)
                     return;
 
-                if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Projectile)
+                if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Projectile)
                 {
                     playProjectile = true;
                 }
-                else if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.DirectVisioning)
+                else if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.DirectVisioning)
                 {
                     playDirectVisioning = true;
                 }
-                else if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Pierce)
+                else if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Pierce)
                 {
                     playPierce = true;
                 }
-                else if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.Void)
+                else if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.Void)
                 {
                     playVoid = true;
                 }
-                else if (skillBaseData.SkillDamageIndex.DamageType == V2Enum_ARR_DamageType.RepeatAttack)
+                else if (skillBaseData.SkillDamageIndex.DamageType == Enum_DamageType.RepeatAttack)
                 {
                     playRepeatAttack = true;
                 }
@@ -936,7 +936,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public float GetSkillRemainCoolTime(SkillBaseData skillBaseData)
         {
-            if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Default)
+            if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Default)
                 return skillBaseData.CoolTimeValue - (skillBaseData.CoolTimeValue * _skillCoolTimeDecreaseRate);
             else
                 return skillBaseData.CoolTimeValue;
@@ -987,18 +987,18 @@ namespace GameBerry
             NeedOperWaveStartCount += count;
         }
         //------------------------------------------------------------------------------------
-        public void AddGambleCardRewardCount(int count, V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public void AddGambleCardRewardCount(int count, Enum_SynergyType Enum_SynergyType)
         {
             NeedOperGambleCardRewardCount += count;
-            _lastChoice_SynergyType = v2Enum_ARR_SynergyType;
+            _lastChoice_SynergyType = Enum_SynergyType;
 
-            if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Red)
+            if (Enum_SynergyType == Enum_SynergyType.Red)
                 NeedOperGambleCardRewardFire += count;
-            else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Yellow)
+            else if (Enum_SynergyType == Enum_SynergyType.Yellow)
                 NeedOperGambleCardRewardGold += count;
-            else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Blue)
+            else if (Enum_SynergyType == Enum_SynergyType.Blue)
                 NeedOperGambleCardRewardWater += count;
-            else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.White)
+            else if (Enum_SynergyType == Enum_SynergyType.White)
                 NeedOperGambleCardRewardThunder += count;
         }
         //------------------------------------------------------------------------------------
@@ -1081,11 +1081,11 @@ namespace GameBerry
                 SkillManageInfo skillManageInfo = pair;
                 SkillBaseData skillBaseData = skillManageInfo.SkillBaseData;
 
-                if (skillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Self)
+                if (skillBaseData.TargetCheckType == Enum_TargetCheckType.Self)
                 {
                     //HPPercentOver = 15, // 현재 HP가 50% 이상
                     //HPPercentBelow = 16, // 현재 HP가 50% 미만
-                    if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentOver)
+                    if (skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentOver)
                         //&& isHalfOver == true)
                     {
                         if (isHalfOver == true && skillManageInfo.IsApplySkill == false)
@@ -1106,7 +1106,7 @@ namespace GameBerry
                         }
 
                     }
-                    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentBelow)
+                    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentBelow)
                         //&& isHalfOver == false)
                     {
                         if (isHalfOver == false && skillManageInfo.IsApplySkill == false)
@@ -1153,23 +1153,23 @@ namespace GameBerry
             //    }
 
 
-            //    if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.AttackCount)
+            //    if (skillBaseData.CoolTimeType == Enum_CoolTimeType.AttackCount)
             //        skillManageInfo.RemainCount -= NeedOperAttackCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.KillingCount)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.KillingCount)
             //        skillManageInfo.RemainCount -= NeedOperKillCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HitCount)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.HitCount)
             //        skillManageInfo.RemainCount -= NeedOperHitCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.CriticalAttack)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.CriticalAttack)
             //        skillManageInfo.RemainCount -= NeedOperCriticalCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.IsBoss)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.IsBoss)
             //        skillManageInfo.RemainCount -= NeedOperBossHitCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.IsNormal)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.IsNormal)
             //        skillManageInfo.RemainCount -= NeedOperNormalHitCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Interest)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Interest)
             //        skillManageInfo.RemainCount -= NeedOperInterestCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.WaveClear)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.WaveClear)
             //        skillManageInfo.RemainCount -= NeedOperWaveClearCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.WaveStart)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.WaveStart)
             //        skillManageInfo.RemainCount -= NeedOperWaveStartCount;
 
             //    if (SkillManageInfo.IsCountCoolTime(skillBaseData.CoolTimeType))
@@ -1212,45 +1212,45 @@ namespace GameBerry
                     continue;
                 }
 
-                if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.AttackCount)
+                if (skillBaseData.CoolTimeType == Enum_CoolTimeType.AttackCount)
                     skillManageInfo.RemainCount -= NeedOperAttackCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.KillingCount)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.KillingCount)
                     skillManageInfo.RemainCount -= NeedOperKillCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HitCount)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.HitCount)
                     skillManageInfo.RemainCount -= NeedOperHitCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.CriticalAttack)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.CriticalAttack)
                     skillManageInfo.RemainCount -= NeedOperCriticalCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.IsBoss)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.IsBoss)
                     skillManageInfo.RemainCount -= NeedOperBossHitCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.IsNormal)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.IsNormal)
                     skillManageInfo.RemainCount -= NeedOperNormalHitCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Interest)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Interest)
                     skillManageInfo.RemainCount -= NeedOperInterestCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.WaveClear)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.WaveClear)
                     skillManageInfo.RemainCount -= NeedOperWaveClearCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.WaveStart)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.WaveStart)
                     skillManageInfo.RemainCount -= NeedOperWaveStartCount;
 
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardReward)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.GambleCardReward)
                     skillManageInfo.RemainCount -= NeedOperGambleCardRewardCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.FailGasGamble)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.FailGasGamble)
                     skillManageInfo.RemainCount -= NeedOperFailGasGambleCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GainGasReward)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.GainGasReward)
                     skillManageInfo.RemainCount -= NeedOperGainGasRewardCount;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.MissionComplete)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.MissionComplete)
                     skillManageInfo.RemainCount -= NeedOperMissionCompleteCount;
 
 
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardFire)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.GambleCardRewardFire)
                     skillManageInfo.RemainCount -= NeedOperGambleCardRewardFire;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardGold)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.GambleCardRewardGold)
                     skillManageInfo.RemainCount -= NeedOperGambleCardRewardGold;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardWater)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.GambleCardRewardWater)
                     skillManageInfo.RemainCount -= NeedOperGambleCardRewardWater;
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GambleCardRewardThunder)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.GambleCardRewardThunder)
                     skillManageInfo.RemainCount -= NeedOperGambleCardRewardThunder;
 
-                else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Revive)
+                else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Revive)
                     skillManageInfo.RemainCount -= NeedOperRevive;
 
                 node = node.Next;
@@ -1269,23 +1269,23 @@ namespace GameBerry
             //    }
 
 
-            //    if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.AttackCount)
+            //    if (skillBaseData.CoolTimeType == Enum_CoolTimeType.AttackCount)
             //        skillManageInfo.RemainCount -= NeedOperAttackCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.KillingCount)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.KillingCount)
             //        skillManageInfo.RemainCount -= NeedOperKillCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HitCount)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.HitCount)
             //        skillManageInfo.RemainCount -= NeedOperHitCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.CriticalAttack)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.CriticalAttack)
             //        skillManageInfo.RemainCount -= NeedOperCriticalCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.IsBoss)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.IsBoss)
             //        skillManageInfo.RemainCount -= NeedOperBossHitCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.IsNormal)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.IsNormal)
             //        skillManageInfo.RemainCount -= NeedOperNormalHitCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Interest)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Interest)
             //        skillManageInfo.RemainCount -= NeedOperInterestCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.WaveClear)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.WaveClear)
             //        skillManageInfo.RemainCount -= NeedOperWaveClearCount;
-            //    else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.WaveStart)
+            //    else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.WaveStart)
             //        skillManageInfo.RemainCount -= NeedOperWaveStartCount;
             //}
 

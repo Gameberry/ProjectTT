@@ -63,14 +63,14 @@ namespace GameBerry.Managers
         }
 #endif
         //------------------------------------------------------------------------------------
-        public Dictionary<ObscuredInt, JobData> GetJobDatas_Dic(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public Dictionary<ObscuredInt, JobData> GetJobDatas_Dic(Enum_SynergyType Enum_SynergyType)
         {
-            return JobOperator.GetJobDatas_Dic(v2Enum_ARR_SynergyType);
+            return JobOperator.GetJobDatas_Dic(Enum_SynergyType);
         }
         //------------------------------------------------------------------------------------
-        public JobData GetJobData(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt jobTier)
+        public JobData GetJobData(Enum_SynergyType Enum_SynergyType, ObscuredInt jobTier)
         {
-            return JobOperator.GetJobData(v2Enum_ARR_SynergyType, jobTier);
+            return JobOperator.GetJobData(Enum_SynergyType, jobTier);
         }
         //------------------------------------------------------------------------------------
         public Dictionary<ObscuredInt, JobData> GetAllJobData()
@@ -83,14 +83,14 @@ namespace GameBerry.Managers
             if (JobContainer.JobTier <= 0)
                 return string.Format(weaponSkinPath, weaponSkinDefault);
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = JobContainer.JobType.GetDecrypted().IntToEnum32<V2Enum_ARR_SynergyType>();
+            Enum_SynergyType Enum_SynergyType = JobContainer.JobType.GetDecrypted().IntToEnum32<Enum_SynergyType>();
 
-            return GetWeaponSkinName(v2Enum_ARR_SynergyType, JobContainer.JobTier);
+            return GetWeaponSkinName(Enum_SynergyType, JobContainer.JobTier);
         }
         //------------------------------------------------------------------------------------
-        public string GetWeaponSkinName(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt jobTier)
+        public string GetWeaponSkinName(Enum_SynergyType Enum_SynergyType, ObscuredInt jobTier)
         {
-            JobData jobData = GetJobData(v2Enum_ARR_SynergyType, jobTier);
+            JobData jobData = GetJobData(Enum_SynergyType, jobTier);
             if (jobData == null)
                 return string.Format(weaponSkinPath, weaponSkinDefault);
 
@@ -217,12 +217,12 @@ namespace GameBerry.Managers
             return CanUpGradeJob(JobContainer.JobTier);
         }
         //------------------------------------------------------------------------------------
-        public bool ChangeJobType(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public bool ChangeJobType(Enum_SynergyType Enum_SynergyType)
         {
             if (JobContainer.JobTier == 0)
                 return false;
 
-            JobContainer.JobType = v2Enum_ARR_SynergyType.Enum32ToInt();
+            JobContainer.JobType = Enum_SynergyType.Enum32ToInt();
 
             Managers.GearManager.Instance.RefreshJobUpGrade();
 
@@ -239,7 +239,7 @@ namespace GameBerry.Managers
             return true;
         }
         //------------------------------------------------------------------------------------
-        public bool DoUpGradeJob(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public bool DoUpGradeJob(Enum_SynergyType Enum_SynergyType)
         {
             if (TheBackEnd.TheBackEndManager.Instance.CheckNetworkState() == false)
                 return false;
@@ -252,7 +252,7 @@ namespace GameBerry.Managers
 
             if (JobContainer.JobTier == 0)
             {
-                JobContainer.JobType = v2Enum_ARR_SynergyType.Enum32ToInt();
+                JobContainer.JobType = Enum_SynergyType.Enum32ToInt();
                 JobContainer.JobTier = 1;
 
                 SkillInfo skillInfo = AddNewSkillInfo(JobContainer.JobTier);
@@ -448,24 +448,24 @@ namespace GameBerry.Managers
             return true;
         }
         //------------------------------------------------------------------------------------
-        public V2Enum_ARR_SynergyType GetCurrentJobType()
+        public Enum_SynergyType GetCurrentJobType()
         {
             if (JobContainer.JobTier <= 0)
-                return V2Enum_ARR_SynergyType.Max;
+                return Enum_SynergyType.Max;
 
-            return JobContainer.JobType.GetDecrypted().IntToEnum32<V2Enum_ARR_SynergyType>();
+            return JobContainer.JobType.GetDecrypted().IntToEnum32<Enum_SynergyType>();
         }
         //------------------------------------------------------------------------------------
-        public double GetJobAddBuff_Gear(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public double GetJobAddBuff_Gear(Enum_SynergyType Enum_SynergyType)
         {
-            if (GetCurrentJobType() != v2Enum_ARR_SynergyType)
+            if (GetCurrentJobType() != Enum_SynergyType)
                 return 0;
 
             double buffvalue = 0;
 
             foreach (var equippair in JobContainer.SynergyInfo)
             {
-                JobData jobData = GetJobData(v2Enum_ARR_SynergyType, equippair.Value.Id);
+                JobData jobData = GetJobData(Enum_SynergyType, equippair.Value.Id);
 
                 if (jobData != null)
                 {
@@ -476,16 +476,16 @@ namespace GameBerry.Managers
             return buffvalue;
         }
         //------------------------------------------------------------------------------------
-        public int GetJobAddBuff_Rune(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public int GetJobAddBuff_Rune(Enum_SynergyType Enum_SynergyType)
         {
-            if (GetCurrentJobType() != v2Enum_ARR_SynergyType)
+            if (GetCurrentJobType() != Enum_SynergyType)
                 return 0;
 
             int buffvalue = 0;
 
             foreach (var equippair in JobContainer.SynergyInfo)
             {
-                JobData jobData = GetJobData(v2Enum_ARR_SynergyType, equippair.Value.Id);
+                JobData jobData = GetJobData(Enum_SynergyType, equippair.Value.Id);
 
                 if (jobData != null)
                 {
@@ -502,11 +502,11 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void SetInGameJobData()
         {
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = GetCurrentJobType();
+            Enum_SynergyType Enum_SynergyType = GetCurrentJobType();
 
             foreach (var equippair in JobContainer.SynergyInfo)
             {
-                JobData jobData = GetJobData(v2Enum_ARR_SynergyType, equippair.Value.Id);
+                JobData jobData = GetJobData(Enum_SynergyType, equippair.Value.Id);
 
                 if (jobData != null)
                 {

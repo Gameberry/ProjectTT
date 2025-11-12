@@ -15,9 +15,9 @@ namespace GameBerry.UI
         [SerializeField]
         private TMP_Text _percentDesc;
 
-        public void SetSynergyDesc(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int stack, string desc)
+        public void SetSynergyDesc(Enum_SynergyType Enum_SynergyType, int stack, string desc)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_SynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_SynergyType);
 
             if (_uIGambleChoiceSkillElement != null)
             { 

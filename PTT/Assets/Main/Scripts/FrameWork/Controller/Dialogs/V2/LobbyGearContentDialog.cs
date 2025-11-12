@@ -426,7 +426,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void ChangeEquipStateSynergyRune(GameBerry.Event.ChangeEquipStateGearMsg msg)
         {
-            UILobbyGearSlotGroupElement uILobbySynergyRuneSlotGroupElement = uIARRRSkillSlotElements.Find(x => x.SynergyType == msg.v2Enum_ARR_SynergyType);
+            UILobbyGearSlotGroupElement uILobbySynergyRuneSlotGroupElement = uIARRRSkillSlotElements.Find(x => x.SynergyType == msg.Enum_SynergyType);
             if (uILobbySynergyRuneSlotGroupElement != null)
                 uILobbySynergyRuneSlotGroupElement.RefreshAllSlot();
 
@@ -443,29 +443,29 @@ namespace GameBerry.UI
             }
         }
         //------------------------------------------------------------------------------------
-        private void OnClick_unEquipSlot(V2Enum_GearType v2Enum_ARR_SynergyType)
+        private void OnClick_unEquipSlot(V2Enum_GearType Enum_SynergyType)
         {
-            GearData synergyRuneData = Managers.GearManager.Instance.EquipedRuneData(v2Enum_ARR_SynergyType);
+            GearData synergyRuneData = Managers.GearManager.Instance.EquipedRuneData(Enum_SynergyType);
             if (synergyRuneData == null)
                 return;
 
             Managers.GearManager.Instance.UnEquipSkillSlot(
-                v2Enum_ARR_SynergyType);
+                Enum_SynergyType);
 
             //if (_lobbySynergyRuneDetailPopupDialog != null)
             //{
             //    _lobbySynergyRuneDetailPopupDialog.SynergyRuneElement(synergyRuneData);
             //    _lobbySynergyRuneDetailPopupDialog.SetEquipMode(false);
-            //    _lobbySynergyRuneDetailPopupDialog.SetSlotState(v2Enum_ARR_SynergyType, slotidx);
+            //    _lobbySynergyRuneDetailPopupDialog.SetSlotState(Enum_SynergyType, slotidx);
             //    _lobbySynergyRuneDetailPopupDialog.ElementEnter();
             //}
 
             SetAllEquipGear_RedDot();
         }
         //------------------------------------------------------------------------------------
-        private void OnClick_Slot(V2Enum_GearType v2Enum_ARR_SynergyType)
+        private void OnClick_Slot(V2Enum_GearType Enum_SynergyType)
         {
-            GearData synergyRuneData = Managers.GearManager.Instance.EquipedRuneData(v2Enum_ARR_SynergyType);
+            GearData synergyRuneData = Managers.GearManager.Instance.EquipedRuneData(Enum_SynergyType);
             if (synergyRuneData == null)
                 return;
 
@@ -485,7 +485,7 @@ namespace GameBerry.UI
             if (_lobbySynergyRuneDetailPopupDialog != null)
             {
                 _lobbySynergyRuneDetailPopupDialog.SynergyRuneElement(synergyRuneData);
-                _lobbySynergyRuneDetailPopupDialog.SetSlotState(v2Enum_ARR_SynergyType);
+                _lobbySynergyRuneDetailPopupDialog.SetSlotState(Enum_SynergyType);
                 _lobbySynergyRuneDetailPopupDialog.SetEquipMode(false);
                 _lobbySynergyRuneDetailPopupDialog.ElementEnter();
             }

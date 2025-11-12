@@ -146,7 +146,7 @@ namespace GameBerry.Managers
                 if (gearData.Grade >= pair.Key)
                 {
                     MainSkillData mainSkillData = SkillManager.Instance.GetMainSkillData(pair.Value);
-                    if (mainSkillData != null && mainSkillData.MainSkillType == V2Enum_ARR_MainSkillType.AddSkill)
+                    if (mainSkillData != null && mainSkillData.MainSkillType == Enum_MainSkillType.AddSkill)
                     {
                         SkillBaseData skillBaseData = Managers.SkillManager.Instance.GetSkillBaseData(mainSkillData.MainSkillTypeParam1);
                         if (skillBaseData != null && skillBaseData.SkillEffect != null)
@@ -192,7 +192,7 @@ namespace GameBerry.Managers
                 if (gearData.Grade >= pair.Key)
                 {
                     MainSkillData mainSkillData = SkillManager.Instance.GetMainSkillData(pair.Value);
-                    if (mainSkillData != null && mainSkillData.MainSkillType == V2Enum_ARR_MainSkillType.AddSkill)
+                    if (mainSkillData != null && mainSkillData.MainSkillType == Enum_MainSkillType.AddSkill)
                     {
                         SkillBaseData skillBaseData = Managers.SkillManager.Instance.GetSkillBaseData(mainSkillData.MainSkillTypeParam1);
                         if (skillBaseData != null && skillBaseData.SkillEffect != null)
@@ -249,7 +249,7 @@ namespace GameBerry.Managers
             return CharacterGearOperator.GetGearCombineData(grade);
         }
         //------------------------------------------------------------------------------------
-        public GearOptionData GetGearOptionData(V2Enum_GearType v2Enum_Grade, V2Enum_ARR_SynergyType gearNumber)
+        public GearOptionData GetGearOptionData(V2Enum_GearType v2Enum_Grade, Enum_SynergyType gearNumber)
         {
             return CharacterGearOperator.GetGearOptionData(v2Enum_Grade, gearNumber);
         }
@@ -729,9 +729,9 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         #region GearSlot
         //------------------------------------------------------------------------------------
-        public int GetCanEquipSkillSlotIdx(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public int GetCanEquipSkillSlotIdx(V2Enum_GearType Enum_SynergyType)
         {
-            if (GearContainer.SynergyEquip_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (GearContainer.SynergyEquip_Dic.ContainsKey(Enum_SynergyType) == false)
                 return -1;
 
             return 0;
@@ -745,12 +745,12 @@ namespace GameBerry.Managers
             return GearContainer.SynergyEquip_Dic[synergyEffectData.GearType] == synergyEffectData.Index;
         }
         //------------------------------------------------------------------------------------
-        public GearData EquipedRuneData(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public GearData EquipedRuneData(V2Enum_GearType Enum_SynergyType)
         {
-            if (GearContainer.SynergyEquip_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (GearContainer.SynergyEquip_Dic.ContainsKey(Enum_SynergyType) == false)
                 return null;
 
-            return GetSynergyEffectData(GearContainer.SynergyEquip_Dic[v2Enum_ARR_SynergyType]);
+            return GetSynergyEffectData(GearContainer.SynergyEquip_Dic[Enum_SynergyType]);
         }
         //------------------------------------------------------------------------------------
         public Dictionary<V2Enum_GearType, GearData> GetHigherGradeEquipments()
@@ -820,7 +820,7 @@ namespace GameBerry.Managers
 
             TheBackEnd.TheBackEndManager.Instance.AddUpdateWaitDatas(Define.PlayerGearTable);
 
-            _changeEquipStateSynergyRuneMsg.v2Enum_ARR_SynergyType = aRRRSkillData.GearType;
+            _changeEquipStateSynergyRuneMsg.Enum_SynergyType = aRRRSkillData.GearType;
             _changeEquipStateSynergyRuneMsg.synergyRuneData = aRRRSkillData;
             _changeEquipStateSynergyRuneMsg.IsEquipResult = true;
             Message.Send(_changeEquipStateSynergyRuneMsg);
@@ -834,20 +834,20 @@ namespace GameBerry.Managers
             return true;
         }
         //------------------------------------------------------------------------------------
-        public GearData UnEquipSkillSlot(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public GearData UnEquipSkillSlot(V2Enum_GearType Enum_SynergyType)
         {
-            if (GearContainer.SynergyEquip_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (GearContainer.SynergyEquip_Dic.ContainsKey(Enum_SynergyType) == false)
                 return null;
 
-            GearData aRRRSkillData = GetSynergyEffectData(GearContainer.SynergyEquip_Dic[v2Enum_ARR_SynergyType]);
+            GearData aRRRSkillData = GetSynergyEffectData(GearContainer.SynergyEquip_Dic[Enum_SynergyType]);
 
             DecreaseStat(aRRRSkillData);
 
-            GearContainer.SynergyEquip_Dic[v2Enum_ARR_SynergyType] = -1;
+            GearContainer.SynergyEquip_Dic[Enum_SynergyType] = -1;
 
             TheBackEnd.TheBackEndManager.Instance.AddUpdateWaitDatas(Define.PlayerGearTable);
 
-            _changeEquipStateSynergyRuneMsg.v2Enum_ARR_SynergyType = v2Enum_ARR_SynergyType;
+            _changeEquipStateSynergyRuneMsg.Enum_SynergyType = Enum_SynergyType;
             _changeEquipStateSynergyRuneMsg.synergyRuneData = aRRRSkillData;
             _changeEquipStateSynergyRuneMsg.IsEquipResult = false;
             Message.Send(_changeEquipStateSynergyRuneMsg);
@@ -859,41 +859,41 @@ namespace GameBerry.Managers
             return aRRRSkillData;
         }
         //------------------------------------------------------------------------------------
-        public int GetSlotLevel(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public int GetSlotLevel(V2Enum_GearType Enum_SynergyType)
         {
-            if (GearContainer.SlotLevel_Dic.ContainsKey(v2Enum_ARR_SynergyType) == true)
-                return GearContainer.SlotLevel_Dic[v2Enum_ARR_SynergyType];
+            if (GearContainer.SlotLevel_Dic.ContainsKey(Enum_SynergyType) == true)
+                return GearContainer.SlotLevel_Dic[Enum_SynergyType];
 
             return 0;
         }
         //------------------------------------------------------------------------------------
-        public bool IsMaxLevelSynergy(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public bool IsMaxLevelSynergy(V2Enum_GearType Enum_SynergyType)
         {
-            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(v2Enum_ARR_SynergyType);
+            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(Enum_SynergyType);
 
             if (synergyLevelUpCostData == null)
                 return true;
 
-            int level = GetSlotLevel(v2Enum_ARR_SynergyType);
+            int level = GetSlotLevel(Enum_SynergyType);
 
             return level >= synergyLevelUpCostData.MaxLevel;
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyEnhance_NeedCount1(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public int GetSynergyEnhance_NeedCount1(V2Enum_GearType Enum_SynergyType)
         {
-            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(v2Enum_ARR_SynergyType);
+            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(Enum_SynergyType);
 
             if (synergyLevelUpCostData == null)
                 return 99999;
 
-            int level = GetSlotLevel(v2Enum_ARR_SynergyType);
+            int level = GetSlotLevel(Enum_SynergyType);
 
             return synergyLevelUpCostData.LevelUpCostGoodsParam12 + (level * synergyLevelUpCostData.LevelUpCostGoodsParam13);
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyEnhanceCostGoodsIndex1(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public int GetSynergyEnhanceCostGoodsIndex1(V2Enum_GearType Enum_SynergyType)
         {
-            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(v2Enum_ARR_SynergyType);
+            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(Enum_SynergyType);
 
             if (synergyLevelUpCostData == null)
                 return -1;
@@ -901,21 +901,21 @@ namespace GameBerry.Managers
             return synergyLevelUpCostData.LevelUpCostGoodsParam11;
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyEnhance_NeedCount2(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public int GetSynergyEnhance_NeedCount2(V2Enum_GearType Enum_SynergyType)
         {
-            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(v2Enum_ARR_SynergyType);
+            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(Enum_SynergyType);
 
             if (synergyLevelUpCostData == null)
                 return 99999;
 
-            int level = GetSlotLevel(v2Enum_ARR_SynergyType);
+            int level = GetSlotLevel(Enum_SynergyType);
 
             return synergyLevelUpCostData.LevelUpCostGoodsParam22 + (level * synergyLevelUpCostData.LevelUpCostGoodsParam23);
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyEnhanceCostGoodsIndex2(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public int GetSynergyEnhanceCostGoodsIndex2(V2Enum_GearType Enum_SynergyType)
         {
-            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(v2Enum_ARR_SynergyType);
+            GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(Enum_SynergyType);
 
             if (synergyLevelUpCostData == null)
                 return -1;
@@ -923,32 +923,32 @@ namespace GameBerry.Managers
             return synergyLevelUpCostData.LevelUpCostGoodsParam21;
         }
         //------------------------------------------------------------------------------------
-        public bool ReadySynergyEnhance(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public bool ReadySynergyEnhance(V2Enum_GearType Enum_SynergyType)
         {
-            int costIndex = GetSynergyEnhanceCostGoodsIndex1(v2Enum_ARR_SynergyType);
+            int costIndex = GetSynergyEnhanceCostGoodsIndex1(Enum_SynergyType);
             int currentCount = (int)Managers.GoodsManager.Instance.GetGoodsAmount(costIndex);
 
-            if (currentCount < GetSynergyEnhance_NeedCount1(v2Enum_ARR_SynergyType))
+            if (currentCount < GetSynergyEnhance_NeedCount1(Enum_SynergyType))
                 return false;
 
-            costIndex = GetSynergyEnhanceCostGoodsIndex2(v2Enum_ARR_SynergyType);
+            costIndex = GetSynergyEnhanceCostGoodsIndex2(Enum_SynergyType);
             currentCount = (int)Managers.GoodsManager.Instance.GetGoodsAmount(costIndex);
 
-            if (currentCount < GetSynergyEnhance_NeedCount2(v2Enum_ARR_SynergyType))
+            if (currentCount < GetSynergyEnhance_NeedCount2(Enum_SynergyType))
                 return false;
 
             return true;
         }
         //------------------------------------------------------------------------------------
-        public bool EnhanceSynergy(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public bool EnhanceSynergy(V2Enum_GearType Enum_SynergyType)
         {
             if (TheBackEnd.TheBackEndManager.Instance.CheckNetworkState() == false)
                 return false;
 
-            if (IsMaxLevelSynergy(v2Enum_ARR_SynergyType) == true)
+            if (IsMaxLevelSynergy(Enum_SynergyType) == true)
                 return false;
 
-            if (ReadySynergyEnhance(v2Enum_ARR_SynergyType) == false)
+            if (ReadySynergyEnhance(Enum_SynergyType) == false)
             {
                 Contents.GlobalContent.ShowPopup_OkCancel(
 Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodstitle"),
@@ -967,10 +967,10 @@ null);
             List<double> used_quan = new List<double>();
             List<double> after_quan = new List<double>();
 
-            int costIndex = GetSynergyEnhanceCostGoodsIndex1(v2Enum_ARR_SynergyType);
+            int costIndex = GetSynergyEnhanceCostGoodsIndex1(Enum_SynergyType);
             used_type.Add(costIndex);
 
-            int useCost = GetSynergyEnhance_NeedCount1(v2Enum_ARR_SynergyType);
+            int useCost = GetSynergyEnhance_NeedCount1(Enum_SynergyType);
 
             before_quan.Add(Managers.GoodsManager.Instance.GetGoodsAmount(costIndex));
             used_quan.Add(useCost);
@@ -978,24 +978,24 @@ null);
             after_quan.Add(Managers.GoodsManager.Instance.GetGoodsAmount(costIndex));
 
 
-            costIndex = GetSynergyEnhanceCostGoodsIndex2(v2Enum_ARR_SynergyType);
+            costIndex = GetSynergyEnhanceCostGoodsIndex2(Enum_SynergyType);
             used_type.Add(costIndex);
 
-            useCost = GetSynergyEnhance_NeedCount2(v2Enum_ARR_SynergyType);
+            useCost = GetSynergyEnhance_NeedCount2(Enum_SynergyType);
 
             before_quan.Add(Managers.GoodsManager.Instance.GetGoodsAmount(costIndex));
             used_quan.Add(useCost);
             Managers.GoodsManager.Instance.UseGoodsAmount(costIndex, useCost);
             after_quan.Add(Managers.GoodsManager.Instance.GetGoodsAmount(costIndex));
 
-            GearData gearData = EquipedRuneData(v2Enum_ARR_SynergyType);
+            GearData gearData = EquipedRuneData(Enum_SynergyType);
             if (gearData != null)
                 DecreaseStat(gearData);
 
-            if (GearContainer.SlotLevel_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                GearContainer.SlotLevel_Dic.Add(v2Enum_ARR_SynergyType, 0);
+            if (GearContainer.SlotLevel_Dic.ContainsKey(Enum_SynergyType) == false)
+                GearContainer.SlotLevel_Dic.Add(Enum_SynergyType, 0);
 
-            GearContainer.SlotLevel_Dic[v2Enum_ARR_SynergyType] += 1;
+            GearContainer.SlotLevel_Dic[Enum_SynergyType] += 1;
 
             if (gearData != null)
                 IncreaseStat(gearData);
@@ -1003,7 +1003,7 @@ null);
 
             TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData_WaitSecond(m_changeInfoUpdate, null);
 
-            ThirdPartyLog.Instance.SendLog_log_gearslot_enforce(v2Enum_ARR_SynergyType.Enum32ToInt(), GearContainer.SlotLevel_Dic[v2Enum_ARR_SynergyType],
+            ThirdPartyLog.Instance.SendLog_log_gearslot_enforce(Enum_SynergyType.Enum32ToInt(), GearContainer.SlotLevel_Dic[Enum_SynergyType],
                 used_type, before_quan, used_quan, after_quan);
 
             //PassManager.Instance.CheckPassType(V2Enum_PassType.SkillLevel);
@@ -1018,15 +1018,15 @@ null);
             return true;
         }
         //------------------------------------------------------------------------------------
-        public bool ResetSlot(V2Enum_GearType v2Enum_ARR_SynergyType)
+        public bool ResetSlot(V2Enum_GearType Enum_SynergyType)
         {
             if (TheBackEnd.TheBackEndManager.Instance.CheckNetworkState() == false)
                 return false;
 
-            if (GearContainer.SlotLevel_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (GearContainer.SlotLevel_Dic.ContainsKey(Enum_SynergyType) == false)
                 return false;
 
-            if (GearContainer.SlotLevel_Dic[v2Enum_ARR_SynergyType] == 0)
+            if (GearContainer.SlotLevel_Dic[Enum_SynergyType] == 0)
                 return false;
 
             List<int> idx = new List<int>();
@@ -1037,13 +1037,13 @@ null);
             List<double> after_quan = new List<double>();
 
             {
-                GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(v2Enum_ARR_SynergyType);
+                GearLevelUpCostData synergyLevelUpCostData = GetGearLevelUpCostData(Enum_SynergyType);
                 if (synergyLevelUpCostData == null)
                     return false;
 
-                int slotlevel = GearContainer.SlotLevel_Dic[v2Enum_ARR_SynergyType];
+                int slotlevel = GearContainer.SlotLevel_Dic[Enum_SynergyType];
 
-                int costIndex = GetSynergyEnhanceCostGoodsIndex1(v2Enum_ARR_SynergyType);
+                int costIndex = GetSynergyEnhanceCostGoodsIndex1(Enum_SynergyType);
 
                 RewardData rewardData = m_setInGameRewardPopupMsg.RewardDatas.Find(x => x.Index == costIndex);
                 if (rewardData == null)
@@ -1058,7 +1058,7 @@ null);
                 rewardData.Amount += GetTotalCost(slotlevel, synergyLevelUpCostData.LevelUpCostGoodsParam12, synergyLevelUpCostData.LevelUpCostGoodsParam13);
 
 
-                costIndex = GetSynergyEnhanceCostGoodsIndex2(v2Enum_ARR_SynergyType);
+                costIndex = GetSynergyEnhanceCostGoodsIndex2(Enum_SynergyType);
 
                 rewardData = m_setInGameRewardPopupMsg.RewardDatas.Find(x => x.Index == costIndex);
                 if (rewardData == null)
@@ -1074,13 +1074,13 @@ null);
 
             }
 
-            int slotbeforelevel = GearContainer.SlotLevel_Dic[v2Enum_ARR_SynergyType];
+            int slotbeforelevel = GearContainer.SlotLevel_Dic[Enum_SynergyType];
 
-            GearData gearData = EquipedRuneData(v2Enum_ARR_SynergyType);
+            GearData gearData = EquipedRuneData(Enum_SynergyType);
             if (gearData != null)
                 DecreaseStat(gearData);
 
-            GearContainer.SlotLevel_Dic[v2Enum_ARR_SynergyType] = 0;
+            GearContainer.SlotLevel_Dic[Enum_SynergyType] = 0;
 
             if (gearData != null)
                 IncreaseStat(gearData);
@@ -1115,7 +1115,7 @@ null);
 
             TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData_WaitSecond(m_changeInfoUpdate, null);
 
-            ThirdPartyLog.Instance.SendLog_log_gearslot_reset(v2Enum_ARR_SynergyType.Enum32ToInt(), slotbeforelevel,
+            ThirdPartyLog.Instance.SendLog_log_gearslot_reset(Enum_SynergyType.Enum32ToInt(), slotbeforelevel,
                 reward_type, reward_quan);
 
 

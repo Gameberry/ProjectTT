@@ -34,7 +34,7 @@ namespace GameBerry.UI
 
         //private SynergyTotalLevelEffectData _currentSynergyTotalLevelEffectData;
 
-        private V2Enum_ARRR_TotalLevelType v2Enum_ARRR_TotalLevelType = V2Enum_ARRR_TotalLevelType.BasicStat;
+        private Enum_ARRR_TotalLevelType _enumArrrTotalLevelType = Enum_ARRR_TotalLevelType.BasicStat;
 
         //------------------------------------------------------------------------------------
         private void Awake()
@@ -58,7 +58,7 @@ namespace GameBerry.UI
         //    if (_needExp != null)
         //        _needExp.SetText("{0}", myExp);
 
-        //    v2Enum_ARRR_TotalLevelType = synergyTotalLevelEffectData.TotalLevelEffectType;
+        //    _enumArrrTotalLevelType = synergyTotalLevelEffectData.TotalLevelEffectType;
 
         //    _currentSynergyTotalLevelEffectData = synergyTotalLevelEffectData;
 
@@ -113,7 +113,7 @@ namespace GameBerry.UI
         ////------------------------------------------------------------------------------------
         private void OnClick()
         {
-            if (v2Enum_ARRR_TotalLevelType == V2Enum_ARRR_TotalLevelType.CardGradeLimitBreak)
+            if (_enumArrrTotalLevelType == Enum_ARRR_TotalLevelType.CardGradeLimitBreak)
             {
                 //if (_currentSynergyTotalLevelEffectData != null)
                 //    Managers.SynergyManager.Instance.ShowTotalExpDetail(ContentDetailList.None, _currentSynergyTotalLevelEffectData);

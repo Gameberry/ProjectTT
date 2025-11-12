@@ -110,9 +110,9 @@ namespace GameBerry.Managers
                         if (waveDeathRangeData == null)
                             return false;
 
-                        V2Enum_Dungeon v2Enum_Dungeon = waveDeathRangeData.Param1.IntToEnum32<V2Enum_Dungeon>();
+                        Enum_Dungeon enumDungeon = waveDeathRangeData.Param1.IntToEnum32<Enum_Dungeon>();
 
-                        return waveDeathRangeData.Param2 <= Managers.DungeonDataManager.Instance.GetDungeonRecord(v2Enum_Dungeon);
+                        return waveDeathRangeData.Param2 <= Managers.DungeonDataManager.Instance.GetDungeonRecord(enumDungeon);
                     }
                 case V2Enum_OpenConditionType.StaminaCount:
                 case V2Enum_OpenConditionType.RelicSummonCount:
@@ -288,25 +288,25 @@ namespace GameBerry.Managers
 
                 case V2Enum_OpenConditionType.FireSynergyLevelStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(V2Enum_ARR_SynergyType.Red);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(Enum_SynergyType.Red);
 
                         break;
                     }
                 case V2Enum_OpenConditionType.GoldSynergyLevelStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(V2Enum_ARR_SynergyType.Yellow);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(Enum_SynergyType.Yellow);
 
                         break;
                     }
                 case V2Enum_OpenConditionType.WaterSynergyLevelStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(V2Enum_ARR_SynergyType.Blue);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(Enum_SynergyType.Blue);
 
                         break;
                     }
                 case V2Enum_OpenConditionType.ThunderSynergyLevelStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(V2Enum_ARR_SynergyType.White);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumLevel(Enum_SynergyType.White);
 
                         break;
                     }
@@ -314,33 +314,33 @@ namespace GameBerry.Managers
 
                 case V2Enum_OpenConditionType.FireSynergyBreakStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(V2Enum_ARR_SynergyType.Red);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(Enum_SynergyType.Red);
 
                         break;
                     }
                 case V2Enum_OpenConditionType.GoldSynergyBreakStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(V2Enum_ARR_SynergyType.Yellow);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(Enum_SynergyType.Yellow);
 
                         break;
                     }
                 case V2Enum_OpenConditionType.WaterSynergyBreakStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(V2Enum_ARR_SynergyType.Blue);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(Enum_SynergyType.Blue);
 
                         break;
                     }
                 case V2Enum_OpenConditionType.ThunderSynergyBreakStack:
                     {
-                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(V2Enum_ARR_SynergyType.White);
+                        sendValue = Managers.SynergyManager.Instance.GetSynergyAccumBreakLevel(Enum_SynergyType.White);
 
                         break;
                     }
                 case V2Enum_OpenConditionType.Synergy4GradeSkillCount:
                     {
-                        for (int i = V2Enum_ARR_SynergyType.Red.Enum32ToInt(); i < V2Enum_ARR_SynergyType.Max.Enum32ToInt(); ++i)
+                        for (int i = Enum_SynergyType.Red.Enum32ToInt(); i < Enum_SynergyType.Max.Enum32ToInt(); ++i)
                         {
-                            V2Enum_ARR_SynergyType v2Enum_Stat = i.IntToEnum32<V2Enum_ARR_SynergyType>();
+                            Enum_SynergyType v2Enum_Stat = i.IntToEnum32<Enum_SynergyType>();
 
                             SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(v2Enum_Stat, 4);
 

@@ -117,7 +117,7 @@ namespace GameBerry.Managers
         {
             ChatClient?.SendLeaveGuildChannel();
 
-            //if (Managers.DungeonManager.Instance.CurrentDungeonKinds != V2Enum_Dungeon.AllyArenaDungeon)
+            //if (Managers.DungeonManager.Instance.CurrentDungeonKinds != Enum_Dungeon.AllyArenaDungeon)
             //{
             //    UI.IDialog.RequestDialogEnter<UI.ChatViewDialog>();
             //    UI.IDialog.RequestDialogExit<UI.ChatGuildDialog>();

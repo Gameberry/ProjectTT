@@ -297,7 +297,7 @@ namespace GameBerry
 
             PetController petController = _petDictionary[petData];
             if (petController != null)
-                petController.AddGambleSkill(gambleSkillData, V2Enum_ARR_SynergyType.Max, skillInfo);
+                petController.AddGambleSkill(gambleSkillData, Enum_SynergyType.Max, skillInfo);
         }
         //------------------------------------------------------------------------------------
         private void RefreshPetPosition()
@@ -310,7 +310,7 @@ namespace GameBerry
                 if (_petTargetPosRoot.Count > 0)
                 {
                     Vector3 pos = transform.position;
-                    float oper = _lookDirection == Enum_ARR_LookDirection.Right ? -1 : 1;
+                    float oper = _lookDirection == Enum_LookDirection.Right ? -1 : 1;
 
                     pos.x += StaticResource.Instance.GetBattleModeStaticData().PetRadius * oper;
                     _petTargetPosRoot[0].transform.position = pos;
@@ -342,7 +342,7 @@ namespace GameBerry
                 float z = radius * Mathf.Sin(radians);
 
                 Vector3 pos = transform.position;
-                float oper = _lookDirection == Enum_ARR_LookDirection.Right ? -1 : 1;
+                float oper = _lookDirection == Enum_LookDirection.Right ? -1 : 1;
                 pos.x -= x * oper;
                 pos.z -= z * oper;
                 if (_petTargetPosRoot.Count > i)
@@ -395,7 +395,7 @@ namespace GameBerry
             {
                 ChangeState(CharacterState.Run);
 
-                ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Left);
+                ChangeCharacterLookAtDirection(Enum_LookDirection.Left);
 
                 Vector3 pos = transform.position;
                 pos.x += MyCharacterMoveSpeed * Time.deltaTime * -1.0f;
@@ -407,7 +407,7 @@ namespace GameBerry
             {
                 ChangeState(CharacterState.Run);
 
-                ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Right);
+                ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
 
                 Vector3 pos = transform.position;
                 pos.x += MyCharacterMoveSpeed * Time.deltaTime * 1.0f;
@@ -467,7 +467,7 @@ namespace GameBerry
 
                     if (_attackTarget == null || _attackTarget.IsDead == true)
                     {
-                        if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.LobbyScene)
+                        if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.LobbyScene)
                             ChangeState(CharacterState.Idle);
                         else
                             ChangeState(CharacterState.Run);
@@ -492,19 +492,19 @@ namespace GameBerry
 
                     if (_selectPlaySkillData != null)
                     {
-                        if (_selectPlaySkillData.SkillBaseData.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+                        if (_selectPlaySkillData.SkillBaseData.TargetCheckType == Enum_TargetCheckType.Friendly)
                         {
                             ChangeState(CharacterState.Skill);
                             return;
                         }
 
-                        if (distance > _selectPlaySkillData.SkillBaseData.AttackRange * GetOutputAttackRange() * (_selectPlaySkillData.SkillBaseData.TargetAttackType == V2Enum_ARR_TargetAttackType.Circle ? 0.5f : 1.0f))
+                        if (distance > _selectPlaySkillData.SkillBaseData.AttackRange * GetOutputAttackRange() * (_selectPlaySkillData.SkillBaseData.TargetAttackType == Enum_TargetAttackType.Circle ? 0.5f : 1.0f))
                             ChangeState(CharacterState.Run);
                         else
                         {
-                            if (_selectPlaySkillData.SkillBaseData.TriggerType == V2Enum_ARR_TriggerType.Default)
+                            if (_selectPlaySkillData.SkillBaseData.TriggerType == Enum_TriggerType.Default)
                                 ChangeState(CharacterState.Attack);
-                            else if (_selectPlaySkillData.SkillBaseData.TriggerType == V2Enum_ARR_TriggerType.Active)
+                            else if (_selectPlaySkillData.SkillBaseData.TriggerType == Enum_TriggerType.Active)
                                 ChangeState(CharacterState.Skill);
 
                             //if (_selectPlaySkillData == _attackData)
@@ -619,7 +619,7 @@ namespace GameBerry
 
                         if (_attackTarget == null)
                         {
-                            ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Right);
+                            ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
                         }
                         else
                         {
@@ -644,7 +644,7 @@ namespace GameBerry
 
                         if (_attackTarget == null)
                         {
-                            ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Right);
+                            ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
                         }
                         else
                         {

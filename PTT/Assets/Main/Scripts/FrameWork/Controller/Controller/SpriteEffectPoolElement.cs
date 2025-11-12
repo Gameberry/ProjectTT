@@ -54,7 +54,7 @@ namespace GameBerry
             particlePoolElement.ParticleStop -= EndParticle;
         }
         //------------------------------------------------------------------------------------
-        public void PlaySpriteEffect(SpriteAnimation spriteAnimation, AnimationSpriteLibraryAsset animationSpriteLibraryAsset, Vector3 effectpos, Enum_ARR_LookDirection lookdirection = Enum_ARR_LookDirection.Right)
+        public void PlaySpriteEffect(SpriteAnimation spriteAnimation, AnimationSpriteLibraryAsset animationSpriteLibraryAsset, Vector3 effectpos, Enum_LookDirection lookdirection = Enum_LookDirection.Right)
         {
             gameObject.SetActive(true);
 
@@ -72,7 +72,7 @@ namespace GameBerry
 
             EndTime = Time.time + m_currentSpriteAnimation.Duration;
 
-            if (lookdirection == Enum_ARR_LookDirection.Right)
+            if (lookdirection == Enum_LookDirection.Right)
             {
                 Vector3 rotate = transform.eulerAngles;
                 rotate.y = 0.0f;
@@ -84,7 +84,7 @@ namespace GameBerry
                 pos.z += m_currentSpriteAnimation.ReTouchWorldPos.z;
                 transform.position = pos;
             }
-            else if (lookdirection == Enum_ARR_LookDirection.Left)
+            else if (lookdirection == Enum_LookDirection.Left)
             {
                 Vector3 rotate = transform.eulerAngles;
                 rotate.y = 180.0f;

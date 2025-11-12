@@ -49,9 +49,9 @@ namespace GameBerry.UI
 
             gameObject.SetActive(true);
 
-            for (int i = V2Enum_ARR_SynergyType.Red.Enum32ToInt(); i < V2Enum_ARR_SynergyType.Max.Enum32ToInt(); ++i)
+            for (int i = Enum_SynergyType.Red.Enum32ToInt(); i < Enum_SynergyType.Max.Enum32ToInt(); ++i)
             {
-                V2Enum_ARR_SynergyType v2Enum_Stat = i.IntToEnum32<V2Enum_ARR_SynergyType>();
+                Enum_SynergyType v2Enum_Stat = i.IntToEnum32<Enum_SynergyType>();
 
                 GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_Stat);
 

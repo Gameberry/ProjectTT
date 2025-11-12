@@ -21,8 +21,8 @@ namespace GameBerry
 
         public int AnimNumber; // 모델링 기본 스킨 번호
 
-        public V2Enum_ARR_MonsterGradeType MonsterGradeType;
-        public V2Enum_ARR_MonsterRoleType MonsterRoleType;
+        public Enum_MonsterGradeType MonsterGradeType;
+        public V2Enum_MonsterRoleType MonsterRoleType;
 
         public float Scale = 1.0f;
 
@@ -62,7 +62,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_MonsterRoleType RoleType;
+        public V2Enum_MonsterRoleType RoleType;
         public ObscuredInt MaximumLevel;
 
         public Dictionary<V2Enum_Stat, CreatureBaseStatElement> StatValue = new Dictionary<V2Enum_Stat, CreatureBaseStatElement>();
@@ -72,7 +72,7 @@ namespace GameBerry
     {
         private Dictionary<int, CreatureData> _creatureDatas_Dic = new Dictionary<int, CreatureData>();
 
-        private Dictionary<V2Enum_ARR_MonsterRoleType, List<CreatureLevelUpStatData>> _creatureRoleLevelUpDatas_Dic = new Dictionary<V2Enum_ARR_MonsterRoleType, List<CreatureLevelUpStatData>>();
+        private Dictionary<V2Enum_MonsterRoleType, List<CreatureLevelUpStatData>> _creatureRoleLevelUpDatas_Dic = new Dictionary<V2Enum_MonsterRoleType, List<CreatureLevelUpStatData>>();
 
         //------------------------------------------------------------------------------------
         public override async UniTask InitData_Async()
@@ -149,7 +149,7 @@ namespace GameBerry
                 CreatureLevelUpStatData creatureLevelUpStatData = new CreatureLevelUpStatData();
 
                 creatureLevelUpStatData.Index = rows[i]["Index"].ToString().ToInt();
-                creatureLevelUpStatData.RoleType = rows[i]["RoleType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_MonsterRoleType>();
+                creatureLevelUpStatData.RoleType = rows[i]["RoleType"].ToString().ToInt().IntToEnum32<V2Enum_MonsterRoleType>();
 
                 creatureLevelUpStatData.MaximumLevel = rows[i]["MaximumLevel"].ToString().ToInt();
 
@@ -206,10 +206,10 @@ namespace GameBerry
             return null;
         }
         //------------------------------------------------------------------------------------
-        public List<CreatureLevelUpStatData> GetCreatureLevelUpStatDatas(V2Enum_ARR_MonsterRoleType enum_ARR_RoleType)
+        public List<CreatureLevelUpStatData> GetCreatureLevelUpStatDatas(V2Enum_MonsterRoleType enumRoleType)
         {
-            if (_creatureRoleLevelUpDatas_Dic.ContainsKey(enum_ARR_RoleType) == true)
-                return _creatureRoleLevelUpDatas_Dic[enum_ARR_RoleType];
+            if (_creatureRoleLevelUpDatas_Dic.ContainsKey(enumRoleType) == true)
+                return _creatureRoleLevelUpDatas_Dic[enumRoleType];
 
             return null;
         }

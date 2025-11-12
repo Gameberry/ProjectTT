@@ -966,7 +966,7 @@ namespace GameBerry.UI
             }
         }
         //------------------------------------------------------------------------------------
-        private void SetSynergyStack(HashSet<V2Enum_ARR_SynergyType> NeedSynergyCount)
+        private void SetSynergyStack(HashSet<Enum_SynergyType> NeedSynergyCount)
         {
             {
                 int i = 0;

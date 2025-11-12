@@ -12,7 +12,7 @@ namespace GameBerry
 
         public V2Enum_Grade Grade;
 
-        public V2Enum_ARR_DescendType DescendType;
+        public Enum_DescendType DescendType;
 
         public ObscuredInt DescendParam1;
         public ObscuredInt DescendIconIndex;
@@ -22,9 +22,9 @@ namespace GameBerry
 
         public Dictionary<ObscuredInt, ObscuredInt> DescendPhaseIndexList = new Dictionary<ObscuredInt, ObscuredInt>();
 
-        public HashSet<V2Enum_ARR_SynergyType> SynergyType = new HashSet<V2Enum_ARR_SynergyType>();
+        public HashSet<Enum_SynergyType> SynergyType = new HashSet<Enum_SynergyType>();
 
-        //public Dictionary<V2Enum_ARR_SynergyType, ObscuredInt> NeedSynergyCount = new Dictionary<V2Enum_ARR_SynergyType, ObscuredInt>();
+        //public Dictionary<Enum_SynergyType, ObscuredInt> NeedSynergyCount = new Dictionary<Enum_SynergyType, ObscuredInt>();
 
         public ObscuredDouble OriginNeedRequiredExp;
         public ObscuredDouble NeedRequiredExp;
@@ -160,7 +160,7 @@ namespace GameBerry
 
                 descendData.Grade = rows[i]["Grade"].ToString().ToInt().IntToEnum32<V2Enum_Grade>();
 
-                descendData.DescendType = rows[i]["DescendType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_DescendType>();
+                descendData.DescendType = rows[i]["DescendType"].ToString().ToInt().IntToEnum32<Enum_DescendType>();
                 descendData.DescendParam1 = rows[i]["DescendParam1"].ToString().ToInt();
                 descendData.DescendIconIndex = rows[i]["DescendIconIndex"].ToString().ToInt();
 
@@ -194,10 +194,10 @@ namespace GameBerry
                 //        if (SynergyTypeData == -1 || SynergyTypeData == 0)
                 //            continue;
 
-                //        V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType = SynergyTypeData.IntToEnum32<V2Enum_ARR_SynergyType>();
+                //        Enum_SynergyType Enum_GambleSynergyType = SynergyTypeData.IntToEnum32<Enum_SynergyType>();
 
-                //        if (descendData.SynergyType.Contains(v2Enum_ARR_GambleSynergyType) == false)
-                //            descendData.SynergyType.Add(v2Enum_ARR_GambleSynergyType);
+                //        if (descendData.SynergyType.Contains(Enum_GambleSynergyType) == false)
+                //            descendData.SynergyType.Add(Enum_GambleSynergyType);
                 //    }
                 //    catch
                 //    {

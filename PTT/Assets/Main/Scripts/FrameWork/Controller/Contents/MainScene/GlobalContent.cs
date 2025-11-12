@@ -8,7 +8,7 @@ namespace GameBerry.Contents
     [System.Serializable]
     public class V2SkillTriggerColorData
     {
-        public V2Enum_ARR_TriggerType SkillTriggerType = V2Enum_ARR_TriggerType.Max;
+        public Enum_TriggerType SkillTriggerType = Enum_TriggerType.Max;
         public Color BGColor;
         public Color TextColor;
         public Material TextMaterial;
@@ -34,7 +34,7 @@ namespace GameBerry.Contents
     {
         [SerializeField]
         private List<V2SkillTriggerColorData> m_v2SkillTriggerColorDatas = new List<V2SkillTriggerColorData>();
-        private static Dictionary<V2Enum_ARR_TriggerType, V2SkillTriggerColorData> m_v2SkillTriggerColorDatas_Dic = new Dictionary<V2Enum_ARR_TriggerType, V2SkillTriggerColorData>();
+        private static Dictionary<Enum_TriggerType, V2SkillTriggerColorData> m_v2SkillTriggerColorDatas_Dic = new Dictionary<Enum_TriggerType, V2SkillTriggerColorData>();
 
 
         [Header("----------------BerserkerModeBG----------------")]
@@ -113,7 +113,7 @@ _uiLoader._uiList.Add("GlobalCheatDialog");
             IDialog.RequestDialogExit<GlobalNoticeDialog>();
         }
         //------------------------------------------------------------------------------------
-        public static V2SkillTriggerColorData GetV2SkillTriggerColorData(V2Enum_ARR_TriggerType v2Enum_TriggerType)
+        public static V2SkillTriggerColorData GetV2SkillTriggerColorData(Enum_TriggerType v2Enum_TriggerType)
         {
             V2SkillTriggerColorData v2SkillTriggerColorData = null;
 

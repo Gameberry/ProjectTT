@@ -445,7 +445,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         private void RefreshVipState()
         {
-            if (BattleSceneManager.Instance.BattleType != V2Enum_Dungeon.LobbyScene)
+            if (BattleSceneManager.Instance.BattleType != Enum_Dungeon.LobbyScene)
                 return;
 
             CheckVipMode();

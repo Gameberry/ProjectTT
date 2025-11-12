@@ -66,7 +66,7 @@ namespace GameBerry.UI
         [Header("------------Filter------------")]
         [SerializeField]
         private List<UICallBackBtnElement> m_elementFilter;
-        private List<V2Enum_ARR_SynergyType> m_allyElementFilter = new List<V2Enum_ARR_SynergyType>();
+        private List<Enum_SynergyType> m_allyElementFilter = new List<Enum_SynergyType>();
 
         private Dictionary<V2Enum_Grade, int> _gradeCount = new Dictionary<V2Enum_Grade, int>();
 
@@ -138,7 +138,7 @@ namespace GameBerry.UI
 
             if (Managers.GuideInteractorManager.Instance.PlayRuneTutorial == true)
             {
-                //if (_currentSynergyType == V2Enum_ARR_SynergyType.White)
+                //if (_currentSynergyType == Enum_SynergyType.White)
                 //{
                 //    SynergyEffectData tuto = Managers.SynergyManager.Instance.GetSynergyEffectData(_tutorialIndex);
                 //    if (tuto != null)
@@ -302,7 +302,7 @@ namespace GameBerry.UI
             SetRuneElement();
         }
         //------------------------------------------------------------------------------------
-        private void OnClick_unEquipSlot(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int slotidx)
+        private void OnClick_unEquipSlot(Enum_SynergyType Enum_SynergyType, int slotidx)
         {
             bool isopen = Managers.SynergyRuneManager.Instance.IsOpenDescendSlot(slotidx);
             if (isopen == false)
@@ -322,12 +322,12 @@ namespace GameBerry.UI
             //{
             //    _lobbySynergyRuneDetailPopupDialog.SynergyRuneElement(synergyRuneData);
             //    _lobbySynergyRuneDetailPopupDialog.SetEquipMode(false);
-            //    _lobbySynergyRuneDetailPopupDialog.SetSlotState(v2Enum_ARR_SynergyType, slotidx);
+            //    _lobbySynergyRuneDetailPopupDialog.SetSlotState(Enum_SynergyType, slotidx);
             //    _lobbySynergyRuneDetailPopupDialog.ElementEnter();
             //}
         }
         //------------------------------------------------------------------------------------
-        private void OnClick_Slot(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int slotidx)
+        private void OnClick_Slot(Enum_SynergyType Enum_SynergyType, int slotidx)
         {
             bool isopen = Managers.SynergyRuneManager.Instance.IsOpenDescendSlot(slotidx);
             if (isopen == false)
@@ -344,7 +344,7 @@ namespace GameBerry.UI
             {
                 _lobbySynergyRuneDetailPopupDialog.SynergyRuneElement(synergyRuneData);
                 _lobbySynergyRuneDetailPopupDialog.SetEquipMode(false);
-                _lobbySynergyRuneDetailPopupDialog.SetSlotState(v2Enum_ARR_SynergyType, slotidx);
+                _lobbySynergyRuneDetailPopupDialog.SetSlotState(Enum_SynergyType, slotidx);
                 _lobbySynergyRuneDetailPopupDialog.ElementEnter();
             }
 
@@ -559,7 +559,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void SetElementFilter(int element)
         {
-            V2Enum_ARR_SynergyType v2Enum_ElementType = element.IntToEnum32<V2Enum_ARR_SynergyType>();
+            Enum_SynergyType v2Enum_ElementType = element.IntToEnum32<Enum_SynergyType>();
 
             UICallBackBtnElement uICallBackBtnElement = m_elementFilter.Find(x => x.m_myID == element);
 

@@ -8,16 +8,6 @@ namespace GameBerry.Event
 
     }
 
-    public class ReadyLuckyRouletteMsg : Message
-    {
-
-    }
-
-    public class SetRemainLuckyRouletteMsg : Message
-    {
-
-    }
-
     public class RefreshNickNameMsg : Message
     {
     }
@@ -43,7 +33,7 @@ namespace GameBerry.Event
 
     public class ChangeEquipStateGearMsg : Message
     {
-        public V2Enum_GearType v2Enum_ARR_SynergyType;
+        public V2Enum_GearType Enum_SynergyType;
         public GearData synergyRuneData;
 
         public bool IsEquipResult = false;
@@ -133,12 +123,12 @@ namespace GameBerry.Event
 
     public class SetDungeonSelectMsg : Message
     {
-        public V2Enum_Dungeon v2Enum_Dungeon;
+        public Enum_Dungeon EnumDungeon;
     }
 
     public class RefreshDungeonAdInfoListMsg : Message
     {
-        public List<V2Enum_Dungeon> datas = new List<V2Enum_Dungeon>();
+        public List<Enum_Dungeon> datas = new List<Enum_Dungeon>();
     }
 
     public class RefreshAdBuffStateMsg : Message

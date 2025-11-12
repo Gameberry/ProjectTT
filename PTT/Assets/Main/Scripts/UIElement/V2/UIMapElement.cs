@@ -96,7 +96,7 @@ namespace GameBerry.UI
             if (_currentMapData != null)
             {
                 Managers.MapManager.Instance.SetMapLastEnter(_currentMapData.StageNumber);
-                Managers.BattleSceneManager.Instance.ChangeBattleScene(V2Enum_Dungeon.StageScene);
+                Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
             }
         }
         //------------------------------------------------------------------------------------

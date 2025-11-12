@@ -81,7 +81,7 @@ namespace GameBerry.UI
         [SerializeField]
         private UILobbySynergyTabElement _uIGambleSynergyViewElement;
 
-        private Dictionary<V2Enum_ARR_SynergyType, UILobbySynergyTabElement> _uIGambleSynergyViewElement_dic = new Dictionary<V2Enum_ARR_SynergyType, UILobbySynergyTabElement>();
+        private Dictionary<Enum_SynergyType, UILobbySynergyTabElement> _uIGambleSynergyViewElement_dic = new Dictionary<Enum_SynergyType, UILobbySynergyTabElement>();
 
 
         [SerializeField]
@@ -222,7 +222,7 @@ namespace GameBerry.UI
 
         private SynergyEffectData _currentSynergyEffectData;
 
-        private V2Enum_ARR_SynergyType _currentSynergyType = V2Enum_ARR_SynergyType.Max;
+        private Enum_SynergyType _currentSynergyType = Enum_SynergyType.Max;
 
         private int _tutorialIndex;
 
@@ -245,7 +245,7 @@ namespace GameBerry.UI
                     if (_guideOpen2Btn != null)
                         _guideOpen2Btn.gameObject.SetActive(false);
 
-                    SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 3);
+                    SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 3);
                     SetSynergyEffectDetail(synergyEffectData);
 
 
@@ -291,7 +291,7 @@ namespace GameBerry.UI
                     if (_guideOpen5BG != null)
                         _guideOpen5BG.gameObject.SetActive(true);
 
-                    SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 1);
+                    SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 1);
                     SetSynergyEffectDetail(synergyEffectData);
 
 
@@ -308,7 +308,7 @@ namespace GameBerry.UI
                     if (_guideOpen6Btn != null)
                         _guideOpen6Btn.gameObject.SetActive(false);
 
-                    SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 3);
+                    SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 3);
                     SetSynergyEffectDetail(synergyEffectData);
 
                     Managers.GuideInteractorManager.Instance.EndGuideQuest();
@@ -372,11 +372,11 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
-            if (_currentSynergyType == V2Enum_ARR_SynergyType.Max)
+            if (_currentSynergyType == Enum_SynergyType.Max)
             {
-                OnClick_SynergyTab(V2Enum_ARR_SynergyType.Red);
+                OnClick_SynergyTab(Enum_SynergyType.Red);
 
-                SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 1);
+                SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 1);
                 SetSynergyEffectDetail(synergyEffectData);
             }
             else
@@ -392,16 +392,16 @@ namespace GameBerry.UI
 
             if (Managers.GuideInteractorManager.Instance.PlaySynergyOpenTutorial == true)
             {
-                SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 3);
+                SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 3);
                 if (Managers.SynergyManager.Instance.IsLockSynergy(synergyEffectData) == false)
                 {
                     Managers.GuideInteractorManager.Instance.EndGuideQuest();
                     return;
                 }
 
-                OnClick_SynergyTab(V2Enum_ARR_SynergyType.Red);
+                OnClick_SynergyTab(Enum_SynergyType.Red);
 
-                synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 1);
+                synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 1);
                 SetSynergyEffectDetail(synergyEffectData);
 
                 PlaySynergyOpenTutorial().Forget();
@@ -438,15 +438,15 @@ namespace GameBerry.UI
 
             if (Managers.GuideInteractorManager.Instance.PlaySynergyUnLockTutorial == true)
             {
-                OnClick_SynergyTab(V2Enum_ARR_SynergyType.Red);
+                OnClick_SynergyTab(Enum_SynergyType.Red);
                 PlaySynergyUnLockTutorial().Forget();
             }
 
             if (Managers.GuideInteractorManager.Instance.PlaySynergyBreakTutorial == true)
             {
-                OnClick_SynergyTab(V2Enum_ARR_SynergyType.Red);
+                OnClick_SynergyTab(Enum_SynergyType.Red);
 
-                SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 1);
+                SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 1);
                 SetSynergyEffectDetail(synergyEffectData);
 
                 PlaySynergyBreakTutorial().Forget();
@@ -456,7 +456,7 @@ namespace GameBerry.UI
         private async UniTask PlaySynergyChangeTutorial()
         {
             await UniTask.NextFrame();
-            //if (_currentSynergyType == V2Enum_ARR_SynergyType.White)
+            //if (_currentSynergyType == Enum_SynergyType.White)
             //    Managers.GuideInteractorManager.Instance.SetGuideStep(3);
             //else
             //    Managers.GuideInteractorManager.Instance.SetGuideStep(2);
@@ -468,7 +468,7 @@ namespace GameBerry.UI
         private async UniTask PlaySynergyOpenTutorial()
         {
             await UniTask.NextFrame();
-            //if (_currentSynergyType == V2Enum_ARR_SynergyType.White)
+            //if (_currentSynergyType == Enum_SynergyType.White)
             //    Managers.GuideInteractorManager.Instance.SetGuideStep(3);
             //else
             //    Managers.GuideInteractorManager.Instance.SetGuideStep(2);
@@ -499,7 +499,7 @@ namespace GameBerry.UI
         private async UniTask PlaySynergyBreakTutorial()
         {
             await UniTask.NextFrame();
-            //if (_currentSynergyType == V2Enum_ARR_SynergyType.White)
+            //if (_currentSynergyType == Enum_SynergyType.White)
             //    Managers.GuideInteractorManager.Instance.SetGuideStep(3);
             //else
             //    Managers.GuideInteractorManager.Instance.SetGuideStep(2);
@@ -609,33 +609,33 @@ namespace GameBerry.UI
             }
         }
         //------------------------------------------------------------------------------------
-        private void OnClick_SynergyTab(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        private void OnClick_SynergyTab(Enum_SynergyType Enum_SynergyType)
         {
-            if (v2Enum_ARR_SynergyType == _currentSynergyType)
+            if (Enum_SynergyType == _currentSynergyType)
                 return;
 
             if (Managers.GuideInteractorManager.Instance.PlaySynergyOpenTutorial == true
                 || Managers.GuideInteractorManager.Instance.PlaySynergyBreakTutorial == true)
             {
-                if (v2Enum_ARR_SynergyType != V2Enum_ARR_SynergyType.Red)
+                if (Enum_SynergyType != Enum_SynergyType.Red)
                     return;
             }
 
             
             Managers.SynergyManager.Instance.RefreshNewSynergyIcon();
 
-            SetSynergyPage(v2Enum_ARR_SynergyType);
+            SetSynergyPage(Enum_SynergyType);
 
-            SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(v2Enum_ARR_SynergyType, 1);
+            SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType, 1);
 
 
-            if (Managers.GuideInteractorManager.Instance.PlaySynergyTutorial == true && v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.White)
+            if (Managers.GuideInteractorManager.Instance.PlaySynergyTutorial == true && Enum_SynergyType == Enum_SynergyType.White)
             {
                 SynergyEffectData tuto = Managers.SynergyManager.Instance.GetSynergyEffectData(_tutorialIndex);
                 if (tuto != null)
                     synergyEffectData = tuto;
             }
-            else if (Managers.GuideInteractorManager.Instance.PlaySynergyTutorial == true && v2Enum_ARR_SynergyType != V2Enum_ARR_SynergyType.White)
+            else if (Managers.GuideInteractorManager.Instance.PlaySynergyTutorial == true && Enum_SynergyType != Enum_SynergyType.White)
             {
                 Managers.GuideInteractorManager.Instance.SetGuideStep(2);
             }
@@ -643,26 +643,26 @@ namespace GameBerry.UI
             SetSynergyEffectDetail(synergyEffectData);
         }
         //------------------------------------------------------------------------------------
-        private void SetSynergyPage(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        private void SetSynergyPage(Enum_SynergyType Enum_SynergyType)
         {
-            _currentSynergyType = v2Enum_ARR_SynergyType;
+            _currentSynergyType = Enum_SynergyType;
 
-            if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Red)
+            if (Enum_SynergyType == Enum_SynergyType.Red)
             {
                 if (_uIItemIconAndAmount != null)
                     _uIItemIconAndAmount.SetSetting_NotConnectRefreshEvent(V2Enum_Point.SynergyLimitFire);
             }
-            else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Yellow)
+            else if (Enum_SynergyType == Enum_SynergyType.Yellow)
             {
                 if (_uIItemIconAndAmount != null)
                     _uIItemIconAndAmount.SetSetting_NotConnectRefreshEvent(V2Enum_Point.SynergyLimitGold);
             }
-            else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Blue)
+            else if (Enum_SynergyType == Enum_SynergyType.Blue)
             {
                 if (_uIItemIconAndAmount != null)
                     _uIItemIconAndAmount.SetSetting_NotConnectRefreshEvent(V2Enum_Point.SynergyLimitWater);
             }
-            else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.White)
+            else if (Enum_SynergyType == Enum_SynergyType.White)
             {
                 if (_uIItemIconAndAmount != null)
                     _uIItemIconAndAmount.SetSetting_NotConnectRefreshEvent(V2Enum_Point.SynergyLimitThunder);
@@ -674,12 +674,12 @@ namespace GameBerry.UI
                 pair.Value.SetClickState(pair.Key == _currentSynergyType);
             }
 
-            SetSynergyTier(v2Enum_ARR_SynergyType);
+            SetSynergyTier(Enum_SynergyType);
         }
         //------------------------------------------------------------------------------------
-        private void SetSynergyTier(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        private void SetSynergyTier(Enum_SynergyType Enum_SynergyType)
         {
-            SynergyData synergyData = Managers.SynergyManager.Instance.GetGambleSynergyData(v2Enum_ARR_SynergyType);
+            SynergyData synergyData = Managers.SynergyManager.Instance.GetGambleSynergyData(Enum_SynergyType);
 
             if (synergyData == null || synergyData.TierDatas == null)
                 return;
@@ -713,7 +713,7 @@ namespace GameBerry.UI
                     _uILobbySynergyTierGroupElements.Add(uILobbySynergyEffectElement);
                 }
 
-                uILobbySynergyEffectElement.SetSynergyTierGroup(v2Enum_ARR_SynergyType, pair.Key, pair.Value);
+                uILobbySynergyEffectElement.SetSynergyTierGroup(Enum_SynergyType, pair.Key, pair.Value);
                 uILobbySynergyEffectElement.gameObject.SetActive(true);
 
                 _uIGambleSynergyTierGroupElement_dic.Add(pair.Key, uILobbySynergyEffectElement);
@@ -730,7 +730,7 @@ namespace GameBerry.UI
             
             if (_synergyLockGroup != null)
             {
-                if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Yellow)
+                if (Enum_SynergyType == Enum_SynergyType.Yellow)
                 {
                     if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == false)
                     {
@@ -742,7 +742,7 @@ namespace GameBerry.UI
                     else
                         _synergyLockGroup.gameObject.SetActive(false);
                 }
-                else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.White)
+                else if (Enum_SynergyType == Enum_SynergyType.White)
                 {
                     if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == false)
                     {
@@ -809,7 +809,7 @@ namespace GameBerry.UI
 
             if (Managers.GuideInteractorManager.Instance.PlaySynergyBreakTutorial == true)
             {
-                SynergyEffectData tutotarget = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 1);
+                SynergyEffectData tutotarget = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 1);
 
                 if (synergyEffectData != tutotarget)
                     return;
@@ -1361,7 +1361,7 @@ namespace GameBerry.UI
                     {
                         if (Managers.GuideInteractorManager.Instance.GetCurrentStep() == 5)
                         {
-                            SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(V2Enum_ARR_SynergyType.Red, 3);
+                            SynergyEffectData synergyEffectData = Managers.SynergyManager.Instance.GetEquipSynergyEffect(Enum_SynergyType.Red, 3);
                             if (Managers.SynergyManager.Instance.IsLockSynergy(synergyEffectData) == false)
                             {
                                 if (_guideOpen5BG != null)
@@ -1441,9 +1441,9 @@ namespace GameBerry.UI
 
             Contents.GlobalContent.ShowGlobalNotice_Guide(Managers.LocalStringManager.Instance.GetLocalString("guide/synergyskill1"));
 
-            //if (_uIGambleSynergyViewElement_dic.ContainsKey(V2Enum_ARR_SynergyType.White) == true)
+            //if (_uIGambleSynergyViewElement_dic.ContainsKey(Enum_SynergyType.White) == true)
             //{
-            //    UILobbySynergyTabElement uILobbySynergyTabElement = _uIGambleSynergyViewElement_dic[V2Enum_ARR_SynergyType.White];
+            //    UILobbySynergyTabElement uILobbySynergyTabElement = _uIGambleSynergyViewElement_dic[Enum_SynergyType.White];
             //    uILobbySynergyTabElement.SetSynergyChangeElement(dialogView.transform);
             //}
 

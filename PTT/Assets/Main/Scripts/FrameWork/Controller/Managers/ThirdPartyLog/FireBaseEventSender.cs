@@ -510,7 +510,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
 
-        public void SendLog_log_playmode(V2Enum_ARR_BattleSpeed type)
+        public void SendLog_log_playmode(Enum_BattleSpeed type)
         {
             BigQuery_GrowthLog("log_playmode",
             new Parameter("type", type.ToString()));
@@ -1028,16 +1028,6 @@ namespace GameBerry
                 //new Parameter("after_quan", Util.ConvertListToString(after_quan)));
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_LuckyRouletteEvent(int rec_now, List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
-        {
-            //BigQuery_GrowthLog("log_luckyroulette",
-                //new Parameter("rec_now", rec_now.ToString()),
-                //new Parameter("reward_type", Util.ConvertListToString(reward_type)),
-                //new Parameter("before_quan", Util.ConvertListToString(before_quan)),
-                //new Parameter("reward_quan", Util.ConvertListToString(reward_quan)),
-                //new Parameter("after_quan", Util.ConvertListToString(after_quan)));
-        }
-        //------------------------------------------------------------------------------------
         public void SendLog_BoxEvent(int idx, int count, List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
         {
             //BigQuery_GrowthLog("log_box",
@@ -1455,14 +1445,14 @@ List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<
                 //new Parameter("reward_quan", Util.ConvertListToString(reward_quan)));
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_Guild_RankDunEvent(V2Enum_Dungeon type, int rec_now)
+        public void SendLog_Guild_RankDunEvent(Enum_Dungeon type, int rec_now)
         {
             //BigQuery_GrowthLog("log_guild_rankDun",
                 //new Parameter("type", type.ToString()),
                 //new Parameter("rec_now", rec_now.ToString()));
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_Guild_NorDunEvent(V2Enum_Dungeon type, int rec_now,
+        public void SendLog_Guild_NorDunEvent(Enum_Dungeon type, int rec_now,
             List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
         {
             //BigQuery_GrowthLog("log_guild_norDun",
@@ -1474,7 +1464,7 @@ List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<
             //new Parameter("after_quan", Util.ConvertListToString(after_quan)));
         }
         //------------------------------------------------------------------------------------
-        public void SendLog_Guild_NorDunSweepEvent(V2Enum_Dungeon type, int rec_now, int count,
+        public void SendLog_Guild_NorDunSweepEvent(Enum_Dungeon type, int rec_now, int count,
             List<int> reward_type, List<double> before_quan, List<double> reward_quan, List<double> after_quan)
         {
             //BigQuery_GrowthLog("log_guild_norDunsweep",

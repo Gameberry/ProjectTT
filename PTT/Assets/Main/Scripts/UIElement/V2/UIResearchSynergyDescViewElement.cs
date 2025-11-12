@@ -16,15 +16,15 @@ namespace GameBerry.UI
         {
             List<GambleGradeProbData> gambleProbDatas = GambleOperator.GetGambleProbDatas(level);
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+            Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
             if (researchData.ResearchEffectType == V2Enum_ResearchType.FireGambleLevel)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+                Enum_SynergyType = Enum_SynergyType.Red;
             else if (researchData.ResearchEffectType == V2Enum_ResearchType.GoldGambleLevel)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Yellow;
+                Enum_SynergyType = Enum_SynergyType.Yellow;
             else if (researchData.ResearchEffectType == V2Enum_ResearchType.WaterGambleLevel)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Blue;
+                Enum_SynergyType = Enum_SynergyType.Blue;
             else if (researchData.ResearchEffectType == V2Enum_ResearchType.ThunderGambleLevel)
-                v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.White;
+                Enum_SynergyType = Enum_SynergyType.White;
 
             double totalProb = 0;
 
@@ -49,7 +49,7 @@ namespace GameBerry.UI
                 string desc = string.Format("{0:0.##}%", (gambleGradeProbData.GambleProb / totalProb) * 100);
 
                 uIResearchSynergyDescLine.gameObject.SetActive(true);
-                uIResearchSynergyDescLine.SetSynergyDesc(v2Enum_ARR_SynergyType, gambleGradeProbData.CardGambleGrade.Enum32ToInt() - 10, desc);
+                uIResearchSynergyDescLine.SetSynergyDesc(Enum_SynergyType, gambleGradeProbData.CardGambleGrade.Enum32ToInt() - 10, desc);
             }
 
             for (int i = gambleProbDatas.Count; i < _uIResearchSynergyDescLines.Count; ++i)

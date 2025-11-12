@@ -68,8 +68,8 @@ namespace GameBerry.UI
 
             if (_uISkillDetail_CoolTime != null)
             {
-                if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Default
-                    || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GamebleCoolTime)
+                if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Default
+                    || skillBaseData.CoolTimeType == Enum_CoolTimeType.GamebleCoolTime)
                 {
                     if (skillBaseData.CoolTimeValue == -1 || skillBaseData.CoolTimeValue == 0)
                         _uISkillDetail_CoolTime.SetText("-");
@@ -156,7 +156,7 @@ namespace GameBerry.UI
 
             SkillBaseData skillBaseData = null;
 
-            if (gambleSkillData.DescendType == V2Enum_ARR_DescendType.DescendSkill)
+            if (gambleSkillData.DescendType == Enum_DescendType.DescendSkill)
             {
                 if (gambleSkillData.SynergySkillData != null)
                     skillBaseData = Managers.SkillManager.Instance.GetSkillBaseData(gambleSkillData.SynergySkillData.MainSkillTypeParam1);
@@ -196,8 +196,8 @@ namespace GameBerry.UI
 
             if (_uISkillDetail_CoolTime != null)
             {
-                if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Default
-                    || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GamebleCoolTime)
+                if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Default
+                    || skillBaseData.CoolTimeType == Enum_CoolTimeType.GamebleCoolTime)
                 {
                     if (skillBaseData.CoolTimeValue == -1 || skillBaseData.CoolTimeValue == 0)
                         _uISkillDetail_CoolTime.SetText("-");
@@ -269,8 +269,8 @@ namespace GameBerry.UI
 
             if (_uISkillDetail_CoolTime != null)
             {
-                if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.Default
-                    || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.GamebleCoolTime)
+                if (skillBaseData.CoolTimeType == Enum_CoolTimeType.Default
+                    || skillBaseData.CoolTimeType == Enum_CoolTimeType.GamebleCoolTime)
                 {
                     if (skillBaseData.CoolTimeValue == -1 || skillBaseData.CoolTimeValue == 0)
                         _uISkillDetail_CoolTime.SetText("-");

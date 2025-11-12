@@ -240,21 +240,21 @@ namespace GameBerry.UI
                 {
                     if (m_dungeonExitPopUpText != null)
                     {
-                        //if (Managers.DungeonManager.Instance.CurrentDungeonKinds == V2Enum_Dungeon.DevilCastleDungeon)
+                        //if (Managers.DungeonManager.Instance.CurrentDungeonKinds == Enum_Dungeon.DevilCastleDungeon)
                         //    Managers.LocalStringManager.Instance.SetLocalizeText(m_dungeonExitPopUpText, "devilCastle/exitDesc");
-                        //else if (Managers.DungeonManager.Instance.CurrentDungeonKinds == V2Enum_Dungeon.GoddessDungeon
-                        //    || Managers.DungeonManager.Instance.CurrentDungeonKinds == V2Enum_Dungeon.RedBullDungeon
-                        //    || Managers.DungeonManager.Instance.CurrentDungeonKinds == V2Enum_Dungeon.UrsulaDungeon
-                        //    || Managers.DungeonManager.Instance.CurrentDungeonKinds == V2Enum_Dungeon.KingSlimeDungeon)
+                        //else if (Managers.DungeonManager.Instance.CurrentDungeonKinds == Enum_Dungeon.GoddessDungeon
+                        //    || Managers.DungeonManager.Instance.CurrentDungeonKinds == Enum_Dungeon.RedBullDungeon
+                        //    || Managers.DungeonManager.Instance.CurrentDungeonKinds == Enum_Dungeon.UrsulaDungeon
+                        //    || Managers.DungeonManager.Instance.CurrentDungeonKinds == Enum_Dungeon.KingSlimeDungeon)
                         //    Managers.LocalStringManager.Instance.SetLocalizeText(m_dungeonExitPopUpText, "goddessDungeon/exitComment");
-                        if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.StageScene)
+                        if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.StageScene)
                             Managers.LocalStringManager.Instance.SetLocalizeText(m_dungeonExitPopUpText, "stage/exitComment");
                         else
                             Managers.LocalStringManager.Instance.SetLocalizeText(m_dungeonExitPopUpText, "dungeon/exitComment");
                     }
                     m_dungeonExitPopupIDialog.ElementEnter();
 
-                    Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+                    Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
                 }
                 else
                 {
@@ -282,7 +282,7 @@ namespace GameBerry.UI
 
             ThirdPartyLog.Instance.SendLog_log_dungeon_end(3, MapContainer.GetLogStage() + MapContainer.GetLogWave());
             Managers.MapManager.Instance.RemoveEnterKey();
-            Managers.BattleSceneManager.Instance.ChangeBattleScene(V2Enum_Dungeon.LobbyScene);
+            Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.LobbyScene);
         }
         //------------------------------------------------------------------------------------
     }

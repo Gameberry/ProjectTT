@@ -214,7 +214,7 @@ namespace GameBerry.Managers
             }
 
             // ½Ã³ÊÁö ÃÑÇÕ ·¹º§ ÆÄ¿ö
-            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_SynergyPowerType.LevelUpSynergy);
+            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_SynergyPowerType.LevelUpSynergy);
             power += opwervalue * SynergyContainer.SynergyEffectCurrentTotalLevel;
 
             // ½Ã³ÊÁö ·é È¹µæ ÆÄ¿ö
@@ -222,33 +222,33 @@ namespace GameBerry.Managers
             {
                 SynergyBreakthroughData synergyRuneData = Managers.SynergyManager.Instance.GetSynergyBreakthroughData(pair);
                 if(synergyRuneData.Grade == V2Enum_Grade.C)
-                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_SynergyPowerType.GetCSynergyRune);
+                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_SynergyPowerType.GetCSynergyRune);
                 else if (synergyRuneData.Grade == V2Enum_Grade.B)
-                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_SynergyPowerType.GetBSynergyRune);
+                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_SynergyPowerType.GetBSynergyRune);
                 else if (synergyRuneData.Grade == V2Enum_Grade.A)
-                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_SynergyPowerType.GetASynergyRune);
+                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_SynergyPowerType.GetASynergyRune);
                 else if (synergyRuneData.Grade == V2Enum_Grade.S)
-                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_SynergyPowerType.GetSSynergyRune);
+                    opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_SynergyPowerType.GetSSynergyRune);
 
                 power += opwervalue;
             }
 
 
             // °­¸² È¹µæ ÆÄ¿ö
-            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_DescendPowerType.GetDescend);
+            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_DescendPowerType.GetDescend);
             power += opwervalue * DescendContainer.SynergyInfo.Count;
 
             // °­¸² ÃÑÇÕ ·¹º§ ÆÄ¿ö
-            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_DescendPowerType.LevelupDescend);
+            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_DescendPowerType.LevelupDescend);
             power += opwervalue * DescendContainer.SynergyAccumLevel;
 
 
             // À¯¹° È¹µæ ÆÄ¿ö
-            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_RelicPowerType.GetRelic);
+            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_RelicPowerType.GetRelic);
             power += opwervalue * RelicContainer.SynergyInfo.Count;
 
             // °­¸² ÃÑÇÕ ·¹º§ ÆÄ¿ö
-            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_ARR_RelicPowerType.LevelUpRelic);
+            opwervalue = _characterLocalTable.GetBattlePowerConvertValue(Enum_RelicPowerType.LevelUpRelic);
             power += opwervalue * RelicContainer.SynergyAccumLevel;
 
 

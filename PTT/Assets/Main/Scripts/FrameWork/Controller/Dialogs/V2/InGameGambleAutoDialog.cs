@@ -12,12 +12,12 @@ namespace GameBerry.UI
 
         [SerializeField]
         private List<UICallBackBtnElement> m_elementFilter;
-        private List<V2Enum_ARR_SynergyType> m_allyElementFilter = new List<V2Enum_ARR_SynergyType>();
+        private List<Enum_SynergyType> m_allyElementFilter = new List<Enum_SynergyType>();
 
         [SerializeField]
         private Toggle _gambleAutoToggle;
 
-        Dictionary<int, V2Enum_ARR_SynergyType> autoOrder = new Dictionary<int, V2Enum_ARR_SynergyType>();
+        Dictionary<int, Enum_SynergyType> autoOrder = new Dictionary<int, Enum_SynergyType>();
 
         [SerializeField]
         private TMP_Text _playAutoCanCount;
@@ -39,11 +39,11 @@ namespace GameBerry.UI
 
             for (int i = 0; i < Managers.GambleManager.Instance.AutoGambleOrder.Count; ++i)
             {
-                V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
+                Enum_SynergyType Enum_SynergyType = Managers.GambleManager.Instance.AutoGambleOrder[i];
 
-                autoOrder.Add(i, v2Enum_ARR_SynergyType);
+                autoOrder.Add(i, Enum_SynergyType);
 
-                GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_SynergyType);
+                GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_SynergyType);
                 if (gambleCardSprite == null)
                     continue;
 
@@ -68,7 +68,7 @@ namespace GameBerry.UI
         protected override void OnEnter()
         {
             RefreshEnableBtn();
-            Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+            Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()
@@ -84,7 +84,7 @@ namespace GameBerry.UI
 
             foreach (var pair in autoOrder)
             {
-                if (pair.Value == V2Enum_ARR_SynergyType.Max)
+                if (pair.Value == Enum_SynergyType.Max)
                 {
                     canAuto = false;
                 }
@@ -113,7 +113,7 @@ namespace GameBerry.UI
 
             foreach (var pair in autoOrder)
             {
-                if (pair.Value == V2Enum_ARR_SynergyType.Max)
+                if (pair.Value == Enum_SynergyType.Max)
                 {
                     canAuto = false;
                     break;
@@ -150,7 +150,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void SetElementFilter(int element)
         {
-            V2Enum_ARR_SynergyType v2Enum_ElementType = element.IntToEnum32<V2Enum_ARR_SynergyType>();
+            Enum_SynergyType v2Enum_ElementType = element.IntToEnum32<Enum_SynergyType>();
 
             UICallBackBtnElement uICallBackBtnElement = m_elementFilter.Find(x => x.m_myID == element);
 
@@ -165,7 +165,7 @@ namespace GameBerry.UI
 
                 foreach (var pair in autoOrder)
                 {
-                    if (pair.Value == V2Enum_ARR_SynergyType.Max)
+                    if (pair.Value == Enum_SynergyType.Max)
                     { 
                         idx = pair.Key;
                         break;
@@ -197,7 +197,7 @@ namespace GameBerry.UI
 
                 if (idx != -1)
                 {
-                    autoOrder[idx] = V2Enum_ARR_SynergyType.Max;
+                    autoOrder[idx] = Enum_SynergyType.Max;
                     if (_autoSettingOrder.Count > idx)
                     {
                         _autoSettingOrder[idx].gameObject.SetActive(false);

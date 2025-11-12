@@ -11,7 +11,7 @@ namespace GameBerry
 
         public ObscuredInt ResourceIndex;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
     }
 
     public class OperationProbData
@@ -31,7 +31,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public V2Enum_Grade GambleGrade;
 
@@ -46,7 +46,7 @@ namespace GameBerry
 
         public ObscuredInt ResourceIndex;
 
-        public V2Enum_ARR_GambleSlotType SlotType;
+        public Enum_GambleSlotType SlotType;
     }
 
     public class GambleSlotProbData : OperationProbData
@@ -55,8 +55,8 @@ namespace GameBerry
 
         public ObscuredInt ResourceIndex;
 
-        public V2Enum_ARR_GambleSlotType SlotType;
-        public V2Enum_ARR_GambleSlotGrade GambleSlotGrade;
+        public Enum_GambleSlotType SlotType;
+        public Enum_GambleSlotGrade GambleSlotGrade;
     }
 
 
@@ -66,7 +66,7 @@ namespace GameBerry
 
         public ObscuredInt StatSlotIndex;
 
-        public V2Enum_ARR_GambleSlotGrade GambleSlotGrade;
+        public Enum_GambleSlotGrade GambleSlotGrade;
         public GambleSlotIncreaseValueData FakeData; // 연출용 데이터
 
         public V2Enum_Stat BaseStat;
@@ -77,14 +77,14 @@ namespace GameBerry
     public class GambleProbChanceData
     {
         public Dictionary<V2Enum_Grade, ObscuredDouble> CardGradeChance = new Dictionary<V2Enum_Grade, ObscuredDouble>();
-        public Dictionary<V2Enum_ARR_GambleSlotGrade, ObscuredDouble> SlotGradeChance = new Dictionary<V2Enum_ARR_GambleSlotGrade, ObscuredDouble>();
+        public Dictionary<Enum_GambleSlotGrade, ObscuredDouble> SlotGradeChance = new Dictionary<Enum_GambleSlotGrade, ObscuredDouble>();
     }
 
     public class GambleCostData
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_GambleType GambleType;
+        public Enum_GambleType GambleType;
 
         public ObscuredDouble BaseCost;
         public ObscuredDouble CostIncrease;
@@ -106,11 +106,11 @@ namespace GameBerry
 
         private Dictionary<ObscuredInt, WeightedRandomPicker<GambleGradeProbData>> _gambleGradePicker_Dic = new Dictionary<ObscuredInt, WeightedRandomPicker<GambleGradeProbData>>();
 
-        private Dictionary<V2Enum_ARR_SynergyType, Dictionary<V2Enum_Grade, List<GambleSkillProbData>>> _gambleSkillCardGradeProbData_Dic = new Dictionary<V2Enum_ARR_SynergyType, Dictionary<V2Enum_Grade, List<GambleSkillProbData>>>();
+        private Dictionary<Enum_SynergyType, Dictionary<V2Enum_Grade, List<GambleSkillProbData>>> _gambleSkillCardGradeProbData_Dic = new Dictionary<Enum_SynergyType, Dictionary<V2Enum_Grade, List<GambleSkillProbData>>>();
 
 
 
-        private Dictionary<V2Enum_ARR_GambleSlotType, List<GambleSlotProbData>> _gambleSlotProbData_Dic = new Dictionary<V2Enum_ARR_GambleSlotType, List<GambleSlotProbData>>();
+        private Dictionary<Enum_GambleSlotType, List<GambleSlotProbData>> _gambleSlotProbData_Dic = new Dictionary<Enum_GambleSlotType, List<GambleSlotProbData>>();
 
         private Dictionary<ObscuredInt, List<GambleSlotIncreaseValueData>> _gambleSlotIncreaseValueData_Dic = new Dictionary<ObscuredInt, List<GambleSlotIncreaseValueData>>();
 
@@ -118,7 +118,7 @@ namespace GameBerry
 
         private GambleProbChanceData _gambleProbChanceData;
 
-        private Dictionary<V2Enum_ARR_GambleType, GambleCostData> _gambleCost_Dic = new Dictionary<V2Enum_ARR_GambleType, GambleCostData>();
+        private Dictionary<Enum_GambleType, GambleCostData> _gambleCost_Dic = new Dictionary<Enum_GambleType, GambleCostData>();
 
         public override async UniTask InitData_Async()
         {
@@ -148,7 +148,7 @@ namespace GameBerry
 
                 gambleCardData.ResourceIndex = rows[i]["ResourceIndex"].ToString().ToInt();
 
-                gambleCardData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                gambleCardData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
 
                 gambleCardData.GambleProb = rows[i]["CardGambleProb"].ToString().ToDouble();
                 gambleCardData.GambleProbWeight = rows[i]["CardGambleWeight"].ToString().ToDouble();
@@ -204,7 +204,7 @@ namespace GameBerry
 
                 gambleSkillProbData.Index = rows[i]["Index"].ToString().ToInt();
 
-                gambleSkillProbData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                gambleSkillProbData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
 
                 gambleSkillProbData.GambleGrade = rows[i]["GambleGrade"].ToString().ToInt().IntToEnum32<V2Enum_Grade>();
 
@@ -256,9 +256,9 @@ namespace GameBerry
                 GambleSlotProbData gambleSlotProbData = new GambleSlotProbData();
 
                 gambleSlotProbData.Index = rows[i]["Index"].ToString().ToInt();
-                gambleSlotProbData.SlotType = rows[i]["SlotType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_GambleSlotType>();
+                gambleSlotProbData.SlotType = rows[i]["SlotType"].ToString().ToInt().IntToEnum32<Enum_GambleSlotType>();
                 gambleSlotProbData.ResourceIndex = rows[i]["ResourceIndex"].ToString().ToInt();
-                gambleSlotProbData.GambleSlotGrade = rows[i]["GambleSlotGrade"].ToString().ToInt().IntToEnum32<V2Enum_ARR_GambleSlotGrade>();
+                gambleSlotProbData.GambleSlotGrade = rows[i]["GambleSlotGrade"].ToString().ToInt().IntToEnum32<Enum_GambleSlotGrade>();
 
                 gambleSlotProbData.GambleProb = rows[i]["GambleProb"].ToString().ToDouble();
                 gambleSlotProbData.GambleProbWeight = rows[i]["GambleProbWeight"].ToString().ToDouble();
@@ -283,7 +283,7 @@ namespace GameBerry
 
                 gambleSlotIncreaseValueData.Index = rows[i]["Index"].ToString().ToInt();
                 gambleSlotIncreaseValueData.StatSlotIndex = rows[i]["StatSlotIndex"].ToString().ToInt();
-                gambleSlotIncreaseValueData.GambleSlotGrade = rows[i]["GambleSlotGrade"].ToString().ToInt().IntToEnum32<V2Enum_ARR_GambleSlotGrade>();
+                gambleSlotIncreaseValueData.GambleSlotGrade = rows[i]["GambleSlotGrade"].ToString().ToInt().IntToEnum32<Enum_GambleSlotGrade>();
 
                 gambleSlotIncreaseValueData.BaseStat = rows[i]["BaseStat"].ToString().ToInt().IntToEnum32<V2Enum_Stat>();
 
@@ -336,16 +336,16 @@ namespace GameBerry
 
                 for (int j = 11; j <= 15; ++j)
                 {
-                    V2Enum_ARR_GambleSlotGrade v2Enum_ARR_GambleSlotGrade = j.IntToEnum32<V2Enum_ARR_GambleSlotGrade>();
+                    Enum_GambleSlotGrade Enum_GambleSlotGrade = j.IntToEnum32<Enum_GambleSlotGrade>();
 
-                    if (_gambleProbChanceData.SlotGradeChance.ContainsKey(v2Enum_ARR_GambleSlotGrade) == true)
+                    if (_gambleProbChanceData.SlotGradeChance.ContainsKey(Enum_GambleSlotGrade) == true)
                         continue;
 
                     try
                     {
                         ObscuredDouble goodstype = rows[i][string.Format("Slot{0}GradeChance", j)].ToString().ToDouble();
 
-                        _gambleProbChanceData.SlotGradeChance.Add(v2Enum_ARR_GambleSlotGrade, goodstype);
+                        _gambleProbChanceData.SlotGradeChance.Add(Enum_GambleSlotGrade, goodstype);
                     }
                     catch
                     {
@@ -371,7 +371,7 @@ namespace GameBerry
                 GambleCostData gambleSlotIncreaseValueData = new GambleCostData();
 
                 gambleSlotIncreaseValueData.Index = rows[i]["Index"].ToString().ToInt();
-                gambleSlotIncreaseValueData.GambleType = rows[i]["GambleType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_GambleType>();
+                gambleSlotIncreaseValueData.GambleType = rows[i]["GambleType"].ToString().ToInt().IntToEnum32<Enum_GambleType>();
 
                 gambleSlotIncreaseValueData.BaseCost = rows[i]["BaseCost"].ToString().ToDouble();
                 gambleSlotIncreaseValueData.CostIncrease = rows[i]["CostIncrease"].ToString().ToDouble();
@@ -420,18 +420,18 @@ namespace GameBerry
             return null;
         }
         //------------------------------------------------------------------------------------
-        public List<GambleSkillProbData> GetGambleSkillProbs(V2Enum_ARR_SynergyType v2Enum_ARR_Card, V2Enum_Grade V2Enum_Grade)
+        public List<GambleSkillProbData> GetGambleSkillProbs(Enum_SynergyType Enum_Card, V2Enum_Grade V2Enum_Grade)
         {
-            if (_gambleSkillCardGradeProbData_Dic.ContainsKey(v2Enum_ARR_Card) == false)
+            if (_gambleSkillCardGradeProbData_Dic.ContainsKey(Enum_Card) == false)
                 return null;
 
-            if (_gambleSkillCardGradeProbData_Dic[v2Enum_ARR_Card].ContainsKey(V2Enum_Grade) == false)
+            if (_gambleSkillCardGradeProbData_Dic[Enum_Card].ContainsKey(V2Enum_Grade) == false)
                 return null;
 
-            return _gambleSkillCardGradeProbData_Dic[v2Enum_ARR_Card][V2Enum_Grade];
+            return _gambleSkillCardGradeProbData_Dic[Enum_Card][V2Enum_Grade];
         }
         //------------------------------------------------------------------------------------
-        public Dictionary<V2Enum_ARR_GambleSlotType, List<GambleSlotProbData>> GetGambleSlotProbData_Dic()
+        public Dictionary<Enum_GambleSlotType, List<GambleSlotProbData>> GetGambleSlotProbData_Dic()
         {
             return _gambleSlotProbData_Dic;
         }
@@ -454,10 +454,10 @@ namespace GameBerry
             return _gambleProbChanceData;
         }
         //------------------------------------------------------------------------------------
-        public GambleCostData GetGambleCostData(V2Enum_ARR_GambleType v2Enum_ARR_GambleType)
+        public GambleCostData GetGambleCostData(Enum_GambleType Enum_GambleType)
         {
-            if (_gambleCost_Dic.ContainsKey(v2Enum_ARR_GambleType) == true)
-                return _gambleCost_Dic[v2Enum_ARR_GambleType];
+            if (_gambleCost_Dic.ContainsKey(Enum_GambleType) == true)
+                return _gambleCost_Dic[Enum_GambleType];
 
             return null;
         }

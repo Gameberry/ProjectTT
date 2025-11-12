@@ -145,18 +145,6 @@ namespace GameBerry.UI
                 m_uIDungeonSweepPopupElement.Load_Element();
                 m_uIDungeonSweepPopupElement.Init(SetRefreshDungeonDetail_Sweep);
             }
-            
-            for (int i = 0; i < Define.HellDungeonClearRewardGroup.Count; ++i)
-            {
-                if (m_uIHellDungeonGoodsRewardIconElement.Count > i)
-                {
-                    RewardData rewardData = new RewardData();
-                    rewardData.V2Enum_Goods = V2Enum_Goods.Point;
-                    rewardData.Index = Define.HellDungeonClearRewardGroup[i];
-                    rewardData.Amount = 0;
-                    m_uIHellDungeonGoodsRewardIconElement[i].SetRewardElement(rewardData);
-                }
-            }
 
             Message.AddListener<GameBerry.Event.SetDungeonSelectMsg>(SetDungeonSelect);
         }
@@ -227,7 +215,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void SetDungeonSelect(GameBerry.Event.SetDungeonSelectMsg msg)
         {
-            SetDungeonMode(msg.v2Enum_Dungeon);
+            SetDungeonMode(msg.EnumDungeon);
         }
         //------------------------------------------------------------------------------------
         public void SetRefreshDungeonDetail_Sweep()
@@ -235,9 +223,9 @@ namespace GameBerry.UI
             SetDungeonMode(m_dungeonData.DungeonType);
         }
         //------------------------------------------------------------------------------------
-        private void SetDungeonMode(V2Enum_Dungeon v2Enum_Dungeon)
+        private void SetDungeonMode(Enum_Dungeon enumDungeon)
         {
-            m_dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(v2Enum_Dungeon);
+            m_dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(enumDungeon);
 
             if (m_dungeonData == null)
                 return;
@@ -265,8 +253,8 @@ namespace GameBerry.UI
 
             switch (m_dungeonData.DungeonType)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         if (m_defficultyBossName != null)
                             Managers.LocalStringManager.Instance.SetLocalizeText(m_defficultyBossName, "monster/1055/name");
@@ -539,10 +527,8 @@ namespace GameBerry.UI
         {
             switch (m_dungeonData.DungeonType)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
-                case V2Enum_Dungeon.TowerDungeon:
-                case V2Enum_Dungeon.GoldDungeon:
-                case V2Enum_Dungeon.RuneDungeon:
+                case Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         if (m_dungeonData == null || m_dungeonModeBase == null)
                             return;

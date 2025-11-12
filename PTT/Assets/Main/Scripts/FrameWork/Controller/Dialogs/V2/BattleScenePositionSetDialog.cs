@@ -65,7 +65,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_ExitDungeonBtn()
         {
-            Managers.BattleSceneManager.Instance.ChangeBattleScene(V2Enum_Dungeon.LobbyScene);
+            Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.LobbyScene);
         }
         //------------------------------------------------------------------------------------
         private void OnClick_PlayBtn()

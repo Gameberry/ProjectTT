@@ -23,7 +23,7 @@ namespace GameBerry.Managers
         private Event.NoticeResearchCompleteMsg m_noticeResearchCompleteMsg = new Event.NoticeResearchCompleteMsg();
         private GameBerry.Event.RefreshCharacterInfo_StatMsg _refreshCharacterInfo_StatMsg = new Event.RefreshCharacterInfo_StatMsg();
 
-        private Dictionary<V2Enum_ARR_SynergyType, ObscuredInt> _synergyGambleLevel = new Dictionary<V2Enum_ARR_SynergyType, ObscuredInt>();
+        private Dictionary<Enum_SynergyType, ObscuredInt> _synergyGambleLevel = new Dictionary<Enum_SynergyType, ObscuredInt>();
 
         private Dictionary<V2Enum_ResearchType, ObscuredDouble> _researchValues = new Dictionary<V2Enum_ResearchType, ObscuredDouble>();
 
@@ -49,10 +49,10 @@ namespace GameBerry.Managers
 
             if (_synergyGambleLevel.Count == 0)
             {
-                for (int i = V2Enum_ARR_SynergyType.Red.Enum32ToInt(); i < V2Enum_ARR_SynergyType.Max.Enum32ToInt(); ++i)
+                for (int i = Enum_SynergyType.Red.Enum32ToInt(); i < Enum_SynergyType.Max.Enum32ToInt(); ++i)
                 {
-                    V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = i.IntToEnum32<V2Enum_ARR_SynergyType>();
-                    _synergyGambleLevel.Add(v2Enum_ARR_SynergyType, 1);
+                    Enum_SynergyType Enum_SynergyType = i.IntToEnum32<Enum_SynergyType>();
+                    _synergyGambleLevel.Add(Enum_SynergyType, 1);
                 }
             }
 
@@ -370,29 +370,29 @@ namespace GameBerry.Managers
             return playerResearchInfo.Level;
         }
         //------------------------------------------------------------------------------------
-        public V2Enum_ARR_SynergyType ConvertResearchTypeToSynergyType(V2Enum_ResearchType v2Enum_ResearchType)
+        public Enum_SynergyType ConvertResearchTypeToSynergyType(V2Enum_ResearchType v2Enum_ResearchType)
         {
             switch (v2Enum_ResearchType)
             {
                 case V2Enum_ResearchType.FireGambleLevel:
                     {
-                        return V2Enum_ARR_SynergyType.Red;
+                        return Enum_SynergyType.Red;
                     }
                 case V2Enum_ResearchType.GoldGambleLevel:
                     {
-                        return V2Enum_ARR_SynergyType.Yellow;
+                        return Enum_SynergyType.Yellow;
                     }
                 case V2Enum_ResearchType.WaterGambleLevel:
                     {
-                        return V2Enum_ARR_SynergyType.Blue;
+                        return Enum_SynergyType.Blue;
                     }
                 case V2Enum_ResearchType.ThunderGambleLevel:
                     {
-                        return V2Enum_ARR_SynergyType.White;
+                        return Enum_SynergyType.White;
                     }
             }
 
-            return V2Enum_ARR_SynergyType.Max;
+            return Enum_SynergyType.Max;
         }
         //------------------------------------------------------------------------------------
         public void InCreaseResearchValue(V2Enum_ResearchType v2Enum_ResearchType, double effectValue, bool noticestat = true)
@@ -411,10 +411,10 @@ namespace GameBerry.Managers
                 case V2Enum_ResearchType.WaterGambleLevel:
                 case V2Enum_ResearchType.ThunderGambleLevel:
                     {
-                        V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = ConvertResearchTypeToSynergyType(v2Enum_ResearchType);
+                        Enum_SynergyType Enum_SynergyType = ConvertResearchTypeToSynergyType(v2Enum_ResearchType);
                         int setlevel = effectValue.ToInt();
-                        if (_synergyGambleLevel[v2Enum_ARR_SynergyType] <= setlevel)
-                            _synergyGambleLevel[v2Enum_ARR_SynergyType] = setlevel;
+                        if (_synergyGambleLevel[Enum_SynergyType] <= setlevel)
+                            _synergyGambleLevel[Enum_SynergyType] = setlevel;
 
                         break;
                     }
@@ -503,12 +503,12 @@ namespace GameBerry.Managers
             return _researchValues[v2Enum_ResearchType];
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyGambleLevel(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public int GetSynergyGambleLevel(Enum_SynergyType Enum_SynergyType)
         {
-            if (_synergyGambleLevel.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergyGambleLevel.ContainsKey(Enum_SynergyType) == false)
                 return 1;
 
-            return _synergyGambleLevel[v2Enum_ARR_SynergyType];
+            return _synergyGambleLevel[Enum_SynergyType];
         }
         //------------------------------------------------------------------------------------
         public List<List<ResearchData>> GetResearchDatas()
@@ -601,7 +601,7 @@ namespace GameBerry.Managers
             if (IsSynergyResearchData(researchData) == true)
             {
                 int sytype = researchData.ResearchEffectType.Enum32ToInt();
-                int level = GetSynergyGambleLevel(sytype.IntToEnum32<V2Enum_ARR_SynergyType>()) + 1;
+                int level = GetSynergyGambleLevel(sytype.IntToEnum32<Enum_SynergyType>()) + 1;
 
                 return ConvertDisplayString(researchData.ResearchEffectType, level);
             }

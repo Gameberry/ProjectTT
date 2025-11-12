@@ -28,7 +28,7 @@ namespace GameBerry
 
         private MonsterSetLocalTable _monsterSetLocalTable = null;
 
-        private V2Enum_Dungeon _v2Enum_Dungeon = V2Enum_Dungeon.None;
+        private Enum_Dungeon _enumDungeon = Enum_Dungeon.None;
         private int _v2Enum_Dungeon_number = 1;
 
         private DungeonData dungeonData;
@@ -68,12 +68,12 @@ namespace GameBerry
 
             _spawnNexus = false;
 
-            _v2Enum_Dungeon = Managers.BattleSceneManager.Instance.BattleType;
+            _enumDungeon = Managers.BattleSceneManager.Instance.BattleType;
 
-            _v2Enum_Dungeon_number = _v2Enum_Dungeon.Enum32ToInt() - 10;
+            _v2Enum_Dungeon_number = _enumDungeon.Enum32ToInt() - 10;
 
-            m_currentDungeonData = Managers.DungeonDataManager.Instance.GetEnterDungeonData(_v2Enum_Dungeon);
-            dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(_v2Enum_Dungeon);
+            m_currentDungeonData = Managers.DungeonDataManager.Instance.GetEnterDungeonData(_enumDungeon);
+            dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(_enumDungeon);
 
 
             float startpos = StaticResource.Instance.GetBattleModeStaticData().Stage_StartXPos;
@@ -126,14 +126,14 @@ namespace GameBerry
 
             //UI.IDialog.RequestDialogEnter<UI.InGameGambleDialog>();
 
-            Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.Red, Define.SynergyDungeonCharge);
-            Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.Blue, Define.SynergyDungeonCharge);
+            Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.Red, Define.SynergyDungeonCharge);
+            Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.Blue, Define.SynergyDungeonCharge);
 
             if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == true)
-               Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.Yellow, Define.SynergyDungeonCharge);
+               Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.Yellow, Define.SynergyDungeonCharge);
 
             if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == true)
-                Managers.SynergyManager.Instance.AddSkillSynergy(V2Enum_ARR_SynergyType.White, Define.SynergyDungeonCharge);
+                Managers.SynergyManager.Instance.AddSkillSynergy(Enum_SynergyType.White, Define.SynergyDungeonCharge);
 
             UI.IDialog.RequestDialogEnter<UI.InGameGambleSynergyDialog>();
 
@@ -184,7 +184,7 @@ namespace GameBerry
             if (_isPlay == false)
                 return;
 
-            Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.x1);
+            Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.x1);
             _isPlay = false;
 
             UI.IDialog.RequestDialogExit<UI.InGameGambleDialog>();
@@ -210,14 +210,14 @@ namespace GameBerry
                 await UniTask.NextFrame();
             }
 
-            _resultBattleStageMsg.v2Enum_Dungeon = _v2Enum_Dungeon;
+            _resultBattleStageMsg.EnumDungeon = _enumDungeon;
             _resultBattleStageMsg.Win = win;
             _resultBattleStageMsg.PlayTime = Time.time - _playStartTime;
             _resultBattleStageMsg.WaveRewardList.Clear();
             _resultBattleStageMsg.ApplyAdIncreaseRewardMode = false;
             _resultBattleStageMsg.ApplyAdIncreaseRewardValue = 0;
             _resultBattleStageMsg.currentRecord = 0;
-            _resultBattleStageMsg.prevRecord = Managers.DungeonDataManager.Instance.GetDungeonRecord(_v2Enum_Dungeon).ToInt();
+            _resultBattleStageMsg.prevRecord = Managers.DungeonDataManager.Instance.GetDungeonRecord(_enumDungeon).ToInt();
 
             if (m_currentDungeonData != null)
             {
@@ -232,7 +232,7 @@ namespace GameBerry
                 }
 
                 if (win == true)
-                    Managers.DungeonDataManager.Instance.SetDungeonRecord(_v2Enum_Dungeon, m_currentDungeonData.DungeonNumber);
+                    Managers.DungeonDataManager.Instance.SetDungeonRecord(_enumDungeon, m_currentDungeonData.DungeonNumber);
                 //ThirdPartyLog.Instance.SendLog_StageResult(_currentWaveRewardData.StageNumber, _currentWaveRewardData.WaveNumber, descendList);
                 //Managers.MapManager.Instance.SetResultStageInfo(_currentWaveRewardData);
 
@@ -290,7 +290,7 @@ namespace GameBerry
 
             GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.StageChallenge, 1);
             GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.MonterKillCount, _monsterKillCount);
-            GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.CardGambleCount, Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card));
+            GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.CardGambleCount, Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card));
             GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.SynergyCombineClear, Managers.SynergyManager.Instance.GetCombineClearCount());
 
             GameBerry.Managers.PassManager.Instance.AddMonsterKillCount(_monsterKillCount);
@@ -330,7 +330,7 @@ namespace GameBerry
                 bossMonster.gameObject.SetActive(true);
                 bossMonster.SetCreatureData(Managers.CreatureManager.Instance.GetCreatureData(monsterSetCreatureData.MonsterIndex), 1);
                 bossMonster.SetOverrideStat(overrideStat);
-                bossMonster.ChangeCharacterLookAtDirection(Enum_ARR_LookDirection.Left);
+                bossMonster.ChangeCharacterLookAtDirection(Enum_LookDirection.Left);
                 bossMonster.ReadyCreature();
             }
 
@@ -353,7 +353,7 @@ namespace GameBerry
 
             if (creatureController.IFFType == IFFType.IFF_Foe)
             {
-                if (_v2Enum_Dungeon == V2Enum_Dungeon.DiamondDungeon)
+                if (_enumDungeon == Enum_Dungeon.DiamondDungeon)
                     Managers.GoodsDropDirectionManager.Instance.ShowDropIn_World(V2Enum_Goods.Point, V2Enum_Point.Dia.Enum32ToInt(), creatureController.transform.position, m_currentDungeonData.ClearRewardParam2.ToInt());
 
                 _monsterKillCount++;

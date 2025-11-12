@@ -118,9 +118,9 @@ namespace GameBerry.UI
             _index = index;
         }
         //------------------------------------------------------------------------------------
-        public void SetElement(V2Enum_ARR_SynergyType v2Enum_ARR_Card, V2Enum_Grade V2Enum_Grade, MainSkillData gambleSkillData)
+        public void SetElement(Enum_SynergyType Enum_Card, V2Enum_Grade V2Enum_Grade, MainSkillData gambleSkillData)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_Card);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_Card);
             //if (_gambleCardTypeImage != null)
             //    _gambleCardTypeImage.sprite = gambleCardSprite.CardSprite;
 
@@ -160,7 +160,7 @@ namespace GameBerry.UI
 
             _currentGambleSkillData = gambleSkillData;
 
-            if (gambleSkillData.SynergyType == V2Enum_ARR_SynergyType.Max)
+            if (gambleSkillData.SynergyType == Enum_SynergyType.Max)
             {
                 if (_gambleCardTypeImage != null)
                     _gambleCardTypeImage.color = Color.yellow;
@@ -180,7 +180,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         public void ShowCanLevelUp()
         {
-            if (Managers.MapManager.Instance.NeedTutotial1() == true && Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card) == 1)
+            if (Managers.MapManager.Instance.NeedTutotial1() == true && Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card) == 1)
             {
                 if (_canLevelUpGroup != null)
                     _canLevelUpGroup.gameObject.SetActive(false);
@@ -189,7 +189,7 @@ namespace GameBerry.UI
 
             if (_currentGambleSkillData != null)
             {
-                if (_currentGambleSkillData.SynergyType == V2Enum_ARR_SynergyType.Max)
+                if (_currentGambleSkillData.SynergyType == Enum_SynergyType.Max)
                 {
                     if (_canLevelUpGroup != null)
                         _canLevelUpGroup.gameObject.SetActive(false);

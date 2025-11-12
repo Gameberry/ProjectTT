@@ -70,9 +70,9 @@ namespace GameBerry.UI
             //int dungeon = 0;
             //dungeon = msg.ContentDetailList.Enum32ToInt() - ContentDetailList.Dungeon.Enum32ToInt() + 10;
 
-            //V2Enum_Dungeon v2Enum_Dungeon = dungeon.IntToEnum32<V2Enum_Dungeon>();
+            //Enum_Dungeon EnumDungeon = dungeon.IntToEnum32<Enum_Dungeon>();
 
-            //OnClick_DungeonEnterBtn(v2Enum_Dungeon);
+            //OnClick_DungeonEnterBtn(EnumDungeon);
         }
         //------------------------------------------------------------------------------------
     }

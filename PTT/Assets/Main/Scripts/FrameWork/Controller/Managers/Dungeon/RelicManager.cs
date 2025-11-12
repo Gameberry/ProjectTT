@@ -406,7 +406,7 @@ namespace GameBerry.Managers
                     if (skillInfo == null)
                         continue;
 
-                    Managers.BattleSceneManager.Instance.AddGambleSkill(descendData.SynergySkillData, V2Enum_ARR_SynergyType.Max, skillInfo);
+                    Managers.BattleSceneManager.Instance.AddGambleSkill(descendData.SynergySkillData, Enum_SynergyType.Max, skillInfo);
                 }
             }
         }

@@ -9,14 +9,14 @@ namespace GameBerry.Managers
 {
     public class SynergyManager : MonoSingleton<SynergyManager>
     {
-        private Dictionary<V2Enum_ARR_SynergyType, List<MainSkillData>> _synergySkillList = new Dictionary<V2Enum_ARR_SynergyType, List<MainSkillData>>();
-        private Dictionary<V2Enum_ARR_SynergyType, int> _synergyStack = new Dictionary<V2Enum_ARR_SynergyType, int>();
-        private Dictionary<V2Enum_ARR_SynergyType, int> _synergyLevel = new Dictionary<V2Enum_ARR_SynergyType, int>();
+        private Dictionary<Enum_SynergyType, List<MainSkillData>> _synergySkillList = new Dictionary<Enum_SynergyType, List<MainSkillData>>();
+        private Dictionary<Enum_SynergyType, int> _synergyStack = new Dictionary<Enum_SynergyType, int>();
+        private Dictionary<Enum_SynergyType, int> _synergyLevel = new Dictionary<Enum_SynergyType, int>();
         private List<SynergyCombineData> _equipedSynergyCombineSkillList = new List<SynergyCombineData>();
         private List<SynergyCombineData> _readySynergyCombineSkillList = new List<SynergyCombineData>();
-        private Dictionary<V2Enum_ARR_SynergyType, int> _synergyUnlockTier = new Dictionary<V2Enum_ARR_SynergyType, int>();
+        private Dictionary<Enum_SynergyType, int> _synergyUnlockTier = new Dictionary<Enum_SynergyType, int>();
 
-        public List<V2Enum_ARR_SynergyType> SynergySortView = new List<V2Enum_ARR_SynergyType>();
+        public List<Enum_SynergyType> SynergySortView = new List<Enum_SynergyType>();
 
         private Event.SetInGameRewardPopupMsg m_setInGameRewardPopupMsg = new Event.SetInGameRewardPopupMsg();
         private GameBerry.Event.ShowGambleSynergyDetailMsg _showGambleSynergyDetailMsg = new Event.ShowGambleSynergyDetailMsg();
@@ -37,11 +37,11 @@ namespace GameBerry.Managers
         //private GameBerry.Event.ShowTotalExpDetailMsg _showTotalExpDetailMsg = new Event.ShowTotalExpDetailMsg();
 
         // 플레이어 장착 시너지 <SlotID, ArrrSkillId>
-        public Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>> _equipEnterSynergyList = new Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>>();
+        public Dictionary<Enum_SynergyType, List<SynergyEffectData>> _equipEnterSynergyList = new Dictionary<Enum_SynergyType, List<SynergyEffectData>>();
 
         private List<string> m_changeInfoUpdate = new List<string>();
 
-        public Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>> _newSynergyDatas = new Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>>();
+        public Dictionary<Enum_SynergyType, List<SynergyEffectData>> _newSynergyDatas = new Dictionary<Enum_SynergyType, List<SynergyEffectData>>();
 
 
         // totalLevel
@@ -60,10 +60,10 @@ namespace GameBerry.Managers
             m_changeInfoUpdate.Add(Define.PlayerSynergyInfoTable);
             m_changeInfoUpdate.Add(Define.PlayerPointTable);
 
-            SynergySortView.Add(V2Enum_ARR_SynergyType.Red);
-            SynergySortView.Add(V2Enum_ARR_SynergyType.Blue);
-            SynergySortView.Add(V2Enum_ARR_SynergyType.Yellow);
-            SynergySortView.Add(V2Enum_ARR_SynergyType.White);
+            SynergySortView.Add(Enum_SynergyType.Red);
+            SynergySortView.Add(Enum_SynergyType.Blue);
+            SynergySortView.Add(Enum_SynergyType.Yellow);
+            SynergySortView.Add(Enum_SynergyType.White);
 
             SynergyOperator.Init();
         }
@@ -204,7 +204,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public bool RefreshSynergyRedDot()
         {
-            List<V2Enum_ARR_SynergyType> needRedDotList = new List<V2Enum_ARR_SynergyType>();
+            List<Enum_SynergyType> needRedDotList = new List<Enum_SynergyType>();
 
             foreach (var pair in SynergyContainer.SynergyInfo)
             {
@@ -308,14 +308,14 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         #region SynergyData
         //------------------------------------------------------------------------------------
-        public Dictionary<V2Enum_ARR_SynergyType, SynergyData> GetAllGambleSynergyData()
+        public Dictionary<Enum_SynergyType, SynergyData> GetAllGambleSynergyData()
         {
             return SynergyOperator.GetAllGambleSynergyData();
         }
         //------------------------------------------------------------------------------------
-        public SynergyData GetGambleSynergyData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public SynergyData GetGambleSynergyData(Enum_SynergyType Enum_GambleSynergyType)
         {
-            return SynergyOperator.GetGambleSynergyData(v2Enum_ARR_GambleSynergyType);
+            return SynergyOperator.GetGambleSynergyData(Enum_GambleSynergyType);
         }
         //------------------------------------------------------------------------------------
         public Dictionary<ObscuredInt, SynergyEffectData> GetAllSynergyEffectDatas()
@@ -328,27 +328,27 @@ namespace GameBerry.Managers
             return SynergyOperator.GetSynergyEffectData(index);
         }
         //------------------------------------------------------------------------------------
-        public Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>> GetAllGambleSynergyEffectDataList()
+        public Dictionary<Enum_SynergyType, List<SynergyEffectData>> GetAllGambleSynergyEffectDataList()
         {
             return SynergyOperator.GetAllGambleSynergyEffectDataList();
         }
         //------------------------------------------------------------------------------------
-        public List<SynergyEffectData> GetGambleSynergyEffectDataList(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public List<SynergyEffectData> GetGambleSynergyEffectDataList(Enum_SynergyType Enum_GambleSynergyType)
         {
-            return SynergyOperator.GetGambleSynergyEffectDataList(v2Enum_ARR_GambleSynergyType);
+            return SynergyOperator.GetGambleSynergyEffectDataList(Enum_GambleSynergyType);
         }
         //------------------------------------------------------------------------------------
-        public List<SynergyEffectData> GetInGameEquipSynergyEffectData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public List<SynergyEffectData> GetInGameEquipSynergyEffectData(Enum_SynergyType Enum_GambleSynergyType)
         {
-            if (_equipEnterSynergyList.ContainsKey(v2Enum_ARR_GambleSynergyType) == true)
-                return _equipEnterSynergyList[v2Enum_ARR_GambleSynergyType];
+            if (_equipEnterSynergyList.ContainsKey(Enum_GambleSynergyType) == true)
+                return _equipEnterSynergyList[Enum_GambleSynergyType];
 
             return null;
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyAccumLevel(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public int GetSynergyAccumLevel(Enum_SynergyType Enum_GambleSynergyType)
         {
-            List<SynergyEffectData> SynergyEffectDatas = GetGambleSynergyEffectDataList(v2Enum_ARR_GambleSynergyType);
+            List<SynergyEffectData> SynergyEffectDatas = GetGambleSynergyEffectDataList(Enum_GambleSynergyType);
 
             int accumLevel = 0;
 
@@ -361,9 +361,9 @@ namespace GameBerry.Managers
             return accumLevel;
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyAccumBreakLevel(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public int GetSynergyAccumBreakLevel(Enum_SynergyType Enum_GambleSynergyType)
         {
-            List<SynergyEffectData> SynergyEffectDatas = GetGambleSynergyEffectDataList(v2Enum_ARR_GambleSynergyType);
+            List<SynergyEffectData> SynergyEffectDatas = GetGambleSynergyEffectDataList(Enum_GambleSynergyType);
 
             int accumLevel = 0;
 
@@ -408,19 +408,19 @@ namespace GameBerry.Managers
             return 0;
         }
         //------------------------------------------------------------------------------------
-        public SynergyBreakthroughCostData GetSynergyLevelUpLimitData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, ObscuredInt level)
+        public SynergyBreakthroughCostData GetSynergyLevelUpLimitData(Enum_SynergyType Enum_GambleSynergyType, ObscuredInt level)
         {
-            return SynergyOperator.GetSynergyLevelUpLimitData(v2Enum_ARR_GambleSynergyType, level + 1);
+            return SynergyOperator.GetSynergyLevelUpLimitData(Enum_GambleSynergyType, level + 1);
         }
         //------------------------------------------------------------------------------------
-        //public Dictionary<ObscuredInt, SynergyLevelUpLimitData> GetAllSynergyGradeLevelUpLimitData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, V2Enum_Grade v2Enum_Grade)
+        //public Dictionary<ObscuredInt, SynergyLevelUpLimitData> GetAllSynergyGradeLevelUpLimitData(Enum_SynergyType Enum_GambleSynergyType, V2Enum_Grade v2Enum_Grade)
         //{
-        //    return SynergyOperator.GetAllSynergyGradeLevelUpLimitData(v2Enum_ARR_GambleSynergyType, v2Enum_Grade);
+        //    return SynergyOperator.GetAllSynergyGradeLevelUpLimitData(Enum_GambleSynergyType, v2Enum_Grade);
         //}
         ////------------------------------------------------------------------------------------
-        public SynergyDuplicationData GetSynergyDuplicationData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, V2Enum_Grade v2Enum_Grade)
+        public SynergyDuplicationData GetSynergyDuplicationData(Enum_SynergyType Enum_GambleSynergyType, V2Enum_Grade v2Enum_Grade)
         {
-            return SynergyOperator.GetSynergyDuplicationData(v2Enum_ARR_GambleSynergyType, v2Enum_Grade);
+            return SynergyOperator.GetSynergyDuplicationData(Enum_GambleSynergyType, v2Enum_Grade);
         }
         //------------------------------------------------------------------------------------
         public SynergyReinforceStatData GetSynergyReinforceStatData(ObscuredInt level)
@@ -470,15 +470,15 @@ namespace GameBerry.Managers
                 AddNewSynergyIcon(synergyEffectData);
         }
         //------------------------------------------------------------------------------------
-        public SynergyEffectData GetEquipSynergyEffect(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt tier)
+        public SynergyEffectData GetEquipSynergyEffect(Enum_SynergyType Enum_SynergyType, ObscuredInt tier)
         {
-            if (SynergyContainer.SynergyEquip_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (SynergyContainer.SynergyEquip_Dic.ContainsKey(Enum_SynergyType) == false)
                 return null;
 
-            if (SynergyContainer.SynergyEquip_Dic[v2Enum_ARR_SynergyType].ContainsKey(tier) == false)
+            if (SynergyContainer.SynergyEquip_Dic[Enum_SynergyType].ContainsKey(tier) == false)
                 return null;
 
-            return SynergyContainer.SynergyEquip_Dic[v2Enum_ARR_SynergyType][tier];
+            return SynergyContainer.SynergyEquip_Dic[Enum_SynergyType][tier];
         }
         //------------------------------------------------------------------------------------
         public V2Enum_Grade GetSynergyGrade(int index)
@@ -704,10 +704,10 @@ namespace GameBerry.Managers
             return SynergyContainer.NewSynergys.ContainsKey(synergyEffectData);
         }
         //------------------------------------------------------------------------------------
-        public int GetNewSynergyIconCount(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public int GetNewSynergyIconCount(Enum_SynergyType Enum_SynergyType)
         {
-            if (_newSynergyDatas.ContainsKey(v2Enum_ARR_SynergyType) == true)
-                return _newSynergyDatas[v2Enum_ARR_SynergyType].Count;
+            if (_newSynergyDatas.ContainsKey(Enum_SynergyType) == true)
+                return _newSynergyDatas[Enum_SynergyType].Count;
 
             return 0;
         }
@@ -726,23 +726,23 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-        public ContentDetailList ConvertRedDotEnum(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public ContentDetailList ConvertRedDotEnum(Enum_SynergyType Enum_SynergyType)
         {
-            switch (v2Enum_ARR_SynergyType)
+            switch (Enum_SynergyType)
             {
-                case V2Enum_ARR_SynergyType.Red:
+                case Enum_SynergyType.Red:
                     {
                         return ContentDetailList.LobbySynergy_Red;
                     }
-                case V2Enum_ARR_SynergyType.Yellow:
+                case Enum_SynergyType.Yellow:
                     {
                         return ContentDetailList.LobbySynergy_Yellow;
                     }
-                case V2Enum_ARR_SynergyType.Blue:
+                case Enum_SynergyType.Blue:
                     {
                         return ContentDetailList.LobbySynergy_Blue;
                     }
-                case V2Enum_ARR_SynergyType.White:
+                case Enum_SynergyType.White:
                     {
                         return ContentDetailList.LobbySynergy_White;
                     }
@@ -1134,12 +1134,12 @@ namespace GameBerry.Managers
             return false;
         }
         //------------------------------------------------------------------------------------
-        public bool IsOverLevel(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int tier, int targetLevel)
+        public bool IsOverLevel(Enum_SynergyType Enum_SynergyType, int tier, int targetLevel)
         {
             if (targetLevel <= 0)
                 return true;
 
-            SynergyEffectData synergyEffectData = GetEquipSynergyEffect(v2Enum_ARR_SynergyType, tier);
+            SynergyEffectData synergyEffectData = GetEquipSynergyEffect(Enum_SynergyType, tier);
             if (synergyEffectData == null)
                 return false;
 
@@ -1444,7 +1444,7 @@ null);
             return true;
         }
         //------------------------------------------------------------------------------------
-        public bool DoSynergyLevelReset(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public bool DoSynergyLevelReset(Enum_SynergyType Enum_SynergyType)
         {
             if (TheBackEnd.TheBackEndManager.Instance.CheckNetworkState() == false)
                 return false;
@@ -1460,10 +1460,10 @@ null);
             List<double> reward_quan = new List<double>();
             List<double> after_quan = new List<double>();
 
-            string equipedSynergy = SynergyContainer.GetSynergyInfoSerializeString(v2Enum_ARR_SynergyType);
+            string equipedSynergy = SynergyContainer.GetSynergyInfoSerializeString(Enum_SynergyType);
 
 
-            List<SynergyEffectData> synergyEffectDataList = GetGambleSynergyEffectDataList(v2Enum_ARR_SynergyType);
+            List<SynergyEffectData> synergyEffectDataList = GetGambleSynergyEffectDataList(Enum_SynergyType);
 
             int minusLevel = 0;
 
@@ -1551,7 +1551,7 @@ null);
 
             TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData_WaitSecond(m_changeInfoUpdate, null);
 
-            ThirdPartyLog.Instance.SendLog_log_skill_reset(v2Enum_ARR_SynergyType.Enum32ToInt(), equipedSynergy,
+            ThirdPartyLog.Instance.SendLog_log_skill_reset(Enum_SynergyType.Enum32ToInt(), equipedSynergy,
                 reward_type, reward_quan);
 
             SynergyContainer.SynergyEffectCurrentTotalLevel -= minusLevel;
@@ -1580,9 +1580,9 @@ null);
         {
             _synergyUnlockTier.Clear();
 
-            for (int synergy = V2Enum_ARR_SynergyType.Red.Enum32ToInt(); synergy < V2Enum_ARR_SynergyType.Max.Enum32ToInt(); ++synergy)
+            for (int synergy = Enum_SynergyType.Red.Enum32ToInt(); synergy < Enum_SynergyType.Max.Enum32ToInt(); ++synergy)
             {
-                V2Enum_ARR_SynergyType v2Enum_Stat = synergy.IntToEnum32<V2Enum_ARR_SynergyType>();
+                Enum_SynergyType v2Enum_Stat = synergy.IntToEnum32<Enum_SynergyType>();
                 List<SynergyEffectData> synergyEffectDatas = GetInGameEquipSynergyEffectData(v2Enum_Stat);
 
                 if (synergyEffectDatas == null)
@@ -1612,19 +1612,19 @@ null);
             }
         }
         //------------------------------------------------------------------------------------
-        public void AddGambleSynergy(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int stack, ref int descendEnhance)
+        public void AddGambleSynergy(Enum_SynergyType Enum_SynergyType, int stack, ref int descendEnhance)
         {
-            if (_synergyStack.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergyStack.ContainsKey(Enum_SynergyType) == false)
             {
-                _synergyStack.Add(v2Enum_ARR_SynergyType, 0);
+                _synergyStack.Add(Enum_SynergyType, 0);
             }
 
-            List<SynergyEffectData> synergyEffectDatas = GetInGameEquipSynergyEffectData(v2Enum_ARR_SynergyType);
+            List<SynergyEffectData> synergyEffectDatas = GetInGameEquipSynergyEffectData(Enum_SynergyType);
 
             if (synergyEffectDatas == null)
                 return;
 
-            int beforeStack = GetSynergyStack(v2Enum_ARR_SynergyType);
+            int beforeStack = GetSynergyStack(Enum_SynergyType);
             int afterStack = beforeStack + stack;
 
             int descend = 0;
@@ -1651,7 +1651,7 @@ null);
 
             descendEnhance = descend;
 
-            _synergyStack[v2Enum_ARR_SynergyType] = afterStack;
+            _synergyStack[Enum_SynergyType] = afterStack;
 
             for (int i = 0; i < synergyEffectDatas.Count; ++i)
             {
@@ -1664,14 +1664,14 @@ null);
                 }
             }
 
-            if (Managers.BattleSceneManager.Instance.BattleType != V2Enum_Dungeon.DiamondDungeon
-                && Managers.BattleSceneManager.Instance.BattleType != V2Enum_Dungeon.TowerDungeon)
+            if (Managers.BattleSceneManager.Instance.BattleType != Enum_Dungeon.DiamondDungeon
+                && Managers.BattleSceneManager.Instance.BattleType != Enum_Dungeon.TowerDungeon)
             {
                 _refreshReadyGambleSynergyCombineSkillMsg.ReadySynergyCombineSkillList = GetReadySynergyCombineSkillList();
                 Message.Send(_refreshReadyGambleSynergyCombineSkillMsg);
             }
 
-            Managers.BattleSceneManager.Instance.CurrentBattleScene.MyARRRControllers.RefreshSynergy(v2Enum_ARR_SynergyType, afterStack);
+            Managers.BattleSceneManager.Instance.CurrentBattleScene.MyARRRControllers.RefreshSynergy(Enum_SynergyType, afterStack);
 
             Managers.DescendManager.Instance.RefreshGambleSynergy();
         }
@@ -1689,21 +1689,21 @@ null);
 #endif
         public void AddARRRSynergySkill(SynergyEffectData synergyEffectData, bool saveLevel = true)
         {
-            V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = synergyEffectData.SynergyType;
+            Enum_SynergyType Enum_SynergyType = synergyEffectData.SynergyType;
 
-            if (_synergySkillList.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergySkillList.ContainsKey(Enum_SynergyType) == false)
             {
-                _synergySkillList.Add(v2Enum_ARR_SynergyType, new List<MainSkillData>());
+                _synergySkillList.Add(Enum_SynergyType, new List<MainSkillData>());
             }
 
-            if (_synergyLevel.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergyLevel.ContainsKey(Enum_SynergyType) == false)
             {
-                _synergyLevel.Add(v2Enum_ARR_SynergyType, 0);
+                _synergyLevel.Add(Enum_SynergyType, 0);
             }
 
             if (synergyEffectData.SynergySkillData != null)
             {
-                if (_synergySkillList[v2Enum_ARR_SynergyType].Contains(synergyEffectData.SynergySkillData) == false)
+                if (_synergySkillList[Enum_SynergyType].Contains(synergyEffectData.SynergySkillData) == false)
                 {
                     SkillInfo skillInfo = GetSynergyEffectSkillInfo(synergyEffectData);
                     Managers.BattleSceneManager.Instance.AddGambleSkill(synergyEffectData.SynergySkillData, synergyEffectData.SynergyType, skillInfo);
@@ -1735,84 +1735,84 @@ null);
                         }
                     }
 
-                    _synergySkillList[v2Enum_ARR_SynergyType].Add(synergyEffectData.SynergySkillData);
+                    _synergySkillList[Enum_SynergyType].Add(synergyEffectData.SynergySkillData);
                     if (saveLevel == true)
                     {
-                        if (_synergyLevel[v2Enum_ARR_SynergyType] < synergyEffectData.SynergyTier)
-                            _synergyLevel[v2Enum_ARR_SynergyType] = synergyEffectData.SynergyTier;
+                        if (_synergyLevel[Enum_SynergyType] < synergyEffectData.SynergyTier)
+                            _synergyLevel[Enum_SynergyType] = synergyEffectData.SynergyTier;
                     }
                     
                 }
             }
         }
         //------------------------------------------------------------------------------------
-        public void AddSkillSynergy(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, int stack)
+        public void AddSkillSynergy(Enum_SynergyType Enum_SynergyType, int stack)
         {
-            if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Max)
+            if (Enum_SynergyType == Enum_SynergyType.Max)
                 return;
             
             if (stack <= 0)
                 return;
 
-            _addSkillSynergyMsg.V2Enum_ARR_SynergyType = v2Enum_ARR_SynergyType;
+            _addSkillSynergyMsg.Enum_SynergyType = Enum_SynergyType;
 
-            _addSkillSynergyMsg.BeforeData = GetCurrentSynergyEffectData(v2Enum_ARR_SynergyType);
-            _addSkillSynergyMsg.BeforeStack = GetSynergyStack(v2Enum_ARR_SynergyType);
+            _addSkillSynergyMsg.BeforeData = GetCurrentSynergyEffectData(Enum_SynergyType);
+            _addSkillSynergyMsg.BeforeStack = GetSynergyStack(Enum_SynergyType);
 
-            AddGambleSynergy(v2Enum_ARR_SynergyType, stack, ref _addSkillSynergyMsg.DescendEnhance);
+            AddGambleSynergy(Enum_SynergyType, stack, ref _addSkillSynergyMsg.DescendEnhance);
 
-            _addSkillSynergyMsg.AfterData = GetCurrentSynergyEffectData(v2Enum_ARR_SynergyType);
-            _addSkillSynergyMsg.AfterStack = GetSynergyStack(v2Enum_ARR_SynergyType);
+            _addSkillSynergyMsg.AfterData = GetCurrentSynergyEffectData(Enum_SynergyType);
+            _addSkillSynergyMsg.AfterStack = GetSynergyStack(Enum_SynergyType);
 
             Message.Send(_addSkillSynergyMsg);
         }
         //------------------------------------------------------------------------------------
-        public void UseGambleSynergyStack(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, int stack)
+        public void UseGambleSynergyStack(Enum_SynergyType Enum_GambleSynergyType, int stack)
         {
-            if (_synergyStack.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
+            if (_synergyStack.ContainsKey(Enum_GambleSynergyType) == false)
                 return;
 
-            _synergyStack[v2Enum_ARR_GambleSynergyType] -= stack;
-            if (_synergyStack[v2Enum_ARR_GambleSynergyType] < 0)
-                _synergyStack[v2Enum_ARR_GambleSynergyType] = 0;
+            _synergyStack[Enum_GambleSynergyType] -= stack;
+            if (_synergyStack[Enum_GambleSynergyType] < 0)
+                _synergyStack[Enum_GambleSynergyType] = 0;
 
-            _refreshGambleSynergyMsg.v2Enum_ARR_GambleSynergyType = v2Enum_ARR_GambleSynergyType;
+            _refreshGambleSynergyMsg.Enum_GambleSynergyType = Enum_GambleSynergyType;
             Message.Send(_refreshGambleSynergyMsg);
         }
         //------------------------------------------------------------------------------------
-        public List<MainSkillData> GetSynergySkillList(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public List<MainSkillData> GetSynergySkillList(Enum_SynergyType Enum_GambleSynergyType)
         {
-            if (_synergySkillList.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
+            if (_synergySkillList.ContainsKey(Enum_GambleSynergyType) == false)
                 return null;
 
-            return _synergySkillList[v2Enum_ARR_GambleSynergyType];
+            return _synergySkillList[Enum_GambleSynergyType];
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyStack(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public int GetSynergyStack(Enum_SynergyType Enum_GambleSynergyType)
         {
-            if (_synergyStack.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
+            if (_synergyStack.ContainsKey(Enum_GambleSynergyType) == false)
                 return 0;
 
-            return _synergyStack[v2Enum_ARR_GambleSynergyType];
+            return _synergyStack[Enum_GambleSynergyType];
         }
         //------------------------------------------------------------------------------------
-        public int GetSynergyLevel(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public int GetSynergyLevel(Enum_SynergyType Enum_GambleSynergyType)
         {
-            SynergyEffectData currentSynergy = GetCurrentSynergyEffectData(v2Enum_ARR_GambleSynergyType);
+            SynergyEffectData currentSynergy = GetCurrentSynergyEffectData(Enum_GambleSynergyType);
             if (currentSynergy == null)
                 return 0;
 
             return currentSynergy.SynergyTier;
         }
         //------------------------------------------------------------------------------------
-        public SynergyEffectData GetCurrentSynergyEffectData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public SynergyEffectData GetCurrentSynergyEffectData(Enum_SynergyType Enum_GambleSynergyType)
         {
-            int stack = GetSynergyStack(v2Enum_ARR_GambleSynergyType);
+            int stack = GetSynergyStack(Enum_GambleSynergyType);
 
             if (stack == 0)
                 return null;
 
-            List<SynergyEffectData> gambleSynergyEffectDatas = GetInGameEquipSynergyEffectData(v2Enum_ARR_GambleSynergyType);
+            List<SynergyEffectData> gambleSynergyEffectDatas = GetInGameEquipSynergyEffectData(Enum_GambleSynergyType);
 
             if (gambleSynergyEffectDatas == null)
                 return null;
@@ -1820,10 +1820,10 @@ null);
             SynergyEffectData currentSynergy = null;
 
             // 임시 테스트로
-            if (_synergyLevel.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
+            if (_synergyLevel.ContainsKey(Enum_GambleSynergyType) == false)
                 return null;
 
-            currentSynergy = gambleSynergyEffectDatas.Find(x => x.SynergyTier == _synergyLevel[v2Enum_ARR_GambleSynergyType]);
+            currentSynergy = gambleSynergyEffectDatas.Find(x => x.SynergyTier == _synergyLevel[Enum_GambleSynergyType]);
 
             return currentSynergy;
             // 임시 테스트로
@@ -1838,9 +1838,9 @@ null);
             return currentSynergy;
         }
         //------------------------------------------------------------------------------------
-        public SynergyEffectData GetFirstSynergy(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public SynergyEffectData GetFirstSynergy(Enum_SynergyType Enum_GambleSynergyType)
         {
-            List<SynergyEffectData> gambleSynergyEffectDatas = GetInGameEquipSynergyEffectData(v2Enum_ARR_GambleSynergyType);
+            List<SynergyEffectData> gambleSynergyEffectDatas = GetInGameEquipSynergyEffectData(Enum_GambleSynergyType);
 
             if (gambleSynergyEffectDatas == null)
                 return null;
@@ -1851,10 +1851,10 @@ null);
             return null;
         }
         //------------------------------------------------------------------------------------
-        public void ShowSynergyDetailPopup(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, SynergyEffectData focusData = null)
+        public void ShowSynergyDetailPopup(Enum_SynergyType Enum_GambleSynergyType, SynergyEffectData focusData = null)
         {
             _showGambleSynergyDetailMsg.FocusData = focusData;
-            _showGambleSynergyDetailMsg.v2Enum_ARR_GambleSynergyType = v2Enum_ARR_GambleSynergyType;
+            _showGambleSynergyDetailMsg.Enum_GambleSynergyType = Enum_GambleSynergyType;
             Message.Send(_showGambleSynergyDetailMsg);
 
             //Managers.GuideInteractorManager.Instance.PlayCardTutorial = false;
@@ -1865,16 +1865,16 @@ null);
             if (gambleSkillData == null)
                 return null;
 
-            V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType = gambleSkillData.SynergyType;
+            Enum_SynergyType Enum_GambleSynergyType = gambleSkillData.SynergyType;
 
-            SynergyEffectData nextdata = GetNextSynergyData(v2Enum_ARR_GambleSynergyType);
+            SynergyEffectData nextdata = GetNextSynergyData(Enum_GambleSynergyType);
             if (nextdata == null)
                 return null;
 
-            if (nextdata.SynergyTier > GetInGameSynergyUnlockTier(v2Enum_ARR_GambleSynergyType))
+            if (nextdata.SynergyTier > GetInGameSynergyUnlockTier(Enum_GambleSynergyType))
                 return null;
 
-            int currentstack = GetSynergyStack(v2Enum_ARR_GambleSynergyType);
+            int currentstack = GetSynergyStack(Enum_GambleSynergyType);
 
             if (nextdata.SynergyCount <= currentstack + gambleSkillData.SynergyStack)
                 return nextdata;
@@ -1882,13 +1882,13 @@ null);
             return null;
         }
         //------------------------------------------------------------------------------------
-        public SynergyEffectData GetNextSynergyData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public SynergyEffectData GetNextSynergyData(Enum_SynergyType Enum_GambleSynergyType)
         {
-            SynergyEffectData gambleSynergyEffectData = GetCurrentSynergyEffectData(v2Enum_ARR_GambleSynergyType);
+            SynergyEffectData gambleSynergyEffectData = GetCurrentSynergyEffectData(Enum_GambleSynergyType);
 
             SynergyEffectData nextdata = null;
             if (gambleSynergyEffectData == null)
-                nextdata = GetFirstSynergy(v2Enum_ARR_GambleSynergyType);
+                nextdata = GetFirstSynergy(Enum_GambleSynergyType);
             else
                 nextdata = gambleSynergyEffectData.NextEffectData;
 
@@ -1907,11 +1907,11 @@ null);
             Message.Send(_showInterestTextMsg);
         }
         //------------------------------------------------------------------------------------
-        public int GetInGameSynergyUnlockTier(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public int GetInGameSynergyUnlockTier(Enum_SynergyType Enum_GambleSynergyType)
         {
-            if (_synergyUnlockTier.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
+            if (_synergyUnlockTier.ContainsKey(Enum_GambleSynergyType) == false)
                 return 0;
-            return _synergyUnlockTier[v2Enum_ARR_GambleSynergyType];
+            return _synergyUnlockTier[Enum_GambleSynergyType];
         }
         //------------------------------------------------------------------------------------
         #endregion
@@ -1977,8 +1977,8 @@ null);
         public bool AddSynergyCombineSkill(SynergyCombineData gambleSynergyCombineData)
         {
 
-            if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.DiamondDungeon
-                || Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.TowerDungeon)
+            if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.DiamondDungeon
+                || Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.TowerDungeon)
             {
                 return false;
             }

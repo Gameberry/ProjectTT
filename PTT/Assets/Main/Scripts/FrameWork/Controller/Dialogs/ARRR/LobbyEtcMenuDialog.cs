@@ -151,10 +151,6 @@ namespace GameBerry.UI
                         RequestDialogEnter<InGameInventoryDialog>();
                         break;
                     }
-                case ContentDetailList.Event:
-                    {
-                        break;
-                    }
             }
 
             OnClick_MenuBtn();

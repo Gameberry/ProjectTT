@@ -102,7 +102,7 @@ namespace GameBerry.UI
         protected override void OnLoad()
         {
             if (_gambleCardCost != null)
-                _gambleCardCost.text = string.Format("{0}", Managers.GambleManager.Instance.GetCost(V2Enum_ARR_GambleType.Card));
+                _gambleCardCost.text = string.Format("{0}", Managers.GambleManager.Instance.GetCost(Enum_GambleType.Card));
 
             if (_playGambleCard != null)
                 _playGambleCard.onClick.AddListener(OnClick_PlayGambleCard);
@@ -248,7 +248,7 @@ namespace GameBerry.UI
         {
             double currentGold = Managers.GoodsManager.Instance.GetGoodsAmount(V2Enum_Goods.Point, V2Enum_Point.InGameGold.Enum32ToInt());
 
-            double needcost = Managers.GambleManager.Instance.GetCost(V2Enum_ARR_GambleType.Card);
+            double needcost = Managers.GambleManager.Instance.GetCost(Enum_GambleType.Card);
 
             if (_playGambleDisableImage != null)
             {
@@ -277,7 +277,7 @@ namespace GameBerry.UI
                 return;
 
             double currentGold = Managers.GoodsManager.Instance.GetGoodsAmount(V2Enum_Goods.Point, V2Enum_Point.InGameGold.Enum32ToInt());
-            double needcost = Managers.GambleManager.Instance.GetCost(V2Enum_ARR_GambleType.Card);
+            double needcost = Managers.GambleManager.Instance.GetCost(Enum_GambleType.Card);
 
             if (needcost > currentGold)
                 return;
@@ -302,10 +302,10 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void PlayARRRTutorial(GameBerry.Event.PlayARRRTutorialMsg msg)
         {
-            if (msg.v2Enum_ARR_GambleType != V2Enum_EventType.TutoGambleCard)
+            if (msg.Enum_GambleType != V2Enum_EventType.TutoGambleCard)
                 return;
 
-            _tutorialMode = msg.v2Enum_ARR_GambleType;
+            _tutorialMode = msg.Enum_GambleType;
 
             Managers.GuideInteractorManager.Instance.StartGuideInteractor(V2Enum_EventType.TutoGambleCard);
 
@@ -322,7 +322,7 @@ namespace GameBerry.UI
                 _playGambleCard.gameObject.SetActive(true);
             }
 
-            Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+            Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
         }
         //------------------------------------------------------------------------------------
         private void PlaySlotTutorial(GameBerry.Event.PlaySlotTutorialMsg msg)
@@ -338,7 +338,7 @@ namespace GameBerry.UI
                 _tutorialBlack.gameObject.SetActive(true);
             }
 
-            //Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+            //Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
 
             PlayGasTutorial().Forget();
         }
@@ -376,7 +376,7 @@ namespace GameBerry.UI
                 _tutorialBlack.gameObject.SetActive(true);
             }
 
-            //Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+            //Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
         }
         //------------------------------------------------------------------------------------
         private void ShowInterestText(GameBerry.Event.ShowInterestTextMsg msg)

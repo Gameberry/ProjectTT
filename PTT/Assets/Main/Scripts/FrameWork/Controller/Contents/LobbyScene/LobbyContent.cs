@@ -61,9 +61,9 @@ namespace GameBerry.Contents
             Managers.AOSBackBtnManager.Instance.InitManager();
 
             if (MapContainer.MaxWaveClear == 0)
-                Managers.BattleSceneManager.Instance.ChangeBattleScene(V2Enum_Dungeon.StageScene);
+                Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
             else
-                Managers.BattleSceneManager.Instance.ChangeBattleScene(V2Enum_Dungeon.LobbyScene);
+                Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.LobbyScene);
             Managers.SynergyManager.Instance.RefreshSynergyRedDot();
             
 
@@ -72,7 +72,7 @@ namespace GameBerry.Contents
 
             Managers.JobManager.Instance.RefreshJobUpgradeReddot();
 
-            DungeonData dungeonTicketData = Managers.DungeonDataManager.Instance.GetDungeonData(V2Enum_Dungeon.DiamondDungeon);
+            DungeonData dungeonTicketData = Managers.DungeonDataManager.Instance.GetDungeonData(Enum_Dungeon.DiamondDungeon);
 
             if (Managers.GoodsManager.Instance.GetGoodsAmount(dungeonTicketData.EnterCostParam1) > 0)
                 Managers.RedDotManager.Instance.ShowRedDot(ContentDetailList.Dungeon);

@@ -10,7 +10,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
         public ObscuredInt JobTier;
 
         public ObscuredInt MainSkill;
@@ -69,7 +69,7 @@ namespace GameBerry
 
     public class JobLocalTable : LocalTableBase
     {
-        private Dictionary<V2Enum_ARR_SynergyType, Dictionary<ObscuredInt, JobData>> _jobDatas_Dic = new Dictionary<V2Enum_ARR_SynergyType, Dictionary<ObscuredInt, JobData>>();
+        private Dictionary<Enum_SynergyType, Dictionary<ObscuredInt, JobData>> _jobDatas_Dic = new Dictionary<Enum_SynergyType, Dictionary<ObscuredInt, JobData>>();
         private Dictionary<ObscuredInt, JobData> _jobDatas_Index_Dic = new Dictionary<ObscuredInt, JobData>();
 
         private Dictionary<ObscuredInt, JobLevelUpCostData> _jobLevelUpCostDatas_Dic = new Dictionary<ObscuredInt, JobLevelUpCostData>();
@@ -94,7 +94,7 @@ namespace GameBerry
 
                 jobData.Index = rows[i]["Index"].ToString().ToInt();
 
-                jobData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                jobData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
                 jobData.JobTier = rows[i]["JobTier"].ToString().ToInt();
 
                 jobData.MainSkill = rows[i]["MainSkill"].ToString().ToInt();
@@ -226,23 +226,23 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
-        public Dictionary<ObscuredInt, JobData> GetJobDatas_Dic(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        public Dictionary<ObscuredInt, JobData> GetJobDatas_Dic(Enum_SynergyType Enum_SynergyType)
         {
-            if (_jobDatas_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_jobDatas_Dic.ContainsKey(Enum_SynergyType) == false)
                 return null;
 
-            return _jobDatas_Dic[v2Enum_ARR_SynergyType];
+            return _jobDatas_Dic[Enum_SynergyType];
         }
         //------------------------------------------------------------------------------------
-        public JobData GetJobData(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt jobTier)
+        public JobData GetJobData(Enum_SynergyType Enum_SynergyType, ObscuredInt jobTier)
         {
-            if (_jobDatas_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_jobDatas_Dic.ContainsKey(Enum_SynergyType) == false)
                 return null;
 
-            if (_jobDatas_Dic[v2Enum_ARR_SynergyType].ContainsKey(jobTier) == false)
+            if (_jobDatas_Dic[Enum_SynergyType].ContainsKey(jobTier) == false)
                 return null;
 
-            return _jobDatas_Dic[v2Enum_ARR_SynergyType][jobTier];
+            return _jobDatas_Dic[Enum_SynergyType][jobTier];
         }
         //------------------------------------------------------------------------------------
         public Dictionary<ObscuredInt, JobData> GetAllJobData()

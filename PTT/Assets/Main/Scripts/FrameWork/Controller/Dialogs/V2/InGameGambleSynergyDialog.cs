@@ -22,7 +22,7 @@ namespace GameBerry.UI
         [SerializeField]
         private UIGambleSynergyViewElement _uIGambleSynergyViewElement;
 
-        private Dictionary<V2Enum_ARR_SynergyType, UIGambleSynergyViewElement> _uIGambleSynergyViewElement_dic = new Dictionary<V2Enum_ARR_SynergyType, UIGambleSynergyViewElement>();
+        private Dictionary<Enum_SynergyType, UIGambleSynergyViewElement> _uIGambleSynergyViewElement_dic = new Dictionary<Enum_SynergyType, UIGambleSynergyViewElement>();
 
 
 
@@ -69,12 +69,12 @@ namespace GameBerry.UI
         private Button _synergyViewToturialBtn;
 
 
-        private V2Enum_ARR_SynergyType _tutorialSynergyType;
+        private Enum_SynergyType _tutorialSynergyType;
         private UIGambleSynergyViewElement _tutorialUIGambleSynergyViewElement;
 
-        public Dictionary<V2Enum_ARR_SynergyType, Queue<SynergyViewDirectionOrderData>> _synergyAddData = new Dictionary<V2Enum_ARR_SynergyType, Queue<SynergyViewDirectionOrderData>>();
+        public Dictionary<Enum_SynergyType, Queue<SynergyViewDirectionOrderData>> _synergyAddData = new Dictionary<Enum_SynergyType, Queue<SynergyViewDirectionOrderData>>();
 
-        public Dictionary<V2Enum_ARR_SynergyType, bool> _synergyDoing = new Dictionary<V2Enum_ARR_SynergyType, bool>();
+        public Dictionary<Enum_SynergyType, bool> _synergyDoing = new Dictionary<Enum_SynergyType, bool>();
 
         //------------------------------------------------------------------------------------
         protected override void OnLoad()
@@ -129,7 +129,7 @@ namespace GameBerry.UI
                     continue;
 
 
-                if (pair == V2Enum_ARR_SynergyType.Yellow)
+                if (pair == Enum_SynergyType.Yellow)
                 {
                     if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == false)
                     {
@@ -137,7 +137,7 @@ namespace GameBerry.UI
                         continue;
                     }
                 }
-                else if (pair == V2Enum_ARR_SynergyType.White)
+                else if (pair == Enum_SynergyType.White)
                 {
                     if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == false)
                     {
@@ -168,8 +168,8 @@ namespace GameBerry.UI
                     _showSynergySkill.gameObject.SetActive(false);
                 else
                 {
-                    if (Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.DiamondDungeon
-                        || Managers.BattleSceneManager.Instance.BattleType == V2Enum_Dungeon.TowerDungeon)
+                    if (Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.DiamondDungeon
+                        || Managers.BattleSceneManager.Instance.BattleType == Enum_Dungeon.TowerDungeon)
                         _showSynergySkill.gameObject.SetActive(false);
                     else
                         _showSynergySkill.gameObject.SetActive(true);
@@ -186,30 +186,30 @@ namespace GameBerry.UI
             disableCancellation = new CancellationTokenSource();
         }
         //------------------------------------------------------------------------------------
-        private void AddSynergyDirectionData(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, SynergyViewDirectionOrderData synergyViewDirectionOrderData)
+        private void AddSynergyDirectionData(Enum_SynergyType Enum_SynergyType, SynergyViewDirectionOrderData synergyViewDirectionOrderData)
         {
-            if (_synergyAddData.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyAddData.Add(v2Enum_ARR_SynergyType, new Queue<SynergyViewDirectionOrderData>());
+            if (_synergyAddData.ContainsKey(Enum_SynergyType) == false)
+                _synergyAddData.Add(Enum_SynergyType, new Queue<SynergyViewDirectionOrderData>());
 
-            if (_synergyDoing.ContainsKey(v2Enum_ARR_SynergyType) == false)
-                _synergyDoing.Add(v2Enum_ARR_SynergyType, false);
+            if (_synergyDoing.ContainsKey(Enum_SynergyType) == false)
+                _synergyDoing.Add(Enum_SynergyType, false);
 
             
 
-            _synergyAddData[v2Enum_ARR_SynergyType].Enqueue(synergyViewDirectionOrderData);
+            _synergyAddData[Enum_SynergyType].Enqueue(synergyViewDirectionOrderData);
 
-            if (_synergyDoing[v2Enum_ARR_SynergyType] == false)
-                PlaySynergyDirection(v2Enum_ARR_SynergyType);
+            if (_synergyDoing[Enum_SynergyType] == false)
+                PlaySynergyDirection(Enum_SynergyType);
         }
         //------------------------------------------------------------------------------------
-        private async void PlaySynergyDirection(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType)
+        private async void PlaySynergyDirection(Enum_SynergyType Enum_SynergyType)
         {
-            if (_synergyAddData.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergyAddData.ContainsKey(Enum_SynergyType) == false)
                 return;
 
-            _synergyDoing[v2Enum_ARR_SynergyType] = true;
+            _synergyDoing[Enum_SynergyType] = true;
 
-            Queue<SynergyViewDirectionOrderData> synergyQueue = _synergyAddData[v2Enum_ARR_SynergyType];
+            Queue<SynergyViewDirectionOrderData> synergyQueue = _synergyAddData[Enum_SynergyType];
 
             while (synergyQueue.Count > 0)
             {
@@ -217,7 +217,7 @@ namespace GameBerry.UI
                 await DirectionSynergy(synergyQueue.Dequeue());
             }
 
-            _synergyDoing[v2Enum_ARR_SynergyType] = false;
+            _synergyDoing[Enum_SynergyType] = false;
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()
@@ -237,7 +237,7 @@ namespace GameBerry.UI
 
 
             SynergyViewDirectionOrderData synergyViewDirectionOrderData = new SynergyViewDirectionOrderData();
-            synergyViewDirectionOrderData.v2Enum_ARR_SynergyType = gambleSkillData.SynergyType;
+            synergyViewDirectionOrderData.Enum_SynergyType = gambleSkillData.SynergyType;
             synergyViewDirectionOrderData.startpos = msg.UIStartPos;
             synergyViewDirectionOrderData.gambleSkillData = gambleSkillData;
 
@@ -258,11 +258,11 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void AddSkillSynergy(GameBerry.Event.AddSkillSynergyMsg msg)
         {
-            if (_uIGambleSynergyViewElement_dic.ContainsKey(msg.V2Enum_ARR_SynergyType) == false)
+            if (_uIGambleSynergyViewElement_dic.ContainsKey(msg.Enum_SynergyType) == false)
                 return;
 
             SynergyViewDirectionOrderData synergyViewDirectionOrderData = new SynergyViewDirectionOrderData();
-            synergyViewDirectionOrderData.v2Enum_ARR_SynergyType = msg.V2Enum_ARR_SynergyType;
+            synergyViewDirectionOrderData.Enum_SynergyType = msg.Enum_SynergyType;
 
             synergyViewDirectionOrderData.beforeData = msg.BeforeData;
             synergyViewDirectionOrderData.beforeStack = msg.BeforeStack;
@@ -273,18 +273,18 @@ namespace GameBerry.UI
 
             Debug.Log(string.Format("AddSkillSynergy AfterSynergy : {0}", msg.AfterStack));
 
-            AddSynergyDirectionData(msg.V2Enum_ARR_SynergyType, synergyViewDirectionOrderData);
+            AddSynergyDirectionData(msg.Enum_SynergyType, synergyViewDirectionOrderData);
 
-            //UIGambleSynergyViewElement uIGambleSynergyViewElement = _uIGambleSynergyViewElement_dic[msg.V2Enum_ARR_SynergyType];
+            //UIGambleSynergyViewElement uIGambleSynergyViewElement = _uIGambleSynergyViewElement_dic[msg.Enum_SynergyType];
             //uIGambleSynergyViewElement.AddSynergyViewDirectionOrderData(synergyViewDirectionOrderData);
         }
         //------------------------------------------------------------------------------------
         private void RefreshGambleSynergy(GameBerry.Event.RefreshGambleSynergyMsg msg)
         {
-            if (_uIGambleSynergyViewElement_dic.ContainsKey(msg.v2Enum_ARR_GambleSynergyType) == false)
+            if (_uIGambleSynergyViewElement_dic.ContainsKey(msg.Enum_GambleSynergyType) == false)
                 return;
 
-            UIGambleSynergyViewElement uIGambleSynergyViewElement = _uIGambleSynergyViewElement_dic[msg.v2Enum_ARR_GambleSynergyType];
+            UIGambleSynergyViewElement uIGambleSynergyViewElement = _uIGambleSynergyViewElement_dic[msg.Enum_GambleSynergyType];
             uIGambleSynergyViewElement.RefreshSynergyInfo();
         }
         //------------------------------------------------------------------------------------
@@ -297,10 +297,10 @@ namespace GameBerry.UI
                 return;
             }
 
-            if (Managers.MapManager.Instance.NeedTutotial1() == true && Managers.GambleManager.Instance.GetGambleActionCount(V2Enum_ARR_GambleType.Card) == 1)
+            if (Managers.MapManager.Instance.NeedTutotial1() == true && Managers.GambleManager.Instance.GetGambleActionCount(Enum_GambleType.Card) == 1)
                 await UniTask.Delay(100, false, PlayerLoopTiming.Update, disableCancellation.Token);
 
-            UIGambleSynergyViewElement uIGambleSynergyViewElement = _uIGambleSynergyViewElement_dic[viewdata.v2Enum_ARR_SynergyType];
+            UIGambleSynergyViewElement uIGambleSynergyViewElement = _uIGambleSynergyViewElement_dic[viewdata.Enum_SynergyType];
 
             if (viewdata.gambleSkillData != null)
             {
@@ -358,8 +358,8 @@ namespace GameBerry.UI
                 if (_synergyVerticalLayout != null)
                     _synergyVerticalLayout.enabled = false;
 
-                Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
-                _tutorialSynergyType = viewdata.v2Enum_ARR_SynergyType;
+                Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
+                _tutorialSynergyType = viewdata.Enum_SynergyType;
                 if (_synergyViewToturialBtn != null)
                 { 
                     _synergyViewToturialBtn.gameObject.SetActive(true);
@@ -482,7 +482,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void PlaySynergyCombineTutorial(GameBerry.Event.PlaySynergyCombineTutorialMsg msg)
         {
-            Managers.BattleSceneManager.Instance.ChangeTimeScale(V2Enum_ARR_BattleSpeed.Pause);
+            Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.Pause);
 
             if (_tutorialBlack != null)
                 _tutorialBlack.gameObject.SetActive(true);

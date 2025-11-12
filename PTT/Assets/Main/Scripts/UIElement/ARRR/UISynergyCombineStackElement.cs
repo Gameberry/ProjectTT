@@ -20,16 +20,16 @@ namespace GameBerry.UI
         [SerializeField]
         private Image _readyCheckImage;
 
-        public void SetSynergyStack(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, int stack)
+        public void SetSynergyStack(Enum_SynergyType Enum_GambleSynergyType, int stack)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_GambleSynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_GambleSynergyType);
             if (gambleCardSprite != null)
             {
                 if (_gambleSynergyIcon != null)
                     _gambleSynergyIcon.sprite = gambleCardSprite.SynergyIcon;
             }
 
-            int currentStack = Managers.SynergyManager.Instance.GetSynergyStack(v2Enum_ARR_GambleSynergyType);
+            int currentStack = Managers.SynergyManager.Instance.GetSynergyStack(Enum_GambleSynergyType);
             bool ready = stack <= currentStack;
 
             if (_gambleSynergyStack != null)
@@ -42,9 +42,9 @@ namespace GameBerry.UI
                 _readyCheckImage.gameObject.SetActive(ready);
         }
 
-        public void SetDescendSynergyStack(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, int stack)
+        public void SetDescendSynergyStack(Enum_SynergyType Enum_GambleSynergyType, int stack)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_GambleSynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_GambleSynergyType);
             if (gambleCardSprite != null)
             {
                 if (_gambleSynergyIcon != null)
@@ -61,9 +61,9 @@ namespace GameBerry.UI
                 _readyCheckImage.gameObject.SetActive(false);
         }
 
-        public void SetDescendSynergyStack(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public void SetDescendSynergyStack(Enum_SynergyType Enum_GambleSynergyType)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_GambleSynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_GambleSynergyType);
             if (gambleCardSprite != null)
             {
                 if (_gambleSynergyIcon != null)

@@ -148,9 +148,9 @@ namespace GameBerry.UI
             Managers.DungeonDataManager.Instance.GetDungeonRewardInfo(dungeonData.DungeonType, out m_rewardData.Index);
         }
         //------------------------------------------------------------------------------------
-        public void SetDungeonMode(V2Enum_Dungeon v2Enum_Dungeon)
+        public void SetDungeonMode(Enum_Dungeon enumDungeon)
         {
-            m_dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(v2Enum_Dungeon);
+            m_dungeonData = Managers.DungeonDataManager.Instance.GetDungeonData(enumDungeon);
 
             if (m_dungeonData == null)
                 return;
@@ -179,13 +179,13 @@ namespace GameBerry.UI
 
             switch (m_dungeonData.DungeonType)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         SetDungeonDetailData(m_dungeonModeBase);
                         SetTickAndBtnInitState();
                         break;
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         SetDungeonDetailData(m_dungeonModeBase);
 
@@ -223,7 +223,7 @@ namespace GameBerry.UI
                         if (m_nextDefficulty != null)
                             m_nextDefficulty.gameObject.SetActive(false);
 
-                        if (m_dungeonModeBase.DungeonNumber == Managers.DungeonDataManager.Instance.GetDungeonRecord(V2Enum_Dungeon.TowerDungeon).ToInt())
+                        if (m_dungeonModeBase.DungeonNumber == Managers.DungeonDataManager.Instance.GetDungeonRecord(Enum_Dungeon.TowerDungeon).ToInt())
                         {
                             if (_endDungeon != null)
                                 _endDungeon.gameObject.SetActive(true);
@@ -417,13 +417,13 @@ namespace GameBerry.UI
 
                 switch (m_dungeonData.DungeonType)
                 {
-                    case V2Enum_Dungeon.DiamondDungeon:
+                    case Enum_Dungeon.DiamondDungeon:
                         {
                             Managers.RedDotManager.Instance.ShowRedDot(ContentDetailList.DungeonDiamond);
                             Managers.RedDotManager.Instance.ShowRedDot(ContentDetailList.Dungeon);
                             break;
                         }
-                    case V2Enum_Dungeon.TowerDungeon:
+                    case Enum_Dungeon.TowerDungeon:
                         {
                             Managers.RedDotManager.Instance.ShowRedDot(ContentDetailList.DungeonTower);
                             break;
@@ -442,12 +442,12 @@ namespace GameBerry.UI
 
             switch (m_dungeonData.DungeonType)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         Managers.RedDotManager.Instance.HideRedDot(ContentDetailList.DungeonDiamond);
                         break;
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         Managers.RedDotManager.Instance.HideRedDot(ContentDetailList.DungeonTower);
                         break;
@@ -514,10 +514,8 @@ namespace GameBerry.UI
         {
             switch (m_dungeonData.DungeonType)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
-                case V2Enum_Dungeon.TowerDungeon:
-                case V2Enum_Dungeon.GoldDungeon:
-                case V2Enum_Dungeon.RuneDungeon:
+                case Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         if (m_dungeonData == null || m_dungeonModeBase == null)
                             return;

@@ -85,14 +85,14 @@ namespace GameBerry.UI
 
             _skillRemainCoolTimeText.gameObject.SetActive(true);
 
-            if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.AttackCount
-                    || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.KillingCount
-                    || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HitCount)
+            if (skillBaseData.CoolTimeType == Enum_CoolTimeType.AttackCount
+                    || skillBaseData.CoolTimeType == Enum_CoolTimeType.KillingCount
+                    || skillBaseData.CoolTimeType == Enum_CoolTimeType.HitCount)
             {
                 _skillRemainCoolTimeText.SetText("{0}", remainCount);
             }
-            else if (skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentOver
-                || skillBaseData.CoolTimeType == V2Enum_ARR_CoolTimeType.HPPercentBelow)
+            else if (skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentOver
+                || skillBaseData.CoolTimeType == Enum_CoolTimeType.HPPercentBelow)
             {
                 _skillRemainCoolTimeText.SetText(skillBaseData.CoolTimeType.ToString());
             }

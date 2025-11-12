@@ -49,7 +49,7 @@ namespace GameBerry.UI
 
         //        if (_desc1 != null)
         //        {
-        //            if (synergyTotalLevelEffectData.TotalLevelEffectType == V2Enum_ARRR_TotalLevelType.CardGradeLimitBreak)
+        //            if (synergyTotalLevelEffectData.TotalLevelEffectType == Enum_ARRR_TotalLevelType.CardGradeLimitBreak)
         //            {
         //                if (_desc1_Group != null)
         //                    _desc1_Group.gameObject.SetActive(true);

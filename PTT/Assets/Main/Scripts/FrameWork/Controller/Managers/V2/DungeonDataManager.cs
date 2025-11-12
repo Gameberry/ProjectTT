@@ -17,7 +17,7 @@ namespace GameBerry.Managers
         private Event.SetInGameRewardPopupMsg m_setInGameRewardPopupMsg = new Event.SetInGameRewardPopupMsg();
         private Event.SetInGameRewardPopup_TitleMsg m_setInGameRewardPopup_TitleMsg = new Event.SetInGameRewardPopup_TitleMsg();
 
-        private Dictionary<V2Enum_Dungeon, DungeonEnterData> m_selectDungeonEnterStep = new Dictionary<V2Enum_Dungeon, DungeonEnterData>();
+        private Dictionary<Enum_Dungeon, DungeonEnterData> m_selectDungeonEnterStep = new Dictionary<Enum_Dungeon, DungeonEnterData>();
 
         private List<string> m_changeInfoAdTicketUpdate = new List<string>();
 
@@ -45,11 +45,11 @@ namespace GameBerry.Managers
                     continue;
 
                 DungeonInitInfo dungeonInitInfo = new DungeonInitInfo();
-                dungeonInitInfo.V2Enum_Dungeon = dungeonDatas[i].DungeonType;
-                DungeonDataContainer.m_dungeonInitInfo.Add(dungeonInitInfo.V2Enum_Dungeon, dungeonInitInfo);
+                dungeonInitInfo.EnumDungeon = dungeonDatas[i].DungeonType;
+                DungeonDataContainer.m_dungeonInitInfo.Add(dungeonInitInfo.EnumDungeon, dungeonInitInfo);
             }
 
-            foreach (KeyValuePair<V2Enum_Dungeon, DungeonInitInfo> pair in DungeonDataOperator.GetDungeonAdAllInfo())
+            foreach (KeyValuePair<Enum_Dungeon, DungeonInitInfo> pair in DungeonDataOperator.GetDungeonAdAllInfo())
             {
                 DungeonData dungeonData = GetDungeonData(pair.Key);
                 DungeonInitInfo dungeonInitInfo = pair.Value;
@@ -156,19 +156,19 @@ namespace GameBerry.Managers
             return DungeonDataOperator.GetDungeonAllData();
         }
         //------------------------------------------------------------------------------------
-        public DungeonData GetDungeonData(V2Enum_Dungeon v2Enum_Dungeon)
+        public DungeonData GetDungeonData(Enum_Dungeon enumDungeon)
         {
-            return DungeonDataOperator.GetDungeonData(v2Enum_Dungeon);
+            return DungeonDataOperator.GetDungeonData(enumDungeon);
         }
         //------------------------------------------------------------------------------------
-        public DungeonInitInfo GetDungeonInitInfo(V2Enum_Dungeon v2Enum_Dungeon)
+        public DungeonInitInfo GetDungeonInitInfo(Enum_Dungeon enumDungeon)
         {
-            return DungeonDataOperator.GetDungeonInitInfo(v2Enum_Dungeon);
+            return DungeonDataOperator.GetDungeonInitInfo(enumDungeon);
         }
         //------------------------------------------------------------------------------------
-        public double GetDungeonTicketAmount(V2Enum_Dungeon v2Enum_Dungeon)
+        public double GetDungeonTicketAmount(Enum_Dungeon enumDungeon)
         {
-            DungeonData dungeonData = GetDungeonData(v2Enum_Dungeon);
+            DungeonData dungeonData = GetDungeonData(enumDungeon);
 
             if (dungeonData == null)
                 return 0.0;
@@ -176,14 +176,14 @@ namespace GameBerry.Managers
             return GoodsManager.Instance.GetGoodsAmount(dungeonData.EnterCostParam1);
         }
         //------------------------------------------------------------------------------------
-        public bool SetAdTicket(V2Enum_Dungeon v2Enum_Dungeon, Action complete = null)
+        public bool SetAdTicket(Enum_Dungeon enumDungeon, Action complete = null)
         {
 
-            DungeonData dungeonData = GetDungeonData(v2Enum_Dungeon);
+            DungeonData dungeonData = GetDungeonData(enumDungeon);
             if (dungeonData == null)
                 return false;
 
-            DungeonInitInfo dungeonInitInfo = GetDungeonInitInfo(v2Enum_Dungeon);
+            DungeonInitInfo dungeonInitInfo = GetDungeonInitInfo(enumDungeon);
             if (dungeonInitInfo == null)
                 return false;
 
@@ -216,9 +216,9 @@ namespace GameBerry.Managers
             return viewComplete;
         }
         //------------------------------------------------------------------------------------
-        public void DoUseDungeonTicket(V2Enum_Dungeon v2Enum_Dungeon, int count = 1)
+        public void DoUseDungeonTicket(Enum_Dungeon enumDungeon, int count = 1)
         {
-            DungeonData dungeonData = GetDungeonData(v2Enum_Dungeon);
+            DungeonData dungeonData = GetDungeonData(enumDungeon);
 
             if (dungeonData == null)
                 return;
@@ -226,11 +226,11 @@ namespace GameBerry.Managers
             GoodsManager.Instance.UseGoodsAmount(dungeonData.EnterCostParam1, dungeonData.EnterCostParam2 * count);
         }
         //------------------------------------------------------------------------------------
-        public Sprite GetDungeonRewardSprite(V2Enum_Dungeon v2Enum_Dungeon)
+        public Sprite GetDungeonRewardSprite(Enum_Dungeon enumDungeon)
         {
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         DungeonModeBase diamondDungeonData = DungeonDataOperator.GetMaxEnterDiamondDungeonData();
                         if (diamondDungeonData == null)
@@ -238,7 +238,7 @@ namespace GameBerry.Managers
 
                         return GoodsManager.Instance.GetGoodsSprite(diamondDungeonData.ClearRewardParam1);
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         DungeonModeBase diamondDungeonData = DungeonDataOperator.GetMaxEnterTowerDungeonData();
                         if (diamondDungeonData == null)
@@ -251,13 +251,13 @@ namespace GameBerry.Managers
             return null;
         }
         //------------------------------------------------------------------------------------
-        public void GetDungeonRewardInfo(V2Enum_Dungeon v2Enum_Dungeon, out ObscuredInt index)
+        public void GetDungeonRewardInfo(Enum_Dungeon enumDungeon, out ObscuredInt index)
         {
             index = -1;
 
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         DungeonModeBase diamondDungeonData = DungeonDataOperator.GetMaxEnterDiamondDungeonData();
                         if (diamondDungeonData == null)
@@ -267,7 +267,7 @@ namespace GameBerry.Managers
 
                         return;
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         DungeonModeBase diamondDungeonData = DungeonDataOperator.GetMaxEnterTowerDungeonData();
                         if (diamondDungeonData == null)
@@ -282,32 +282,32 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         #region Dungeon
         //------------------------------------------------------------------------------------
-        public bool AlreadySweepDungeon(V2Enum_Dungeon v2Enum_Dungeon)
+        public bool AlreadySweepDungeon(Enum_Dungeon enumDungeon)
         {
-            DungeonData dungeonData = GetDungeonData(v2Enum_Dungeon);
+            DungeonData dungeonData = GetDungeonData(enumDungeon);
             if (dungeonData == null)
                 return false;
 
-            int remainticket = (int)GetDungeonTicketAmount(v2Enum_Dungeon);
+            int remainticket = (int)GetDungeonTicketAmount(enumDungeon);
 
             if (remainticket == 0)
-                remainticket = GetDungeonRemainAdViewCount(v2Enum_Dungeon);
+                remainticket = GetDungeonRemainAdViewCount(enumDungeon);
 
             if(remainticket <= 0)
                 return false;
 
-            return GetDungeonRecord(v2Enum_Dungeon) > 0;
+            return GetDungeonRecord(enumDungeon) > 0;
         }
         //------------------------------------------------------------------------------------
-        public void DoSweepOnceDungeon(V2Enum_Dungeon v2Enum_Dungeon, Action<bool> action)
+        public void DoSweepOnceDungeon(Enum_Dungeon enumDungeon, Action<bool> action)
         {
             if (TheBackEnd.TheBackEndManager.Instance.CheckNetworkState() == false)
                 return;
 
-            int remainticket = (int)GetDungeonTicketAmount(v2Enum_Dungeon);
+            int remainticket = (int)GetDungeonTicketAmount(enumDungeon);
             if (remainticket <= 0)
             {
-                remainticket = GetDungeonRemainAdViewCount(v2Enum_Dungeon);
+                remainticket = GetDungeonRemainAdViewCount(enumDungeon);
 
                 if (remainticket <= 0)
                 {
@@ -315,24 +315,24 @@ namespace GameBerry.Managers
                     return;
                 }
 
-                if (SetAdTicket(v2Enum_Dungeon, () =>
+                if (SetAdTicket(enumDungeon, () =>
                 {
-                    DoSweepOnce(v2Enum_Dungeon, true, action);
+                    DoSweepOnce(enumDungeon, true, action);
                 }) == false)
                     action?.Invoke(false);
 
                 return;
             }
 
-            DoSweepOnce(v2Enum_Dungeon, false, action);
+            DoSweepOnce(enumDungeon, false, action);
         }
         //------------------------------------------------------------------------------------
-        private void DoSweepOnce(V2Enum_Dungeon v2Enum_Dungeon, bool isad, Action<bool> action)
+        private void DoSweepOnce(Enum_Dungeon enumDungeon, bool isad, Action<bool> action)
         {
             if (TheBackEnd.TheBackEndManager.Instance.CheckNetworkState() == false)
                 return;
 
-            DungeonData dungeonData = GetDungeonData(v2Enum_Dungeon);
+            DungeonData dungeonData = GetDungeonData(enumDungeon);
 
             m_setInGameRewardPopupMsg.GoodsType = V2Enum_Goods.Max;
             m_setInGameRewardPopupMsg.RewardDatas.Clear();
@@ -342,17 +342,17 @@ namespace GameBerry.Managers
             double logrec_now = 0;
             double logrec_season = 0;
 
-            double record = GetDungeonRecord(v2Enum_Dungeon);
+            double record = GetDungeonRecord(enumDungeon);
 
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         m_setInGameRewardPopupMsg.RewardDatas.AddRange(GetDiamondDungeonReward((int)record));
                         logStage = (int)record;
                         break;
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         m_setInGameRewardPopupMsg.RewardDatas.AddRange(GetTowerDungeonReward((int)record));
                         logStage = (int)record;
@@ -385,7 +385,7 @@ namespace GameBerry.Managers
             former_quan = Managers.GoodsManager.Instance.GetGoodsAmount(dungeonData.EnterCostParam1);
             used_quan = dungeonData.EnterCostParam2;
 
-            DoUseDungeonTicket(v2Enum_Dungeon);
+            DoUseDungeonTicket(enumDungeon);
 
             keep_quan = Managers.GoodsManager.Instance.GetGoodsAmount(dungeonData.EnterCostParam1);
 
@@ -408,9 +408,9 @@ namespace GameBerry.Managers
             action?.Invoke(true);
         }
         //------------------------------------------------------------------------------------
-        public bool DoSweepAllDungeon(V2Enum_Dungeon v2Enum_Dungeon)
+        public bool DoSweepAllDungeon(Enum_Dungeon enumDungeon)
         {
-            int remainticket = (int)GetDungeonTicketAmount(v2Enum_Dungeon);
+            int remainticket = (int)GetDungeonTicketAmount(enumDungeon);
             if (remainticket <= 0) // 광고소탕은 여기서 취급 안한다
                 return false;
 
@@ -422,17 +422,17 @@ namespace GameBerry.Managers
             double logrec_now = 0;
             double logrec_season = 0;
 
-            double record = GetDungeonRecord(v2Enum_Dungeon);
+            double record = GetDungeonRecord(enumDungeon);
 
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         m_setInGameRewardPopupMsg.RewardDatas.AddRange(GetDiamondDungeonReward((int)record, remainticket));
                         logStage = (int)record;
                         break;
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         m_setInGameRewardPopupMsg.RewardDatas.AddRange(GetTowerDungeonReward((int)record, remainticket));
                         logStage = (int)record;
@@ -459,7 +459,7 @@ namespace GameBerry.Managers
                 after_quan.Add((int)GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
             }
 
-            DoUseDungeonTicket(v2Enum_Dungeon, remainticket);
+            DoUseDungeonTicket(enumDungeon, remainticket);
 
             Message.Send(m_setInGameRewardPopupMsg);
             UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
@@ -469,7 +469,7 @@ namespace GameBerry.Managers
 
             TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData(m_changeInfoAdTicketUpdate, null);
 
-            DungeonData dungeonData = GetDungeonData(v2Enum_Dungeon);
+            DungeonData dungeonData = GetDungeonData(enumDungeon);
 
             if (dungeonData != null)
             {
@@ -481,15 +481,15 @@ namespace GameBerry.Managers
             return true;
         }
         //------------------------------------------------------------------------------------
-        public DungeonModeBase GetEnterDungeonData(V2Enum_Dungeon v2Enum_Dungeon)
+        public DungeonModeBase GetEnterDungeonData(Enum_Dungeon enumDungeon)
         {
-            switch (v2Enum_Dungeon)
+            switch (enumDungeon)
             {
-                case V2Enum_Dungeon.DiamondDungeon:
+                case Enum_Dungeon.DiamondDungeon:
                     {
                         return GetEnterDiamondDungeonData();
                     }
-                case V2Enum_Dungeon.TowerDungeon:
+                case Enum_Dungeon.TowerDungeon:
                     {
                         return GetEnterTowerDungeonData();
                     }
@@ -498,31 +498,31 @@ namespace GameBerry.Managers
             return GetEnterDiamondDungeonData();
         }
         //------------------------------------------------------------------------------------
-        public DungeonModeBase GetMaxEnterDungeonModeData(V2Enum_Dungeon v2Enum_Dungeon)
+        public DungeonModeBase GetMaxEnterDungeonModeData(Enum_Dungeon enumDungeon)
         {
-            return DungeonDataOperator.GetMaxEnterDungeonModeData(v2Enum_Dungeon);
+            return DungeonDataOperator.GetMaxEnterDungeonModeData(enumDungeon);
         }
         //------------------------------------------------------------------------------------
-        public DungeonModeBase GetMaxClearDungeonModeData(V2Enum_Dungeon v2Enum_Dungeon)
+        public DungeonModeBase GetMaxClearDungeonModeData(Enum_Dungeon enumDungeon)
         {
-            return DungeonDataOperator.GetMaxClearDungeonModeData(v2Enum_Dungeon);
+            return DungeonDataOperator.GetMaxClearDungeonModeData(enumDungeon);
         }
         //------------------------------------------------------------------------------------
-        public double GetDungeonRecord(V2Enum_Dungeon v2Enum_Dungeon)
+        public double GetDungeonRecord(Enum_Dungeon enumDungeon)
         {
-            return DungeonDataOperator.GetDungeonRecord(v2Enum_Dungeon);
+            return DungeonDataOperator.GetDungeonRecord(enumDungeon);
         }
         //------------------------------------------------------------------------------------
-        public void SetDungeonRecord(V2Enum_Dungeon v2Enum_Dungeon, double record)
+        public void SetDungeonRecord(Enum_Dungeon enumDungeon, double record)
         {
-            bool complete = DungeonDataOperator.SetDungeonRecord(v2Enum_Dungeon, record);
+            bool complete = DungeonDataOperator.SetDungeonRecord(enumDungeon, record);
 
             if (complete == false)
                 return;
 
-            //switch (v2Enum_Dungeon)
+            //switch (EnumDungeon)
             //{
-            //    case V2Enum_Dungeon.DiamondDungeon:
+            //    case Enum_Dungeon.DiamondDungeon:
             //        {
             //            ShopManager.Instance.RefreshProductContitionType(V2Enum_ProductConditionType.DiamondDungeonClear);
             //            ContentOpenConditionManager.Instance.RefreshOpenCondition(V2Enum_OpenConditionType.DiamondDungeonClear);
@@ -531,13 +531,13 @@ namespace GameBerry.Managers
             //}
         }
         //------------------------------------------------------------------------------------
-        public int GetDungeonRemainAdViewCount(V2Enum_Dungeon v2Enum_Dungeon)
+        public int GetDungeonRemainAdViewCount(Enum_Dungeon enumDungeon)
         {
-            DungeonData dungeonData = GetDungeonData(v2Enum_Dungeon);
+            DungeonData dungeonData = GetDungeonData(enumDungeon);
             if (dungeonData == null)
                 return 0;
 
-            DungeonInitInfo dungeonInitInfo = GetDungeonInitInfo(v2Enum_Dungeon);
+            DungeonInitInfo dungeonInitInfo = GetDungeonInitInfo(enumDungeon);
 
             int remaincount = (int)dungeonData.DailyAdCount - dungeonInitInfo.ToDayAdEnterCount;
             if (remaincount < 0)
@@ -546,28 +546,28 @@ namespace GameBerry.Managers
             return remaincount;
         }
         //------------------------------------------------------------------------------------
-        public void SetEnterDungeonStep(V2Enum_Dungeon v2Enum_Dungeon, int step)
+        public void SetEnterDungeonStep(Enum_Dungeon enumDungeon, int step)
         {
-            if (m_selectDungeonEnterStep.ContainsKey(v2Enum_Dungeon) == false)
+            if (m_selectDungeonEnterStep.ContainsKey(enumDungeon) == false)
             {
                 DungeonEnterData dungeonEnterData = new DungeonEnterData();
-                m_selectDungeonEnterStep.Add(v2Enum_Dungeon, dungeonEnterData);
+                m_selectDungeonEnterStep.Add(enumDungeon, dungeonEnterData);
             }
 
-            m_selectDungeonEnterStep[v2Enum_Dungeon].step = step;
+            m_selectDungeonEnterStep[enumDungeon].step = step;
         }
         //------------------------------------------------------------------------------------
-        public DungeonEnterData GetEnterDungeonStep(V2Enum_Dungeon v2Enum_Dungeon)
+        public DungeonEnterData GetEnterDungeonStep(Enum_Dungeon enumDungeon)
         {
-            if (m_selectDungeonEnterStep.ContainsKey(v2Enum_Dungeon) == false)
+            if (m_selectDungeonEnterStep.ContainsKey(enumDungeon) == false)
             {
                 DungeonEnterData dungeonEnterData = new DungeonEnterData();
                 dungeonEnterData.step = 1;
-                m_selectDungeonEnterStep.Add(v2Enum_Dungeon, dungeonEnterData);
+                m_selectDungeonEnterStep.Add(enumDungeon, dungeonEnterData);
                 return null;
             }
 
-            return m_selectDungeonEnterStep[v2Enum_Dungeon];
+            return m_selectDungeonEnterStep[enumDungeon];
         }
         //------------------------------------------------------------------------------------
         #endregion
@@ -576,10 +576,10 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public DungeonModeBase GetEnterDiamondDungeonData()
         {
-            if (m_selectDungeonEnterStep.ContainsKey(V2Enum_Dungeon.DiamondDungeon) == false)
+            if (m_selectDungeonEnterStep.ContainsKey(Enum_Dungeon.DiamondDungeon) == false)
                 DungeonDataOperator.GetDiamondDungeonData(1);
 
-            return DungeonDataOperator.GetDiamondDungeonData(m_selectDungeonEnterStep[V2Enum_Dungeon.DiamondDungeon].step);
+            return DungeonDataOperator.GetDiamondDungeonData(m_selectDungeonEnterStep[Enum_Dungeon.DiamondDungeon].step);
         }
         //------------------------------------------------------------------------------------
         public List<RewardData> GetDiamondDungeonReward(int step, int addCount = 1)
@@ -610,10 +610,10 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public DungeonModeBase GetEnterTowerDungeonData()
         {
-            if (m_selectDungeonEnterStep.ContainsKey(V2Enum_Dungeon.TowerDungeon) == false)
+            if (m_selectDungeonEnterStep.ContainsKey(Enum_Dungeon.TowerDungeon) == false)
                 DungeonDataOperator.GetTowerDungeonData(1);
 
-            return DungeonDataOperator.GetTowerDungeonData(m_selectDungeonEnterStep[V2Enum_Dungeon.TowerDungeon].step);
+            return DungeonDataOperator.GetTowerDungeonData(m_selectDungeonEnterStep[Enum_Dungeon.TowerDungeon].step);
         }
         //------------------------------------------------------------------------------------
         public List<RewardData> GetTowerDungeonReward(int step, int addCount = 1)

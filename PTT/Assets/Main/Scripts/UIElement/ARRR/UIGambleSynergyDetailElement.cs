@@ -50,7 +50,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         public void SetGambleSynergyEffectData(SynergyEffectData gambleSynergyEffectData)
         {
-            V2Enum_ARR_SynergyType SynergyType = gambleSynergyEffectData.SynergyType;
+            Enum_SynergyType SynergyType = gambleSynergyEffectData.SynergyType;
 
             int currentStack = Managers.SynergyManager.Instance.GetSynergyStack(SynergyType);
             int targetStack = gambleSynergyEffectData.SynergyCount;

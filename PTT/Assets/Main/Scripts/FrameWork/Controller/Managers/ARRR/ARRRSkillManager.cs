@@ -60,7 +60,7 @@ namespace GameBerry.Managers
 
                 SkillBaseData skillBaseData = GetSkillBaseData(aRRRSkillData);
 
-                if (skillBaseData != null && skillBaseData.TriggerType == V2Enum_ARR_TriggerType.Default)
+                if (skillBaseData != null && skillBaseData.TriggerType == Enum_TriggerType.Default)
                 {
                     _characterSkillData_BasicAttack = skillBaseData;
                     defaultSkillList.Add(aRRRSkillData.Index);
@@ -75,7 +75,7 @@ namespace GameBerry.Managers
 
             //    SkillBaseData skillBaseData = GetSkillBaseData(aRRRSkillData);
 
-            //    if (skillBaseData != null && skillBaseData.TriggerType == V2Enum_ARR_TriggerType.Default)
+            //    if (skillBaseData != null && skillBaseData.TriggerType == Enum_TriggerType.Default)
             //    {
             //        _characterSkillData_BasicAttack = skillBaseData;
             //        defaultSkillList.Add(aRRRSkillData.Index);

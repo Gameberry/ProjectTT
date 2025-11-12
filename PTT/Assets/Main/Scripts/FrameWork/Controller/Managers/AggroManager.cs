@@ -46,7 +46,7 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-        public CharacterControllerBase GetIFFTargetCharacter(Enum_ARR_TargetConditionType v2Enum_TargetSearchType, CharacterControllerBase myControllerBase, float range = -1)
+        public CharacterControllerBase GetIFFTargetCharacter(Enum_TargetConditionType v2Enum_TargetSearchType, CharacterControllerBase myControllerBase, float range = -1)
         {
             CharacterControllerBase target = null;
 
@@ -54,7 +54,7 @@ namespace GameBerry.Managers
 
             switch (v2Enum_TargetSearchType)
             {
-                case Enum_ARR_TargetConditionType.HpHigh:
+                case Enum_TargetConditionType.HpHigh:
                     {
                         double hPHigh = 0.0;
 
@@ -84,7 +84,7 @@ namespace GameBerry.Managers
 
                         break;
                     }
-                case Enum_ARR_TargetConditionType.HpLow:
+                case Enum_TargetConditionType.HpLow:
                     {
                         double hPLow = double.MaxValue;
 
@@ -114,7 +114,7 @@ namespace GameBerry.Managers
 
                         break;
                     }
-                case Enum_ARR_TargetConditionType.AtkHigh:
+                case Enum_TargetConditionType.AtkHigh:
                     {
                         double aTKHigh = 0.0;
 
@@ -144,7 +144,7 @@ namespace GameBerry.Managers
 
                         break;
                     }
-                case Enum_ARR_TargetConditionType.Far:
+                case Enum_TargetConditionType.Far:
                     {
                         float fardis = 0.0f;
 
@@ -172,9 +172,9 @@ namespace GameBerry.Managers
 
                         break;
                     }
-                case Enum_ARR_TargetConditionType.Range:
-                case Enum_ARR_TargetConditionType.RangeAll:
-                case Enum_ARR_TargetConditionType.RangeNear:
+                case Enum_TargetConditionType.Range:
+                case Enum_TargetConditionType.RangeAll:
+                case Enum_TargetConditionType.RangeNear:
                     {
                         float neardis = 0.0f;
 
@@ -202,7 +202,7 @@ namespace GameBerry.Managers
 
                         break;
                     }
-                default: //case Enum_ARR_TargetConditionType.Near:
+                default: //case Enum_TargetConditionType.Near:
                     {
                         float neardis = float.MaxValue;
 
@@ -230,7 +230,7 @@ namespace GameBerry.Managers
             }
 
             //if (target == null && range > 0.0f)
-            //    target = GetIFFTargetCharacter(Enum_ARR_TargetConditionType.Near, myControllerBase);
+            //    target = GetIFFTargetCharacter(Enum_TargetConditionType.Near, myControllerBase);
 
             return target;
         }

@@ -31,7 +31,7 @@ namespace GameBerry.UI
 
         private Material _originMaterial;
 
-        V2Enum_ARR_SynergyType _v2Enum_ARR_Card;
+        Enum_SynergyType _Enum_Card;
         V2Enum_Grade _V2Enum_Grade = V2Enum_Grade.Max;
 
 
@@ -52,11 +52,11 @@ namespace GameBerry.UI
             }
         }
         //------------------------------------------------------------------------------------
-        public void SetCard(V2Enum_ARR_SynergyType v2Enum_ARR_Card)
+        public void SetCard(Enum_SynergyType Enum_Card)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_Card);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_Card);
 
-            _v2Enum_ARR_Card = v2Enum_ARR_Card;
+            _Enum_Card = Enum_Card;
 
             AllHideParticle();
             _V2Enum_Grade = V2Enum_Grade.Max;

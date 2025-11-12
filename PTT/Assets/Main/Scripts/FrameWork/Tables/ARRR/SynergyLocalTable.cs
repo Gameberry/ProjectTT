@@ -12,7 +12,7 @@ namespace GameBerry
 
         public ObscuredInt ResourceIndex;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public Dictionary<ObscuredInt, List<SynergyEffectData>> TierDatas = new Dictionary<ObscuredInt, List<SynergyEffectData>>();
     }
@@ -21,7 +21,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public ObscuredInt SynergyTier;
         public ObscuredInt SynergyOriginCount;
@@ -91,7 +91,7 @@ namespace GameBerry
 
         public ObscuredInt MainSkillIndex;
 
-        public Dictionary<V2Enum_ARR_SynergyType, ObscuredInt> NeedSynergyCount = new Dictionary<V2Enum_ARR_SynergyType, ObscuredInt>();
+        public Dictionary<Enum_SynergyType, ObscuredInt> NeedSynergyCount = new Dictionary<Enum_SynergyType, ObscuredInt>();
 
         public MainSkillData SynergySkillData;
     }
@@ -112,7 +112,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public ObscuredInt Procedure;
 
@@ -124,7 +124,7 @@ namespace GameBerry
     {
         public ObscuredInt Index;
 
-        public V2Enum_ARR_SynergyType SynergyType;
+        public Enum_SynergyType SynergyType;
 
         public V2Enum_Grade Grade;
 
@@ -150,19 +150,19 @@ namespace GameBerry
 
     public class SynergyLocalTable : LocalTableBase
     {
-        private Dictionary<V2Enum_ARR_SynergyType, SynergyData> _gambleSynergyData_Dic = new Dictionary<V2Enum_ARR_SynergyType, SynergyData>();
+        private Dictionary<Enum_SynergyType, SynergyData> _gambleSynergyData_Dic = new Dictionary<Enum_SynergyType, SynergyData>();
 
-        private Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>> _gambleSynergyEffectDataList_Dic = new Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>>();
+        private Dictionary<Enum_SynergyType, List<SynergyEffectData>> _gambleSynergyEffectDataList_Dic = new Dictionary<Enum_SynergyType, List<SynergyEffectData>>();
 
         private Dictionary<ObscuredInt, SynergyEffectData> _synergyEffectDatas_Dic = new Dictionary<ObscuredInt, SynergyEffectData>();
 
         private Dictionary<V2Enum_Grade, SynergyLevelUpCostData> _synergyLevelUpCost_Dic = new Dictionary<V2Enum_Grade, SynergyLevelUpCostData>();
 
-        private Dictionary<V2Enum_ARR_SynergyType, Dictionary<ObscuredInt, SynergyBreakthroughCostData>> _synergyLevelUpLimit_Dic = new Dictionary<V2Enum_ARR_SynergyType, Dictionary<ObscuredInt, SynergyBreakthroughCostData>>();
+        private Dictionary<Enum_SynergyType, Dictionary<ObscuredInt, SynergyBreakthroughCostData>> _synergyLevelUpLimit_Dic = new Dictionary<Enum_SynergyType, Dictionary<ObscuredInt, SynergyBreakthroughCostData>>();
 
         private List<SynergyCombineData> _gambleSynergyCombineDatas = new List<SynergyCombineData>();
 
-        private Dictionary<V2Enum_ARR_SynergyType, Dictionary<V2Enum_Grade, SynergyDuplicationData>> _synergyDuplicationData_Dic = new Dictionary<V2Enum_ARR_SynergyType, Dictionary<V2Enum_Grade, SynergyDuplicationData>>();
+        private Dictionary<Enum_SynergyType, Dictionary<V2Enum_Grade, SynergyDuplicationData>> _synergyDuplicationData_Dic = new Dictionary<Enum_SynergyType, Dictionary<V2Enum_Grade, SynergyDuplicationData>>();
 
         private Dictionary<ObscuredInt, SynergyBreakthroughData> _synergyBreakthroughList_Dic = new Dictionary<ObscuredInt, SynergyBreakthroughData>();
 
@@ -193,7 +193,7 @@ namespace GameBerry
 
                 gambleCardData.ResourceIndex = rows[i]["ResourceIndex"].ToString().ToInt();
 
-                gambleCardData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                gambleCardData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
 
                 if (_gambleSynergyData_Dic.ContainsKey(gambleCardData.SynergyType) == false)
                     _gambleSynergyData_Dic.Add(gambleCardData.SynergyType, gambleCardData);
@@ -219,7 +219,7 @@ namespace GameBerry
                 synergyEffectData.Index = index;
                 synergyEffectData.MainSkillIndex = rows[i]["MainSkillIndex"].ToString().ToInt();
 
-                synergyEffectData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                synergyEffectData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
                 synergyEffectData.SynergyTier = rows[i]["SynergyTier"].ToString().ToInt();
                 synergyEffectData.SynergyOriginCount = rows[i]["SynergyCount"].ToString().ToInt();
                 synergyEffectData.SynergyCount = synergyEffectData.SynergyOriginCount;
@@ -401,10 +401,10 @@ namespace GameBerry
                         if (RequiredSynergyCountData == -1 || RequiredSynergyCountData == 0)
                             continue;
 
-                        V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType = SynergyTypeData.IntToEnum32<V2Enum_ARR_SynergyType>();
+                        Enum_SynergyType Enum_GambleSynergyType = SynergyTypeData.IntToEnum32<Enum_SynergyType>();
 
-                        if (gambleCardData.NeedSynergyCount.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
-                            gambleCardData.NeedSynergyCount.Add(v2Enum_ARR_GambleSynergyType, RequiredSynergyCountData);
+                        if (gambleCardData.NeedSynergyCount.ContainsKey(Enum_GambleSynergyType) == false)
+                            gambleCardData.NeedSynergyCount.Add(Enum_GambleSynergyType, RequiredSynergyCountData);
                     }
                     catch
                     {
@@ -457,7 +457,7 @@ namespace GameBerry
 
                 synergyLevelUpLimitData.Index = rows[i]["Index"].ToString().ToInt();
 
-                synergyLevelUpLimitData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                synergyLevelUpLimitData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
                 
                 synergyLevelUpLimitData.Procedure = rows[i]["Procedure"].ToString().ToInt();
 
@@ -485,7 +485,7 @@ namespace GameBerry
 
                 synergyDuplicationData.Index = rows[i]["Index"].ToString().ToInt();
 
-                synergyDuplicationData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                synergyDuplicationData.SynergyType = rows[i]["SynergyType"].ToString().ToInt().IntToEnum32<Enum_SynergyType>();
                 
                 synergyDuplicationData.Grade = rows[i]["Grade"].ToString().ToInt().IntToEnum32<V2Enum_Grade>();
 
@@ -636,15 +636,15 @@ namespace GameBerry
             return null;
         }
         //------------------------------------------------------------------------------------
-        public Dictionary<V2Enum_ARR_SynergyType, SynergyData> GetAllGambleSynergyData()
+        public Dictionary<Enum_SynergyType, SynergyData> GetAllGambleSynergyData()
         {
             return _gambleSynergyData_Dic;
         }
         //------------------------------------------------------------------------------------
-        public SynergyData GetGambleSynergyData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public SynergyData GetGambleSynergyData(Enum_SynergyType Enum_GambleSynergyType)
         {
-            if (_gambleSynergyData_Dic.ContainsKey(v2Enum_ARR_GambleSynergyType) == true)
-                return _gambleSynergyData_Dic[v2Enum_ARR_GambleSynergyType];
+            if (_gambleSynergyData_Dic.ContainsKey(Enum_GambleSynergyType) == true)
+                return _gambleSynergyData_Dic[Enum_GambleSynergyType];
             return null;
         }
         //------------------------------------------------------------------------------------
@@ -660,15 +660,15 @@ namespace GameBerry
             return null;
         }
         //------------------------------------------------------------------------------------
-        public Dictionary<V2Enum_ARR_SynergyType, List<SynergyEffectData>> GetAllGambleSynergyEffectDataList()
+        public Dictionary<Enum_SynergyType, List<SynergyEffectData>> GetAllGambleSynergyEffectDataList()
         {
             return _gambleSynergyEffectDataList_Dic;
         }
         //------------------------------------------------------------------------------------
-        public List<SynergyEffectData> GetGambleSynergyEffectDataList(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType)
+        public List<SynergyEffectData> GetGambleSynergyEffectDataList(Enum_SynergyType Enum_GambleSynergyType)
         {
-            if (_gambleSynergyEffectDataList_Dic.ContainsKey(v2Enum_ARR_GambleSynergyType) == true)
-                return _gambleSynergyEffectDataList_Dic[v2Enum_ARR_GambleSynergyType];
+            if (_gambleSynergyEffectDataList_Dic.ContainsKey(Enum_GambleSynergyType) == true)
+                return _gambleSynergyEffectDataList_Dic[Enum_GambleSynergyType];
 
             return null;
         }
@@ -685,37 +685,37 @@ namespace GameBerry
             return _gambleSynergyCombineDatas;
         }
         //------------------------------------------------------------------------------------
-        public SynergyBreakthroughCostData GetSynergyLevelUpLimitData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, ObscuredInt level)
+        public SynergyBreakthroughCostData GetSynergyLevelUpLimitData(Enum_SynergyType Enum_GambleSynergyType, ObscuredInt level)
         {
-            if (_synergyLevelUpLimit_Dic.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
+            if (_synergyLevelUpLimit_Dic.ContainsKey(Enum_GambleSynergyType) == false)
                 return null;
 
-            if (_synergyLevelUpLimit_Dic[v2Enum_ARR_GambleSynergyType].ContainsKey(level) == false)
+            if (_synergyLevelUpLimit_Dic[Enum_GambleSynergyType].ContainsKey(level) == false)
                 return null;
 
-            return _synergyLevelUpLimit_Dic[v2Enum_ARR_GambleSynergyType][level];
+            return _synergyLevelUpLimit_Dic[Enum_GambleSynergyType][level];
         }
         //------------------------------------------------------------------------------------
-        //public Dictionary<ObscuredInt, SynergyLevelUpLimitData> GetAllSynergyGradeLevelUpLimitData(V2Enum_ARR_SynergyType v2Enum_ARR_GambleSynergyType, V2Enum_Grade v2Enum_Grade)
+        //public Dictionary<ObscuredInt, SynergyLevelUpLimitData> GetAllSynergyGradeLevelUpLimitData(Enum_SynergyType Enum_GambleSynergyType, V2Enum_Grade v2Enum_Grade)
         //{
-        //    if (_synergyLevelUpLimit_Dic.ContainsKey(v2Enum_ARR_GambleSynergyType) == false)
+        //    if (_synergyLevelUpLimit_Dic.ContainsKey(Enum_GambleSynergyType) == false)
         //        return null;
 
-        //    if (_synergyLevelUpLimit_Dic[v2Enum_ARR_GambleSynergyType].ContainsKey(v2Enum_Grade) == true)
-        //        return _synergyLevelUpLimit_Dic[v2Enum_ARR_GambleSynergyType][v2Enum_Grade];
+        //    if (_synergyLevelUpLimit_Dic[Enum_GambleSynergyType].ContainsKey(v2Enum_Grade) == true)
+        //        return _synergyLevelUpLimit_Dic[Enum_GambleSynergyType][v2Enum_Grade];
 
         //    return null;
         //}
         //------------------------------------------------------------------------------------
-        public SynergyDuplicationData GetSynergyDuplicationData(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, V2Enum_Grade v2Enum_Grade)
+        public SynergyDuplicationData GetSynergyDuplicationData(Enum_SynergyType Enum_SynergyType, V2Enum_Grade v2Enum_Grade)
         {
-            if (_synergyDuplicationData_Dic.ContainsKey(v2Enum_ARR_SynergyType) == false)
+            if (_synergyDuplicationData_Dic.ContainsKey(Enum_SynergyType) == false)
                 return null;
 
-            if (_synergyDuplicationData_Dic[v2Enum_ARR_SynergyType].ContainsKey(v2Enum_Grade) == false)
+            if (_synergyDuplicationData_Dic[Enum_SynergyType].ContainsKey(v2Enum_Grade) == false)
                 return null;
 
-            return _synergyDuplicationData_Dic[v2Enum_ARR_SynergyType][v2Enum_Grade];
+            return _synergyDuplicationData_Dic[Enum_SynergyType][v2Enum_Grade];
         }
         //------------------------------------------------------------------------------------
         public Dictionary<ObscuredInt, SynergyBreakthroughData> GetAllSynergyRuneData()

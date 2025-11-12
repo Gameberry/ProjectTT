@@ -24,7 +24,7 @@ namespace GameBerry
 
         public List<CreatureBaseStatElement> MasteryDungeonOverrideStats = new List<CreatureBaseStatElement>();
 
-        public Enum_ARR_TargetConditionType TargetSearchType;
+        public Enum_TargetConditionType TargetSearchType;
 
         public CrackDungeonData PrevData;
         public CrackDungeonData NextData;
@@ -148,7 +148,7 @@ namespace GameBerry
                     }
                 }
 
-                crackDungeonData.TargetSearchType = rows[i]["TargetSearchType"].ToString().FastStringToInt().IntToEnum32<Enum_ARR_TargetConditionType>();
+                crackDungeonData.TargetSearchType = rows[i]["TargetSearchType"].ToString().FastStringToInt().IntToEnum32<Enum_TargetConditionType>();
 
                 crackDungeonDatas.Add(crackDungeonData);
             }

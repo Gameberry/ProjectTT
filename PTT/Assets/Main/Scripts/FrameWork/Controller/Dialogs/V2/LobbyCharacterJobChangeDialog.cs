@@ -45,7 +45,7 @@ namespace GameBerry.UI
         private Button _uIUpGradeJob;
 
         private ObscuredInt _jobTier = 0;
-        private V2Enum_ARR_SynergyType _v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+        private Enum_SynergyType _Enum_SynergyType = Enum_SynergyType.Red;
 
         private bool _isUpGrade = false;
 
@@ -97,7 +97,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
-            RefreshJobUI(_v2Enum_ARR_SynergyType, _jobTier);
+            RefreshJobUI(_Enum_SynergyType, _jobTier);
 
             if (Managers.GuideInteractorManager.Instance.PlayJobChangeTutorial == true)
             {
@@ -130,11 +130,11 @@ namespace GameBerry.UI
 
             if (enable == true)
             {
-                int synergytype = _v2Enum_ARR_SynergyType.Enum32ToInt();
+                int synergytype = _Enum_SynergyType.Enum32ToInt();
 
                 for (int i = 0; i < m_elementFilter.Count; ++i)
                 {
-                    JobData jobData = Managers.JobManager.Instance.GetJobData(m_elementFilter[i].m_myID.IntToEnum32<V2Enum_ARR_SynergyType>(), _jobTier);
+                    JobData jobData = Managers.JobManager.Instance.GetJobData(m_elementFilter[i].m_myID.IntToEnum32<Enum_SynergyType>(), _jobTier);
 
                     m_elementFilter[i].SetEnable(m_elementFilter[i].m_myID == synergytype);
 
@@ -144,26 +144,26 @@ namespace GameBerry.UI
             }
         }
         //------------------------------------------------------------------------------------
-        public void InitJobEffectElement(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt tier, bool isupgrade)
+        public void InitJobEffectElement(Enum_SynergyType Enum_SynergyType, ObscuredInt tier, bool isupgrade)
         {
             _isUpGrade = isupgrade;
 
-            _v2Enum_ARR_SynergyType = v2Enum_ARR_SynergyType;
+            _Enum_SynergyType = Enum_SynergyType;
             _jobTier = tier;
 
         }
         //------------------------------------------------------------------------------------
-        public void RefreshJobUI(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt tier)
+        public void RefreshJobUI(Enum_SynergyType Enum_SynergyType, ObscuredInt tier)
         {
-            _v2Enum_ARR_SynergyType = v2Enum_ARR_SynergyType;
-            if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Max)
-                _v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Red;
+            _Enum_SynergyType = Enum_SynergyType;
+            if (Enum_SynergyType == Enum_SynergyType.Max)
+                _Enum_SynergyType = Enum_SynergyType.Red;
 
 
             _jobTier = tier;
 
             if (_uIJobEffectElement != null)
-                _uIJobEffectElement.SetJobEffectElement(_v2Enum_ARR_SynergyType, tier);
+                _uIJobEffectElement.SetJobEffectElement(_Enum_SynergyType, tier);
 
 
             if (_isUpGrade == false)
@@ -179,7 +179,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_ElementFilter(int element)
         {
-            RefreshJobUI(element.IntToEnum32<V2Enum_ARR_SynergyType>(), _jobTier);
+            RefreshJobUI(element.IntToEnum32<Enum_SynergyType>(), _jobTier);
 
             EnableFilter(true);
         }
@@ -194,7 +194,7 @@ namespace GameBerry.UI
 
             if (_isUpGrade == false)
             {
-                if (Managers.JobManager.Instance.ChangeJobType(_v2Enum_ARR_SynergyType) == true)
+                if (Managers.JobManager.Instance.ChangeJobType(_Enum_SynergyType) == true)
                 {
                     _lobbyCharacterJobContentDialog.CompleteChangeJobState(true);
                     ElementExit();
@@ -202,7 +202,7 @@ namespace GameBerry.UI
             }
             else
             {
-                if (Managers.JobManager.Instance.DoUpGradeJob(_v2Enum_ARR_SynergyType) == true)
+                if (Managers.JobManager.Instance.DoUpGradeJob(_Enum_SynergyType) == true)
                 {
                     _lobbyCharacterJobContentDialog.CompleteChangeJobState(true);
                     ElementExit();

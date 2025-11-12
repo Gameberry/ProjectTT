@@ -12,7 +12,7 @@ namespace GameBerry.UI
 {
     public class UILobbySynergyRuneSlotGroupElement : MonoBehaviour
     {
-        public V2Enum_ARR_SynergyType SynergyType = V2Enum_ARR_SynergyType.Max;
+        public Enum_SynergyType SynergyType = Enum_SynergyType.Max;
 
         [SerializeField]
         private Image _synergyIcon;
@@ -22,16 +22,16 @@ namespace GameBerry.UI
 
         private Dictionary<int, UIARRRSkillSlotElement> uIARRRSkillSlotElements_Dic = new Dictionary<int, UIARRRSkillSlotElement>();
 
-        private System.Action<V2Enum_ARR_SynergyType, int> _callBack;
-        private System.Action<V2Enum_ARR_SynergyType, int> _unEquipCallBack;
+        private System.Action<Enum_SynergyType, int> _callBack;
+        private System.Action<Enum_SynergyType, int> _unEquipCallBack;
 
-        public void Init(System.Action<V2Enum_ARR_SynergyType, int> action
-            , System.Action<V2Enum_ARR_SynergyType, int> unEquipCallBack)
+        public void Init(System.Action<Enum_SynergyType, int> action
+            , System.Action<Enum_SynergyType, int> unEquipCallBack)
         {
             _callBack = action;
             _unEquipCallBack = unEquipCallBack;
 
-            if (SynergyType == V2Enum_ARR_SynergyType.Max)
+            if (SynergyType == Enum_SynergyType.Max)
                 return;
 
             Dictionary<ObscuredInt, ObscuredInt> slot = Managers.SynergyRuneManager.Instance.GetEquipSynergyEffect();
@@ -83,7 +83,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         public void RefreshAllSlot()
         {
-            if (SynergyType == V2Enum_ARR_SynergyType.Max)
+            if (SynergyType == Enum_SynergyType.Max)
                 return;
 
             Dictionary<ObscuredInt, ObscuredInt> slot = Managers.SynergyRuneManager.Instance.GetEquipSynergyEffect();

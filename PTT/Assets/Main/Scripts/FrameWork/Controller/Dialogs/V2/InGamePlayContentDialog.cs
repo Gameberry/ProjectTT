@@ -612,7 +612,7 @@ namespace GameBerry.UI
                 return;
 
             Managers.MapManager.Instance.SetMapLastEnter(_currentMapData.StageNumber);
-            Managers.BattleSceneManager.Instance.ChangeBattleScene(V2Enum_Dungeon.StageScene);
+            Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
         }
         //------------------------------------------------------------------------------------
         private void ShowNewSynergy(GameBerry.Event.ShowNewSynergyMsg msg)

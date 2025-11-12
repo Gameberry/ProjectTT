@@ -21,9 +21,9 @@ namespace GameBerry.Managers
             float range = skillManageInfo.GetAttackRange() * actortrans.GetOutputAttackRange();
             Vector3 pos = damagePos;
 
-            if (skilldata.TargetAttackType == V2Enum_ARR_TargetAttackType.Line)
+            if (skilldata.TargetAttackType == Enum_TargetAttackType.Line)
             {
-                if (actortrans.LookDirection == Enum_ARR_LookDirection.Left)
+                if (actortrans.LookDirection == Enum_LookDirection.Left)
                 {
                     pos.x -= skilldata.AttackRange * 0.5f * actortrans.GetOutputAttackRange();
                 }
@@ -33,7 +33,7 @@ namespace GameBerry.Managers
 
             int searchLayer = 0;
 
-            if (skilldata.TargetCheckType == Enum_ARR_TargetCheckType.Friendly)
+            if (skilldata.TargetCheckType == Enum_TargetCheckType.Friendly)
                 searchLayer = LayerMask.NameToLayer(actortrans.IFFType.ToString());
             else
             {
@@ -138,7 +138,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         private void SetHitTarget(CharacterControllerBase actortrans, SkillBaseData skillData, ref List<SkillHitReceiver> recvlist)
         {
-            if (skillData.TargetCondition == Enum_ARR_TargetConditionType.Range)
+            if (skillData.TargetCondition == Enum_TargetConditionType.Range)
             {
                 if (skillData.TargetCount > 0 && recvlist.Count > skillData.TargetCount)
                 {
@@ -153,11 +153,11 @@ namespace GameBerry.Managers
             {
                 if (skillData.TargetCount > 0 && recvlist.Count > skillData.TargetCount)
                 {
-                    if (skillData.TargetCondition == Enum_ARR_TargetConditionType.HpHigh || skillData.TargetCondition == Enum_ARR_TargetConditionType.HpLow)
+                    if (skillData.TargetCondition == Enum_TargetConditionType.HpHigh || skillData.TargetCondition == Enum_TargetConditionType.HpLow)
                     {
                         if (skillData.TargetCount > 0 && recvlist.Count > skillData.TargetCount)
                         {
-                            if (skillData.TargetCondition == Enum_ARR_TargetConditionType.HpHigh)
+                            if (skillData.TargetCondition == Enum_TargetConditionType.HpHigh)
                             {
                                 recvlist.Sort((x, y) =>
                                 {
@@ -183,7 +183,7 @@ namespace GameBerry.Managers
                             }
                         }
                     }
-                    else if (skillData.TargetCondition == Enum_ARR_TargetConditionType.AtkHigh)
+                    else if (skillData.TargetCondition == Enum_TargetConditionType.AtkHigh)
                     {
                         recvlist.Sort((x, y) =>
                         {
@@ -195,9 +195,9 @@ namespace GameBerry.Managers
                             return 0;
                         });
                     }
-                    else if (skillData.TargetCondition == Enum_ARR_TargetConditionType.Far || skillData.TargetCondition == Enum_ARR_TargetConditionType.Near)
+                    else if (skillData.TargetCondition == Enum_TargetConditionType.Far || skillData.TargetCondition == Enum_TargetConditionType.Near)
                     {
-                        if (skillData.TargetCondition == Enum_ARR_TargetConditionType.Far)
+                        if (skillData.TargetCondition == Enum_TargetConditionType.Far)
                         {
                             recvlist.Sort((x, y) =>
                             {
@@ -209,7 +209,7 @@ namespace GameBerry.Managers
                                 return 0;
                             });
                         }
-                        else if (skillData.TargetCondition == Enum_ARR_TargetConditionType.Near)
+                        else if (skillData.TargetCondition == Enum_TargetConditionType.Near)
                         {
                             recvlist.Sort((x, y) =>
                             {

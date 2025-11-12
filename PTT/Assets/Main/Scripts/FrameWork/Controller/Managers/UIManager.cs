@@ -25,14 +25,15 @@ namespace GameBerry.UI
 		public Transform BottomUIStandardPos;
 		public Transform BottomUIExpandPos;
 
-		Dictionary<string, GameObject> _uis;
+        private Dictionary<string, GameObject> _uis;
 
 		public delegate void OnComplete(GameObject ui);
-		Dictionary<string, System.Delegate> _onCompleteEvents;
+
+        private Dictionary<string, System.Delegate> _onCompleteEvents;
 
 		public bool IgnoreEnterDialog = false;
 
-		const string ASSET_PATH = "ContentResources";
+        private const string ASSET_PATH = "ContentResources";
 
         protected override void Init()
 		{
@@ -59,7 +60,7 @@ namespace GameBerry.UI
 			GameObject ui = Get(uiName);
 			if (ui == null)
 			{
-				var bundleName = string.Format("{0}/{1}/Dialogs/{2}", ASSET_PATH, contentName, uiName);
+				var bundleName = $"{ASSET_PATH}/{contentName}/Dialogs/{uiName}";
 				await ResourceLoader.Instance.LoadAsync<GameObject>(bundleName, OnPostLoadProcess);
 			}
 			else
@@ -91,7 +92,7 @@ namespace GameBerry.UI
 			}
 		}
 
-		void OnPostLoadProcess(Object o)
+        private void OnPostLoadProcess(Object o)
 		{
 			var ui = Instantiate(o) as GameObject;
 
@@ -106,7 +107,7 @@ namespace GameBerry.UI
 			RaiseEvent(ui);
 		}
 
-		void AttachToCanvas(GameObject ui)
+        private void AttachToCanvas(GameObject ui)
 		{
 			int sibling = EnumExtensions.ParseToInt<UISibling>(ui.name);
 
@@ -132,8 +133,8 @@ namespace GameBerry.UI
 				return 1.0f;
 
 			float progress = 0.0f;
-			var fullpath = string.Format("{0}{1}", ASSET_PATH, uiName);
-			progress = ResourceLoader.Instance.GetProgress(fullpath);
+			var fullpaths = $"{ASSET_PATH}{uiName}";
+			progress = ResourceLoader.Instance.GetProgress(fullpaths);
 
 			return progress * 0.9f; // 리소스 로딩 90%, OnPostLoadProcess()에서 후처리 10%
 		}
@@ -161,7 +162,7 @@ namespace GameBerry.UI
 			_uis.Clear();
 		}
 
-		void AddEvent(string uiName, OnComplete onComplete)
+        private void AddEvent(string uiName, OnComplete onComplete)
 		{
 			if (onComplete == null)
 				return;
@@ -177,7 +178,7 @@ namespace GameBerry.UI
 			}
 		}
 
-		void RaiseEvent(GameObject ui)
+        private void RaiseEvent(GameObject ui)
 		{
 			System.Delegate events;
 			_onCompleteEvents.TryGetValue(ui.name, out events);
@@ -235,7 +236,7 @@ namespace GameBerry.UI
 			}
 		}
 
-		GameObject GetGameObjectBySiblingIndex(int index)
+        private GameObject GetGameObjectBySiblingIndex(int index)
 		{
 			GameObject obj = null;
             if (1 <= index && index < 500)

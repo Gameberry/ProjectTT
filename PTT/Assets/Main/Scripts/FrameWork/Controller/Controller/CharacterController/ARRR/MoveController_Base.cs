@@ -50,7 +50,7 @@ namespace GameBerry
 
                     //direction.Normalize();
 
-                    _characterControllerBase.ChangeCharacterLookAtDirection(direction.x < 0 ? Enum_ARR_LookDirection.Left : Enum_ARR_LookDirection.Right);
+                    _characterControllerBase.ChangeCharacterLookAtDirection(direction.x < 0 ? Enum_LookDirection.Left : Enum_LookDirection.Right);
 
                     if (operMoveSpeed > Define.MaxEffectiveMoveSpeedValue)
                         operMoveSpeed = Define.MaxEffectiveMoveSpeedValue;

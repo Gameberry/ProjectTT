@@ -47,9 +47,9 @@ namespace GameBerry.UI
         private Transform _otherTabSprite;
 
 
-        private V2Enum_ARR_SynergyType _synergyType = V2Enum_ARR_SynergyType.Max;
+        private Enum_SynergyType _synergyType = Enum_SynergyType.Max;
 
-        private System.Action<V2Enum_ARR_SynergyType> _callBack;
+        private System.Action<Enum_SynergyType> _callBack;
 
 
         //------------------------------------------------------------------------------------
@@ -59,16 +59,16 @@ namespace GameBerry.UI
                 _synergyClick.onClick.AddListener(OnClick);
         }
         //------------------------------------------------------------------------------------
-        public void SetSynergyListData(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, System.Action<V2Enum_ARR_SynergyType> action)
+        public void SetSynergyListData(Enum_SynergyType Enum_SynergyType, System.Action<Enum_SynergyType> action)
         {
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_SynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_SynergyType);
             if (gambleCardSprite != null)
             {
                 if (_synergyIcon != null)
                     _synergyIcon.sprite = gambleCardSprite.SynergyIcon;
             }
 
-            _synergyType = v2Enum_ARR_SynergyType;
+            _synergyType = Enum_SynergyType;
 
             //if (_uiRedDotElement != null)
             //{
@@ -101,7 +101,7 @@ namespace GameBerry.UI
             if (_otherTabSprite != null)
                 _otherTabSprite.gameObject.SetActive(!onclick);
 
-            if (_synergyType == V2Enum_ARR_SynergyType.Yellow)
+            if (_synergyType == Enum_SynergyType.Yellow)
             {
                 if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == false)
                 {
@@ -120,7 +120,7 @@ namespace GameBerry.UI
                         _synergyLock.gameObject.SetActive(false);
                 }
             }
-            else if (_synergyType == V2Enum_ARR_SynergyType.White)
+            else if (_synergyType == Enum_SynergyType.White)
             {
                 if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == false)
                 {

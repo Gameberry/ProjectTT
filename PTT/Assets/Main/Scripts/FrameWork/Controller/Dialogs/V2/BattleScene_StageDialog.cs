@@ -64,7 +64,7 @@ namespace GameBerry.UI
                 m_farmPositionGaugeGap = _gauge_PositionBar_End.transform.localPosition.x - _gauge_PositionBar_Start.transform.localPosition.x;
             }
 
-            _battle_StageScene = Managers.BattleSceneManager.Instance.GetBattleSceneLogic(V2Enum_Dungeon.StageScene) as Battle_StageScene;
+            _battle_StageScene = Managers.BattleSceneManager.Instance.GetBattleSceneLogic(Enum_Dungeon.StageScene) as Battle_StageScene;
 
             _battle_StageScene.InterestText += AddInterestValue;
 

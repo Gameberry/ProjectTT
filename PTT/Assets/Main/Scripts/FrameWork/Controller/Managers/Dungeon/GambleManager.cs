@@ -35,7 +35,7 @@ namespace GameBerry.Managers
         private WeightedRandomPicker<GambleOperationData> _gambleSlotValuePicker = new WeightedRandomPicker<GambleOperationData>();
 
 
-        private Dictionary<V2Enum_ARR_GambleType, int> _gambleActionCount = new Dictionary<V2Enum_ARR_GambleType, int>();
+        private Dictionary<Enum_GambleType, int> _gambleActionCount = new Dictionary<Enum_GambleType, int>();
 
         private System.Random _random = new System.Random();
 
@@ -44,7 +44,7 @@ namespace GameBerry.Managers
         private Event.PlayMinorJokerSynergyMsg _playMinorJokerSynergyMsg = new Event.PlayMinorJokerSynergyMsg();
         private Event.RefreshGambleAutoTriggerMsg _refreshGambleAutoTriggerMsg = new Event.RefreshGambleAutoTriggerMsg();
 
-        public List<V2Enum_ARR_SynergyType> AutoGambleOrder = new List<V2Enum_ARR_SynergyType>();
+        public List<Enum_SynergyType> AutoGambleOrder = new List<Enum_SynergyType>();
 
         private bool _synergyGambleAuto = false;
         public bool SynergyGambleAuto { get { return _synergyGambleAuto; } }
@@ -64,16 +64,16 @@ namespace GameBerry.Managers
 
                 for (int i = 0; i < arr.Length; ++i)
                 {
-                    V2Enum_ARR_SynergyType index = arr[i].ToInt().IntToEnum32<V2Enum_ARR_SynergyType>();
+                    Enum_SynergyType index = arr[i].ToInt().IntToEnum32<Enum_SynergyType>();
                     AutoGambleOrder.Add(index);
                 }
             }
             else
             {
-                AutoGambleOrder.Add(V2Enum_ARR_SynergyType.Red);
-                AutoGambleOrder.Add(V2Enum_ARR_SynergyType.Blue);
-                AutoGambleOrder.Add(V2Enum_ARR_SynergyType.White);
-                AutoGambleOrder.Add(V2Enum_ARR_SynergyType.Yellow);
+                AutoGambleOrder.Add(Enum_SynergyType.Red);
+                AutoGambleOrder.Add(Enum_SynergyType.Blue);
+                AutoGambleOrder.Add(Enum_SynergyType.White);
+                AutoGambleOrder.Add(Enum_SynergyType.Yellow);
             }
 
             int autoMaxStopKey = PlayerPrefs.GetInt(Define.AutoMaxStopKey, -1);
@@ -91,12 +91,12 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void InitGambleContent()
         {
-            for (int i = V2Enum_ARR_GambleType.Card.Enum32ToInt(); i < V2Enum_ARR_GambleType.Max.Enum32ToInt(); ++i)
+            for (int i = Enum_GambleType.Card.Enum32ToInt(); i < Enum_GambleType.Max.Enum32ToInt(); ++i)
             {
-                V2Enum_ARR_GambleType v2Enum_ARR_GambleType = i.IntToEnum32<V2Enum_ARR_GambleType>();
+                Enum_GambleType Enum_GambleType = i.IntToEnum32<Enum_GambleType>();
 
-                if (_gambleActionCount.ContainsKey(v2Enum_ARR_GambleType) == false)
-                    _gambleActionCount.Add(v2Enum_ARR_GambleType, 0);
+                if (_gambleActionCount.ContainsKey(Enum_GambleType) == false)
+                    _gambleActionCount.Add(Enum_GambleType, 0);
             }
 
             ObscuredDouble luckStat = GetLuckStat();
@@ -120,7 +120,7 @@ namespace GameBerry.Managers
             }
 
 
-            Dictionary<V2Enum_ARR_GambleSlotType, List<GambleSlotProbData>> gambleSlotProbData_Dic = GambleOperator.GetGambleSlotProbData_Dic();
+            Dictionary<Enum_GambleSlotType, List<GambleSlotProbData>> gambleSlotProbData_Dic = GambleOperator.GetGambleSlotProbData_Dic();
 
             foreach (var pair in gambleSlotProbData_Dic)
             {
@@ -129,7 +129,7 @@ namespace GameBerry.Managers
                 List<GambleOperationData> gambleSlotDatas = null;
                 WeightedRandomPicker<GambleOperationData> gambleSlotPicker = null;
 
-                if (pair.Key == V2Enum_ARR_GambleSlotType.SlotStat)
+                if (pair.Key == Enum_GambleSlotType.SlotStat)
                 {
                     gambleSlotDatas = _gambleSlotStatDatas;
                     gambleSlotPicker = _gambleSlotStatPicker;
@@ -195,12 +195,12 @@ namespace GameBerry.Managers
         }
         public void ResetGambleState()
         {
-            for (int i = V2Enum_ARR_GambleType.Card.Enum32ToInt(); i < V2Enum_ARR_GambleType.Max.Enum32ToInt(); ++i)
+            for (int i = Enum_GambleType.Card.Enum32ToInt(); i < Enum_GambleType.Max.Enum32ToInt(); ++i)
             {
-                V2Enum_ARR_GambleType v2Enum_ARR_GambleType = i.IntToEnum32<V2Enum_ARR_GambleType>();
+                Enum_GambleType Enum_GambleType = i.IntToEnum32<Enum_GambleType>();
 
-                if (_gambleActionCount.ContainsKey(v2Enum_ARR_GambleType) == true)
-                    _gambleActionCount[v2Enum_ARR_GambleType] = 0;
+                if (_gambleActionCount.ContainsKey(Enum_GambleType) == true)
+                    _gambleActionCount[Enum_GambleType] = 0;
             }
         }
         //------------------------------------------------------------------------------------
@@ -261,7 +261,7 @@ namespace GameBerry.Managers
             if (Managers.BattleSceneManager.Instance.CurrentBattleScene.IsPlay == false)
                 return;
 
-            if (Managers.BattleSceneManager.Instance.BattleType != V2Enum_Dungeon.StageScene)
+            if (Managers.BattleSceneManager.Instance.BattleType != Enum_Dungeon.StageScene)
                 return;
 
             if (_synergyGambleAuto == false)
@@ -273,7 +273,7 @@ namespace GameBerry.Managers
 
             double currentGold = Managers.GoodsManager.Instance.GetGoodsAmount(V2Enum_Goods.Point, V2Enum_Point.InGameGold.Enum32ToInt());
 
-            double needcost = GetCost(V2Enum_ARR_GambleType.Card);
+            double needcost = GetCost(Enum_GambleType.Card);
 
             if (needcost > currentGold)
             {
@@ -295,16 +295,16 @@ namespace GameBerry.Managers
                 bool allMax = true;
                 for (int i = 0; i < AutoGambleOrder.Count; ++i)
                 {
-                    V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = AutoGambleOrder[i];
+                    Enum_SynergyType Enum_SynergyType = AutoGambleOrder[i];
 
-                    if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.Yellow)
+                    if (Enum_SynergyType == Enum_SynergyType.Yellow)
                     {
                         if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == false)
                         {
                             continue;
                         }
                     }
-                    else if (v2Enum_ARR_SynergyType == V2Enum_ARR_SynergyType.White)
+                    else if (Enum_SynergyType == Enum_SynergyType.White)
                     {
                         if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == false)
                         {
@@ -312,7 +312,7 @@ namespace GameBerry.Managers
                         }
                     }
 
-                    if (Managers.SynergyManager.Instance.GetInGameSynergyUnlockTier(v2Enum_ARR_SynergyType) > Managers.SynergyManager.Instance.GetSynergyLevel(v2Enum_ARR_SynergyType))
+                    if (Managers.SynergyManager.Instance.GetInGameSynergyUnlockTier(Enum_SynergyType) > Managers.SynergyManager.Instance.GetSynergyLevel(Enum_SynergyType))
                     {
                         allMax = false;
                     }
@@ -339,7 +339,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public bool ShowGambleResultLog = true;
         //------------------------------------------------------------------------------------
-        public V2Enum_ARR_SynergyType _cheat_GambleCard = V2Enum_ARR_SynergyType.Max;
+        public Enum_SynergyType _cheat_GambleCard = Enum_SynergyType.Max;
         public V2Enum_Grade _cheat_GambleGrade = V2Enum_Grade.Max;
 
         public bool _cheat_ShowJoker = false;
@@ -363,12 +363,12 @@ namespace GameBerry.Managers
             {
                 GambleOperationData gambleOperationData = _gambleCardDatas[i];
                 GambleCardData gambleCardProbData = gambleOperationData.OperationProbData as GambleCardData;
-                if (gambleCardProbData.SynergyType == V2Enum_ARR_SynergyType.Yellow)
+                if (gambleCardProbData.SynergyType == Enum_SynergyType.Yellow)
                 {
                     if (ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockGoldSynergy) == false)
                         continue;
                 }
-                else if (gambleCardProbData.SynergyType == V2Enum_ARR_SynergyType.White)
+                else if (gambleCardProbData.SynergyType == Enum_SynergyType.White)
                 {
                     if (ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.UnlockThunderSynergy) == false)
                         continue;
@@ -385,7 +385,7 @@ namespace GameBerry.Managers
             {
                 GambleOperationData gambleOperationData = null;
 
-                V2Enum_ARR_SynergyType selectSynergy = V2Enum_ARR_SynergyType.Max;
+                Enum_SynergyType selectSynergy = Enum_SynergyType.Max;
 
                 ObscuredDouble totalWeight = 1000000;
                 double select = _random.NextDouble() * totalWeight;
@@ -415,7 +415,7 @@ namespace GameBerry.Managers
 
                 V2Enum_Grade resultGrade = V2Enum_Grade.Max;
 
-                if (selectSynergy != V2Enum_ARR_SynergyType.Max)
+                if (selectSynergy != Enum_SynergyType.Max)
                 {
                     WeightedRandomPicker<GambleGradeProbData> weightedRandomPicker = GambleOperator.GetGambleGradePicker(Managers.ResearchManager.Instance.GetSynergyGambleLevel(selectSynergy));
                     GambleGradeProbData pick = weightedRandomPicker.Pick();
@@ -426,21 +426,21 @@ namespace GameBerry.Managers
                     resultGrade = _cheat_GambleGrade;
 
                 if (_cheat_ShowJoker == true)
-                    selectSynergy = V2Enum_ARR_SynergyType.Max;
+                    selectSynergy = Enum_SynergyType.Max;
 
                 if (Managers.MapManager.Instance.NeedTutotial1())
                 {
-                    if (_gambleActionCount[V2Enum_ARR_GambleType.Card] == 0)
+                    if (_gambleActionCount[Enum_GambleType.Card] == 0)
                     {
                         if (i == 0)
                         {
                             resultGrade = V2Enum_Grade.D;
-                            selectSynergy = V2Enum_ARR_SynergyType.Red;
+                            selectSynergy = Enum_SynergyType.Red;
                         }
                         else if (i == 1)
                         {
                             resultGrade = V2Enum_Grade.D;
-                            selectSynergy = V2Enum_ARR_SynergyType.Blue;
+                            selectSynergy = Enum_SynergyType.Blue;
                         }
 
                         Managers.GuideInteractorManager.Instance.PlayCardTutorial = true;
@@ -448,35 +448,35 @@ namespace GameBerry.Managers
                         ThirdPartyLog.Instance.SendLog_log_tutorial(0);
 
                     }
-                    else if (_gambleActionCount[V2Enum_ARR_GambleType.Card] == 1)
+                    else if (_gambleActionCount[Enum_GambleType.Card] == 1)
                     {
                         if (i == 0)
                         {
                             resultGrade = V2Enum_Grade.D;
-                            selectSynergy = V2Enum_ARR_SynergyType.Red;
+                            selectSynergy = Enum_SynergyType.Red;
                         }
                         else if (i == 1)
                         {
                             resultGrade = V2Enum_Grade.D;
-                            selectSynergy = V2Enum_ARR_SynergyType.Blue;
+                            selectSynergy = Enum_SynergyType.Blue;
                         }
 
                         //Managers.GuideInteractorManager.Instance.PlayCardTutorial = true;
                     }
-                    //else if (_gambleActionCount[V2Enum_ARR_GambleType.Card] == 2)
+                    //else if (_gambleActionCount[Enum_GambleType.Card] == 2)
                     //{
                     //    Managers.GuideInteractorManager.Instance.PlayJokerTutorial = true;
 
-                    //    selectSynergy = V2Enum_ARR_SynergyType.Max;
+                    //    selectSynergy = Enum_SynergyType.Max;
                     //}
                 }
-                else if(selectSynergy == V2Enum_ARR_SynergyType.Max)
+                else if(selectSynergy == Enum_SynergyType.Max)
                 {
                     ThirdPartyLog.Instance.SendLog_log_dungeon_joker(0);
                 }
 
 
-                if (_cheat_GambleCard != V2Enum_ARR_SynergyType.Max)
+                if (_cheat_GambleCard != Enum_SynergyType.Max)
                     selectSynergy = _cheat_GambleCard;
 
 
@@ -485,7 +485,7 @@ namespace GameBerry.Managers
 
                 if (MapContainer.PlayingStage == 1 && MapContainer.MapMaxClear == 0)
                 {
-                    if (_gambleActionCount[V2Enum_ARR_GambleType.Card] <= 2)
+                    if (_gambleActionCount[Enum_GambleType.Card] <= 2)
                     {
                         if (UnityEngine.Random.Range(0, 2) == 1)
                         {
@@ -495,9 +495,9 @@ namespace GameBerry.Managers
                 }
                 else if (MapContainer.PlayingStage == 2 && MapContainer.MapMaxClear == 1)
                 {
-                    if (_gambleActionCount[V2Enum_ARR_GambleType.Card] <= 2)
+                    if (_gambleActionCount[Enum_GambleType.Card] <= 2)
                     {
-                        if (selectSynergy == V2Enum_ARR_SynergyType.Red)
+                        if (selectSynergy == Enum_SynergyType.Red)
                         {
                             if (UnityEngine.Random.Range(0, 2) == 1)
                             {
@@ -516,7 +516,7 @@ namespace GameBerry.Managers
 
             aRR_CardGambleResultData.FinalSkillData = _aRR_CardGambleData;
 
-            double needcost = GetCost(V2Enum_ARR_GambleType.Card);
+            double needcost = GetCost(Enum_GambleType.Card);
 
             Managers.GoodsManager.Instance.UseGoodsAmount(V2Enum_Goods.Point, V2Enum_Point.InGameGold.Enum32ToInt(), needcost);
 
@@ -525,7 +525,7 @@ namespace GameBerry.Managers
                 Debug.Log(GambleResultLog);
             }
 
-            _gambleActionCount[V2Enum_ARR_GambleType.Card]++;
+            _gambleActionCount[Enum_GambleType.Card]++;
 
             ThirdPartyLog.Instance.SendLog_Card(MapContainer.MapLastEnter);
 
@@ -535,9 +535,9 @@ namespace GameBerry.Managers
             return aRR_CardGambleResultData;
         }
         //------------------------------------------------------------------------------------
-        public bool CanUpGradeCardGambleResult(V2Enum_Grade v2Enum_ARR_GambleSlotGrade)
+        public bool CanUpGradeCardGambleResult(V2Enum_Grade Enum_GambleSlotGrade)
         {
-            double chance = GetCardGambleProbChance(v2Enum_ARR_GambleSlotGrade);
+            double chance = GetCardGambleProbChance(Enum_GambleSlotGrade);
 
             ObscuredDouble totalWeight = 10000;
             double select = _random.NextDouble() * totalWeight;
@@ -548,18 +548,18 @@ namespace GameBerry.Managers
             return false;
         }
         //------------------------------------------------------------------------------------
-        public double GetCardGambleProbChance(V2Enum_Grade v2Enum_ARR_GambleSlotGrade)
+        public double GetCardGambleProbChance(V2Enum_Grade Enum_GambleSlotGrade)
         {
             GambleProbChanceData gambleProbChanceData = GambleOperator.GetGambleProbChanceData();
 
             Dictionary<V2Enum_Grade, ObscuredDouble> gradeChance = gambleProbChanceData.CardGradeChance;
 
-            if (gradeChance.ContainsKey(v2Enum_ARR_GambleSlotGrade) == false)
+            if (gradeChance.ContainsKey(Enum_GambleSlotGrade) == false)
                 return 0.0;
 
-            int count = _gambleActionCount[V2Enum_ARR_GambleType.Reinforcement];
+            int count = _gambleActionCount[Enum_GambleType.Reinforcement];
 
-            double chance = gradeChance[v2Enum_ARR_GambleSlotGrade];
+            double chance = gradeChance[Enum_GambleSlotGrade];
 
             return chance + (chance * count);
         }
@@ -592,31 +592,31 @@ namespace GameBerry.Managers
 
             List<GambleSlotIncreaseValueData> resultList = GambleOperator.GetGambleSlotIncreaseValueDatas(statData.Index);
 
-            V2Enum_ARR_GambleSlotGrade fakeGrade = valueData.GambleSlotGrade;
-            V2Enum_ARR_GambleSlotGrade resultGrade = fakeGrade;
+            Enum_GambleSlotGrade fakeGrade = valueData.GambleSlotGrade;
+            Enum_GambleSlotGrade resultGrade = fakeGrade;
 
-            if (Managers.MapManager.Instance.NeedTutotial1() == true && _gambleActionCount[V2Enum_ARR_GambleType.Slot] == 0)
+            if (Managers.MapManager.Instance.NeedTutotial1() == true && _gambleActionCount[Enum_GambleType.Slot] == 0)
             {
                 resultList = GambleOperator.GetGambleSlotIncreaseValueDatas(106060001);
 
-                fakeGrade = V2Enum_ARR_GambleSlotGrade.Six;
-                resultGrade = V2Enum_ARR_GambleSlotGrade.Six;
+                fakeGrade = Enum_GambleSlotGrade.Six;
+                resultGrade = Enum_GambleSlotGrade.Six;
             }
 
             if (Managers.MapManager.Instance.Stage1TryCount > 3)
             {
-                fakeGrade = UnityEngine.Random.Range((int)V2Enum_ARR_GambleSlotGrade.Four, (int)V2Enum_ARR_GambleSlotGrade.Max).IntToEnum32<V2Enum_ARR_GambleSlotGrade>();
+                fakeGrade = UnityEngine.Random.Range((int)Enum_GambleSlotGrade.Four, (int)Enum_GambleSlotGrade.Max).IntToEnum32<Enum_GambleSlotGrade>();
                 resultGrade = fakeGrade;
             }
 
             bool gradeUp = CanUpGradeSlotGambleResult(valueData.GambleSlotGrade);
             if (gradeUp == true)
             {
-                resultGrade = (fakeGrade.Enum32ToInt() + 1).IntToEnum32<V2Enum_ARR_GambleSlotGrade>();
+                resultGrade = (fakeGrade.Enum32ToInt() + 1).IntToEnum32<Enum_GambleSlotGrade>();
             }
 
-            if (resultGrade == V2Enum_ARR_GambleSlotGrade.Max)
-                resultGrade = V2Enum_ARR_GambleSlotGrade.Six;
+            if (resultGrade == Enum_GambleSlotGrade.Max)
+                resultGrade = Enum_GambleSlotGrade.Six;
 
             GambleSlotIncreaseValueData result = resultList.Find(x => x.GambleSlotGrade == resultGrade);
             if(result == null)
@@ -630,20 +630,20 @@ namespace GameBerry.Managers
                 Managers.BattleSceneManager.Instance.AddMyARRRBuff(result.BaseStat, result.BaseStatIncreaseValue);
             }
 
-            //double needcost = Managers.GambleManager.Instance.GetCost(V2Enum_ARR_GambleType.Card);
+            //double needcost = Managers.GambleManager.Instance.GetCost(Enum_GambleType.Card);
 
             //Managers.GoodsManager.Instance.UseGoodsAmount(V2Enum_Goods.Point, V2Enum_Point.Gold.Enum32ToInt(), needcost);
 
-            _gambleActionCount[V2Enum_ARR_GambleType.Slot]++;
+            _gambleActionCount[Enum_GambleType.Slot]++;
 
             ThirdPartyLog.Instance.SendLog_Slot(MapContainer.MapLastEnter);
 
             return result;
         }
         //------------------------------------------------------------------------------------
-        public bool CanUpGradeSlotGambleResult(V2Enum_ARR_GambleSlotGrade v2Enum_ARR_GambleSlotGrade)
+        public bool CanUpGradeSlotGambleResult(Enum_GambleSlotGrade Enum_GambleSlotGrade)
         {
-            double chance = GetSlotGambleProbChance(v2Enum_ARR_GambleSlotGrade);
+            double chance = GetSlotGambleProbChance(Enum_GambleSlotGrade);
 
             ObscuredDouble totalWeight = 10000;
             double select = _random.NextDouble() * totalWeight;
@@ -654,18 +654,18 @@ namespace GameBerry.Managers
             return false;
         }
         //------------------------------------------------------------------------------------
-        public double GetSlotGambleProbChance(V2Enum_ARR_GambleSlotGrade v2Enum_ARR_GambleSlotGrade)
+        public double GetSlotGambleProbChance(Enum_GambleSlotGrade Enum_GambleSlotGrade)
         {
             GambleProbChanceData gambleProbChanceData = GambleOperator.GetGambleProbChanceData();
 
-            Dictionary<V2Enum_ARR_GambleSlotGrade, ObscuredDouble> gradeChance = gambleProbChanceData.SlotGradeChance;
+            Dictionary<Enum_GambleSlotGrade, ObscuredDouble> gradeChance = gambleProbChanceData.SlotGradeChance;
 
-            if (gradeChance.ContainsKey(v2Enum_ARR_GambleSlotGrade) == false)
+            if (gradeChance.ContainsKey(Enum_GambleSlotGrade) == false)
                 return 0.0;
 
-            int count = _gambleActionCount[V2Enum_ARR_GambleType.Reinforcement];
+            int count = _gambleActionCount[Enum_GambleType.Reinforcement];
 
-            double chance = gradeChance[v2Enum_ARR_GambleSlotGrade];
+            double chance = gradeChance[Enum_GambleSlotGrade];
 
             return chance + (chance * count);
         }
@@ -676,11 +676,11 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public bool DoReinforcementLevelUp()
         {
-            double needcost = Managers.GambleManager.Instance.GetCost(V2Enum_ARR_GambleType.Reinforcement);
+            double needcost = Managers.GambleManager.Instance.GetCost(Enum_GambleType.Reinforcement);
 
             Managers.GoodsManager.Instance.UseGoodsAmount(V2Enum_Goods.Point, V2Enum_Point.InGameGold.Enum32ToInt(), needcost);
 
-            _gambleActionCount[V2Enum_ARR_GambleType.Reinforcement]++;
+            _gambleActionCount[Enum_GambleType.Reinforcement]++;
 
             ThirdPartyLog.Instance.SendLog_LuckyUp(MapContainer.MapLastEnter);
 
@@ -689,35 +689,35 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         #endregion
         //-----------------------------------------------------------------------------------
-        public bool IsMaxCount(V2Enum_ARR_GambleType v2Enum_ARR_GambleType)
+        public bool IsMaxCount(Enum_GambleType Enum_GambleType)
         {
-            if (_gambleActionCount.ContainsKey(v2Enum_ARR_GambleType) == false)
+            if (_gambleActionCount.ContainsKey(Enum_GambleType) == false)
                 return true;
 
-            int count = _gambleActionCount[v2Enum_ARR_GambleType];
-            GambleCostData gambleCostData = GambleOperator.GetGambleCostData(v2Enum_ARR_GambleType);
+            int count = _gambleActionCount[Enum_GambleType];
+            GambleCostData gambleCostData = GambleOperator.GetGambleCostData(Enum_GambleType);
             if (gambleCostData.MaxLevel == -1)
                 return false;
 
             return count >= gambleCostData.MaxLevel;
         }
         //-----------------------------------------------------------------------------------
-        public int GetGambleActionCount(V2Enum_ARR_GambleType v2Enum_ARR_GambleType)
+        public int GetGambleActionCount(Enum_GambleType Enum_GambleType)
         {
-            if (_gambleActionCount.ContainsKey(v2Enum_ARR_GambleType) == false)
+            if (_gambleActionCount.ContainsKey(Enum_GambleType) == false)
                 return 0;
 
-            return _gambleActionCount[v2Enum_ARR_GambleType];
+            return _gambleActionCount[Enum_GambleType];
         }
         //-----------------------------------------------------------------------------------
-        public double GetCost(V2Enum_ARR_GambleType v2Enum_ARR_GambleType)
+        public double GetCost(Enum_GambleType Enum_GambleType)
         {
-            int count = _gambleActionCount[v2Enum_ARR_GambleType];
-            GambleCostData gambleCostData = GambleOperator.GetGambleCostData(v2Enum_ARR_GambleType);
+            int count = _gambleActionCount[Enum_GambleType];
+            GambleCostData gambleCostData = GambleOperator.GetGambleCostData(Enum_GambleType);
 
             double cost = gambleCostData.BaseCost + (gambleCostData.CostIncrease * count);
 
-            if (v2Enum_ARR_GambleType == V2Enum_ARR_GambleType.Card)
+            if (Enum_GambleType == Enum_GambleType.Card)
             {
                 if (Managers.BattleSceneManager.isAlive == true && Managers.BattleSceneManager.Instance.CurrentBattleScene != null && Managers.BattleSceneManager.Instance.CurrentBattleScene.MyARRRControllers != null)
                 {

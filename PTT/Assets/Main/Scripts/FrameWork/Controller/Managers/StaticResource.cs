@@ -25,7 +25,7 @@ namespace GameBerry
         [SerializeField]
         private SpineModelAsset _arrrSpineModelAsset;
 
-        private Dictionary<V2Enum_ARR_SynergyType, GambleCardSprite> _gambleCardSprites_Dic = new Dictionary<V2Enum_ARR_SynergyType, GambleCardSprite>();
+        private Dictionary<Enum_SynergyType, GambleCardSprite> _gambleCardSprites_Dic = new Dictionary<Enum_SynergyType, GambleCardSprite>();
         private Dictionary<V2Enum_Grade, GambleGradeBGSprite> _gambleGradeBGSprites_Dic = new Dictionary<V2Enum_Grade, GambleGradeBGSprite>();
 
         [SerializeField]
@@ -207,9 +207,9 @@ namespace GameBerry
             return _staticResourceAsset.m_varianceColor_List;
         }
         //------------------------------------------------------------------------------------
-        public TotalLevelEffectColorData GetTotalLevelEffectColorData(V2Enum_ARRR_TotalLevelType v2Enum_ARRR_TotalLevelType)
+        public TotalLevelEffectColorData GetTotalLevelEffectColorData(Enum_ARRR_TotalLevelType enumArrrTotalLevelType)
         {
-            return _staticResourceAsset.TotalLevelEffectColor.Find(x => x.EffectType == v2Enum_ARRR_TotalLevelType);
+            return _staticResourceAsset.TotalLevelEffectColor.Find(x => x.EffectType == enumArrrTotalLevelType);
         }
         //------------------------------------------------------------------------------------
         public GearResourceData GetGearResourceData(V2Enum_GearType v2Enum_GearType)
@@ -243,10 +243,10 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         #region Gamble
         //------------------------------------------------------------------------------------
-        public GambleCardSprite GetGambleCardSpriteData(V2Enum_ARR_SynergyType v2Enum_ARR_Card)
+        public GambleCardSprite GetGambleCardSpriteData(Enum_SynergyType Enum_Card)
         {
-            if (_gambleCardSprites_Dic.ContainsKey(v2Enum_ARR_Card) == true)
-                return _gambleCardSprites_Dic[v2Enum_ARR_Card];
+            if (_gambleCardSprites_Dic.ContainsKey(Enum_Card) == true)
+                return _gambleCardSprites_Dic[Enum_Card];
 
             return null;
         }

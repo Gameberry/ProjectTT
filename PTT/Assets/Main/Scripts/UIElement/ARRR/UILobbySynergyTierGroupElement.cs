@@ -38,7 +38,7 @@ namespace GameBerry.UI
 
         private System.Action<SynergyEffectData> _callBack;
 
-        private V2Enum_ARR_SynergyType _currentSynergyType = V2Enum_ARR_SynergyType.Max;
+        private Enum_SynergyType _currentSynergyType = Enum_SynergyType.Max;
         private ObscuredInt _currentTier;
 
         //------------------------------------------------------------------------------------
@@ -47,14 +47,14 @@ namespace GameBerry.UI
             _callBack = action;
         }
         //------------------------------------------------------------------------------------
-        public void SetSynergyTierGroup(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt tier, List<SynergyEffectData> effectDatas)
+        public void SetSynergyTierGroup(Enum_SynergyType Enum_SynergyType, ObscuredInt tier, List<SynergyEffectData> effectDatas)
         {
             _uIGambleSynergyViewElement_dic.Clear();
 
             if (effectDatas == null)
                 return;
 
-            _currentSynergyType = v2Enum_ARR_SynergyType;
+            _currentSynergyType = Enum_SynergyType;
             _currentTier = tier;
 
             if (_synergyLevel != null)

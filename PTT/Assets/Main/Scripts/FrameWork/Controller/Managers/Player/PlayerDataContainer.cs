@@ -47,11 +47,6 @@ namespace GameBerry
 
         public static int Profile = 0;
 
-        public static string PlayerServerKind = string.Empty;
-        public static int PlayerServerNum = 0;
-
-        public static string LogServerName = string.Empty;
-
         public static string DisplayServerName = string.Empty;
         public static string RankWindowDisplayServerName = string.Empty;
         public static string DisplayChatServerName = string.Empty;
@@ -65,9 +60,5 @@ namespace GameBerry
         public static List<CharacterProfileData> characterProfileDatas = new List<CharacterProfileData>();
 
         public static Dictionary<int, CharacterProfileData> characterProfileDatas_Dic = new Dictionary<int, CharacterProfileData>();
-
-        public static ObscuredDouble LastRouletteInitTimeStemp = 0.0;
-        public static ObscuredDouble LastRouletteActionTime = 0.0;
-        public static ObscuredInt TodayRouletteActionCount = 0;
     }
 }

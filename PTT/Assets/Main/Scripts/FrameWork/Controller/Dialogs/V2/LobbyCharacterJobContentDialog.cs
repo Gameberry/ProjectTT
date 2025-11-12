@@ -215,9 +215,9 @@ namespace GameBerry.UI
                 if (_doUpGradeJob != null)
                     _doUpGradeJob.interactable = Managers.JobManager.Instance.CanUpGradeJob();
 
-                V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = JobContainer.JobType.GetDecrypted().IntToEnum32<V2Enum_ARR_SynergyType>();
+                Enum_SynergyType Enum_SynergyType = JobContainer.JobType.GetDecrypted().IntToEnum32<Enum_SynergyType>();
 
-                JobData jobData = Managers.JobManager.Instance.GetJobData(v2Enum_ARR_SynergyType, tier);
+                JobData jobData = Managers.JobManager.Instance.GetJobData(Enum_SynergyType, tier);
 
                 JobTierUpgradeConditionData jobTierUpgradeConditionData = Managers.JobManager.Instance.GetJobTierUpgradeConditionData(tier);
 
@@ -277,7 +277,7 @@ namespace GameBerry.UI
             if (refreshCharacter == true)
             {
                 if (_uIJobEffectElement != null)
-                    _uIJobEffectElement.SetJobEffectElement(JobContainer.JobType.GetDecrypted().IntToEnum32<V2Enum_ARR_SynergyType>(), tier);
+                    _uIJobEffectElement.SetJobEffectElement(JobContainer.JobType.GetDecrypted().IntToEnum32<Enum_SynergyType>(), tier);
             }
             
 
@@ -448,12 +448,12 @@ namespace GameBerry.UI
         {
             if (_lobbyCharacterJobChangeDialog != null)
             {
-                V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+                Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
                 if (JobContainer.JobTier <= 0)
                     return;
 
-                _lobbyCharacterJobChangeDialog.InitJobEffectElement(v2Enum_ARR_SynergyType, JobContainer.JobTier, false);
+                _lobbyCharacterJobChangeDialog.InitJobEffectElement(Enum_SynergyType, JobContainer.JobTier, false);
                 _lobbyCharacterJobChangeDialog.ElementEnter();
             }
         }
@@ -462,10 +462,10 @@ namespace GameBerry.UI
         {
             if (_lobbyCharacterJobChangeDialog != null)
             {
-                V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType = V2Enum_ARR_SynergyType.Max;
+                Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max;
 
                 if (JobContainer.JobTier > 0)
-                    v2Enum_ARR_SynergyType = JobContainer.JobType.GetDecrypted().IntToEnum32<V2Enum_ARR_SynergyType>();
+                    Enum_SynergyType = JobContainer.JobType.GetDecrypted().IntToEnum32<Enum_SynergyType>();
 
                 if (Managers.GuideInteractorManager.Instance.PlayJobChangeTutorial == true)
                 {
@@ -473,7 +473,7 @@ namespace GameBerry.UI
                         _guideJob3BG.gameObject.SetActive(false);
                 }
 
-                _lobbyCharacterJobChangeDialog.InitJobEffectElement(v2Enum_ARR_SynergyType, JobContainer.JobTier + 1, true);
+                _lobbyCharacterJobChangeDialog.InitJobEffectElement(Enum_SynergyType, JobContainer.JobTier + 1, true);
                 _lobbyCharacterJobChangeDialog.ElementEnter();
             }
         }

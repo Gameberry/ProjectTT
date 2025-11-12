@@ -54,7 +54,7 @@ namespace GameBerry.UI
         private List<RectTransform> customRefresh;
 
 
-        public void SetJobEffectElement(V2Enum_ARR_SynergyType v2Enum_ARR_SynergyType, ObscuredInt tier)
+        public void SetJobEffectElement(Enum_SynergyType Enum_SynergyType, ObscuredInt tier)
         {
             SpineModelData _currentSpineModelData = StaticResource.Instance.GetARRRSpineModelData();
 
@@ -78,7 +78,7 @@ namespace GameBerry.UI
                         myEquipsSkin.AddSkin(skeletonData.FindSkin(skinname));
                 }
 
-                myEquipsSkin.AddSkin(skeletonData.FindSkin(Managers.JobManager.Instance.GetWeaponSkinName(v2Enum_ARR_SynergyType, tier)));
+                myEquipsSkin.AddSkin(skeletonData.FindSkin(Managers.JobManager.Instance.GetWeaponSkinName(Enum_SynergyType, tier)));
 
                 skeleton.SetSkin(myEquipsSkin);
                 skeleton.SetSlotsToSetupPose(); // 포즈 적용
@@ -87,7 +87,7 @@ namespace GameBerry.UI
                 _skeletonGraphic.AnimationState.SetAnimation(0, "Idle", true); // Idle 적용
             }
 
-            JobData jobData = Managers.JobManager.Instance.GetJobData(v2Enum_ARR_SynergyType, tier);
+            JobData jobData = Managers.JobManager.Instance.GetJobData(Enum_SynergyType, tier);
 
             if (jobData == null)
                 return;
@@ -112,7 +112,7 @@ namespace GameBerry.UI
             if (_runeValueText != null)
                 _runeValueText.SetText("+{0}%", jobData.RuneEffect.GetDecrypted());
 
-            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(v2Enum_ARR_SynergyType);
+            GambleCardSprite gambleCardSprite = StaticResource.Instance.GetGambleCardSpriteData(Enum_SynergyType);
             if (gambleCardSprite != null)
             {
                 if (_gearEffectIcon != null)

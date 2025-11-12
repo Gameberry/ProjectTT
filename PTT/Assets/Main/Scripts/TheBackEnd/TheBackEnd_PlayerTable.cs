@@ -216,14 +216,6 @@ namespace GameBerry.TheBackEnd
                             {
                                 Define.IsAdFree = data[i][key].ToString().ToInt() == 1;
                             }
-                            else if (key == Define.PlayerServerKind)
-                            {
-                                PlayerDataContainer.PlayerServerKind = data[i][key].ToString();
-                            }
-                            else if (key == Define.PlayerServerNum)
-                            {
-                                PlayerDataContainer.PlayerServerNum = data[i][key].ToString().ToInt();
-                            }
                             else if (key == Define.PlayerCheatingCheck)
                             {
                                 PlayerDataContainer.PlayerCheatingCount = data[i][key].ToString().ToInt();
@@ -245,40 +237,9 @@ namespace GameBerry.TheBackEnd
                             {
                                 PlayerDataContainer.PlayerRecvPreReward = data[i][key].ToString().ToInt();
                             }
-
-                            else if (key == Define.PlayerRouletteInitTime)
-                            {
-                                PlayerDataContainer.LastRouletteInitTimeStemp = data[i][key].ToString().ToDouble();
-                            }
-                            else if (key == Define.PlayerRouletteActionTime)
-                            {
-                                PlayerDataContainer.LastRouletteActionTime = data[i][key].ToString().ToDouble();
-                            }
-                            else if (key == Define.PlayerRouletteActionCount)
-                            {
-                                PlayerDataContainer.TodayRouletteActionCount = data[i][key].ToString().ToInt();
-                            }
                         }
                     }
 
-                    if (string.IsNullOrEmpty(PlayerDataContainer.PlayerServerKind) == true)
-                    {
-                        PlayerDataContainer.PlayerServerKind = GetServerKind();
-                        PlayerDataContainer.PlayerServerNum = GetServerCode();
-                    }
-
-                    PlayerDataContainer.DisplayServerName = GetDisplayServerName();
-                    PlayerDataContainer.RankWindowDisplayServerName = GetRankWindowDisplayServerName();
-                    PlayerDataContainer.DisplayChatServerName = GetDisplayChatServerName();
-
-                    if (Managers.SceneManager.Instance.BuildElement == BuildEnvironmentEnum.Develop)
-                        PlayerDataContainer.LogServerName = "DEV";
-                    else if (Managers.SceneManager.Instance.BuildElement == BuildEnvironmentEnum.QA)
-                        PlayerDataContainer.LogServerName = "QA";
-                    else if (Managers.SceneManager.Instance.BuildElement == BuildEnvironmentEnum.Stage)
-                        PlayerDataContainer.LogServerName = "STG";
-                    else if (Managers.SceneManager.Instance.BuildElement == BuildEnvironmentEnum.Product)
-                        PlayerDataContainer.LogServerName = TheBackEnd_Rank.GetRankTitleName(V2Enum_RankType.Power);
 
                     Message.Send(new Event.CompleteTableLoadMsg());
                 }
@@ -288,9 +249,6 @@ namespace GameBerry.TheBackEnd
         private static void InsertPlayerInfoTable()
         {
             Debug.Log("InsertPlayerInfoTable()");
-
-            PlayerDataContainer.PlayerServerKind = GetServerKind();
-            PlayerDataContainer.PlayerServerNum = GetServerCode();
 
             SendQueue.Enqueue(Backend.PlayerData.InsertData, Define.PlayerInfoTable, GetPlayerInfoParam(), (callback) =>
             {
@@ -316,9 +274,6 @@ namespace GameBerry.TheBackEnd
 
             param.Add(Define.PlayerAdFree, Define.IsAdFree.GetDecrypted() == true ? 1 : 0);
 
-            param.Add(Define.PlayerServerKind, PlayerDataContainer.PlayerServerKind);
-            param.Add(Define.PlayerServerNum, PlayerDataContainer.PlayerServerNum);
-
             param.Add(Define.PlayerCheatingCheck, PlayerDataContainer.PlayerCheatingCount.GetDecrypted());
             param.Add(Define.PlayerDontSearchCheat, PlayerDataContainer.PlayerDontSearchCheat.GetDecrypted());
 
@@ -327,64 +282,7 @@ namespace GameBerry.TheBackEnd
             param.Add(Define.PlayerRecvLaunchReward, PlayerDataContainer.PlayerRecvLaunchReward.GetDecrypted());
             param.Add(Define.PlayerRecvPreReward, PlayerDataContainer.PlayerRecvPreReward.GetDecrypted());
 
-            param.Add(Define.PlayerRouletteInitTime, PlayerDataContainer.LastRouletteInitTimeStemp.GetDecrypted());
-            param.Add(Define.PlayerRouletteActionTime, PlayerDataContainer.LastRouletteActionTime.GetDecrypted());
-            param.Add(Define.PlayerRouletteActionCount, PlayerDataContainer.TodayRouletteActionCount.GetDecrypted());
-
             return param;
-        }
-        //------------------------------------------------------------------------------------
-        public static string GetServerKind()
-        {
-            return Define.ServerKind;
-        }
-        //------------------------------------------------------------------------------------
-        public static int GetServerCode()
-        {
-            return Define.ServerNum;
-        }
-        //------------------------------------------------------------------------------------
-        public static string GetDisplayServerName()
-        {
-            if (PlayerDataContainer.PlayerServerKind == "SO")
-            {
-                return "Global 10";
-            }
-            else
-            {
-                return string.Format("Global {0}", PlayerDataContainer.PlayerServerNum);
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public static string GetRankWindowDisplayServerName()
-        {
-            if (PlayerDataContainer.PlayerServerNum >= 107)
-            {
-                return string.Format("Global {0}", PlayerDataContainer.PlayerServerNum);
-            }
-
-            return "Global 10~106";
-
-            //if (PlayerDataContainer.PlayerServerKind == "SO")
-            //{
-            //    return "Global 10";
-            //}
-            //else
-            //{
-            //    return string.Format("Global {0}", PlayerDataContainer.PlayerServerNum);
-            //}
-        }
-        //------------------------------------------------------------------------------------
-        public static string GetDisplayChatServerName()
-        {
-            if (PlayerDataContainer.PlayerServerKind == "SO")
-            {
-                return "G10";
-            }
-            else
-            {
-                return string.Format("G{0}", PlayerDataContainer.PlayerServerNum);
-            }
         }
         //------------------------------------------------------------------------------------
         #endregion
