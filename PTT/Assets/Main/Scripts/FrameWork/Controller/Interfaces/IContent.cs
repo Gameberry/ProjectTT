@@ -131,10 +131,5 @@ namespace GameBerry.Contents
         {
             Message.Send<Event.ExitContentMsg>(typeof(T).Name, new Event.ExitContentMsg());
         }
-
-        public static string GetMsgName<T>()
-		{
-			return typeof(T).Name;
-		}
 	}
 }

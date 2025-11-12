@@ -212,7 +212,7 @@ namespace GameBerry.UI
                 UIGlobalGoodsRewardIconElement uIGlobalGoodsRewardIconElement = null;
                 if (m_uIGlobalGoodsRewardIconElements.Count <= i)
                 {
-                    uIGlobalGoodsRewardIconElement = Managers.RewardManager.Instance.GetGoodsRewardIcon_NoneParticle();
+                    uIGlobalGoodsRewardIconElement = Managers.RewardManager.Instance.GetGoodsRewardIcon();
                     m_uIGlobalGoodsRewardIconElements.Add(uIGlobalGoodsRewardIconElement);
                 }
                 else

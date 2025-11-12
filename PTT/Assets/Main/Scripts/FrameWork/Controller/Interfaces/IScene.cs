@@ -12,7 +12,6 @@ namespace GameBerry.Scene
 	public abstract class IScene : MonoBehaviour
 	{
 		public Constants.SceneName sceneName;
-        public bool unloadBundle = false;
 
 		public List<string> contentsList = new List<string>();
 		public List<string> defaultContentList = new List<string>();
@@ -95,9 +94,6 @@ namespace GameBerry.Scene
 				for (int i = 0; i < contentsList.Count; ++i)
 					ContentsLoader.Instance.Unload(contentsList[i]);
 			}
-
-            if (unloadBundle == true)
-                AssetBundleManager.UnloadSceneLoadedBundles(sceneName);
 
             Managers.SoundManager.Instance.UnloadPlayedClip();
 

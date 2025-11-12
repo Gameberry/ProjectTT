@@ -121,9 +121,10 @@ namespace GameBerry
 		}
 
 		public void Unload(string resourceName)
-		{
-			return;
-		}
+        {
+            if (loadedResources.ContainsKey(resourceName))
+                loadedResources.Remove(resourceName);
+        }
 
 		public void UnloadAll()
 		{

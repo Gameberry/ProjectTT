@@ -1,4 +1,5 @@
 ﻿using GameBerry.Managers;
+using Cysharp.Threading.Tasks;
 
 namespace GameBerry.Scene
 {
@@ -8,7 +9,13 @@ namespace GameBerry.Scene
     {
         protected override void OnLoadComplete()
         {
-            SceneManager.Instance.Load(Constants.SceneName.Lobby);
+            LateChange().Forget();
         }
-    }
+
+		public async UniTask LateChange()
+        {
+            await UniTask.Yield();
+            SceneManager.Instance.Load(Constants.SceneName.Lobby, true);
+        }
+	}
 }

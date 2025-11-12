@@ -5,49 +5,9 @@ using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace GameBerry.Contents
 {
-    [System.Serializable]
-    public class V2SkillTriggerColorData
-    {
-        public Enum_TriggerType SkillTriggerType = Enum_TriggerType.Max;
-        public Color BGColor;
-        public Color TextColor;
-        public Material TextMaterial;
-    }
-
-
-    [System.Serializable]
-    public class BerserkerModeBGColor
-    {
-        public int Min;
-        public int Max;
-        public Color BGColor = Color.white;
-    }
-
-    [System.Serializable]
-    public class PromoStarSprite
-    {
-        public int Promo = 0;
-        public List<Sprite> StarImage = new List<Sprite>();
-    }
-
+    
     public class GlobalContent : IContent
     {
-        [SerializeField]
-        private List<V2SkillTriggerColorData> m_v2SkillTriggerColorDatas = new List<V2SkillTriggerColorData>();
-        private static Dictionary<Enum_TriggerType, V2SkillTriggerColorData> m_v2SkillTriggerColorDatas_Dic = new Dictionary<Enum_TriggerType, V2SkillTriggerColorData>();
-
-
-        [Header("----------------BerserkerModeBG----------------")]
-        [SerializeField]
-        private List<BerserkerModeBGColor> m_berserkerModeBGColor_List = null;
-        private static List<BerserkerModeBGColor> m_berserkerModeBGColors = null;
-
-        [Header("----------------BerserkerModeBG----------------")]
-        [SerializeField]
-        private List<PromoStarSprite> m_promoStarSprite_List = null;
-        private static Dictionary<int, PromoStarSprite> m_promoStarSprites = new Dictionary<int, PromoStarSprite>();
-
-
         private static GameBerry.Event.ShowPopup_OkMsg m_showPopup_OkMsg = new GameBerry.Event.ShowPopup_OkMsg();
         private static GameBerry.Event.ShowPopup_OkCancelMsg m_showPopup_OkCancelMsg = new GameBerry.Event.ShowPopup_OkCancelMsg();
         private static GameBerry.Event.ShowPopup_InputMsg m_showPopup_InputMsg = new GameBerry.Event.ShowPopup_InputMsg();
@@ -67,30 +27,6 @@ namespace GameBerry.Contents
         private static GameBerry.Event.SetGoodsDescPopupMsg m_setGoodsDescPopupMsg = new GameBerry.Event.SetGoodsDescPopupMsg();
 
         //------------------------------------------------------------------------------------
-        protected override void OnLoadStart()
-        {
-            for (int i = 0; i < m_v2SkillTriggerColorDatas.Count; ++i)
-            {
-                if (m_v2SkillTriggerColorDatas_Dic.ContainsKey(m_v2SkillTriggerColorDatas[i].SkillTriggerType) == false)
-                {
-                    m_v2SkillTriggerColorDatas_Dic.Add(m_v2SkillTriggerColorDatas[i].SkillTriggerType, m_v2SkillTriggerColorDatas[i]);
-                }
-            }
-
-
-            m_berserkerModeBGColors = m_berserkerModeBGColor_List;
-
-            for (int i = 0; i < m_promoStarSprite_List.Count; ++i)
-            {
-                if (m_promoStarSprites.ContainsKey(m_promoStarSprite_List[i].Promo) == false)
-                {
-                    m_promoStarSprites.Add(m_promoStarSprite_List[i].Promo, m_promoStarSprite_List[i]);
-                }
-            }
-
-            SetLoadComplete();
-        }
-        //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
             UIManager.DialogEnter<GlobalPopupDialog>();
@@ -107,16 +43,6 @@ namespace GameBerry.Contents
             UIManager.DialogExit<GlobalDungeonFadeDialog>();
             UIManager.DialogExit<GlobalFadeDialog>();
             UIManager.DialogExit<GlobalNoticeDialog>();
-        }
-        //------------------------------------------------------------------------------------
-        public static V2SkillTriggerColorData GetV2SkillTriggerColorData(Enum_TriggerType v2Enum_TriggerType)
-        {
-            V2SkillTriggerColorData v2SkillTriggerColorData = null;
-
-            if (m_v2SkillTriggerColorDatas_Dic.TryGetValue(v2Enum_TriggerType, out v2SkillTriggerColorData) == true)
-                return v2SkillTriggerColorData;
-
-            return null;
         }
         //------------------------------------------------------------------------------------
         public static void DoFade(bool visible, float duration = 1.0f)
@@ -313,17 +239,19 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         public static void ShowSelectGoodsPopup(V2Enum_Goods v2Enum_Goods, List<ObscuredInt> SelectIndexList, System.Action<int> SelectedCallBack)
         {
+            UI.UIManager.DialogEnter<InGameSelectGoodsPopupDialog>();
+
             m_setSelectGoodsPopupMsg.v2Enum_Goods = v2Enum_Goods;
             m_setSelectGoodsPopupMsg.SelectIndexList = SelectIndexList;
             m_setSelectGoodsPopupMsg.SelectedCallBack = SelectedCallBack;
 
             Message.Send(m_setSelectGoodsPopupMsg);
-
-            UI.UIManager.DialogEnter<InGameSelectGoodsPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public static void ShowGoodsDescPopup(V2Enum_Goods v2Enum_Goods, int index, double timegoodstime = 0.0)
         {
+            UI.UIManager.DialogEnter<InGameGoodsDescPopupDialog>();
+
             m_setGoodsDescPopupMsg.v2Enum_Goods = v2Enum_Goods;
 
             if (m_setGoodsDescPopupMsg.v2Enum_Goods == V2Enum_Goods.Max)
@@ -333,34 +261,6 @@ namespace GameBerry.Contents
             m_setGoodsDescPopupMsg.timeGoodsTime = timegoodstime;
 
             Message.Send(m_setGoodsDescPopupMsg);
-
-            UI.UIManager.DialogEnter<InGameGoodsDescPopupDialog>();
-        }
-        //------------------------------------------------------------------------------------
-        public static Color GetBerserkerMoveColor(SpriteRenderer spriteRenderer)
-        {
-            if (spriteRenderer == null)
-                return Color.white;
-
-            if(m_berserkerModeBGColors == null)
-                return spriteRenderer.color;
-
-            for (int i = 0; i < m_berserkerModeBGColors.Count; ++i)
-            {
-                if (m_berserkerModeBGColors[i].Min < spriteRenderer.sortingOrder
-                    && m_berserkerModeBGColors[i].Max >= spriteRenderer.sortingOrder)
-                    return m_berserkerModeBGColors[i].BGColor;
-            }
-
-            return spriteRenderer.color;
-        }
-        //------------------------------------------------------------------------------------
-        public static PromoStarSprite GePromoStarSprite(int promo)
-        {
-            if (m_promoStarSprites.ContainsKey(promo) == false)
-                return null;
-
-            return m_promoStarSprites[promo];
         }
         //------------------------------------------------------------------------------------
     }

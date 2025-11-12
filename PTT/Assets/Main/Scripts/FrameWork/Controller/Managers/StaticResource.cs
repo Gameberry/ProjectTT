@@ -114,6 +114,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         #region Color
         //------------------------------------------------------------------------------------
+        public V2SkillTriggerColorData GetV2SkillTriggerColorData(Enum_TriggerType Enum_TriggerType)
+        {
+            return _staticResourceAsset.SkillTriggerColorDatas.Find(x => x.SkillTriggerType == Enum_TriggerType);
+        }
+        //------------------------------------------------------------------------------------
         public V2GradeColorData GetV2GradeColorData(V2Enum_Grade v2Enum_Grade)
         {
             if (_v2GradeColorDatas_Dic.ContainsKey(v2Enum_Grade) == true)

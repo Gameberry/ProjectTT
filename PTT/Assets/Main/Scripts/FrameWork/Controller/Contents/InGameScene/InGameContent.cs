@@ -6,22 +6,6 @@ using System.Linq;
 
 namespace GameBerry.Contents
 {
-    [System.Serializable]
-    public class ShopElementCustomResource
-    {
-        public ContentDetailList ContentDetailList;
-        public int ResoueceIndex;
-
-        public Color PackageBG_Color = Color.white;
-        public Color PackageGraBG_Color = Color.white;
-        public Color PackageFrame1_Color = Color.white;
-        public Color PackageFrame2_Color = Color.white;
-        public Sprite PackageTitleIcon_Sprite;
-
-        public GameObject PackageIcon;
-    }
-
-
     public class InGameContent : IContent
     {
         [Header("----------------Dungeon----------------")]
@@ -29,11 +13,6 @@ namespace GameBerry.Contents
         private List<VarianceColor> m_varianceColor_List = new List<VarianceColor>();
 
         private static Dictionary<CreatureStatController, double> m_noticeBattlePower = new Dictionary<CreatureStatController, double>();
-
-        [Header("----------------ShopElementCustomResource----------------")]
-        [SerializeField]
-        private List<ShopElementCustomResource> m_shopElementCustomResource_List = new List<ShopElementCustomResource>();
-        private static Dictionary<ContentDetailList, List<ShopElementCustomResource>> m_shopElementCustomResource_Dic = new Dictionary<ContentDetailList, List<ShopElementCustomResource>>();
 
         [Header("----------------CharacterProfileSprite----------------")]
         [SerializeField]
@@ -51,16 +30,6 @@ namespace GameBerry.Contents
         protected override void OnLoadStart()
         {
             Managers.CharacterStatManager.Instance.SetBattlePower();
-
-            for (int i = 0; i < m_shopElementCustomResource_List.Count; ++i)
-            {
-                ShopElementCustomResource shopElementCustomResource = m_shopElementCustomResource_List[i];
-
-                if (m_shopElementCustomResource_Dic.ContainsKey(shopElementCustomResource.ContentDetailList) == false)
-                    m_shopElementCustomResource_Dic.Add(shopElementCustomResource.ContentDetailList, new List<ShopElementCustomResource>());
-
-                m_shopElementCustomResource_Dic[shopElementCustomResource.ContentDetailList].Add(shopElementCustomResource);
-            }
 
             StartCoroutine(CompleteFade());
         }
@@ -197,21 +166,6 @@ namespace GameBerry.Contents
             //    });
             //}
 
-        }
-        //------------------------------------------------------------------------------------
-        public static ShopElementCustomResource GetShopElementCustomResource(ContentDetailList contentDetailList, int resoueceIndex)
-        {
-            if (m_shopElementCustomResource_Dic.ContainsKey(contentDetailList) == false)
-                return null;
-
-            List<ShopElementCustomResource> shopElementCustomResources = m_shopElementCustomResource_Dic[contentDetailList];
-
-            return shopElementCustomResources.Find(x => x.ResoueceIndex == resoueceIndex);
-        }
-        //------------------------------------------------------------------------------------
-        public void AddShopElementCustomResource(ShopElementCustomResource shopElementCustomResource)
-        {
-            m_shopElementCustomResource_List.Add(shopElementCustomResource);
         }
         //------------------------------------------------------------------------------------
         public static void ShowSimpleDescPopup(string title, string desc)

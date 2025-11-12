@@ -12,26 +12,15 @@ namespace GameBerry.Managers
         private Queue<UIGlobalGoodsRewardIconElement> m_uIGlobalGoodsRewardIconElements = new Queue<UIGlobalGoodsRewardIconElement>();
         private UIGlobalGoodsRewardIconElement m_uIGlobalGoodsRewardIconElement = null;
 
-        private Queue<UIGlobalGoodsRewardIconElement> m_uIGlobalGoodsRewardIconElements_NoneParticle = new Queue<UIGlobalGoodsRewardIconElement>();
-        private UIGlobalGoodsRewardIconElement m_uIGlobalGoodsRewardIconElement_NoneParticle = null;
-
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
-            ResourceLoader.Instance.Load<GameObject>("ContentResources/InGameContent/Objects/UIGlobalGoodsRewardIconElement", o =>
+            ResourceLoader.Instance.Load<GameObject>("ContentResources/UIObjects/UIGlobalGoodsRewardIconElement", o =>
             {
                 GameObject obj = o as GameObject;
 
                 if (obj != null)
                     m_uIGlobalGoodsRewardIconElement = obj.GetComponent<UIGlobalGoodsRewardIconElement>();
-            });
-
-            ResourceLoader.Instance.Load<GameObject>("ContentResources/InGameContent/Objects/UIGlobalGoodsRewardIconElement_NoneParticle", o =>
-            {
-                GameObject obj = o as GameObject;
-
-                if (obj != null)
-                    m_uIGlobalGoodsRewardIconElement_NoneParticle = obj.GetComponent<UIGlobalGoodsRewardIconElement>();
             });
         }
         //------------------------------------------------------------------------------------
@@ -86,25 +75,6 @@ namespace GameBerry.Managers
             return m_uIGlobalGoodsRewardIconElements.Dequeue();
         }
         //------------------------------------------------------------------------------------
-        public UIGlobalGoodsRewardIconElement GetGoodsRewardIcon_NoneParticle()
-        {
-            if (m_uIGlobalGoodsRewardIconElements_NoneParticle.Count <= 0)
-            {
-                if (m_uIGlobalGoodsRewardIconElement_NoneParticle != null)
-                {
-                    GameObject clone = Instantiate(m_uIGlobalGoodsRewardIconElement_NoneParticle.gameObject, UIManager.Instance.screenCanvas.transform);
-                    if (clone != null)
-                    {
-                        UIGlobalGoodsRewardIconElement uIGlobalGoodsRewardIconElement = clone.GetComponent<UIGlobalGoodsRewardIconElement>();
-                        clone.SetActive(false);
-                        return uIGlobalGoodsRewardIconElement;
-                    }
-                }
-            }
-
-            return m_uIGlobalGoodsRewardIconElements_NoneParticle.Dequeue();
-        }
-        //------------------------------------------------------------------------------------
         public void PoolGoodsRewardIcon(UIGlobalGoodsRewardIconElement uIGlobalGoodsRewardIconElement)
         {
             if (uIGlobalGoodsRewardIconElement == null)
@@ -113,11 +83,8 @@ namespace GameBerry.Managers
             uIGlobalGoodsRewardIconElement.gameObject.SetActive(false);
             uIGlobalGoodsRewardIconElement.transform.SetParent(UIManager.Instance.screenCanvas.transform);
             uIGlobalGoodsRewardIconElement.AddClickListener(null);
-
-            if (uIGlobalGoodsRewardIconElement.IsNoneParticle == true)
-                m_uIGlobalGoodsRewardIconElements_NoneParticle.Enqueue(uIGlobalGoodsRewardIconElement);
-            else
-                m_uIGlobalGoodsRewardIconElements.Enqueue(uIGlobalGoodsRewardIconElement);
+            
+            m_uIGlobalGoodsRewardIconElements.Enqueue(uIGlobalGoodsRewardIconElement);
         }
         //------------------------------------------------------------------------------------
     }

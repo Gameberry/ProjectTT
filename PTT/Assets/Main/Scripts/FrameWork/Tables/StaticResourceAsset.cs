@@ -6,6 +6,16 @@ using TMPro;
 namespace GameBerry
 {
     [System.Serializable]
+    public class V2SkillTriggerColorData
+    {
+        public Enum_TriggerType SkillTriggerType = Enum_TriggerType.Max;
+        public Color BGColor;
+        public Color TextColor;
+        public Material TextMaterial;
+    }
+
+
+    [System.Serializable]
     public class V2GradeColorData
     {
         public V2Enum_Grade v2Enum_Grade;
@@ -207,6 +217,8 @@ namespace GameBerry
         public List<GambleGradeBGSprite> GambleGradeBGSprites = new List<GambleGradeBGSprite>();
 
         public ElementFrameResourceData elementFrameResourceData;
+
+        public List<V2SkillTriggerColorData> SkillTriggerColorDatas = new List<V2SkillTriggerColorData>();
 
         public List<V2GradeColorData> GradeColorDatas = new List<V2GradeColorData>();
 

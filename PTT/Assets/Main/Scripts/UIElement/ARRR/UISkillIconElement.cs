@@ -55,7 +55,7 @@ namespace GameBerry.UI
             if (_skillIcon != null)
                 _skillIcon.sprite = Managers.SkillManager.Instance.GetSkillIcon(characterSkillData);
 
-            Contents.V2SkillTriggerColorData v2SkillTriggerColorData = Contents.GlobalContent.GetV2SkillTriggerColorData(characterSkillData.TriggerType);
+            V2SkillTriggerColorData v2SkillTriggerColorData = StaticResource.Instance.GetV2SkillTriggerColorData(characterSkillData.TriggerType);
 
             if (_skillTriggerTypeText != null)
             {

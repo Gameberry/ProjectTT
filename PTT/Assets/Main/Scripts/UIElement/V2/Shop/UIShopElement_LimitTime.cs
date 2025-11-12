@@ -56,7 +56,7 @@ namespace GameBerry.UI
 
             for (int i = 0; i < shopDataBase.ShopRewardData.Count; ++i)
             {
-                UIGlobalGoodsRewardIconElement uIGlobalGoodsRewardIconElement = Managers.RewardManager.Instance.GetGoodsRewardIcon_NoneParticle();
+                UIGlobalGoodsRewardIconElement uIGlobalGoodsRewardIconElement = Managers.RewardManager.Instance.GetGoodsRewardIcon();
                 if (uIGlobalGoodsRewardIconElement == null)
                     return;
 

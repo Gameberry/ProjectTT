@@ -23,11 +23,6 @@ namespace GameBerry.UI
     public class UIGlobalGoodsRewardIconElement : MonoBehaviour
     {
         [SerializeField]
-        private bool isNoneParticle;
-
-        public bool IsNoneParticle { get { return isNoneParticle; } }
-
-        [SerializeField]
         private Button m_button;
 
         [SerializeField]
