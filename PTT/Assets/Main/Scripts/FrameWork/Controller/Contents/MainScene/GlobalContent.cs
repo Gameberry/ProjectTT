@@ -88,10 +88,6 @@ namespace GameBerry.Contents
                 }
             }
 
-#if DEV_DEFINE
-_uiLoader._uiList.Add("GlobalCheatDialog");
-#endif
-
             SetLoadComplete();
         }
         //------------------------------------------------------------------------------------

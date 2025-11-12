@@ -61,10 +61,7 @@ namespace GameBerry.Contents
 
                 m_shopElementCustomResource_Dic[shopElementCustomResource.ContentDetailList].Add(shopElementCustomResource);
             }
-        }
-        //------------------------------------------------------------------------------------
-        protected override void OnUILoadComplete()
-        {
+
             StartCoroutine(CompleteFade());
         }
         //------------------------------------------------------------------------------------

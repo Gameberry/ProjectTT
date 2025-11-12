@@ -9,14 +9,12 @@ namespace GameBerry.Contents
         [HideInInspector]
 		public string ContentName;
 
-		public ContentUILoader _uiLoader;
 		public bool dontDestroy = false;
 
 		public delegate void OnComplete(GameObject obj);
 		OnComplete _onLoadComplete;
 
 		protected bool _contentLoadComplete = true;
-		protected bool _uiLoadComplete = true;
 
 		public bool isActive { get; private set; }
 
@@ -32,36 +30,17 @@ namespace GameBerry.Contents
 			StartCoroutine(LoadingProcess());
 		}
 
-		void LoadContentsUI()
-		{
-            if (_uiLoader != null)
-			{
-				_uiLoader.Load(
-					() =>
-					{
-						_uiLoadComplete = true;
-						OnUILoadComplete();
-					});
-			}
-			else
-			{
-				_uiLoadComplete = true;
-			}
-		}
-
 		IEnumerator LoadingProcess()
 		{
-            _uiLoadComplete = false;
 			_contentLoadComplete = false;
 
             OnLoadStart();
-            LoadContentsUI();
 
 			do
 			{
 				yield return null;
 			}
-			while (!_uiLoadComplete || !_contentLoadComplete);
+			while (!_contentLoadComplete);
 
 			OnLoadComplete();
 
@@ -93,20 +72,12 @@ namespace GameBerry.Contents
             /* BLANK */
         }
 
-		protected virtual void OnUILoadComplete()
-		{
-            /* BLANK */
-        }
-
 		public void Unload()
 		{
             Message.RemoveListener<Event.EnterContentMsg>(ContentName, Enter);
 			Message.RemoveListener<Event.ExitContentMsg>(ContentName, Exit);
 
 			OnExit();
-
-			if (_uiLoader != null)
-				_uiLoader.Unload();
 
 			OnUnload();
 		}

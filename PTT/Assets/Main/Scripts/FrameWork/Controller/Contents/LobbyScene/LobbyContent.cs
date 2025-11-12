@@ -12,11 +12,7 @@ namespace GameBerry.Contents
     {
         private GameBerry.Event.SetInGameRewardPopupMsg m_setInGameRewardPopupMsg = new GameBerry.Event.SetInGameRewardPopupMsg();
         private GameBerry.Event.SetInGameRewardPopup_TitleMsg m_SetInGameRewardPopup_TitleMsg = new GameBerry.Event.SetInGameRewardPopup_TitleMsg();
-        
-        protected override void OnUILoadComplete()
-        {
-            StartCoroutine(CompleteFade());
-        }
+
         //------------------------------------------------------------------------------------
         private IEnumerator CompleteFade()
         {
@@ -49,6 +45,8 @@ namespace GameBerry.Contents
             Managers.BattleSceneManager.Instance.InitBattleScene();
             Managers.HPMPVarianceManager.Instance.InitVariance(StaticResource.Instance.GetVarianceColorList());
             Managers.ARRRStatManager.Instance.SetBattlePower();
+
+            StartCoroutine(CompleteFade());
         }
         //------------------------------------------------------------------------------------
         protected override void OnEnter()

@@ -25,9 +25,9 @@ namespace GameBerry.UI
 		public Transform BottomUIStandardPos;
 		public Transform BottomUIExpandPos;
 
-        private Dictionary<string, GameObject> _uis;
+        private Dictionary<string, IDialog> _uis;
 
-		public delegate void OnComplete(GameObject ui);
+		public delegate void OnComplete(IDialog ui);
 
         private Dictionary<string, System.Delegate> _onCompleteEvents;
 
@@ -37,7 +37,7 @@ namespace GameBerry.UI
 
         protected override void Init()
 		{
-			_uis = new Dictionary<string, GameObject>();
+			_uis = new Dictionary<string, IDialog>();
 			_onCompleteEvents = new Dictionary<string, System.Delegate>();
 		}
 
@@ -46,46 +46,66 @@ namespace GameBerry.UI
 			UnloadAll();
 		}
 
-		public GameObject Get(string uiName)
+		public IDialog Get(string uiName)
 		{
-			GameObject ui;
+            IDialog ui;
 			_uis.TryGetValue(uiName, out ui);
 			return ui;
 		}
 
-		public async UniTask Load_Async(string uiName, string contentName, OnComplete onComplete)
+		public async UniTask Load_Async(string uiName, OnComplete onComplete)
 		{
 			AddEvent(uiName, onComplete);
 
-			GameObject ui = Get(uiName);
+            IDialog ui = Get(uiName);
 			if (ui == null)
 			{
-				var bundleName = $"{ASSET_PATH}/{contentName}/Dialogs/{uiName}";
+                var bundleName = string.Format("{0}/Dialogs/{1}", ASSET_PATH, uiName);
 				await ResourceLoader.Instance.LoadAsync<GameObject>(bundleName, OnPostLoadProcess);
 			}
 			else
 			{
-				ui.SetActive(true);
+				ui.gameObject.SetActive(true);
 
 				AttachToCanvas(ui);
 				RaiseEvent(ui);
 			}
 		}
 
+        public void DialogEnter(string uiName)
+        {
+            IDialog ui = Get(uiName);
+            if (ui == null)
+            {
+				Load(uiName, o =>
+                {
+                    o.Enter();
+                });
+			}
+            else
+            {
+                ui.Enter();
+			}
+        }
 
-		public void Load(string uiName, string contentName, OnComplete onComplete)
+        public void DialogExit(string uiName)
+        {
+            Get(uiName)?.Exit();
+        }
+
+		public void Load(string uiName, OnComplete onComplete)
 		{
 			AddEvent(uiName, onComplete);
 
-			GameObject ui = Get(uiName);
+            IDialog ui = Get(uiName);
 			if (ui == null)
 			{
-                var bundleName = string.Format("{0}/Dialogs/{2}", ASSET_PATH, contentName, uiName);
-                StartCoroutine(ResourceLoader.Instance.LoadAsync<GameObject>(bundleName, OnPostLoadProcess));
+                var bundleName = string.Format("{0}/Dialogs/{1}", ASSET_PATH, uiName);
+                ResourceLoader.Instance.Load<GameObject>(bundleName, OnPostLoadProcess);
 			}
 			else
 			{
-				ui.SetActive(true);
+				ui.gameObject.SetActive(true);
 
 				AttachToCanvas(ui);
 				RaiseEvent(ui);
@@ -101,19 +121,24 @@ namespace GameBerry.UI
 
             Common.ShaderHelper.SetupShader(ui);
 
-			AttachToCanvas(ui);
+            IDialog dialog = ui.GetComponent<IDialog>();
 
-			_uis.Add(ui.name, ui);
-			RaiseEvent(ui);
+			AttachToCanvas(dialog);
+
+			_uis.Add(ui.name, dialog);
+
+            dialog.Load();
+
+			RaiseEvent(dialog);
 		}
 
-        private void AttachToCanvas(GameObject ui)
+        private void AttachToCanvas(IDialog ui)
 		{
 			int sibling = EnumExtensions.ParseToInt<UISibling>(ui.name);
 
 			var obj = GetGameObjectBySiblingIndex(sibling);
 			ui.transform.SetParent(obj.transform, false);
-			ui.SetLayerInChildren(obj.layer);
+			ui.gameObject.SetLayerInChildren(obj.layer);
 
 			//ui.transform.localPosition = Vector3.zero;
 			ui.transform.localScale = Vector3.one;
@@ -127,7 +152,7 @@ namespace GameBerry.UI
         // 현재 사용하지 않음
 		public float GetProgress(string uiName)
 		{
-			GameObject ui;
+            IDialog ui;
 			_uis.TryGetValue(uiName, out ui);
 			if (ui != null)
 				return 1.0f;
@@ -141,7 +166,7 @@ namespace GameBerry.UI
 
 		public void Unload(string uiName)
 		{
-			GameObject ui = Get(uiName);
+            IDialog ui = Get(uiName);
 			if (ui != null)
 			{				
 				Destroy(ui);
@@ -178,7 +203,7 @@ namespace GameBerry.UI
 			}
 		}
 
-        private void RaiseEvent(GameObject ui)
+        private void RaiseEvent(IDialog ui)
 		{
 			System.Delegate events;
 			_onCompleteEvents.TryGetValue(ui.name, out events);
@@ -193,7 +218,7 @@ namespace GameBerry.UI
 
 		public void LastSibling(string uiName)
 		{
-			GameObject ui;
+            IDialog ui;
 			_uis.TryGetValue(uiName, out ui);
 
 			if (ui != null)

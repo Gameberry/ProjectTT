@@ -39,9 +39,6 @@ namespace GameBerry.UI
 			_name = GetType().Name;
 			_rt = GetComponent<RectTransform>();
 
-            Message.AddListener<Event.ShowDialogMsg>(_name, Enter);
-			Message.AddListener<Event.HideDialogMsg>(_name, Exit);
-
 			int sibling = EnumExtensions.ParseToInt<UISibling>(_name);
 			UIManager.Instance.SetSibling(_rt, sibling);
 
@@ -75,9 +72,6 @@ namespace GameBerry.UI
             _name = GetType().Name;
             _rt = GetComponent<RectTransform>();
 
-            Message.AddListener<Event.ShowDialogMsg>(_name, Enter);
-            Message.AddListener<Event.HideDialogMsg>(_name, Exit);
-
             dialogView.SetActive(false);
 
 			if (_exitBtn != null)
@@ -98,9 +92,6 @@ namespace GameBerry.UI
 
 		public void Unload()
 		{
-			Message.RemoveListener<Event.ShowDialogMsg>(_name, Enter);
-			Message.RemoveListener<Event.HideDialogMsg>(_name, Exit);
-
 			OnExit();
 			OnUnload();
 		}
@@ -109,12 +100,7 @@ namespace GameBerry.UI
 		{
 		}
 
-		private void Enter(Event.ShowDialogMsg msg)
-		{
-			Enter();
-		}
-
-		private void Enter()
+		public void Enter()
 		{
 			if (UIManager.Instance.IgnoreEnterDialog == true)
 				return;
@@ -135,7 +121,7 @@ namespace GameBerry.UI
 
 		public void ElementEnter()
 		{
-			Enter(null);
+            Enter();
 		}
 
 		public virtual void BackKeyCall()
@@ -143,12 +129,7 @@ namespace GameBerry.UI
 			Exit();
 		}
 
-		private void Exit(Event.HideDialogMsg msg)
-		{
-			Exit();
-		}
-
-        private void Exit()
+        public void Exit()
         {
 			if (ignoreExit == true)
 				return;
@@ -181,12 +162,12 @@ namespace GameBerry.UI
 
         public static void RequestDialogEnter<T>() where T : IDialog
 		{
-			Message.Send(typeof(T).Name, showDialogMsg);
+			UIManager.Instance.DialogEnter(typeof(T).Name);
 		}
 
 		public static void RequestDialogExit<T>() where T : IDialog
 		{
-            Message.Send(typeof(T).Name, hideDialogMsg);
+            UIManager.Instance.DialogExit(typeof(T).Name);
 		}
     }
 }
