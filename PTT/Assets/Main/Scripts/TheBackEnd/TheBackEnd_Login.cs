@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BackEnd;
 using CodeStage.AntiCheat.ObscuredTypes;
+using GameBerry.Contents;
 
 namespace GameBerry.TheBackEnd
 {
@@ -290,7 +291,7 @@ namespace GameBerry.TheBackEnd
                 }
                 else if (serverStatus == "2")
                 {
-                    Managers.SceneManager.Instance.ShowMaintenanceError();
+                    GlobalContent.ShowMaintenanceError();
                     return;
                 }
             }

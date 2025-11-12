@@ -5,10 +5,6 @@ namespace GameBerry.Event
         public string NoticeStr;
     }
 
-    public class CreateNickNameMsg : Message
-    {
-    }
-
     public class LoginResultMsg : Message
     {
         public bool IsSuccess = false;

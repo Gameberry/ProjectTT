@@ -31,9 +31,6 @@ namespace GameBerry.Managers
         private BuildEnvironmentSelectAsset _buildEnvironmentSelectAsset;
         public BuildEnvironmentEnum BuildElement = BuildEnvironmentEnum.Develop;
 
-        GameObject AppObj = null;
-        AppInitialize AppInit = null;
-
         Transform _root;
 
         public Transform DevTool;
@@ -92,9 +89,8 @@ namespace GameBerry.Managers
             }
 #endif
 
-            CodeStage.AntiCheat.Detectors.ObscuredCheatingDetector.StartDetection(OnCheatingDetected);
-
 #if UNITY_IOS
+// 푸쉬 때문에 함수 추가. 토큰 받아오면 좋은거고 안되면 말고...
             StartCoroutine(RequestAuthorization());
 #endif
 
@@ -102,15 +98,6 @@ namespace GameBerry.Managers
                 StartCoroutine(InitializeApp());
             else
                 LoadStartScene();
-        }
-        //------------------------------------------------------------------------------------
-        private void OnCheatingDetected()
-        {
-            if (isCheatingUser == false)
-            {
-                isCheatingUser = true;
-                TheBackEnd.TheBackEndManager.Instance.OnCheatingDetected();
-            }
         }
         //------------------------------------------------------------------------------------
         void LoadStartScene()
@@ -165,15 +152,9 @@ namespace GameBerry.Managers
         // 혹시라도 yield return StartCoroutine 사용해서 싱글톤 초기화를 할 수 있기 때문에 IEnumerator로 냅둠
         IEnumerator InitializeApp()
         {
-            yield return null;
-
-            AppObj = new GameObject("AppInitialize");
-            AppInit = AppObj.AddComponent<AppInitialize>();
-
-            AppInit.Init();
-
             bool completeString = false;
 
+            // 디바이스에 있는 스트링만 로드하자
             TableManager.Instance.LoadDeviceLocalString(() =>
             {
                 completeString = true;
@@ -182,115 +163,9 @@ namespace GameBerry.Managers
             while (completeString == false)
                 yield return null;
 
-            AppInit.ShowNoticeText(LocalStringManager.Instance.GetLocalString("LogIn_Loading_Initialization"));
-
-            if (AppInit.InitBackEnd() == false)
-                yield break;
-            
-            if (BuildElement != BuildEnvironmentEnum.Develop)
-            {
-#if !UNITY_EDITOR
-        var bro = BackEnd.Backend.Utils.GetLatestVersion();
-            if (bro.IsSuccess() == true)
-            {
-                string version = bro.GetReturnValuetoJSON()["version"].ToString();
-                int forceUpdate = bro.GetReturnValuetoJSON()["type"].ToString().ToInt();
-
-                string[] clientServerVersionCut = version.Split('.');
-                string[] clientLocalVersionCut = Project.version.Split('.');
-
-                for (int i = 0; i < clientLocalVersionCut.Length; ++i)
-                {
-                    if(i < 2)
-                    {
-                        if (int.Parse(clientServerVersionCut[i]) < int.Parse(clientLocalVersionCut[i]))
-                        {
-                            // 검수서버다
-                            if (BuildElement == BuildEnvironmentEnum.Product)
-                            {
-                                BuildElement = BuildEnvironmentEnum.Stage;
-
-                                Debug.Log("검수서버다");
-
-                                if (AppInit.InitBackEnd() == false)
-                                    yield break;
-                            }
-                        }
-                    }
-                
-                }
-
-                Debug.LogError(string.Format("InitializeApp serverCheckSuccess {0} forceUpdate {1}", version, forceUpdate));
-            }
-            else
-            {
-                ProjectNoticeContent.Instance.ShowCheckDialog(Managers.LocalStringManager.Instance.GetLocalString("LogIn_Network_Desc"));
-                Debug.LogError(string.Format("InitializeApp serverCheckFail {0}", bro.GetMessage()));
-                AOSBackBtnManager.Instance.QuickExitGame = true;
-                yield break;
-            }
-#endif
-            }
-
-            //yield return new WaitForSeconds(1.0f);
-
-            //AppInit.PlayFlashParticle();
-
-            //yield return new WaitForSeconds(1.5f);
-
-
-
-
-            bool completeLogin = false;
-            AppInit.DoLogin(() =>
-            {
-                completeLogin = true;
-            });
-
-            while (completeLogin == false)
-                yield return null;
-
-
-            Debug.Log("End InitializeApp");
-
             completeAppInit = true;
 
             LoadStartScene();
-        }
-        //------------------------------------------------------------------------------------
-        public void DeleteAppInitProcess()
-        {
-            AppInit.Release();
-            Destroy(AppObj);
-        }
-        //------------------------------------------------------------------------------------
-        public void ShowMaintenanceError()
-        {
-            ProjectNoticeContent.Instance.ShowCheckDialog(Managers.LocalStringManager.Instance.GetLocalString("Notice_Check"));
-
-            AOSBackBtnManager.Instance.QuickExitGame = true;
-
-            BackEnd.Backend.Notice.GetTempNotice((callback) => {
-
-                string coment = callback.Substring(26, callback.Length - 26 - 2).Replace("\\n", "\n");
-                string desc = coment.Split(',')[0];
-
-
-                string[] arr = coment.Split(',');
-                if (arr.Length >= 3)
-                {
-                    System.DateTime startTime = System.DateTime.Parse(arr[1]).ToLocalTime();
-                    System.DateTime endTime = System.DateTime.Parse(arr[2]).ToLocalTime();
-
-                    string notice = string.Format(Managers.LocalStringManager.Instance.GetLocalString(arr[0])
-                        , startTime.ToString("yyyy-MM-dd HH:mm:ss")
-                        , endTime.ToString("yyyy-MM-dd HH:mm:ss"));
-
-                    ProjectNoticeContent.Instance.ShowCheckDialog(notice);
-                }
-
-                Debug.Log(callback);
-            });
         }
         //------------------------------------------------------------------------------------
         GameObject GetRoot(Constants.SceneName sceneName)

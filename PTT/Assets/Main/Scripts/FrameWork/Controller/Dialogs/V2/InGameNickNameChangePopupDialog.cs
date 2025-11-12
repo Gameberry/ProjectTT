@@ -14,84 +14,56 @@ namespace GameBerry.UI
 {
     public class InGameNickNameChangePopupDialog : IDialog
     {
-        [SerializeField]
-        private List<Button> exitBtn;
-
         [Header("------------NameChangePopup------------")]
         [SerializeField]
-        private TMP_InputField m_nickNameInputField;
+        private TMP_InputField _nickNameInputField;
 
         [SerializeField]
-        private TMP_Text m_nameChangeInputField_Placeholder;
+        private TMP_Text _nameChangeInputField_Placeholder;
 
         [SerializeField]
-        private TMP_Text m_nameChangeNotice;
+        private TMP_Text _nameChangeNotice;
 
         [SerializeField]
-        private TMP_Text m_nameChangePrice;
+        private TMP_Text _nameChangePrice;
 
         [SerializeField]
-        private Button m_nameChangeBtn;
+        private Button _nameChangeBtn;
 
         protected override void OnLoad()
         {
-            if (exitBtn != null)
-            {
-                for (int i = 0; i < exitBtn.Count; ++i)
-                {
-                    if (exitBtn[i] != null)
-                        exitBtn[i].onClick.AddListener(OnClick_ExitBtn);
-                }
-            }
-
             //if (m_playerName != null)
             //    m_playerName.text = TheBackEnd.TheBackEndManager.Instance.GetNickPlayerName();
 
-            if (m_nameChangePrice != null)
+            if (_nameChangePrice != null)
             {
-                m_nameChangePrice.text = string.Format("{0:#,0.##}", Define.NickNameChangeDiaCost);
+                _nameChangePrice.text = string.Format("{0:#,0.##}", Define.NickNameChangeDiaCost);
             }
 
-            if (m_nickNameInputField != null)
-                m_nickNameInputField.onValueChanged.AddListener(onValueChanged_Nickname);
+            if (_nickNameInputField != null)
+            {
+                _nickNameInputField.onValueChanged.AddListener(onValueChanged_Nickname);
+                _nickNameInputField.characterLimit = Define.NickNameMaxCount;
+            }
 
-            if (m_nickNameInputField != null)
-                m_nickNameInputField.characterLimit = Define.NickNameMaxCount;
-
-            if (m_nameChangeBtn != null)
-                m_nameChangeBtn.onClick.AddListener(OnCilck_ChangeNickName);
+            if (_nameChangeBtn != null)
+                _nameChangeBtn.onClick.AddListener(OnCilck_ChangeNickName);
 
             //Message.AddListener<GameBerry.Event.RefreshNickNameMsg>(RefreshNickName);
         }
         //------------------------------------------------------------------------------------
-        public void OnClick_ExitBtn()
-        {
-            UIManager.DialogExit<InGameNickNameChangePopupDialog>();
-        }
-        //------------------------------------------------------------------------------------
-        protected override void OnUnload()
-        {
-            //Message.RemoveListener<GameBerry.Event.RefreshNickNameMsg>(RefreshNickName);
-        }
-        //------------------------------------------------------------------------------------
-        //private void RefreshNickName(GameBerry.Event.RefreshNickNameMsg msg)
-        //{
-        //    if (m_playerName != null)
-        //        m_playerName.text = Managers.PlayerDataManager.Instance.GetPlayerName();
-        //}
-        ////------------------------------------------------------------------------------------
         bool isfirst = false;
         protected override void OnEnter()
         {
             isfirst = TheBackEnd.TheBackEndManager.Instance.GetNickPlayerName() == Backend.UID;
 
-            if (m_nameChangePrice != null)
+            if (_nameChangePrice != null)
             {
-                m_nameChangePrice.text = isfirst == true ? Managers.LocalStringManager.Instance.GetLocalString("common/ui/free") : string.Format("{0:#,0.##}", Define.NickNameChangeDiaCost);
+                _nameChangePrice.text = isfirst == true ? Managers.LocalStringManager.Instance.GetLocalString("common/ui/free") : string.Format("{0:#,0.##}", Define.NickNameChangeDiaCost);
             }
 
-            if (m_nameChangeInputField_Placeholder != null)
-                m_nameChangeInputField_Placeholder.text = TheBackEnd.TheBackEndManager.Instance.GetNickPlayerName();
+            if (_nameChangeInputField_Placeholder != null)
+                _nameChangeInputField_Placeholder.text = TheBackEnd.TheBackEndManager.Instance.GetNickPlayerName();
         }
         //------------------------------------------------------------------------------------
         private string beforenickname = string.Empty;
@@ -107,42 +79,42 @@ namespace GameBerry.UI
                 }
             }
 
-            if (m_nickNameInputField.text.Length < Define.NickNameMinCount || m_nickNameInputField.text.Length > Define.NickNameMaxCount)
+            if (_nickNameInputField.text.Length < Define.NickNameMinCount || _nickNameInputField.text.Length > Define.NickNameMaxCount)
             {
-                if (m_nameChangeNotice != null)
+                if (_nameChangeNotice != null)
                 {
-                    m_nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_CharacterCount");
-                    m_nameChangeNotice.gameObject.SetActive(true);
+                    _nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_CharacterCount");
+                    _nameChangeNotice.gameObject.SetActive(true);
                 }
 
                 return;
             }
 
-            string idChecker = Regex.Replace(m_nickNameInputField.text, string.Format(@"{0}", Managers.SceneManager.Instance.SpacialCharRegex), string.Empty, RegexOptions.Singleline);
+            string idChecker = Regex.Replace(_nickNameInputField.text, string.Format(@"{0}", Managers.SceneManager.Instance.SpacialCharRegex), string.Empty, RegexOptions.Singleline);
 
-            if (m_nickNameInputField.text != idChecker)
+            if (_nickNameInputField.text != idChecker)
             {
-                if (m_nameChangeNotice != null)
+                if (_nameChangeNotice != null)
                 {
-                    m_nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_SpecialCharacter");
-                    m_nameChangeNotice.gameObject.SetActive(true);
+                    _nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_SpecialCharacter");
+                    _nameChangeNotice.gameObject.SetActive(true);
                 }
 
                 return;
             }
 
-            if (ProhibitedWordChecker.Instance.CheckProhibitedWord(m_nickNameInputField.text, false) == true)
+            if (ProhibitedWordChecker.Instance.CheckProhibitedWord(_nickNameInputField.text, false) == true)
             {
                 beforenickname = TheBackEnd.TheBackEndManager.Instance.GetNickPlayerName();
 
-                TheBackEnd.TheBackEndManager.Instance.UpdateNickName(m_nickNameInputField.text, RefreshNickName);
+                TheBackEnd.TheBackEndManager.Instance.UpdateNickName(_nickNameInputField.text, RefreshNickName);
             }
             else
             {
-                if (m_nameChangeNotice != null)
+                if (_nameChangeNotice != null)
                 {
-                    m_nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_ProhibitedWords");
-                    m_nameChangeNotice.gameObject.SetActive(true);
+                    _nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_ProhibitedWords");
+                    _nameChangeNotice.gameObject.SetActive(true);
                 }
                 return;
             }
@@ -154,8 +126,8 @@ namespace GameBerry.UI
             {
                 if (backendReturnObject.GetStatusCode() == "409")
                 {
-                    m_nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_UI_Overlap");
-                    m_nameChangeNotice.gameObject.SetActive(true);
+                    _nameChangeNotice.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_UI_Overlap");
+                    _nameChangeNotice.gameObject.SetActive(true);
                 }
                 else
                 {
@@ -164,8 +136,8 @@ namespace GameBerry.UI
             }
             else
             {
-                if (m_nickNameInputField != null)
-                    m_nickNameInputField.text = string.Empty;
+                if (_nickNameInputField != null)
+                    _nickNameInputField.text = string.Empty;
 
                 int reward_type = 0;
                 double before_quan = 0, reward_quan = 0, after_quan = 0;
@@ -190,14 +162,14 @@ namespace GameBerry.UI
 
                 Contents.GlobalContent.ShowGlobalNotice(Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_UI_Complete"));
 
-                OnClick_ExitBtn();
+                UIManager.DialogExit<InGameNickNameChangePopupDialog>();
             }
         }
         //------------------------------------------------------------------------------------
         private void onValueChanged_Nickname(string nickname)
         {
-            if (m_nameChangeNotice != null)
-                m_nameChangeNotice.gameObject.SetActive(false);
+            if (_nameChangeNotice != null)
+                _nameChangeNotice.gameObject.SetActive(false);
         }
         //------------------------------------------------------------------------------------
     }

@@ -8,23 +8,23 @@ namespace GameBerry.Contents
     
     public class GlobalContent : IContent
     {
-        private static GameBerry.Event.ShowPopup_OkMsg m_showPopup_OkMsg = new GameBerry.Event.ShowPopup_OkMsg();
-        private static GameBerry.Event.ShowPopup_OkCancelMsg m_showPopup_OkCancelMsg = new GameBerry.Event.ShowPopup_OkCancelMsg();
-        private static GameBerry.Event.ShowPopup_InputMsg m_showPopup_InputMsg = new GameBerry.Event.ShowPopup_InputMsg();
+        private static GameBerry.Event.ShowPopup_OkMsg _showPopup_OkMsg = new GameBerry.Event.ShowPopup_OkMsg();
+        private static GameBerry.Event.ShowPopup_OkCancelMsg _showPopup_OkCancelMsg = new GameBerry.Event.ShowPopup_OkCancelMsg();
+        private static GameBerry.Event.ShowPopup_InputMsg _showPopup_InputMsg = new GameBerry.Event.ShowPopup_InputMsg();
 
-        private static GameBerry.Event.GlobalNoticeMsg m_globalNoticeMsg = new GameBerry.Event.GlobalNoticeMsg();
-        private static GameBerry.Event.GlobalNoticeBattlePowerMsg m_globalNoticeBattlePowerMsg = new GameBerry.Event.GlobalNoticeBattlePowerMsg();
-        private static GameBerry.Event.GlobalNoticeSynergyCountMsg m_globalNoticeSynergyCountMsg = new GameBerry.Event.GlobalNoticeSynergyCountMsg();
-        private static GameBerry.Event.GlobalUnLockContentNoticeMsg m_globalUnLockContentNoticeMsg = new GameBerry.Event.GlobalUnLockContentNoticeMsg();
+        private static GameBerry.Event.GlobalNoticeMsg _globalNoticeMsg = new GameBerry.Event.GlobalNoticeMsg();
+        private static GameBerry.Event.GlobalNoticeBattlePowerMsg _globalNoticeBattlePowerMsg = new GameBerry.Event.GlobalNoticeBattlePowerMsg();
+        private static GameBerry.Event.GlobalNoticeSynergyCountMsg _globalNoticeSynergyCountMsg = new GameBerry.Event.GlobalNoticeSynergyCountMsg();
+        private static GameBerry.Event.GlobalUnLockContentNoticeMsg _globalUnLockContentNoticeMsg = new GameBerry.Event.GlobalUnLockContentNoticeMsg();
         private static GameBerry.Event.GlobalGuideNoticeMsg _globalGuideNoticeMsg = new GameBerry.Event.GlobalGuideNoticeMsg();
 
-        private static GameBerry.Event.DoFadeMsg m_fadeMsg = new GameBerry.Event.DoFadeMsg();
-        private static GameBerry.Event.DoDungeonFadeMsg m_dungeonFadeMsg = new GameBerry.Event.DoDungeonFadeMsg();
+        private static GameBerry.Event.DoFadeMsg _fadeMsg = new GameBerry.Event.DoFadeMsg();
+        private static GameBerry.Event.DoDungeonFadeMsg _dungeonFadeMsg = new GameBerry.Event.DoDungeonFadeMsg();
 
-        private static GameBerry.Event.SetBuffStringMsg m_setBuffStringMsg = new GameBerry.Event.SetBuffStringMsg();
+        private static GameBerry.Event.SetBuffStringMsg _setBuffStringMsg = new GameBerry.Event.SetBuffStringMsg();
 
-        private static GameBerry.Event.SetSelectGoodsPopupMsg m_setSelectGoodsPopupMsg = new GameBerry.Event.SetSelectGoodsPopupMsg();
-        private static GameBerry.Event.SetGoodsDescPopupMsg m_setGoodsDescPopupMsg = new GameBerry.Event.SetGoodsDescPopupMsg();
+        private static GameBerry.Event.SetSelectGoodsPopupMsg _setSelectGoodsPopupMsg = new GameBerry.Event.SetSelectGoodsPopupMsg();
+        private static GameBerry.Event.SetGoodsDescPopupMsg _setGoodsDescPopupMsg = new GameBerry.Event.SetGoodsDescPopupMsg();
 
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
@@ -45,24 +45,53 @@ namespace GameBerry.Contents
             UIManager.DialogExit<GlobalNoticeDialog>();
         }
         //------------------------------------------------------------------------------------
+        public static void ShowMaintenanceError()
+        {
+            ProjectNoticeContent.Instance.ShowCheckDialog(Managers.LocalStringManager.Instance.GetLocalString("Notice_Check"));
+
+            Managers.AOSBackBtnManager.Instance.QuickExitGame = true;
+
+            BackEnd.Backend.Notice.GetTempNotice((callback) => {
+
+                string coment = callback.Substring(26, callback.Length - 26 - 2).Replace("\\n", "\n");
+                string desc = coment.Split(',')[0];
+
+
+                string[] arr = coment.Split(',');
+                if (arr.Length >= 3)
+                {
+                    System.DateTime startTime = System.DateTime.Parse(arr[1]).ToLocalTime();
+                    System.DateTime endTime = System.DateTime.Parse(arr[2]).ToLocalTime();
+
+                    string notice = string.Format(Managers.LocalStringManager.Instance.GetLocalString(arr[0])
+                        , startTime.ToString("yyyy-MM-dd HH:mm:ss")
+                        , endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                    ProjectNoticeContent.Instance.ShowCheckDialog(notice);
+                }
+
+                Debug.Log(callback);
+            });
+        }
+        //------------------------------------------------------------------------------------
         public static void DoFade(bool visible, float duration = 1.0f)
         {
             // visible : false 투명 -> 검은색으로
 
-            m_fadeMsg.duration = duration;
-            m_fadeMsg.visible = visible;
+            _fadeMsg.duration = duration;
+            _fadeMsg.visible = visible;
 
-            Message.Send(m_fadeMsg);
+            Message.Send(_fadeMsg);
         }
         //------------------------------------------------------------------------------------
         public static void DoDungeonFade(bool visible, float duration = 1.0f)
         {
             // visible : false 투명 -> 검은색으로
 
-            m_dungeonFadeMsg.duration = duration;
-            m_dungeonFadeMsg.visible = visible;
+            _dungeonFadeMsg.duration = duration;
+            _dungeonFadeMsg.visible = visible;
 
-            Message.Send(m_dungeonFadeMsg);
+            Message.Send(_dungeonFadeMsg);
         }
         //------------------------------------------------------------------------------------
         private static bool showBufferingUI = false;
@@ -92,8 +121,8 @@ namespace GameBerry.Contents
 
             showBufferingUI = visible;
 
-            m_setBuffStringMsg.buffstr = buffstring;
-            Message.Send(m_setBuffStringMsg);
+            _setBuffStringMsg.buffstr = buffstring;
+            Message.Send(_setBuffStringMsg);
         }
         //------------------------------------------------------------------------------------
         public static void VisibleNetWorkBufferingUI(bool visible)
@@ -119,26 +148,26 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         public static void ShowPopup_Ok(string titletext, string contenttext, System.Action okAction = null, System.Action<bool> toDayHide = null)
         {
-            m_showPopup_OkMsg.titletext = titletext;
-            m_showPopup_OkMsg.contenttext = contenttext;
-            m_showPopup_OkMsg.okAction = okAction;
-            m_showPopup_OkMsg.toDayHide = toDayHide;
+            _showPopup_OkMsg.titletext = titletext;
+            _showPopup_OkMsg.contenttext = contenttext;
+            _showPopup_OkMsg.okAction = okAction;
+            _showPopup_OkMsg.toDayHide = toDayHide;
 
-            Message.Send(m_showPopup_OkMsg);
+            Message.Send(_showPopup_OkMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowPopup_OkCancel(string titletext, string contenttext, System.Action okAction = null, System.Action cancelAction = null, System.Action<bool> toDayHide = null)
         {
-            m_showPopup_OkCancelMsg.titletext = titletext;
-            m_showPopup_OkCancelMsg.contenttext = contenttext;
+            _showPopup_OkCancelMsg.titletext = titletext;
+            _showPopup_OkCancelMsg.contenttext = contenttext;
 
-            m_showPopup_OkCancelMsg.useCustomOKBtn = false;
+            _showPopup_OkCancelMsg.useCustomOKBtn = false;
 
-            m_showPopup_OkCancelMsg.okAction = okAction;
-            m_showPopup_OkCancelMsg.cancelAction = cancelAction;
-            m_showPopup_OkCancelMsg.toDayHide = toDayHide;
+            _showPopup_OkCancelMsg.okAction = okAction;
+            _showPopup_OkCancelMsg.cancelAction = cancelAction;
+            _showPopup_OkCancelMsg.toDayHide = toDayHide;
 
-            Message.Send(m_showPopup_OkCancelMsg);
+            Message.Send(_showPopup_OkCancelMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowPopup_CustomOkCancel(
@@ -153,63 +182,63 @@ namespace GameBerry.Contents
             System.Action cancelAction = null,
             System.Action<bool> toDayHide = null)
         {
-            m_showPopup_OkCancelMsg.titletext = titletext;
-            m_showPopup_OkCancelMsg.contenttext = contenttext;
+            _showPopup_OkCancelMsg.titletext = titletext;
+            _showPopup_OkCancelMsg.contenttext = contenttext;
 
-            m_showPopup_OkCancelMsg.useCustomOKBtn = true;
-            m_showPopup_OkCancelMsg.OKBtnTitle = okbtntitle;
-            m_showPopup_OkCancelMsg.OKBtnIcon = okbtnicon;
-            m_showPopup_OkCancelMsg.OKBtnContent = okbtncontent;
+            _showPopup_OkCancelMsg.useCustomOKBtn = true;
+            _showPopup_OkCancelMsg.OKBtnTitle = okbtntitle;
+            _showPopup_OkCancelMsg.OKBtnIcon = okbtnicon;
+            _showPopup_OkCancelMsg.OKBtnContent = okbtncontent;
 
-            m_showPopup_OkCancelMsg.okAction = okAction;
-            m_showPopup_OkCancelMsg.cancelAction = cancelAction;
-            m_showPopup_OkCancelMsg.toDayHide = toDayHide;
+            _showPopup_OkCancelMsg.okAction = okAction;
+            _showPopup_OkCancelMsg.cancelAction = cancelAction;
+            _showPopup_OkCancelMsg.toDayHide = toDayHide;
 
-            Message.Send(m_showPopup_OkCancelMsg);
+            Message.Send(_showPopup_OkCancelMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowPopup_Input(string titletext, string defaultstr, string placeholder, System.Action<string> okAction, System.Action cancelAction = null, System.Action<bool> toDayHide = null)
         {
-            m_showPopup_InputMsg.titletext = titletext;
-            m_showPopup_InputMsg.defaultstr = defaultstr;
-            m_showPopup_InputMsg.placeholder = placeholder;
-            m_showPopup_InputMsg.okAction = okAction;
-            m_showPopup_InputMsg.cancelAction = cancelAction;
-            m_showPopup_InputMsg.toDayHide = toDayHide;
+            _showPopup_InputMsg.titletext = titletext;
+            _showPopup_InputMsg.defaultstr = defaultstr;
+            _showPopup_InputMsg.placeholder = placeholder;
+            _showPopup_InputMsg.okAction = okAction;
+            _showPopup_InputMsg.cancelAction = cancelAction;
+            _showPopup_InputMsg.toDayHide = toDayHide;
 
-            Message.Send(m_showPopup_InputMsg);
+            Message.Send(_showPopup_InputMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowGlobalNotice(string notice, float duration = 1.0f)
         {
-            m_globalNoticeMsg.duration = duration;
-            m_globalNoticeMsg.NoticeString = notice;
+            _globalNoticeMsg.duration = duration;
+            _globalNoticeMsg.NoticeString = notice;
 
-            Message.Send(m_globalNoticeMsg);
+            Message.Send(_globalNoticeMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowGlobalNotice_LocalString(string localkey, float duration = 1.0f)
         {
-            m_globalNoticeMsg.duration = duration;
-            m_globalNoticeMsg.NoticeString = Managers.LocalStringManager.Instance.GetLocalString(localkey); ;
+            _globalNoticeMsg.duration = duration;
+            _globalNoticeMsg.NoticeString = Managers.LocalStringManager.Instance.GetLocalString(localkey); ;
 
-            Message.Send(m_globalNoticeMsg);
+            Message.Send(_globalNoticeMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowGlobalNotice_BattlePower(double battlePower, double changeValue)
         {
-            m_globalNoticeBattlePowerMsg.battlePower = battlePower;
-            m_globalNoticeBattlePowerMsg.changeValue = changeValue;
+            _globalNoticeBattlePowerMsg.battlePower = battlePower;
+            _globalNoticeBattlePowerMsg.changeValue = changeValue;
 
-            Message.Send(m_globalNoticeBattlePowerMsg);
+            Message.Send(_globalNoticeBattlePowerMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowGlobalNotice_SynergyCount(int before, int after)
         {
-            m_globalNoticeSynergyCountMsg.before = before;
-            m_globalNoticeSynergyCountMsg.after = after;
+            _globalNoticeSynergyCountMsg.before = before;
+            _globalNoticeSynergyCountMsg.after = after;
 
-            Message.Send(m_globalNoticeSynergyCountMsg);
+            Message.Send(_globalNoticeSynergyCountMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowGlobalNotice_Guide(string notice, float duration = 4.0f, float height = -180.0f)
@@ -232,35 +261,35 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         public static void ShowUnLockContentNotice(string notice)
         {
-            m_globalUnLockContentNoticeMsg.titletext = notice;
+            _globalUnLockContentNoticeMsg.titletext = notice;
 
-            Message.Send(m_globalUnLockContentNoticeMsg);
+            Message.Send(_globalUnLockContentNoticeMsg);
         }
         //------------------------------------------------------------------------------------
         public static void ShowSelectGoodsPopup(V2Enum_Goods v2Enum_Goods, List<ObscuredInt> SelectIndexList, System.Action<int> SelectedCallBack)
         {
             UI.UIManager.DialogEnter<InGameSelectGoodsPopupDialog>();
 
-            m_setSelectGoodsPopupMsg.v2Enum_Goods = v2Enum_Goods;
-            m_setSelectGoodsPopupMsg.SelectIndexList = SelectIndexList;
-            m_setSelectGoodsPopupMsg.SelectedCallBack = SelectedCallBack;
+            _setSelectGoodsPopupMsg.v2Enum_Goods = v2Enum_Goods;
+            _setSelectGoodsPopupMsg.SelectIndexList = SelectIndexList;
+            _setSelectGoodsPopupMsg.SelectedCallBack = SelectedCallBack;
 
-            Message.Send(m_setSelectGoodsPopupMsg);
+            Message.Send(_setSelectGoodsPopupMsg);
         }
         //------------------------------------------------------------------------------------
-        public static void ShowGoodsDescPopup(V2Enum_Goods v2Enum_Goods, int index, double timegoodstime = 0.0)
+        public static void ShowGoodsDescPopup(V2Enum_Goods v2Enu_Goods, int index, double timegoodstime = 0.0)
         {
             UI.UIManager.DialogEnter<InGameGoodsDescPopupDialog>();
 
-            m_setGoodsDescPopupMsg.v2Enum_Goods = v2Enum_Goods;
+            _setGoodsDescPopupMsg.v2Enum_Goods = v2Enu_Goods;
 
-            if (m_setGoodsDescPopupMsg.v2Enum_Goods == V2Enum_Goods.Max)
-                m_setGoodsDescPopupMsg.v2Enum_Goods = Managers.GoodsManager.Instance.GetGoodsType(index);
+            if (_setGoodsDescPopupMsg.v2Enum_Goods == V2Enum_Goods.Max)
+                _setGoodsDescPopupMsg.v2Enum_Goods = Managers.GoodsManager.Instance.GetGoodsType(index);
 
-            m_setGoodsDescPopupMsg.index = index;
-            m_setGoodsDescPopupMsg.timeGoodsTime = timegoodstime;
+            _setGoodsDescPopupMsg.index = index;
+            _setGoodsDescPopupMsg.timeGoodsTime = timegoodstime;
 
-            Message.Send(m_setGoodsDescPopupMsg);
+            Message.Send(_setGoodsDescPopupMsg);
         }
         //------------------------------------------------------------------------------------
     }

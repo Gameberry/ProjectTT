@@ -39,7 +39,6 @@ namespace GameBerry.Contents
             yield return new WaitForSeconds(0.3f);
             GlobalContent.DoFade(false);
             yield return new WaitForSeconds(1.0f);
-            Managers.SceneManager.Instance.DeleteAppInitProcess();
 
             SetLoadComplete();
         }

@@ -43,6 +43,11 @@ namespace GameBerry.UI
 			UnloadAll();
 		}
 
+        public static IDialog Get<T>() where T : IDialog
+        {
+            return Instance.Get(typeof(T).Name);
+        }
+
 		public IDialog Get(string uiName)
 		{
             IDialog ui;
@@ -176,7 +181,7 @@ namespace GameBerry.UI
             IDialog ui = Get(uiName);
 			if (ui != null)
 			{				
-				Destroy(ui);
+				Destroy(ui.gameObject);
 				_uis.Remove(uiName);
 
 				var fullpath = string.Format("{0}{1}", ASSET_PATH, uiName);

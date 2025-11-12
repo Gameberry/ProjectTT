@@ -6,7 +6,7 @@
         SceneUI = 0,
 
         // Login
-        LoginDialog,
+        AppLoadingDialog,
         // Login
 
         // InGame

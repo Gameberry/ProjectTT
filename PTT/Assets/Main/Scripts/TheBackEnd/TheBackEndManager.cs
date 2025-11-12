@@ -76,6 +76,8 @@ namespace GameBerry.TheBackEnd
 
             ThirdPartyLog.Instance.InitThirdParty();
 
+            CodeStage.AntiCheat.Detectors.ObscuredCheatingDetector.StartDetection(OnCheatingDetected);
+
             return bro.IsSuccess();
         }
         //------------------------------------------------------------------------------------

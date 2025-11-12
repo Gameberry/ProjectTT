@@ -7,18 +7,15 @@ using System.Text.RegularExpressions;
 using Spine;
 using Spine.Unity;
 
-namespace GameBerry
+namespace GameBerry.UI
 {
-    public class AppInitializeUI : MonoBehaviour
+    public class AppLoadingDialog : IDialog
     {
         [SerializeField]
         private TMP_Text m_clientVersion;
 
         [SerializeField]
         private TMP_Text m_serverName;
-
-        [SerializeField]
-        private ParticleSystem m_titleLightParticle;
 
         [Header("----------Notice----------")]
         [SerializeField]
@@ -82,29 +79,6 @@ namespace GameBerry
         [SerializeField]
         private Button m_guestLogin_Btn;
 
-        [Header("----------NickNameGroup----------")]
-        [SerializeField]
-        private Transform m_createNickNameGroup;
-
-        [SerializeField]
-        private TMP_InputField m_nickNameInputField;
-
-        [SerializeField]
-        private TMP_Text m_nickNameNoticeText;
-
-        [SerializeField]
-        private Button m_nickNameAuth_Btn;
-
-        [Header("----------PatchGroup----------")]
-        [SerializeField]
-        private Transform m_patchGroup;
-
-        [SerializeField]
-        private Image m_patchProgressBar;
-
-        [SerializeField]
-        private Text m_patchProgressText;
-
         [Header("----------TouchToStart----------")]
         [SerializeField]
         private Transform m_touchToStart;
@@ -135,7 +109,7 @@ namespace GameBerry
         System.Action m_touchToStartCallBack = null;
 
         //------------------------------------------------------------------------------------
-        public void Init()
+        protected override void OnLoad()
         {
             if (m_getHashBtn != null)
                 m_getHashBtn.onClick.AddListener(() =>
@@ -164,18 +138,6 @@ namespace GameBerry
 
             if (m_loginBtnGroup != null)
                 m_loginBtnGroup.gameObject.SetActive(false);
-
-            if (m_createNickNameGroup != null)
-                m_createNickNameGroup.gameObject.SetActive(false);
-
-            //if (m_patchGroup != null)
-            //    m_patchGroup.gameObject.SetActive(false);
-
-            if (m_nickNameInputField != null)
-                m_nickNameInputField.onValueChanged.AddListener(onValueChanged_Nickname);
-
-            if (m_nickNameNoticeText != null)
-                m_nickNameNoticeText.gameObject.SetActive(false);
 
             if (m_termsToggle != null)
                 m_termsToggle.onValueChanged.AddListener(OnTermsToggle_ValueChange);
@@ -210,17 +172,8 @@ namespace GameBerry
             if (m_appleLogin_Btn != null)
                 m_appleLogin_Btn.onClick.AddListener(OnClick_AppleBtn);
 
-            if (m_nickNameAuth_Btn != null)
-                m_nickNameAuth_Btn.onClick.AddListener(OnClick_NickNameAuthBtn);
-
-            if (m_nickNameInputField != null)
-                m_nickNameInputField.characterLimit = Define.NickNameMaxCount;
-
             if (m_touchToStartBtn != null)
                 m_touchToStartBtn.onClick.AddListener(OnClilck_TouchToStartBtn);
-
-            //if (m_customSignUpToggle != null)
-            //    m_customSignUpToggle.isOn = false;
 
             if (m_darkKnightSpine != null)
                 m_darkKnightSpine.PlayAnimation("intro");
@@ -231,20 +184,9 @@ namespace GameBerry
             Message.AddListener<GameBerry.Event.SetNoticeMsg>(SetNotice);
         }
         //------------------------------------------------------------------------------------
-        public void PlayFlashParticle()
+        protected override void OnUnload()
         {
-            if (m_titleLightParticle != null)
-            {
-                m_titleLightParticle.gameObject.SetActive(true);
-
-                List<ParticleSystem> particleSystems = m_titleLightParticle.transform.GetComponentsInAllChildren<ParticleSystem>();
-
-                for (int i = 0; i < particleSystems.Count; ++i)
-                {
-                    particleSystems[i].Stop();
-                    particleSystems[i].Play();
-                }
-            }
+            Message.RemoveListener<GameBerry.Event.SetNoticeMsg>(SetNotice);
         }
         //------------------------------------------------------------------------------------
         private void Update()
@@ -254,11 +196,6 @@ namespace GameBerry
                 if (m_serverName != null)
                     m_serverName.text = string.Format("{0}", PlayerDataContainer.DisplayServerName);
             }
-        }
-        //------------------------------------------------------------------------------------
-        public void Release()
-        {
-            Message.RemoveListener<GameBerry.Event.SetNoticeMsg>(SetNotice);
         }
         //------------------------------------------------------------------------------------
         private void SetNotice(GameBerry.Event.SetNoticeMsg msg)
@@ -433,75 +370,6 @@ namespace GameBerry
         {
             if (m_loginTypeCallBack != null)
                 m_loginTypeCallBack(GameBerry.TheBackEnd.LoginType.CustomLogin);
-        }
-        //------------------------------------------------------------------------------------
-        public void VisibleCreateNickName(bool visible)
-        {
-            if (m_createNickNameGroup != null)
-                m_createNickNameGroup.gameObject.SetActive(visible);
-        }
-        //------------------------------------------------------------------------------------
-        public void SetNickNameCallBack(System.Action<string> callback)
-        {
-            m_nickNameCallBack = callback;
-        }
-        //------------------------------------------------------------------------------------
-        public void SetNickNameError(string NoticeLog)
-        {
-            if (m_nickNameNoticeText != null)
-            {
-                m_nickNameNoticeText.text = NoticeLog;
-                m_nickNameNoticeText.gameObject.SetActive(true);
-            }
-        }
-        //------------------------------------------------------------------------------------
-        private void OnClick_NickNameAuthBtn()
-        {
-            if (m_nickNameInputField.text.Length < Define.NickNameMinCount || m_nickNameInputField.text.Length > Define.NickNameMaxCount)
-            {
-                if (m_nickNameNoticeText != null)
-                {
-                    m_nickNameNoticeText.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_CharacterCount");
-                    m_nickNameNoticeText.gameObject.SetActive(true);
-                }
-
-                return;
-            }
-
-            string idChecker = Regex.Replace(m_nickNameInputField.text, string.Format(@"{0}", Managers.SceneManager.Instance.SpacialCharRegex), string.Empty, RegexOptions.Singleline);
-
-            if (m_nickNameInputField.text != idChecker)
-            {
-                if (m_nickNameNoticeText != null)
-                {
-                    m_nickNameNoticeText.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_SpecialCharacter");
-                    m_nickNameNoticeText.gameObject.SetActive(true);
-                }
-
-                return;
-            }
-
-            if (ProhibitedWordChecker.Instance.CheckProhibitedWord(m_nickNameInputField.text, false) == true)
-            {
-
-                if (m_nickNameCallBack != null)
-                    m_nickNameCallBack(m_nickNameInputField.text);
-            }
-            else
-            {
-                if (m_nickNameNoticeText != null)
-                {
-                    m_nickNameNoticeText.text = Managers.LocalStringManager.Instance.GetLocalString("PlayerNick_Message_ProhibitedWords");
-                    m_nickNameNoticeText.gameObject.SetActive(true);
-                }
-                return;
-            }
-        }
-        //------------------------------------------------------------------------------------
-        private void onValueChanged_Nickname(string nickname)
-        {
-            if (m_nickNameNoticeText != null)
-                m_nickNameNoticeText.gameObject.SetActive(false);
         }
         //------------------------------------------------------------------------------------
         public void VisibleTouchToStart(bool visible)
