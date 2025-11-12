@@ -298,7 +298,7 @@ namespace GameBerry.Managers
             if (m_setInGameRewardPopupMsg.RewardDatas.Count > 0)
             {
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
             }
 
             //GuideQuestManager.Instance.AddEventCount(V2Enum_EventType.MailGet, 1);
@@ -398,7 +398,7 @@ namespace GameBerry.Managers
             if (m_setInGameRewardPopupMsg.RewardDatas.Count > 0)
             {
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
             }
 
             //GuideQuestManager.Instance.AddEventCount(V2Enum_EventType.MailGet, 1);

@@ -80,7 +80,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_ExitBtn()
         {
-            RequestDialogExit<ShopRelayPackageGroupPopupDialog>();
+            UIManager.DialogExit<ShopRelayPackageGroupPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         private void ScrollViewSnapToItem()

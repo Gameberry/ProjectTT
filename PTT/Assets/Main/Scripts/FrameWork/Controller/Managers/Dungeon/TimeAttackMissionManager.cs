@@ -183,7 +183,7 @@ namespace GameBerry.Managers
                             ThirdPartyLog.Instance.SendLog_log_timeattack_mission(pair.Value.Index, 0,
                     null, null, null, null);
 
-                            UI.IDialog.RequestDialogEnter<UI.LobbyTimeAttackMissionDialog>();
+                            UI.UIManager.DialogEnter<UI.LobbyTimeAttackMissionDialog>();
                         }
                     }
                 }
@@ -276,7 +276,7 @@ namespace GameBerry.Managers
                     reward_type, before_quan, reward_quan, after_quan);
 
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
             }
 
             Message.Send(_hideTimeAttackMissionIconMsg);

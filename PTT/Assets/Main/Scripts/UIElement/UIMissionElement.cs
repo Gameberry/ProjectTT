@@ -232,7 +232,7 @@ namespace GameBerry.UI
             {
                 Managers.QuestManager.Instance.DoShortcutRecvMission(m_currentMissionData);
 
-                IDialog.RequestDialogExit<LobbyQuestContentDialog>();
+                UIManager.DialogExit<LobbyQuestContentDialog>();
             }
 
         }

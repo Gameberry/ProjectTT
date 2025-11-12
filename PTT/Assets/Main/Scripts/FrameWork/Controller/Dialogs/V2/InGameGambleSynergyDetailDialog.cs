@@ -137,7 +137,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void ShowGambleSynergyDetail(GameBerry.Event.ShowGambleSynergyDetailMsg msg)
         {
-            RequestDialogEnter<InGameGambleSynergyDetailDialog>();
+            UIManager.DialogEnter<InGameGambleSynergyDetailDialog>();
 
             if (_synergyTitle != null)
                 Managers.LocalStringManager.Instance.SetLocalizeText(_synergyTitle, string.Format("synergytitle/{0}", msg.Enum_GambleSynergyType.Enum32ToInt()));

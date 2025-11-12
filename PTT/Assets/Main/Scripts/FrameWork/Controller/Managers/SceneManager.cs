@@ -165,46 +165,6 @@ namespace GameBerry.Managers
         // 혹시라도 yield return StartCoroutine 사용해서 싱글톤 초기화를 할 수 있기 때문에 IEnumerator로 냅둠
         IEnumerator InitializeApp()
         {
-            //int uid = PlayerPrefs.GetInt(Define.FirstLoginKey, 0);
-
-            //if (uid == 0)
-            //{
-            //    GameObject clone = null;
-            //    Animator animator = null;
-
-            //    bool onSkip = false;
-
-            //    ResourceLoader.Instance.Load<GameObject>("Intro/Intro", o =>
-            //    {
-            //        clone = Instantiate(o, transform) as GameObject;
-            //        if (clone != null)
-            //        {
-            //            animator = clone.GetComponent<Animator>();
-
-            //            IntroDirectionView introDirectionView = clone.GetComponent<IntroDirectionView>();
-            //            introDirectionView.SetSkipCallback(() =>
-            //            {
-            //                onSkip = true;
-            //            });
-            //        }
-
-            //    });
-
-            //    if (animator != null)
-            //    {
-            //        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.99f && onSkip == false)
-            //            yield return null;
-
-            //        if(onSkip == false)
-            //            AOSBackBtnManager.Instance.RemoveForwardBackBtnAction();
-            //    }
-
-            //    if (clone != null)
-            //        Destroy(clone);
-
-            //    PlayerPrefs.SetInt(Define.FirstLoginKey, 1);
-            //}
-
             yield return null;
 
             AppObj = new GameObject("AppInitialize");

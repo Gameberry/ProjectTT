@@ -198,7 +198,7 @@ namespace GameBerry.UI
                 //_playGasSynergyAnimator.runtimeAnimatorController = null;
             }
 
-            RequestDialogExit<InGameGambleAutoDialog>();
+            UIManager.DialogExit<InGameGambleAutoDialog>();
         }
         //------------------------------------------------------------------------------------
         #region Gamble
@@ -233,7 +233,7 @@ namespace GameBerry.UI
             }
             else
             {
-                RequestDialogEnter<InGameGambleAutoDialog>();
+                UIManager.DialogEnter<InGameGambleAutoDialog>();
             }
             
             //Managers.GambleManager.Instance.SetAutoGamble(value);
@@ -358,7 +358,7 @@ namespace GameBerry.UI
             if (_gasAmount != null)
                 _gasAmount.gameObject.SetActive(true);
 
-            RequestDialogExit<UI.InGameGambleSynergyDialog>();
+            UIManager.DialogExit<UI.InGameGambleSynergyDialog>();
 
             if (_playGasSynergy != null)
             { 
@@ -541,7 +541,7 @@ namespace GameBerry.UI
             }
 
             Managers.GambleManager.Instance.PlayGasSynergy();
-            UI.IDialog.RequestDialogEnter<UI.InGameGambleSynergyDialog>();
+            UI.UIManager.DialogEnter<UI.InGameGambleSynergyDialog>();
         }
         //------------------------------------------------------------------------------------
         #endregion

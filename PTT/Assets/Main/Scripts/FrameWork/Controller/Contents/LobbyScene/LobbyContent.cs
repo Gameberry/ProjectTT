@@ -57,8 +57,8 @@ namespace GameBerry.Contents
         {
             CheckRewardStage();
 
-            IDialog.RequestDialogEnter<InGameGoodsDropDirectionDialog>();
-            IDialog.RequestDialogEnter<BattleSceneDialog>();
+            UIManager.DialogEnter<InGameGoodsDropDirectionDialog>();
+            UIManager.DialogEnter<BattleSceneDialog>();
             
             Managers.AOSBackBtnManager.Instance.InitManager();
 
@@ -164,7 +164,7 @@ namespace GameBerry.Contents
                                     SecurityPlayerPrefs.SetInt(MapContainer.Mapidxkey, 0);
 
                                     Message.Send(m_setInGameRewardPopupMsg);
-                                    UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                                    UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
                                 }
                             });
 
@@ -187,12 +187,12 @@ namespace GameBerry.Contents
 #if DEV_DEFINE
             if (Input.GetKeyUp(KeyCode.F3))
             {
-                IDialog.RequestDialogEnter<GlobalCheatDialog>();
+                UIManager.DialogEnter<GlobalCheatDialog>();
             }
 
             if (Input.GetKeyUp(KeyCode.F4))
             {
-                IDialog.RequestDialogExit<GlobalCheatDialog>();
+                UIManager.DialogExit<GlobalCheatDialog>();
             }
 
             if (Input.GetKeyUp(KeyCode.F5))

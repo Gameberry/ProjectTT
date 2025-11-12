@@ -105,7 +105,7 @@ namespace GameBerry.UI
             if (_synergyEffect_Get != null)
                 _synergyEffect_Get.onClick.AddListener(() =>
                 {
-                    RequestDialogExit<LobbyRelicContentDialog>();
+                    UIManager.DialogExit<LobbyRelicContentDialog>();
                     Managers.UIQuickLinkManager.Instance.ShowQuickLink(ContentDetailList.ShopSummon_Relic);
                 });
 

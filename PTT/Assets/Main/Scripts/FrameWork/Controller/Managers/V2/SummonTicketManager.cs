@@ -192,7 +192,7 @@ namespace GameBerry.Managers
                 }
 
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
             }
 
             TheBackEnd.TheBackEndManager.Instance.AddUpdateWaitDatas(Define.PlayerSummonTicketTable);

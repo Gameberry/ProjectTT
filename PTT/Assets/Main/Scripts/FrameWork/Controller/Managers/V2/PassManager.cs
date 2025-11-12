@@ -195,7 +195,7 @@ namespace GameBerry.Managers
             m_setPassRewardDialogMsg.v2Enum_PassType = v2Enum_PassType;
             Message.Send(m_setPassRewardDialogMsg);
 
-            UI.IDialog.RequestDialogEnter<UI.LobbyPassConditionDialog>();
+            UI.UIManager.DialogEnter<UI.LobbyPassConditionDialog>();
         }
         //------------------------------------------------------------------------------------
         public string GetConvertPassCountText(V2Enum_PassType v2Enum_PassType, int count)
@@ -441,7 +441,7 @@ namespace GameBerry.Managers
             if (m_setInGameRewardPopupMsg.RewardDatas.Count > 0)
             {
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
             }
 
             PlayerPassInfo playerShopInfo = GetPassInfo(passData) ?? PassOperator.CreatePlayerShopInfo(passData);

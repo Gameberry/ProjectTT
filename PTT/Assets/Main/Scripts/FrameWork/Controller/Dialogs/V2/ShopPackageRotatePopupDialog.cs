@@ -118,7 +118,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_ExitBtn()
         {
-            RequestDialogExit<ShopPackageRotatePopupDialog>();
+            UIManager.DialogExit<ShopPackageRotatePopupDialog>();
         }
         //------------------------------------------------------------------------------------
         private void RefreshShopRotate(GameBerry.Event.RefreshShopRotateMsg msg)

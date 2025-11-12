@@ -49,7 +49,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_ExitBtn()
         {
-            RequestDialogExit<InGameBoxPercentageDialog>();
+            UIManager.DialogExit<InGameBoxPercentageDialog>();
         }
         //------------------------------------------------------------------------------------
         private void SetRandomBoxPercentage(GameBerry.Event.SetRandomBoxPercentageMsg msg)

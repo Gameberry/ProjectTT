@@ -265,7 +265,7 @@ namespace GameBerry.Managers
                 _setInGameRewardPopupMsg.RewardDatas.Add(shopFreeGoodsData.ReturnGoods);
 
                 Message.Send(_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
                 TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData_WaitSecond(m_changeInfoUpdate, null);
 
@@ -324,7 +324,7 @@ namespace GameBerry.Managers
                     _setInGameRewardPopupMsg.RewardDatas.Add(shopFreeGoodsData.ReturnGoods);
 
                     Message.Send(_setInGameRewardPopupMsg);
-                    UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                    UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
                     TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData_WaitSecond(m_changeInfoUpdate, null);
 
@@ -395,7 +395,7 @@ namespace GameBerry.Managers
             _setInGameRewardPopupMsg.RewardDatas.Add(shopRandomStoreData.ReturnGoods);
 
             Message.Send(_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData_WaitSecond(m_changeInfoUpdate, null);
 

@@ -74,7 +74,7 @@ namespace GameBerry.UI
                     if (m_exitBtn[i] != null)
                         m_exitBtn[i].onClick.AddListener(() =>
                         {
-                            RequestDialogExit<InGameInventoryDialog>();
+                            UIManager.DialogExit<InGameInventoryDialog>();
                         });
                 }
             }

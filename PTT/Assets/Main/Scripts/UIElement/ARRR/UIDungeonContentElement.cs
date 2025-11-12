@@ -528,7 +528,7 @@ namespace GameBerry.UI
             }
 
             Managers.BattleSceneManager.Instance.ChangeBattleScene(m_dungeonData.DungeonType);
-            IDialog.RequestDialogExit<DungeonContentDialog>();
+            UIManager.DialogExit<DungeonContentDialog>();
         }
         //------------------------------------------------------------------------------------
     }

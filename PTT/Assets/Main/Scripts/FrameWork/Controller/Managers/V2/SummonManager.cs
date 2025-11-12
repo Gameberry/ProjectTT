@@ -465,7 +465,7 @@ namespace GameBerry.Managers
         {
             m_waitSummon = false;
             m_waitStateClickCount = 0;
-            UI.IDialog.RequestDialogEnter<UI.ShopSummonResultPopupDialog>();
+            UI.UIManager.DialogEnter<UI.ShopSummonResultPopupDialog>();
 
             Message.Send(m_setSummonPopupMsg);
 
@@ -479,7 +479,7 @@ namespace GameBerry.Managers
 
             m_setShopSummonPercentageDialogMsg.summonGroupData = summonGroupData;
             Message.Send(m_setShopSummonPercentageDialogMsg);
-            UI.IDialog.RequestDialogEnter<UI.ShopSummonPercentageDialog>();
+            UI.UIManager.DialogEnter<UI.ShopSummonPercentageDialog>();
         }
         //------------------------------------------------------------------------------------
         public int GetCanCumfirmCount(V2Enum_SummonType v2Enum_SummonType)

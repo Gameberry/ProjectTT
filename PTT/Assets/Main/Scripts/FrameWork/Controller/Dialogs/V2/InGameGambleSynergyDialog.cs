@@ -96,7 +96,7 @@ namespace GameBerry.UI
                     && _tutorialBlack != null)
                         _tutorialBlack.gameObject.SetActive(false);
 
-                    RequestDialogEnter<InGameGambleSynergyCombineDetailDialog>();
+                    UIManager.DialogEnter<InGameGambleSynergyCombineDetailDialog>();
                 });
 
             Message.AddListener<GameBerry.Event.AddGambleSynergySlotMsg>(AddGambleSynergySlot);

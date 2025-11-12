@@ -479,7 +479,7 @@ namespace GameBerry.UI
             AllHideGambleUI();
 
             //Managers.BattleSceneManager.Instance.ChangeOriginBattleSpeed();
-            RequestDialogExit<InGameGamble_SlotDialog>();
+            UIManager.DialogExit<InGameGamble_SlotDialog>();
         }
         //------------------------------------------------------------------------------------
     }

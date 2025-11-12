@@ -955,7 +955,7 @@ Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodstitl
 Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodsdesc"),
 () =>
 {
-    UI.IDialog.RequestDialogExit<UI.LobbySynergyContentDialog>();
+    UI.UIManager.DialogExit<UI.LobbySynergyContentDialog>();
     Managers.UIQuickLinkManager.Instance.ShowQuickLink(ContentDetailList.ShopInGameStore_Synergy);
 },
 null);
@@ -1108,7 +1108,7 @@ null);
                 //    reward_type, before_quan, reward_quan, after_quan);
 
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
                 //RedDotManager.Instance.HideRedDot(GetRedDotEnum(contentDetailList));
             }

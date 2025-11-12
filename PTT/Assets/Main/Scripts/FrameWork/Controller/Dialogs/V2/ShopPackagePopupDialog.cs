@@ -186,7 +186,7 @@ namespace GameBerry.UI
                 return;
             }
 
-            RequestDialogExit<ShopPackagePopupDialog>();
+            UIManager.DialogExit<ShopPackagePopupDialog>();
         }
         //------------------------------------------------------------------------------------
         private void SetShopSpecialPackagePopup(GameBerry.Event.SetShopSpecialPackagePopupMsg msg)

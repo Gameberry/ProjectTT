@@ -205,7 +205,7 @@ namespace GameBerry.UI
             if (_showCheat != null)
                 _showCheat.onClick.AddListener(() =>
                 {
-                    RequestDialogEnter<GlobalCheatDialog>();
+                    UIManager.DialogEnter<GlobalCheatDialog>();
                 });
 #endif
 

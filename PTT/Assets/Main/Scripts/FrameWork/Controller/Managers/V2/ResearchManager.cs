@@ -977,7 +977,7 @@ namespace GameBerry.Managers
 
             if (CheckReadyLevelUp(researchData) == false)
             {
-                UI.IDialog.RequestDialogEnter<UI.LobbyResearchTicketShopDialog>();
+                UI.UIManager.DialogEnter<UI.LobbyResearchTicketShopDialog>();
                 return false;
             }
 
@@ -1133,7 +1133,7 @@ namespace GameBerry.Managers
             m_setInGameRewardPopupMsg.RewardDatas.Add(rewardData);
 
             Message.Send(m_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             return true;
         }

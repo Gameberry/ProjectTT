@@ -174,7 +174,7 @@ namespace GameBerry.UI
             if (_playerNameChangeShowPopup != null)
                 _playerNameChangeShowPopup.onClick.AddListener(() =>
                 {
-                    RequestDialogEnter<InGameNickNameChangePopupDialog>();
+                    UIManager.DialogEnter<InGameNickNameChangePopupDialog>();
                 });
 
 

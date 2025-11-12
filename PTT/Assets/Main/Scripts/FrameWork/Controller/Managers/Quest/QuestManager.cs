@@ -607,7 +607,7 @@ namespace GameBerry.Managers
 
 
             Message.Send(m_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             TheBackEnd.TheBackEndManager.Instance.UpdatePlayerQuestInfoTable();
             TheBackEnd.TheBackEndManager.Instance.UpdatePlayerPointTable();
@@ -712,7 +712,7 @@ namespace GameBerry.Managers
                     reward_type, before_quan, reward_quan, after_quan);
 
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
                 RedDotManager.Instance.HideRedDot(GetRedDotEnum(contentDetailList));
             }
@@ -857,7 +857,7 @@ namespace GameBerry.Managers
                     reward_type, before_quan, reward_quan, after_quan);
 
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
             }
 
             Message.Send(_refreshQuestGaugeDataMsg);

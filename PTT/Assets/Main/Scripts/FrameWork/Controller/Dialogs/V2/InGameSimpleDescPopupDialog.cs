@@ -35,7 +35,7 @@ namespace GameBerry.UI
                     if (m_exitBtn[i] != null)
                         m_exitBtn[i].onClick.AddListener(() =>
                         {
-                            RequestDialogExit<InGameSimpleDescPopupDialog>();
+                            UIManager.DialogExit<InGameSimpleDescPopupDialog>();
                         });
                 }
             }

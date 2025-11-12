@@ -66,7 +66,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         public void OnClick_ExitBtn()
         {
-            RequestDialogExit<InGameNickNameChangePopupDialog>();
+            UIManager.DialogExit<InGameNickNameChangePopupDialog>();
         }
         //------------------------------------------------------------------------------------
         protected override void OnUnload()

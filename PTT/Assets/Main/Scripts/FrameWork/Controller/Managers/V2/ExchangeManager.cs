@@ -286,7 +286,7 @@ namespace GameBerry.Managers
             m_setInGameRewardPopupMsg.RewardDatas.Add(rewardData);
 
             Message.Send(m_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             m_refreshExchangeDataMsg.exchangeDatas.Clear();
             m_refreshExchangeDataMsg.exchangeDatas.Add(exchangeData);

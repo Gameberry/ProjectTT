@@ -276,7 +276,7 @@ namespace GameBerry.Managers
             after_quan.Add(GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
 
             Message.Send(m_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             m_refreshCheckInRewardMsg.v2Enum_CheckInType = checkInRewardData.CheckInType;
             Message.Send(m_refreshCheckInRewardMsg);

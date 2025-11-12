@@ -94,7 +94,7 @@ namespace GameBerry.UI
             //    }
 
             //    Managers.TimeManager.Instance.DoAdStageCoolTimeReward();
-            //    RequestDialogExit<StageCooltimeRewardDialog>();
+            //    UIManager.DialogExit<StageCooltimeRewardDialog>();
 
             //    ThirdPartyLog.Instance.SendLog_AD_ViewEvent("coolrewrad", 0, GameBerry.Define.IsAdFree == true ? 1 : 2);
             //});
@@ -110,7 +110,7 @@ namespace GameBerry.UI
             }
 
             Managers.TimeManager.Instance.ReleaseStageCoolTimeReward();
-            RequestDialogExit<StageCooltimeRewardDialog>();
+            UIManager.DialogExit<StageCooltimeRewardDialog>();
         }
         //------------------------------------------------------------------------------------
     }

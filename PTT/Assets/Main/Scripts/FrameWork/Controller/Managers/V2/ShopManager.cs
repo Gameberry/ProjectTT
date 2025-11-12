@@ -764,7 +764,7 @@ namespace GameBerry.Managers
 
 
             Message.Send(_setRelayPackageGroupPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.ShopPackagePopupDialog>();
+            UI.UIManager.DialogEnter<UI.ShopPackagePopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public void ShowSpecialPackage(ShopPackageSpecialData shopPackageSpecialData)
@@ -814,7 +814,7 @@ namespace GameBerry.Managers
             _setShopSpecialPackagePopupMsg.shopPackageSpecialData = shopPackageSpecialData;
             Message.Send(_setShopSpecialPackagePopupMsg);
 
-            UI.IDialog.RequestDialogEnter<UI.ShopPackagePopupDialog>();
+            UI.UIManager.DialogEnter<UI.ShopPackagePopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public void ShowEventPackage(ShopPackageEventData shopPackageEventData)
@@ -852,7 +852,7 @@ namespace GameBerry.Managers
             _setShopEventPackagePopupMsg.shopPackageEventData = shopPackageEventData;
             Message.Send(_setShopEventPackagePopupMsg);
 
-            UI.IDialog.RequestDialogEnter<UI.ShopPackageLimitTimePopupDialog>();
+            UI.UIManager.DialogEnter<UI.ShopPackageLimitTimePopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public ShopPackageRotateGroupData GetToDayBuyRotateGroupData()
@@ -976,7 +976,7 @@ namespace GameBerry.Managers
                 _refreshShopRotateMsg.shopPackageRotateGroupData = TodayRotateGroupData;
                 Message.Send(_refreshShopRotateMsg);
 
-                UI.IDialog.RequestDialogEnter<UI.ShopPackageRotatePopupDialog>();
+                UI.UIManager.DialogEnter<UI.ShopPackageRotatePopupDialog>();
             }
         }
         //------------------------------------------------------------------------------------
@@ -1138,7 +1138,7 @@ namespace GameBerry.Managers
             _setInGameRewardPopupMsg.RewardDatas.Add(shopIngameStoreData.ReturnGoods);
 
             Message.Send(_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             TheBackEnd.TheBackEndManager.Instance.UpdatePlayerPointTable();
 

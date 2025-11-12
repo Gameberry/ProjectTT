@@ -311,7 +311,7 @@ namespace GameBerry.Managers
                 }
 
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
                 ThirdPartyLog.Instance.SendLog_log_progress_reward(idx, reward_type, before_quan, reward_quan, after_quan);
             }
@@ -530,7 +530,7 @@ namespace GameBerry.Managers
 
             if (Managers.GoodsManager.Instance.GetGoodsAmount(V2Enum_Goods.Point.Enum32ToInt(), Define.StaminaIndex) < Define.RequiredStamina)
             {
-                UI.IDialog.RequestDialogEnter<UI.LobbyStaminaShopDialog>();
+                UI.UIManager.DialogEnter<UI.LobbyStaminaShopDialog>();
                 return;
             }
 
@@ -642,7 +642,7 @@ namespace GameBerry.Managers
                         if (o.IsSuccess())
                         {
                             Message.Send(m_setInGameRewardPopupMsg);
-                            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
                         }
                     });
 

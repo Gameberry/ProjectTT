@@ -303,7 +303,7 @@ namespace GameBerry.Managers
         //    _showTotalExpDetailMsg.SynergyTotalLevelEffectData = synergyTotalLevelEffectData;
         //    Message.Send(_showTotalExpDetailMsg);
 
-        //    UI.IDialog.RequestDialogEnter<UI.LobbyTotalExpDetailViewDialog>();
+        //    UI.UIManager.DialogEnter<UI.LobbyTotalExpDetailViewDialog>();
         //}
         //------------------------------------------------------------------------------------
         #region SynergyData
@@ -1067,7 +1067,7 @@ namespace GameBerry.Managers
                 Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodsdesc"),
                 () =>
                 {
-                    UI.IDialog.RequestDialogExit<UI.LobbySynergyContentDialog>();
+                    UI.UIManager.DialogExit<UI.LobbySynergyContentDialog>();
                     Managers.UIQuickLinkManager.Instance.ShowQuickLink(ContentDetailList.ShopDailyWeek_MonthPackage);
                 },
                 null);
@@ -1367,7 +1367,7 @@ Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodstitl
 Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodsdesc"),
 () =>
 {
-    UI.IDialog.RequestDialogExit<UI.LobbySynergyContentDialog>();
+    UI.UIManager.DialogExit<UI.LobbySynergyContentDialog>();
     Managers.UIQuickLinkManager.Instance.ShowQuickLink(ContentDetailList.ShopSummon_Normal);
 },
 null);
@@ -1544,7 +1544,7 @@ null);
                 //    reward_type, before_quan, reward_quan, after_quan);
 
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
                 //RedDotManager.Instance.HideRedDot(GetRedDotEnum(contentDetailList));
             }

@@ -93,7 +93,7 @@ namespace GameBerry.Managers
             m_setInGameRewardPopupMsg.RewardDatas.Add(rewardData);
             Message.Send(m_setInGameRewardPopupMsg);
 
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public void RecvSigninGift()
@@ -117,7 +117,7 @@ namespace GameBerry.Managers
             m_setInGameRewardPopupMsg.RewardDatas.Add(rewardData);
             Message.Send(m_setInGameRewardPopupMsg);
 
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public string GetPlayerName()

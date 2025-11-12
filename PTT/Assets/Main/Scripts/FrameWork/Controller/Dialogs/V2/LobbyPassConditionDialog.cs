@@ -158,7 +158,7 @@ namespace GameBerry.UI
 
             m_focusData = null;
 
-            RequestDialogExit<UI.LobbyPassDialog>();
+            UIManager.DialogExit<UI.LobbyPassDialog>();
         }
         //------------------------------------------------------------------------------------
         private void RefreshPassUI(GameBerry.Event.RefreshPassUIMsg msg)

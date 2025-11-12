@@ -465,7 +465,7 @@ namespace GameBerry.Managers
 
         //    ThirdPartyLog.Instance.SendLog_Acc_Reward(MapContainer.MapLastEnter);
 
-        //    UI.IDialog.RequestDialogEnter<UI.StageCooltimeRewardDialog>();
+        //    UI.UIManager.DialogEnter<UI.StageCooltimeRewardDialog>();
 
         //    m_checkCheckStageCoolTimeReward = true;
         }

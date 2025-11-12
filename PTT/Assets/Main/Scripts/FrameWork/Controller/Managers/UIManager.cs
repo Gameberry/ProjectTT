@@ -22,9 +22,6 @@ namespace GameBerry.UI
 
 		public Transform screenCanvasPowerSavingContent;
 
-		public Transform BottomUIStandardPos;
-		public Transform BottomUIExpandPos;
-
         private Dictionary<string, IDialog> _uis;
 
 		public delegate void OnComplete(IDialog ui);
@@ -72,6 +69,11 @@ namespace GameBerry.UI
 			}
 		}
 
+        public static void DialogEnter<T>() where T : IDialog
+        {
+            Instance.DialogEnter(typeof(T).Name);
+        }
+
         public void DialogEnter(string uiName)
         {
             IDialog ui = Get(uiName);
@@ -88,7 +90,12 @@ namespace GameBerry.UI
 			}
         }
 
-        public void DialogExit(string uiName)
+        public static void DialogExit<T>() where T : IDialog
+        {
+            Instance.DialogExit(typeof(T).Name);
+        }
+
+		public void DialogExit(string uiName)
         {
             Get(uiName)?.Exit();
         }

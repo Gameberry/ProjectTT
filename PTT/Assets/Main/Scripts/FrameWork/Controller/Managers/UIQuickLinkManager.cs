@@ -179,7 +179,7 @@ namespace GameBerry.Managers
                         //    }
                         //}
 
-                        UI.IDialog.RequestDialogEnter<UI.ShopGeneralDialog>();
+                        UI.UIManager.DialogEnter<UI.ShopGeneralDialog>();
 
                         switch (contentDetailList)
                         {
@@ -229,7 +229,7 @@ namespace GameBerry.Managers
                             break;
                         }
 
-                        UI.IDialog.RequestDialogEnter<UI.LobbyPassDialog>();
+                        UI.UIManager.DialogEnter<UI.LobbyPassDialog>();
 
                         if (contentDetailList != ContentDetailList.Pass)
                         {

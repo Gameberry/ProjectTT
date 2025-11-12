@@ -91,7 +91,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_Exit()
         {
-            RequestDialogExit<InGameGuideNPCNoticeDialog>();
+            UIManager.DialogExit<InGameGuideNPCNoticeDialog>();
         }
         //------------------------------------------------------------------------------------
     }

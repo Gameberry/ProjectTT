@@ -20,7 +20,7 @@ namespace GameBerry.UI
 
         private void OnClick()
         {
-            UI.IDialog.RequestDialogEnter<UI.InGamePostPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGamePostPopupDialog>();
         }
     }
 }

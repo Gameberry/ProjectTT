@@ -11,10 +11,10 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void OnSetBattleScene()
         {
-            UI.IDialog.RequestDialogEnter<UI.LobbyWaveRewardDialog>();
-            UI.IDialog.RequestDialogEnter<UI.InGamePlayContentDialog>();
-            UI.IDialog.RequestDialogEnter<UI.LobbyEtcMenuDialog>();
-            UI.IDialog.RequestDialogEnter<UI.CharacterInfoDialog>();
+            UI.UIManager.DialogEnter<UI.LobbyWaveRewardDialog>();
+            UI.UIManager.DialogEnter<UI.InGamePlayContentDialog>();
+            UI.UIManager.DialogEnter<UI.LobbyEtcMenuDialog>();
+            UI.UIManager.DialogEnter<UI.CharacterInfoDialog>();
 
             List<ShopFreeGoodsData> datas = Managers.ShopRandomStoreManager.Instance.GetShopFreeGoodsDatas();
 
@@ -75,7 +75,7 @@ namespace GameBerry
 
             if (Managers.BattleSceneManager.Instance._prevBattleType == Enum_Dungeon.DiamondDungeon
                 || Managers.BattleSceneManager.Instance._prevBattleType == Enum_Dungeon.TowerDungeon)
-                UI.IDialog.RequestDialogEnter<UI.DungeonContentDialog>();
+                UI.UIManager.DialogEnter<UI.DungeonContentDialog>();
 
             Managers.GearManager.Instance.RefreshSynergyRedDot();
             Managers.DescendManager.Instance.RefreshSynergyRedDot();
@@ -136,10 +136,10 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void OnReleaseBattleScene()
         {
-            UI.IDialog.RequestDialogExit<UI.LobbyWaveRewardDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGamePlayContentDialog>();
-            UI.IDialog.RequestDialogExit<UI.LobbyEtcMenuDialog>();
-            UI.IDialog.RequestDialogExit<UI.CharacterInfoDialog>();
+            UI.UIManager.DialogExit<UI.LobbyWaveRewardDialog>();
+            UI.UIManager.DialogExit<UI.InGamePlayContentDialog>();
+            UI.UIManager.DialogExit<UI.LobbyEtcMenuDialog>();
+            UI.UIManager.DialogExit<UI.CharacterInfoDialog>();
         }
         //------------------------------------------------------------------------------------
     }

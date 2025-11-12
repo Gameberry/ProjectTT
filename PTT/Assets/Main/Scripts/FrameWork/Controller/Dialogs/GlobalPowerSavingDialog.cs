@@ -235,7 +235,7 @@ namespace GameBerry.UI
 
             if (m_unLockCheckDistance >= remainDistance)
             {
-                RequestDialogExit<GlobalPowerSavingDialog>();
+                UIManager.DialogExit<GlobalPowerSavingDialog>();
             }
             else
             {

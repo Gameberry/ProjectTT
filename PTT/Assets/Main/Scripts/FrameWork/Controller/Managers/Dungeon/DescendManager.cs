@@ -738,7 +738,7 @@ namespace GameBerry.Managers
                 Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodsdesc"),
                 () =>
                 {
-                    UI.IDialog.RequestDialogExit<UI.LobbySynergyContentDialog>();
+                    UI.UIManager.DialogExit<UI.LobbySynergyContentDialog>();
                     Managers.UIQuickLinkManager.Instance.ShowQuickLink(ContentDetailList.ShopDescendStore);
                 },
                 null);
@@ -1146,7 +1146,7 @@ namespace GameBerry.Managers
                 Managers.LocalStringManager.Instance.GetLocalString("common/ui/shortagegoodsdesc"),
                 () =>
                 {
-                    UI.IDialog.RequestDialogExit<UI.LobbyDescendContentDialog>();
+                    UI.UIManager.DialogExit<UI.LobbyDescendContentDialog>();
                     Managers.UIQuickLinkManager.Instance.ShowQuickLink(ContentDetailList.ShopDescendStore);
                 },
                 null);

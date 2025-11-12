@@ -98,16 +98,16 @@ namespace GameBerry.Contents
         {
             //Managers.GuideManager.Instance.PlayGuide();
 
-            IDialog.RequestDialogEnter<InGameGoodsDropDirectionDialog>();
-            IDialog.RequestDialogEnter<InGamePlayContentDialog>();
-            IDialog.RequestDialogEnter<LobbyEtcMenuDialog>();
+            UIManager.DialogEnter<InGameGoodsDropDirectionDialog>();
+            UIManager.DialogEnter<InGamePlayContentDialog>();
+            UIManager.DialogEnter<LobbyEtcMenuDialog>();
 
 
-            IDialog.RequestDialogEnter<DynamicBuffProgressDialog>();
+            UIManager.DialogEnter<DynamicBuffProgressDialog>();
 
 
-            IDialog.RequestDialogEnter<InGameGuideInteractorDialog>();
-            IDialog.RequestDialogEnter<ChatViewDialog>();
+            UIManager.DialogEnter<InGameGuideInteractorDialog>();
+            UIManager.DialogEnter<ChatViewDialog>();
 
             if (SummonTicketContainer.needReddot == true || BoxContainer.needReddot == true)
                 Managers.RedDotManager.Instance.ShowRedDot(ContentDetailList.Inventory_Item);
@@ -221,7 +221,7 @@ namespace GameBerry.Contents
 
             Message.Send(setSimpleDescPopupMsg);
 
-            GameBerry.UI.IDialog.RequestDialogEnter<InGameSimpleDescPopupDialog>();
+            GameBerry.UI.UIManager.DialogEnter<InGameSimpleDescPopupDialog>();
         }
         //------------------------------------------------------------------------------------
     }

@@ -119,8 +119,8 @@ namespace GameBerry.Managers
 
             //if (Managers.DungeonManager.Instance.CurrentDungeonKinds != Enum_Dungeon.AllyArenaDungeon)
             //{
-            //    UI.IDialog.RequestDialogEnter<UI.ChatViewDialog>();
-            //    UI.IDialog.RequestDialogExit<UI.ChatGuildDialog>();
+            //    UI.UIManager.DialogEnter<UI.ChatViewDialog>();
+            //    UI.UIManager.DialogExit<UI.ChatGuildDialog>();
             //}
         }
         //------------------------------------------------------------------------------------
@@ -304,7 +304,7 @@ namespace GameBerry.Managers
             m_setReportUserInfoMsg.messageInfo = messageInfo;
             Message.Send(m_setReportUserInfoMsg);
 
-            UI.IDialog.RequestDialogEnter<UI.ChatUserReportDialog>();
+            UI.UIManager.DialogEnter<UI.ChatUserReportDialog>();
         }
         //------------------------------------------------------------------------------------
         public void SendBlockUser(MessageInfo messageInfo)

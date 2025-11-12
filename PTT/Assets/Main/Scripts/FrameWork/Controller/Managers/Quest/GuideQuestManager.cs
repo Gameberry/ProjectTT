@@ -96,7 +96,7 @@ namespace GameBerry.Managers
         {
             if (m_currentGuideQuest == null)
             {
-                IDialog.RequestDialogExit<InGameGuideQuestDialog>();
+                UIManager.DialogExit<InGameGuideQuestDialog>();
                 return;
             }
 
@@ -105,13 +105,13 @@ namespace GameBerry.Managers
             m_refreshGuideQuestMsg.guideQuestData = m_currentGuideQuest;
             Message.Send(m_refreshGuideQuestMsg);
 
-            IDialog.RequestDialogEnter<InGameGuideQuestDialog>();
+            UIManager.DialogEnter<InGameGuideQuestDialog>();
 
             m_currentGuideTutorialData = m_guideQuestLocalTable.GetTutorialData(m_currentGuideQuest.Index);
 
             if (m_currentGuideTutorialData != null)
             {
-                IDialog.RequestDialogEnter<InGameGuideNPCNoticeDialog>();
+                UIManager.DialogEnter<InGameGuideNPCNoticeDialog>();
                 m_setGuideDialogMsg.guideTutorialData = m_currentGuideTutorialData;
                 Message.Send(m_setGuideDialogMsg);
             }

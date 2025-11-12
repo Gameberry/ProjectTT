@@ -41,7 +41,7 @@ namespace GameBerry.UI
                     if (m_exitBtn[i] != null)
                         m_exitBtn[i].onClick.AddListener(() =>
                         {
-                            RequestDialogExit<ChatUserReportDialog>();
+                            UIManager.DialogExit<ChatUserReportDialog>();
                         });
                 }
             }
@@ -100,7 +100,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_Block()
         {
-            RequestDialogExit<ChatUserReportDialog>();
+            UIManager.DialogExit<ChatUserReportDialog>();
 
             if (messageInfo != null)
                 Managers.ChatManager.Instance.SendBlockUser(messageInfo);
@@ -115,7 +115,7 @@ namespace GameBerry.UI
             if (messageInfo != null)
                 Managers.ChatManager.Instance.SendReport(messageInfo, v2Enum_ReportType, reportDetail.text);
 
-            RequestDialogExit<ChatUserReportDialog>();
+            UIManager.DialogExit<ChatUserReportDialog>();
         }
         //------------------------------------------------------------------------------------
     }

@@ -67,7 +67,7 @@ namespace GameBerry.UI
         ////------------------------------------------------------------------------------------
         //private void OnClick_ExitBtn()
         //{
-        //    RequestDialogExit<ShopPackageEventPopupDialog>();
+        //    UIManager.DialogExit<ShopPackageEventPopupDialog>();
         //}
         //------------------------------------------------------------------------------------
     }

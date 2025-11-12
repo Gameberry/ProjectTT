@@ -127,8 +127,8 @@ namespace GameBerry.UI
                 {
                     //if (GuildContainer.JoinedGuild == true)
                     //{
-                    //    RequestDialogEnter<ChatGuildDialog>();
-                    //    RequestDialogExit<ChatViewDialog>();
+                    //    UIManager.DialogEnter<ChatGuildDialog>();
+                    //    UIManager.DialogExit<ChatViewDialog>();
                     //    OnClick_ShowMinimumContent();
 
                     //    Message.Send(setGuildChatStateMsg);
@@ -396,7 +396,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_m_showBlockListBtn()
         {
-            RequestDialogEnter<ChatBlockListDialog>();
+            UIManager.DialogEnter<ChatBlockListDialog>();
         }
         //------------------------------------------------------------------------------------
         private void RefreshBlockUser(GameBerry.Event.RefreshBlockUserMsg msg)

@@ -17,7 +17,7 @@ namespace GameBerry.Scene
             {
                 //if (Managers.ContentOpenConditionManager.Instance.IsOpen(V2Enum_ContentType.CheckIn) == true)
                 //{
-                //    UI.IDialog.RequestDialogEnter<UI.InGameCheckInDialog>();
+                //    UI.UIManager.DialogEnter<UI.InGameCheckInDialog>();
                 //}
             }
         }

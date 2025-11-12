@@ -173,7 +173,7 @@ namespace GameBerry.Managers
             if (m_setInGameRewardPopupMsg.RewardDatas.Count > 0)
             {
                 Message.Send(m_setInGameRewardPopupMsg);
-                UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+                UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
             }
 
             TheBackEnd.TheBackEndManager.Instance.AddUpdateWaitDatas(Define.PlayerBoxTable);
@@ -193,7 +193,7 @@ namespace GameBerry.Managers
             m_setRandomBoxPercentageMsg.boxData = boxData;
             Message.Send(m_setRandomBoxPercentageMsg);
 
-            UI.IDialog.RequestDialogEnter<UI.InGameBoxPercentageDialog>();
+            UI.UIManager.DialogEnter<UI.InGameBoxPercentageDialog>();
         }
         //------------------------------------------------------------------------------------
     }

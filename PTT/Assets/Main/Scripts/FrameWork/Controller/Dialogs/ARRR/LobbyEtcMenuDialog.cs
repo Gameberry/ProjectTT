@@ -113,42 +113,42 @@ namespace GameBerry.UI
             {
                 case ContentDetailList.Post:
                     {
-                        RequestDialogEnter<InGamePostPopupDialog>();
+                        UIManager.DialogEnter<InGamePostPopupDialog>();
                         break;
                     }
                 case ContentDetailList.CheckIn:
                     {
-                        RequestDialogEnter<InGameCheckInDialog>();
+                        UIManager.DialogEnter<InGameCheckInDialog>();
                         break;
                     }
                 case ContentDetailList.GameOption:
                     {
-                        RequestDialogEnter<GlobalSettingDialog>();
+                        UIManager.DialogEnter<GlobalSettingDialog>();
                         break;
                     }
                 case ContentDetailList.Quest:
                     {
-                        RequestDialogEnter<LobbyQuestContentDialog>();
+                        UIManager.DialogEnter<LobbyQuestContentDialog>();
                         break;
                     }
                 case ContentDetailList.Exchange:
                     {
-                        RequestDialogEnter<InGameExchangeDialog>();
+                        UIManager.DialogEnter<InGameExchangeDialog>();
                         break;
                     }
                 case ContentDetailList.Rank:
                     {
-                        RequestDialogEnter<InGameRankDialog>();
+                        UIManager.DialogEnter<InGameRankDialog>();
                         break;
                     }
                 case ContentDetailList.Notice:
                     {
-                        RequestDialogEnter<InGameNoticeDialog>();
+                        UIManager.DialogEnter<InGameNoticeDialog>();
                         break;
                     }
                 case ContentDetailList.Inventory:
                     {
-                        RequestDialogEnter<InGameInventoryDialog>();
+                        UIManager.DialogEnter<InGameInventoryDialog>();
                         break;
                     }
             }

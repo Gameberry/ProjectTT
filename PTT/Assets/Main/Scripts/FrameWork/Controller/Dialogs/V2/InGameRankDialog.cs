@@ -85,7 +85,7 @@ namespace GameBerry.UI
                 SetRankElement(ContentDetailList.Rank_CombatPower);
 
             if (TheBackEnd.TheBackEndManager.Instance.GetNickPlayerName() == BackEnd.Backend.UID)
-                RequestDialogEnter<InGameNickNameChangePopupDialog>();
+                UIManager.DialogEnter<InGameNickNameChangePopupDialog>();
         }
         //------------------------------------------------------------------------------------
         private void RefreshNickName(GameBerry.Event.RefreshNickNameMsg msg)

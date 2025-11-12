@@ -1194,11 +1194,11 @@ namespace GameBerry.TheBackEnd
                     {
                         if (backendReturnObject.GetMessage().Contains("PreconditionFailed"))
                         {
-                            //UI.IDialog.RequestDialogExit<UI.GuildListDialog>();
-                            //UI.IDialog.RequestDialogExit<UI.GuildDialog>();
-                            //UI.IDialog.RequestDialogExit<UI.GuildMemberListDialog>();
-                            //UI.IDialog.RequestDialogExit<UI.GuildInfoDialog>();
-                            //UI.IDialog.RequestDialogExit<UI.GuildFoundateDialog>();
+                            //UI.UIManager.DialogExit<UI.GuildListDialog>();
+                            //UI.UIManager.DialogExit<UI.GuildDialog>();
+                            //UI.UIManager.DialogExit<UI.GuildMemberListDialog>();
+                            //UI.UIManager.DialogExit<UI.GuildInfoDialog>();
+                            //UI.UIManager.DialogExit<UI.GuildFoundateDialog>();
 
                             Contents.GlobalContent.ShowGlobalNotice("Empty Guild");
                         }

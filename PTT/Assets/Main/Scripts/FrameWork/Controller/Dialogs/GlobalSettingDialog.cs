@@ -208,7 +208,7 @@ namespace GameBerry.UI
             if (m_closeSettingDialog != null)
                 m_closeSettingDialog.onClick.AddListener(() =>
                 {
-                    RequestDialogExit<GlobalSettingDialog>();
+                    UIManager.DialogExit<GlobalSettingDialog>();
                 });
 
             for (int i = 0; i < m_settingToggleElementDatas.Count; ++i)
@@ -219,7 +219,7 @@ namespace GameBerry.UI
             if(m_powerSavingModeBtn != null)
                 m_powerSavingModeBtn.onClick.AddListener(() =>
                 {
-                    RequestDialogEnter<GlobalPowerSavingDialog>();
+                    UIManager.DialogEnter<GlobalPowerSavingDialog>();
                 });
 
             if (m_changeLanguage != null)
@@ -297,7 +297,7 @@ namespace GameBerry.UI
             if (m_playerNameChangeShowPopup != null)
                 m_playerNameChangeShowPopup.onClick.AddListener(() =>
                 {
-                    RequestDialogEnter<InGameNickNameChangePopupDialog>();
+                    UIManager.DialogEnter<InGameNickNameChangePopupDialog>();
                 });
 
             
@@ -630,7 +630,7 @@ namespace GameBerry.UI
             if (backendReturnObject.GetReturnValuetoJSON().ContainsKey("itemObject") == false)
                 return;
 
-            RequestDialogExit<GlobalSettingDialog>();
+            UIManager.DialogExit<GlobalSettingDialog>();
 
             GameBerry.Event.SetInGameRewardPopupMsg m_setInGameRewardPopupMsg = new GameBerry.Event.SetInGameRewardPopupMsg();
 
@@ -658,7 +658,7 @@ namespace GameBerry.UI
             if (m_setInGameRewardPopupMsg.RewardDatas.Count > 0)
             { 
                 Message.Send(m_setInGameRewardPopupMsg);
-                RequestDialogEnter<InGameRewardPopupDialog>();
+                UIManager.DialogEnter<InGameRewardPopupDialog>();
             }
 
             TheBackEnd.TheBackEndManager.Instance.SendUpdateWaitData(true);

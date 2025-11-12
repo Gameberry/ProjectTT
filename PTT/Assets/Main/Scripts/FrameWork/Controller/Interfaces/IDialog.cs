@@ -159,15 +159,5 @@ namespace GameBerry.UI
 		protected virtual void OnExit()
 		{
 		}
-
-        public static void RequestDialogEnter<T>() where T : IDialog
-		{
-			UIManager.Instance.DialogEnter(typeof(T).Name);
-		}
-
-		public static void RequestDialogExit<T>() where T : IDialog
-		{
-            UIManager.Instance.DialogExit(typeof(T).Name);
-		}
     }
 }

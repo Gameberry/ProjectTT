@@ -390,7 +390,7 @@ namespace GameBerry.Managers
             keep_quan = Managers.GoodsManager.Instance.GetGoodsAmount(dungeonData.EnterCostParam1);
 
             Message.Send(m_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             m_setInGameRewardPopup_TitleMsg.title = LocalStringManager.Instance.GetLocalString("dungeon/sweepReward");
             Message.Send(m_setInGameRewardPopup_TitleMsg);
@@ -462,7 +462,7 @@ namespace GameBerry.Managers
             DoUseDungeonTicket(enumDungeon, remainticket);
 
             Message.Send(m_setInGameRewardPopupMsg);
-            UI.IDialog.RequestDialogEnter<UI.InGameRewardPopupDialog>();
+            UI.UIManager.DialogEnter<UI.InGameRewardPopupDialog>();
 
             m_setInGameRewardPopup_TitleMsg.title = LocalStringManager.Instance.GetLocalString("dungeon/sweepReward");
             Message.Send(m_setInGameRewardPopup_TitleMsg);

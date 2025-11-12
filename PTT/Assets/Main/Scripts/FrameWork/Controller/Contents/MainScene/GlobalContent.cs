@@ -93,20 +93,20 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
-            IDialog.RequestDialogEnter<GlobalPopupDialog>();
-            IDialog.RequestDialogEnter<GlobalDungeonFadeDialog>();
-            IDialog.RequestDialogEnter<GlobalFadeDialog>();
-            IDialog.RequestDialogEnter<GlobalNoticeDialog>();
+            UIManager.DialogEnter<GlobalPopupDialog>();
+            UIManager.DialogEnter<GlobalDungeonFadeDialog>();
+            UIManager.DialogEnter<GlobalFadeDialog>();
+            UIManager.DialogEnter<GlobalNoticeDialog>();
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()
         {
-            IDialog.RequestDialogExit<GlobalPopupDialog>();
-            IDialog.RequestDialogExit<GlobalBufferingDialog>();
-            IDialog.RequestDialogExit<GlobalButtonLockDialog>();
-            IDialog.RequestDialogExit<GlobalDungeonFadeDialog>();
-            IDialog.RequestDialogExit<GlobalFadeDialog>();
-            IDialog.RequestDialogExit<GlobalNoticeDialog>();
+            UIManager.DialogExit<GlobalPopupDialog>();
+            UIManager.DialogExit<GlobalBufferingDialog>();
+            UIManager.DialogExit<GlobalButtonLockDialog>();
+            UIManager.DialogExit<GlobalDungeonFadeDialog>();
+            UIManager.DialogExit<GlobalFadeDialog>();
+            UIManager.DialogExit<GlobalNoticeDialog>();
         }
         //------------------------------------------------------------------------------------
         public static V2SkillTriggerColorData GetV2SkillTriggerColorData(Enum_TriggerType v2Enum_TriggerType)
@@ -144,11 +144,11 @@ namespace GameBerry.Contents
         public static void VisibleBufferingUI(bool visible)
         {
             if (visible == true)
-                IDialog.RequestDialogEnter<GlobalBufferingDialog>();
+                UIManager.DialogEnter<GlobalBufferingDialog>();
             else
             {
                 if (showNetWorkBufferingUI == false)
-                    IDialog.RequestDialogExit<GlobalBufferingDialog>();
+                    UIManager.DialogExit<GlobalBufferingDialog>();
             }
 
             showBufferingUI = visible;
@@ -157,11 +157,11 @@ namespace GameBerry.Contents
         public static void VisibleBufferingUI(bool visible, string buffstring)
         {
             if (visible == true)
-                IDialog.RequestDialogEnter<GlobalBufferingDialog>();
+                UIManager.DialogEnter<GlobalBufferingDialog>();
             else
             {
                 if (showNetWorkBufferingUI == false)
-                    IDialog.RequestDialogExit<GlobalBufferingDialog>();
+                    UIManager.DialogExit<GlobalBufferingDialog>();
             }
 
             showBufferingUI = visible;
@@ -173,11 +173,11 @@ namespace GameBerry.Contents
         public static void VisibleNetWorkBufferingUI(bool visible)
         {
             if (visible == true)
-                IDialog.RequestDialogEnter<GlobalBufferingDialog>();
+                UIManager.DialogEnter<GlobalBufferingDialog>();
             else
             {
                 if (showBufferingUI == false)
-                    IDialog.RequestDialogExit<GlobalBufferingDialog>();
+                    UIManager.DialogExit<GlobalBufferingDialog>();
             }
 
             showNetWorkBufferingUI = visible;
@@ -186,9 +186,9 @@ namespace GameBerry.Contents
         public static void SetButtonLock(bool btnlock)
         {
             if (btnlock == true)
-                IDialog.RequestDialogEnter<GlobalButtonLockDialog>();
+                UIManager.DialogEnter<GlobalButtonLockDialog>();
             else
-                IDialog.RequestDialogExit<GlobalButtonLockDialog>();
+                UIManager.DialogExit<GlobalButtonLockDialog>();
         }
         //------------------------------------------------------------------------------------
         public static void ShowPopup_Ok(string titletext, string contenttext, System.Action okAction = null, System.Action<bool> toDayHide = null)
@@ -319,7 +319,7 @@ namespace GameBerry.Contents
 
             Message.Send(m_setSelectGoodsPopupMsg);
 
-            UI.IDialog.RequestDialogEnter<InGameSelectGoodsPopupDialog>();
+            UI.UIManager.DialogEnter<InGameSelectGoodsPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public static void ShowGoodsDescPopup(V2Enum_Goods v2Enum_Goods, int index, double timegoodstime = 0.0)
@@ -334,7 +334,7 @@ namespace GameBerry.Contents
 
             Message.Send(m_setGoodsDescPopupMsg);
 
-            UI.IDialog.RequestDialogEnter<InGameGoodsDescPopupDialog>();
+            UI.UIManager.DialogEnter<InGameGoodsDescPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public static Color GetBerserkerMoveColor(SpriteRenderer spriteRenderer)

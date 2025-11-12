@@ -98,7 +98,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void OnSetBattleScene()
         {
-            //UI.IDialog.RequestDialogEnter<UI.BattleScenePositionSetDialog>();
+            //UI.UIManager.DialogEnter<UI.BattleScenePositionSetDialog>();
 
             Managers.SynergyManager.Instance.SetSynergyNextData();
 
@@ -215,12 +215,12 @@ namespace GameBerry
 
             InGamePositionContainer.Instance.VisibleBattleFriendPos(false);
 
-            UI.IDialog.RequestDialogEnter<UI.InGameGambleDialog>();
+            UI.UIManager.DialogEnter<UI.InGameGambleDialog>();
 
             if (Managers.MapManager.Instance.NeedTutotial1() == false)
-                UI.IDialog.RequestDialogEnter<UI.InGameGambleSynergyDialog>();
+                UI.UIManager.DialogEnter<UI.InGameGambleSynergyDialog>();
 
-            UI.IDialog.RequestDialogEnter<UI.InGameDescendContentDialog>();
+            UI.UIManager.DialogEnter<UI.InGameDescendContentDialog>();
 
             Managers.DescendManager.Instance.EquipDescendContent();
 
@@ -388,8 +388,8 @@ namespace GameBerry
         {
             Message.Send(new GameBerry.Event.PlayForceEndGambleCardMsg());
 
-            UI.IDialog.RequestDialogExit<UI.InGameGambleSynergyDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleSynergyDetailDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleSynergyDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleSynergyDetailDialog>();
 
             _playingSlotTutorial = true;
 
@@ -456,11 +456,11 @@ namespace GameBerry
             Managers.BattleSceneManager.Instance.ChangeTimeScale(Enum_BattleSpeed.x1);
             _isPlay = false;
 
-            UI.IDialog.RequestDialogExit<UI.InGameGambleDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleSynergyDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleSynergyDetailDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleCardHandDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameDescendContentDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleSynergyDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleSynergyDetailDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleCardHandDialog>();
+            UI.UIManager.DialogExit<UI.InGameDescendContentDialog>();
 
             if (win == false)
             {
@@ -789,14 +789,14 @@ namespace GameBerry
 
             InGamePositionContainer.Instance.VisibleBattleFriendPos(false);
 
-            //UI.IDialog.RequestDialogExit<UI.BattleScenePositionSetDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleSynergyDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleSynergyDetailDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGambleCardHandDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameGamble_SlotDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameSkillViewDialog>();
-            UI.IDialog.RequestDialogExit<UI.InGameDescendContentDialog>();
+            //UI.UIManager.DialogExit<UI.BattleScenePositionSetDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleSynergyDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleSynergyDetailDialog>();
+            UI.UIManager.DialogExit<UI.InGameGambleCardHandDialog>();
+            UI.UIManager.DialogExit<UI.InGameGamble_SlotDialog>();
+            UI.UIManager.DialogExit<UI.InGameSkillViewDialog>();
+            UI.UIManager.DialogExit<UI.InGameDescendContentDialog>();
 
 
             Managers.GambleManager.Instance.ResetGambleState();

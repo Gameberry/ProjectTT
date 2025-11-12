@@ -204,13 +204,13 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void PlayGambleCard(GameBerry.Event.PlayGambleCardMsg msg)
         {
-            RequestDialogEnter<InGameGambleCardHandDialog>();
+            UIManager.DialogEnter<InGameGambleCardHandDialog>();
             OnClick_PlayGamble(msg.aRR_GambleResultData);
         }
         //------------------------------------------------------------------------------------
         private void PlayGasSynergy(GameBerry.Event.PlayGasSynergyMsg msg)
         {
-            RequestDialogEnter<InGameGambleCardHandDialog>();
+            UIManager.DialogEnter<InGameGambleCardHandDialog>();
             PlayGassSynergy();
         }
         //------------------------------------------------------------------------------------
@@ -252,7 +252,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void PlayMinorJoker(int synergyStack)
         {
-            RequestDialogEnter<InGameGambleCardHandDialog>();
+            UIManager.DialogEnter<InGameGambleCardHandDialog>();
             AllHideGambleUI();
 
             if (_gambleSkillDirection != null)
@@ -658,7 +658,7 @@ namespace GameBerry.UI
                 if (_tutorialBlack != null)
                     _tutorialBlack.gameObject.SetActive(false);
 
-                UI.IDialog.RequestDialogEnter<UI.InGameGambleSynergyDialog>();
+                UI.UIManager.DialogEnter<UI.InGameGambleSynergyDialog>();
 
                 Managers.BattleSceneManager.Instance.ChangeOriginBattleSpeed();
 
@@ -687,7 +687,7 @@ namespace GameBerry.UI
                 if (_gasSynergyJokerBalck != null)
                     _gasSynergyJokerBalck.gameObject.SetActive(false);
 
-                UI.IDialog.RequestDialogEnter<UI.InGameGambleSynergyDialog>();
+                UI.UIManager.DialogEnter<UI.InGameGambleSynergyDialog>();
 
                 Managers.BattleSceneManager.Instance.ChangeOriginBattleSpeed();
 
@@ -736,7 +736,7 @@ namespace GameBerry.UI
 
             forceReleaseElement = null;
 
-            RequestDialogExit<InGameGambleCardHandDialog>();
+            UIManager.DialogExit<InGameGambleCardHandDialog>();
         }
         //------------------------------------------------------------------------------------
     }

@@ -123,7 +123,7 @@ namespace GameBerry.UI
                                 SetCheckInElement(V2Enum_CheckInType.Repeat);
                             }
                             else
-                                RequestDialogExit<InGameCheckInDialog>();
+                                UIManager.DialogExit<InGameCheckInDialog>();
                         });
                 }
             }

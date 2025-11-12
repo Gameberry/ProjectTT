@@ -261,7 +261,7 @@ namespace GameBerry.UI
             if (_showStaminaShop != null)
                 _showStaminaShop.onClick.AddListener(() =>
                 {
-                    RequestDialogEnter<LobbyStaminaShopDialog>();
+                    UIManager.DialogEnter<LobbyStaminaShopDialog>();
                 });
 
 
@@ -575,7 +575,7 @@ namespace GameBerry.UI
 
             if (Managers.GoodsManager.Instance.GetGoodsAmount(V2Enum_Goods.Point.Enum32ToInt(), Define.StaminaIndex) < Define.RequiredStamina)
             {
-                RequestDialogEnter<LobbyStaminaShopDialog>();
+                UIManager.DialogEnter<LobbyStaminaShopDialog>();
                 return;
             }
 
@@ -762,8 +762,8 @@ namespace GameBerry.UI
 
             if (_currentMapData != null && _currentMapData.StageNumber == 0 && mapData.StageNumber != 0)
             {
-                RequestDialogExit<CharacterInfoDialog>();
-                RequestDialogEnter<CharacterInfoDialog>();
+                UIManager.DialogExit<CharacterInfoDialog>();
+                UIManager.DialogEnter<CharacterInfoDialog>();
             }
 
             _currentMapData = mapData;
@@ -894,7 +894,7 @@ namespace GameBerry.UI
 
             if (Input.GetKeyUp(KeyCode.F7))
             {
-                RequestDialogEnter<InGameRankDialog>();
+                UIManager.DialogEnter<InGameRankDialog>();
             }
         }
 #endif
@@ -1144,37 +1144,37 @@ namespace GameBerry.UI
             {
                 case ContentDetailList.LobbyGear:
                     {
-                        RequestDialogEnter<LobbyCharacterContentDialog>();
+                        UIManager.DialogEnter<LobbyCharacterContentDialog>();
                         break;
                     }
                 case ContentDetailList.LobbyRelic:
                     {
-                        RequestDialogEnter<LobbyRelicContentDialog>();
+                        UIManager.DialogEnter<LobbyRelicContentDialog>();
                         break;
                     }
                 case ContentDetailList.TimeAttackMission:
                     {
-                        RequestDialogEnter<LobbyTimeAttackMissionDialog>();
+                        UIManager.DialogEnter<LobbyTimeAttackMissionDialog>();
                         break;
                     }
                 case ContentDetailList.LobbyDescend:
                     {
-                        RequestDialogEnter<LobbyDescendContentDialog>();
+                        UIManager.DialogEnter<LobbyDescendContentDialog>();
                         break;
                     }
                 case ContentDetailList.LobbySynergy:
                     {
-                        RequestDialogEnter<LobbySynergyContentDialog>();
+                        UIManager.DialogEnter<LobbySynergyContentDialog>();
                         break;
                     }
                 case ContentDetailList.LobbySynergyRune:
                     {
-                        RequestDialogEnter<LobbySynergyRuneContentDialog>();
+                        UIManager.DialogEnter<LobbySynergyRuneContentDialog>();
                         break;
                     }
                 case ContentDetailList.Shop:
                     {
-                        RequestDialogEnter<ShopGeneralDialog>();
+                        UIManager.DialogEnter<ShopGeneralDialog>();
                         break;
                     }
                 case ContentDetailList.StageMap:
@@ -1184,32 +1184,32 @@ namespace GameBerry.UI
                     }
                 case ContentDetailList.Quest:
                     {
-                        RequestDialogEnter<LobbyQuestContentDialog>();
+                        UIManager.DialogEnter<LobbyQuestContentDialog>();
                         break;
                     }
                 case ContentDetailList.Pass:
                     {
-                        RequestDialogEnter<LobbyPassDialog>();
+                        UIManager.DialogEnter<LobbyPassDialog>();
                         break;
                     }
                 case ContentDetailList.AdBuff:
                     {
-                        RequestDialogEnter<AdBuffDialog>();
+                        UIManager.DialogEnter<AdBuffDialog>();
                         break;
                     }
                 case ContentDetailList.LobbyResearch:
                     {
-                        RequestDialogEnter<LobbyResearchDialog>();
+                        UIManager.DialogEnter<LobbyResearchDialog>();
                         break;
                     }
                 case ContentDetailList.Rank:
                     {
-                        RequestDialogEnter<InGameRankDialog>();
+                        UIManager.DialogEnter<InGameRankDialog>();
                         break;
                     }
                 case ContentDetailList.Dungeon:
                     {
-                        RequestDialogEnter<DungeonContentDialog>();
+                        UIManager.DialogEnter<DungeonContentDialog>();
                         break;
                     }
             }

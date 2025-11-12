@@ -461,7 +461,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_ExitBtn()
         {
-            RequestDialogExit<DungeonSelectDialog>();
+            UIManager.DialogExit<DungeonSelectDialog>();
         }
         //------------------------------------------------------------------------------------
         private void OnClick_PrevDefficulty()
@@ -495,7 +495,7 @@ namespace GameBerry.UI
             if (m_dungeonData == null)
                 return;
 
-            RequestDialogEnter<UIDungeonSweepPopupElement>();
+            UIManager.DialogEnter<UIDungeonSweepPopupElement>();
             if (m_uIDungeonSweepPopupElement != null)
             {
                 m_uIDungeonSweepPopupElement.ElementEnter();
@@ -547,7 +547,7 @@ namespace GameBerry.UI
 
             Managers.BattleSceneManager.Instance.ChangeBattleScene(m_dungeonData.DungeonType);
             OnClick_ExitBtn();
-            RequestDialogExit<DungeonContentDialog>();
+            UIManager.DialogExit<DungeonContentDialog>();
         }
         //------------------------------------------------------------------------------------
     }
