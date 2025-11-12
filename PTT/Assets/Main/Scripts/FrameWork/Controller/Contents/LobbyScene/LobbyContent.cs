@@ -14,6 +14,19 @@ namespace GameBerry.Contents
         private GameBerry.Event.SetInGameRewardPopup_TitleMsg m_SetInGameRewardPopup_TitleMsg = new GameBerry.Event.SetInGameRewardPopup_TitleMsg();
 
         //------------------------------------------------------------------------------------
+        protected override void OnLoadStart()
+        {
+            UIManager.Instance.Load(nameof(InGameRewardPopupDialog), null);
+            UIManager.Instance.Load(nameof(InGameGambleSynergyDetailDialog), null);
+            UIManager.Instance.Load(nameof(InGameGambleCardHandDialog), null);
+
+            Managers.BattleSceneManager.Instance.InitBattleScene();
+            Managers.HPMPVarianceManager.Instance.InitVariance(StaticResource.Instance.GetVarianceColorList());
+            Managers.ARRRStatManager.Instance.SetBattlePower();
+
+            StartCoroutine(CompleteFade());
+        }
+        //------------------------------------------------------------------------------------
         private IEnumerator CompleteFade()
         {
             //yield return new WaitForSeconds(0.3f);
@@ -38,15 +51,6 @@ namespace GameBerry.Contents
 
             Managers.PassManager.Instance.SetPassContent();
             Managers.RankManager.Instance.InitRankContent();
-        }
-        //------------------------------------------------------------------------------------
-        protected override void OnLoadStart()
-        {
-            Managers.BattleSceneManager.Instance.InitBattleScene();
-            Managers.HPMPVarianceManager.Instance.InitVariance(StaticResource.Instance.GetVarianceColorList());
-            Managers.ARRRStatManager.Instance.SetBattlePower();
-
-            StartCoroutine(CompleteFade());
         }
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
