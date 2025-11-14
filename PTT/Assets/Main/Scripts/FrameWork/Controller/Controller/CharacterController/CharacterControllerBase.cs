@@ -28,6 +28,8 @@ namespace GameBerry
 
         [SerializeField] protected SkeletonAnimationHandler _mySkeletonAnimationHandler;
 
+        [SerializeField] protected SpineModelData _currentSpineModelData;
+
         [SerializeField]
         protected UICharacterState _uiCharacterState;
 
@@ -45,9 +47,11 @@ namespace GameBerry
 #if UNITY_EDITOR
         [SerializeField]
 #endif
-        protected CharacterStatOperator _characterStatOperator;
+        protected CharacterStatOperator _characterStatOperator = new CharacterStatOperator();
         public CharacterStatOperator CharacterStatOperator { get { return _characterStatOperator; } }
 
+        protected double _myDamage = 0.0;
+        public double MyDamage { get { return _myDamage; } }
 
         [SerializeField]
         protected double _maxHP = 0.0;
@@ -84,14 +88,77 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
+        public void SetSpineModelData(SpineModelData spineModelData)
+        {
+            if (spineModelData == null)
+                return;
+
+            _currentSpineModelData = spineModelData;
+
+            _mySkeletonAnimationHandler?.SetSpineModel(_currentSpineModelData);
+        }
+        //------------------------------------------------------------------------------------
+        [ContextMenu("RefreshCheatStat()")]
+        public void RefreshCheatStat()
+        {// Îç∞Ïù¥ÌÑ∞Í∞Ä ÏóÜÏñ¥ÏÑú...
+            List<StatViewer> TempPlayerStat = _iFFType == IFFType.IFF_Friend ? StaticResource.Instance.GetBattleModeStaticData().TempPlayerStat : StaticResource.Instance.GetBattleModeStaticData().TempMonsterStat;
+            for (int i = 0; i < TempPlayerStat.Count; ++i)
+            {
+                _characterStatOperator.SetDefaultStat(TempPlayerStat[i].v2Enum_Stat, TempPlayerStat[i].value);
+            }
+            _characterStatOperator.RefreshDefaultStat();
+            _characterStatOperator.RefreshOutputStatValue();
+            RefreshStat(true);
+        }
+        //------------------------------------------------------------------------------------
+        public void OnDamage(double damage)
+        {
+            if (IsDead == true)
+                return;
+
+            DeCreaseHP(damage);
+            if (CurrentHP <= 0)
+                ChangeState(CharacterState.Dead);
+            else
+            { 
+
+            }
+        }
+        //------------------------------------------------------------------------------------
+        public void OnDamage(AttackData damage)
+        {
+            if (damage.Hitter != null && damage.Hitter.IsDead == false)
+                OnDamage(damage.DamageRate * damage.Hitter.MyDamage);
+        }
+        //------------------------------------------------------------------------------------
+        public void PlaySkill(AttackData attackData, Vector3 pos)
+        {
+            SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, null);
+        }
+        //------------------------------------------------------------------------------------
+        public void PlaySkill(AttackData attackData, Vector3 pos, CharacterControllerBase fixSkillHitReceiver)
+        {
+            SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, fixSkillHitReceiver);
+        }
+        //------------------------------------------------------------------------------------
+        public void Play()
+        {
+            OnPlay();
+        }
+        //------------------------------------------------------------------------------------
+        protected virtual void OnPlay()
+        {
+
+        }
+        //------------------------------------------------------------------------------------
         protected virtual void SpineAnimationEvent(string aniName, string eventName)
         {
 
         }
         //------------------------------------------------------------------------------------
         public virtual Vector3 GetMoveDirection()
-        { // MoveController_Baseø°º≠ ¡÷∑Œ »£√‚
-            // ¿Ø¿˙¥¬ ¡∂¿ÃΩ∫∆Ω¿∏∑Œ πÊ«‚¿ª ¡§«“ ∂ß∞° ¿÷æÓº≠ ∞°ªÛ«‘ºˆ∑Œ ∏∏µÎ
+        { // MoveController_BaseÔøΩÔøΩÔøΩÔøΩ ÔøΩ÷∑ÔøΩ »£ÔøΩÔøΩ
+            // ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÃΩÔøΩ∆ΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ ÔøΩ÷æÓº≠ ÔøΩÔøΩÔøΩÔøΩÔøΩ‘ºÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
 
             if (AttackTarget == null)
                 return Vector3.zero;
@@ -101,6 +168,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void Update()
         {
+            if (Input.GetKey(KeyCode.R))
+            {
+                RefreshCheatStat();
+            }
+
             Updated();
 
             if (_characterState != CharacterState.Dead
@@ -157,18 +229,37 @@ namespace GameBerry
 
             double hpratio = _currentHP / _maxHP;
 
-            if (_uiCharacterState != null)
-                _uiCharacterState.SetHPBar(hpratio);
+            _uiCharacterState?.SetHPBar(hpratio);
         }
         //------------------------------------------------------------------------------------
         public void ChangeCharacterState(CharacterState state)
-        { // ø‹∫Œø°º≠ µÈæÓø√ ∂ß
+        { // ÔøΩ‹∫ŒøÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩ
             ChangeState(state);
         }
         //------------------------------------------------------------------------------------
         protected virtual void ChangeState(CharacterState state)
         {
+            if (_characterState == state)
+                return;
 
+            _characterState = state;
+            PlayAnimation(state);
+            if (state == CharacterState.Dead)
+            {
+                OnDead();
+            }
+        }
+        //------------------------------------------------------------------------------------
+        protected virtual void OnDead()
+        { 
+        }
+        //------------------------------------------------------------------------------------
+        protected virtual void PlayAnimation(CharacterState state)
+        {
+            if (_mySkeletonAnimationHandler != null)
+            {
+                _mySkeletonAnimationHandler.PlayAnimation_Once(state, true);
+            }
         }
         //------------------------------------------------------------------------------------
         protected virtual void Updated()
@@ -221,6 +312,29 @@ namespace GameBerry
         public virtual double GetOutPutMyStat(V2Enum_Stat v2Enum_Stat)
         {
             return _characterStatOperator.GetOutPutMyStat(v2Enum_Stat);
+        }
+        //------------------------------------------------------------------------------------
+        public void RefreshStat(bool setFullHp = false)
+        {
+            _characterMoveSpeed = (float)(GetOutPutMyStat(V2Enum_Stat.MoveSpeed));
+            _characterAttackSpeed = (float)(GetOutPutMyStat(V2Enum_Stat.AttackSpeed));
+
+            double currHpRatio = 0;
+
+            if (_maxHP <= 0)
+                currHpRatio = 0;
+            else
+                currHpRatio = _currentHP / _maxHP;
+
+
+            _maxHP = GetOutPutMyStat(V2Enum_Stat.HP);
+
+            if (setFullHp == true)
+                _currentHP = _maxHP;
+            else
+                _currentHP = _maxHP * currHpRatio;
+
+            _myDamage = GetOutPutMyStat(V2Enum_Stat.Attack);
         }
         //------------------------------------------------------------------------------------
     }

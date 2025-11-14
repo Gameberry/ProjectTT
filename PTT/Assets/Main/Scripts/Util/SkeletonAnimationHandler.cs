@@ -20,8 +20,6 @@ namespace GameBerry
         private Dictionary<CharacterState, string> _myAnimation = new Dictionary<CharacterState, string>();
 
 
-        private int _animNumber;
-
         private MeshRenderer _meshRenderer;
 
         [System.Serializable]
@@ -87,11 +85,6 @@ namespace GameBerry
 
         }
 
-        public void SetAnimNumber(int number)
-        {
-            _animNumber = number;
-        }
-
         public void SetSpineModel(SpineModelData spineModelData)
         {
             if (spineModelData == null)
@@ -113,6 +106,11 @@ namespace GameBerry
 
             AnimationList_Dic.Clear();
             _myAnimation.Clear();
+
+            foreach (var pair in spineModelData.AnimationState)
+            {
+                _myAnimation.Add(pair.characterState, pair.animationName);
+            }
 
             foreach (var pair in skeletonData.Animations)
             {
@@ -285,11 +283,7 @@ namespace GameBerry
         {
             if (_myAnimation.ContainsKey(characterState) == false)
             {
-                SpineModelAnimationData spineModelAnimationData = _statesAndAnimation.Find(x => x.stateName == string.Format("{0}_{1}", characterState, _animNumber));
-                if (spineModelAnimationData != null)
-                    _myAnimation.Add(characterState, spineModelAnimationData.stateName);
-                else
-                    _myAnimation.Add(characterState, characterState.ToString());
+                _myAnimation.Add(characterState, characterState.ToString());
             }
 
             return _myAnimation[characterState];

@@ -67,6 +67,15 @@ namespace GameBerry
             contentTrans.localPosition = localpos;
         }
 
+        //------------------------------------------------------------------------------------
+        public static IFFType GetEnemyIFFType(IFFType iFFType)
+        {
+            if (iFFType == IFFType.IFF_Foe)
+                return IFFType.IFF_Friend;
+
+            return IFFType.IFF_Foe;
+        }
+
         public static Sprite ConvertTexture2DToSprite(Texture2D tex)
         {
             /*

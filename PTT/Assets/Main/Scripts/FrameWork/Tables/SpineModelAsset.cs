@@ -15,6 +15,13 @@ namespace GameBerry
     }
 
     [System.Serializable]
+    public class SpineModelStateAnimationNameData
+    {
+        public CharacterState characterState;
+        public string animationName;
+    }
+
+    [System.Serializable]
     public class SpineModelData
     {
         public int ResourceIndex;
@@ -28,6 +35,8 @@ namespace GameBerry
 
         public List<SpineModelAnimationData> AnimationList = new List<SpineModelAnimationData>();
         public Dictionary<string, SpineModelAnimationData> AnimationList_Dic = new Dictionary<string, SpineModelAnimationData>();
+
+        public List<SpineModelStateAnimationNameData> AnimationState = new List<SpineModelStateAnimationNameData>();
     }
 
     [CreateAssetMenu(fileName = "SpineModel", menuName = "Table/SpineModel", order = 1)]

@@ -64,7 +64,7 @@ namespace GameBerry
         Max,
     }
 
-    public enum Enum_TargetAttackType
+    public enum Enum_AttackRangeType
     {
         None = 0,
         Circle = 11,
@@ -87,6 +87,23 @@ namespace GameBerry
         Max,
     }
 
+    [System.Serializable]
+    public class AttackData
+    {
+        public int ResourceIndex;
+        [HideInInspector]
+        public CharacterControllerBase Hitter;
+        public double DamageRate;
+        public float AttackRange;
+        public float HitRange;
+        public int TargetCount;
+
+        public Enum_AttackRangeType TargetAttackType;
+
+        public float Cooltime = 1.0f;
+        public float NextPlayTime = 0.0f;
+    }
+
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);
     public delegate void CallSendDamage(double damage);
     public delegate void RefreshOpenCondition(V2Enum_OpenConditionType v2Enum_OpenConditionType, int conditionValue);
@@ -106,23 +123,21 @@ namespace GameBerry
         Defence = 13,
 
         MoveSpeed = 14,
+        AttackSpeed = 15,
 
-        CritChance = 15,
+        CritChance,
 
-        VampiricRate = 16,
-        ResistanceStat = 17,
+        VampiricRate,
+        ResistanceStat,
 
-        ResistancePenetration = 18,
-        CritDmgIncrease = 19,
-        DmgBoost = 20,
+        ResistancePenetration,
+        CritDmgIncrease,
+        DmgBoost,
 
-        Evasion = 21,
-        Accuracy = 22,
+        Evasion,
+        Accuracy,
 
-        GoldIncrease = 23,
-        SkillCoolTimeDecrease = 24,
-
-        HpRecovery = 25,
+        HpRecovery,
 
         Max,
     }

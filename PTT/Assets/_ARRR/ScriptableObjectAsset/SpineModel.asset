@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a41820fdfb7a0445890c11eff3a7bb8, type: 3}
+  m_Name: SpineModel
+  m_EditorClassIdentifier: 
+  SpineModelDatas:
+  - ResourceIndex: 0
+    SkeletonData: {fileID: 11400000, guid: ba1152f1eb7ed9949884772077c09886, type: 2}
+    Name: "ai\uCE90\uB9AD\uD130\uC2A4\uD30C\uC778\uD14C\uC2A4\uD2B8_skeletondata"
+    SkinList: []
+    DefaultAttackSkin: []
+    AnimationList:
+    - stateName: Idle
+    - stateName: Run&gun
+    AnimationState:
+    - characterState: 1
+      animationName: Idle
+    - characterState: 2
+      animationName: Run&gun
+    - characterState: 3
+      animationName: Run&gun
+    - characterState: 4
+      animationName: Idle
+    - characterState: 5
+      animationName: Idle
+  - ResourceIndex: 1
+    SkeletonData: {fileID: 11400000, guid: 88a565b3b6f1e3f4d99a16ccf89f85b7, type: 2}
+    Name: ai_mon_01_skeletondata
+    SkinList: []
+    DefaultAttackSkin: []
+    AnimationList:
+    - stateName: Die
+    - stateName: Hit
+    - stateName: Run
+    AnimationState:
+    - characterState: 1
+      animationName: Run
+    - characterState: 2
+      animationName: Run
+    - characterState: 3
+      animationName: Run
+    - characterState: 4
+      animationName: Hit
+    - characterState: 5
+      animationName: Die
+  - ResourceIndex: 2
+    SkeletonData: {fileID: 11400000, guid: 8581875d425e5974b80b0067ad508da7, type: 2}
+    Name: ai_mon_02_skeletondata
+    SkinList: []
+    DefaultAttackSkin: []
+    AnimationList:
+    - stateName: Die
+    - stateName: Hit
+    - stateName: Run
+    AnimationState:
+    - characterState: 1
+      animationName: Run
+    - characterState: 2
+      animationName: Run
+    - characterState: 3
+      animationName: Run
+    - characterState: 4
+      animationName: Hit
+    - characterState: 5
+      animationName: Die

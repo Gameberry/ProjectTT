@@ -8,6 +8,22 @@ namespace GameBerry
     // 임시 네이밍 클래스. 클래스 이름 바꿀 수 있다면 바꾸자
     public class PlayerController : CharacterControllerBase
     {
+        [SerializeField]
+        private SkillProjectilePlayer _projectilePlayer;
+
+        [SerializeField]
+        private float attackRange = 3.0f;
+
+        // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
+        [SerializeField]
+        private float _attackTimming = 0.2f;
+
+        [SerializeField]
+        private AttackData _attackData = new AttackData();
+
+        [SerializeField]
+        private List<AttackData> _skillDatas = new List<AttackData>();
+
         // 조이스틱 넣기 전에 임시 변수
         private bool _useCustomDirVec = false;
 
@@ -16,10 +32,26 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public override void Init()
         {
-            _characterStatOperator = new CharacterStatOperator(this);
+            Managers.AggroManager.Instance.AddIFFCharacterAggro(this);
             MoveController_Base creatureBaseMove = gameObject.AddComponent<MoveController_Base>();
             creatureBaseMove.SetCharacterController(this);
-            _characterStatOperator.RefreshOutputStatValue();
+            RefreshCheatStat();
+
+            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(0);
+            SetSpineModelData(_currentSpineModelData);
+        }
+        //------------------------------------------------------------------------------------
+        protected override void OnPlay()
+        {
+            _attackData.Hitter = this;
+
+            for (int i = 0; i < _skillDatas.Count; ++i)
+            {
+                _skillDatas[i].Hitter = this;
+                _skillDatas[i].NextPlayTime = Time.time + _skillDatas[i].Cooltime;
+            }
+
+            ChangeState(CharacterState.Idle);
         }
         //------------------------------------------------------------------------------------
         public override Vector3 GetMoveDirection()
@@ -39,7 +71,7 @@ namespace GameBerry
             _useCustomDirVec = false;
             _customDieVec = Vector3.zero;
 
-            
+
 
             if (Input.GetKey(KeyCode.W))
             {
@@ -64,10 +96,34 @@ namespace GameBerry
                 _useCustomDirVec = true;
                 _customDieVec.x = -1;
             }
+
+            if (_useCustomDirVec == true)
+            {
+                _attackTarget = null;
+                ChangeState(CharacterState.Run);
+                return;
+            }
 #endif
 
             if (CharacterState != CharacterState.Dead)
             {
+                for (int i = 0; i < _skillDatas.Count; ++i)
+                {
+                    AttackData attackData = _skillDatas[i];
+                    if (attackData.NextPlayTime <= Time.time)
+                    {
+                        if (_attackTarget != null && _attackTarget.IsDead != true)
+                        { 
+                            float distance = MathDatas.GetDistance(transform.position.x, transform.position.z, _attackTarget.transform.position.x, _attackTarget.transform.position.z);
+                            if (distance <= attackData.AttackRange)
+                            {
+                                _projectilePlayer.PlayProjectile(attackData, _attackTarget);
+                                attackData.NextPlayTime = Time.time + attackData.Cooltime;
+                            }
+                        }
+                    }
+                }
+
                 if (CharacterState == CharacterState.Idle || CharacterState == CharacterState.Run)
                 {
                     if (_attackTarget == null || _attackTarget.IsDead == true)
@@ -79,167 +135,37 @@ namespace GameBerry
                     {
                         ChangeState(CharacterState.Run);
                     }
+                    else
+                    {
+                        ChangeState(CharacterState.Idle);
+                        return;
+                    }
+
+                    float distance = MathDatas.GetDistance(transform.position.x, transform.position.z, _attackTarget.transform.position.x, _attackTarget.transform.position.z);
+                    if (distance <= attackRange)
+                    {
+                        ChangeState(CharacterState.Attack);
+                        _attackTimming = Time.time + _attackData.Cooltime;
+                    }
+                }
+                else if (CharacterState == CharacterState.Attack)
+                {
+                    if (_attackTimming <= Time.time)
+                    {
+                        if (AttackTarget != null)
+                        {
+                            ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+                            _projectilePlayer.PlayProjectile(_attackData, AttackTarget);
+                            AttackTarget.OnDamage(MyDamage);
+                            if (AttackTarget.IsDead)
+                                ChangeState(CharacterState.Idle);
+                            else
+                                _attackTimming = Time.time + _attackData.Cooltime;
+                        }
+                    }
                 }
             }
         }
         //------------------------------------------------------------------------------------
-        protected override void ChangeState(CharacterState state)
-        {
-            //if (CharacterState == state)
-            //    return;
-
-
-            //if (CharacterState == CharacterState.Hit)
-            //{
-            //    ReleaseHitDirection();
-            //}
-
-            //_aniControllerSpeed = 1.0f;
-
-            //if (_selectSkillCustomAction != null)
-            //{
-            //    _selectSkillCustomAction.Release();
-            //    _selectSkillCustomAction = null;
-            //}
-
-            //switch (state)
-            //{
-            //    case CharacterState.Idle:
-            //        {
-            //            break;
-            //        }
-            //    case CharacterState.Run:
-            //        {
-            //            _aniControllerSpeed = _characterMoveSpeed;
-            //            break;
-            //        }
-            //    case CharacterState.Attack:
-            //        {
-            //            _aniControllerSpeed = _characterAttackSpeed;
-
-            //            _skillActiveController.UseSkill(_selectPlaySkillData);
-
-            //            if (_skillEffectController != null)
-            //            {
-            //                if (_skillEffectController.IsAppliedCC(V2Enum_SkillEffectType.Slow))
-            //                {
-            //                    _aniControllerSpeed = (1.0f - (float)(_skillEffectController.GetCCValue(V2Enum_SkillEffectType.Slow) * Define.PercentageRecoverValue));
-            //                }
-            //            }
-
-            //            if (_attackTarget == null)
-            //            {
-            //                ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
-            //            }
-            //            else
-            //            {
-            //                ChangeCharacterLookAtDirection_Target(_attackTarget.transform);
-            //            }
-
-            //            break;
-            //        }
-            //    case CharacterState.Skill:
-            //        {
-            //            _aniControllerSpeed = _characterAttackSpeed;
-
-            //            _skillActiveController.UseSkill(_selectPlaySkillData);
-
-            //            if (_skillEffectController != null)
-            //            {
-            //                if (_skillEffectController.IsAppliedCC(V2Enum_SkillEffectType.Slow))
-            //                {
-            //                    _aniControllerSpeed = (1.0f - (float)(_skillEffectController.GetCCValue(V2Enum_SkillEffectType.Slow) * Define.PercentageRecoverValue));
-            //                }
-            //            }
-
-            //            if (_attackTarget == null)
-            //            {
-            //                ChangeCharacterLookAtDirection(Enum_LookDirection.Right);
-            //            }
-            //            else
-            //            {
-            //                ChangeCharacterLookAtDirection_Target(_attackTarget.transform);
-            //            }
-
-            //            if (_skillCustomActionPlayer != null)
-            //                _selectSkillCustomAction = _skillCustomActionPlayer.PlayAction(_selectPlaySkillData);
-
-            //            //_playSkillTime = Time.time + GetSkillCoolTime();
-
-            //            break;
-            //        }
-            //    case CharacterState.Hit:
-            //        {
-            //            break;
-            //        }
-            //    case CharacterState.Dead:
-            //        {
-            //            if (_hitDirectionCoroutine != null)
-            //            {
-            //                ReleaseHitDirection();
-            //            }
-
-            //            _creatureDeadTime = Time.time;
-            //            _deadDirectionTime = StaticResource.Instance.GetDeadDirectionTime();
-
-            //            //for (int i = 0; i < _deadParticle.Count; ++i)
-            //            //{
-            //            //    _deadParticle[i].Stop();
-            //            //    _deadParticle[i].Play();
-            //            //}
-
-            //            if (_skillEffectController != null)
-            //                _skillEffectController.ReleaseAllCC();
-
-
-
-            //            ReleaseParticle();
-            //            _skillActiveController.ReleaseSkill();
-
-            //            if (_skillHitReceiver != null)
-            //                _skillHitReceiver.EnableColliders(false);
-
-            //            Managers.AggroManager.Instance.RemoveIFFCharacterAggro(this);
-
-            //            Managers.BattleSceneManager.Instance.CallDeadARRR(this);
-
-            //            break;
-            //        }
-            //    default:
-            //        {
-            //            _aniControllerSpeed = 1.0f;
-            //            break;
-            //        }
-            //}
-
-            //SetAniSpeed();
-
-            _characterState = state;
-
-            //if (CharacterState == CharacterState.Dead)
-            //    PlayAnimation(CharacterState.Hit);
-            //else if (CharacterState == CharacterState.Attack)
-            //{
-            //    PlayAnimation(GetAttackAnimation(), false);
-            //    _attackMotion = !_attackMotion;
-            //}
-            //else if (CharacterState == CharacterState.Skill)
-            //{
-            //    if (_selectSkillCustomAction == null)
-            //    {
-            //        if (_selectPlaySkillData.GetAniName() != string.Empty)
-            //            PlayAnimation(_selectPlaySkillData.GetAniName(), true);
-            //        else
-            //            PlayAnimation(_attackMotion1, true);
-            //    }
-            //    else
-            //        _selectSkillCustomAction.Play();
-            //}
-            //else
-            //    PlayAnimation(_characterState);
-
-        }
-        //------------------------------------------------------------------------------------
-
     }
 }

@@ -34,13 +34,18 @@ namespace GameBerry
 
                     Vector3 newpos = _characterControllerBase.MyRigidbody2D.position + direction * operMoveSpeed * Time.deltaTime;
 
-                    //float limitLine = Managers.BattleSceneManager.Instance.GetCreatureLimitLine();
+                    Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
+                    Vector3 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
 
-                    //if (limitLine > 0.0f)
-                    //{
-                    //    if (newpos.x > limitLine)
-                    //        newpos.x = limitLine;
-                    //}
+                    if (newpos.x < minpos.x)
+                        newpos.x = minpos.x;
+                    else if (newpos.x > maxpos.x)
+                        newpos.x = maxpos.x;
+
+                    if (newpos.z < minpos.z)
+                        newpos.z = minpos.z;
+                    else if (newpos.z > maxpos.z)
+                        newpos.z = maxpos.z;
 
                     _characterControllerBase.MyRigidbody2D.MovePosition(newpos);
                 }

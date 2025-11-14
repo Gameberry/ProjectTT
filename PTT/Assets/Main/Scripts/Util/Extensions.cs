@@ -727,16 +727,9 @@ namespace GameBerry
 			}
 		}
 
-		public static void AllSetActive(this IList<Transform> list, bool active)
+		public static T GetRandom<T>(this IList<T> list)
 		{
-			if (list == null)
-				return;
-
-			for (int i = 0; i < list.Count; ++i)
-			{
-				if (list[i] != null)
-					list[i].gameObject.SetActive(active);
-			}
+			return list[UnityEngine.Random.Range(0, list.Count)];
 		}
 	}
 

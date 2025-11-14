@@ -18,11 +18,6 @@ namespace GameBerry
 #endif
     public class CharacterStatOperator
     {
-        public CharacterStatOperator(CharacterControllerBase characterControllerBase)
-        {
-            _characterControllerBase = characterControllerBase;
-        }
-
         protected Dictionary<V2Enum_Stat, ObscuredDouble> _defauleStatValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
         protected Dictionary<V2Enum_Stat, ObscuredDouble> _outputStatValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
 
@@ -33,13 +28,6 @@ namespace GameBerry
         public List<StatViewer> OutputViewers = new List<StatViewer>();
 #endif
 
-        protected CharacterControllerBase _characterControllerBase;
-
-        //------------------------------------------------------------------------------------
-        public void SetCharacterControllerBaseType(CharacterControllerBase characterControllerBase)
-        {
-            _characterControllerBase = characterControllerBase;
-        }
         //------------------------------------------------------------------------------------
         public void SetDefaultStat(V2Enum_Stat v2Enum_Stat, ObscuredDouble statValue)
         {

@@ -11,8 +11,16 @@ namespace GameBerry
     public class BattleModeStaticDataAsset : ScriptableObject
     {
         [Header("-----------TestStage-----------")]
-        public List<MonsterController> MonsterPrefab = new List<MonsterController>();
+        public List<int> MonsterModelIdxs = new List<int>();
+        public float MonsterAttackTurm = 1.0f;
         public int SpawnCount = 30;
+        public float SpawnTurm = 5f;
+
+        public Vector3 MapRange_Min;
+        public Vector3 MapRange_Max;
+
+        public List<StatViewer> TempPlayerStat = new List<StatViewer>();
+        public List<StatViewer> TempMonsterStat = new List<StatViewer>();
 
         [Header("-----------Stage-----------")]
         public float Stage_StartXPos = 0.0f;
