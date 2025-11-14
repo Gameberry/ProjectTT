@@ -14,9 +14,6 @@ namespace GameBerry.UI
         [SerializeField]
         private TMP_Text m_clientVersion;
 
-        [SerializeField]
-        private TMP_Text m_serverName;
-
         [Header("----------Notice----------")]
         [SerializeField]
         private Transform m_noticeGroup;
@@ -178,24 +175,12 @@ namespace GameBerry.UI
             if (m_darkKnightSpine != null)
                 m_darkKnightSpine.PlayAnimation("intro");
 
-            if (introAudioSource != null)
-                introAudioSource.enabled = Managers.GameSettingManager.Instance.IsOn(Managers.GameSettingBtn.BGSound);
-
             Message.AddListener<GameBerry.Event.SetNoticeMsg>(SetNotice);
         }
         //------------------------------------------------------------------------------------
         protected override void OnUnload()
         {
             Message.RemoveListener<GameBerry.Event.SetNoticeMsg>(SetNotice);
-        }
-        //------------------------------------------------------------------------------------
-        private void Update()
-        {
-            if (string.IsNullOrEmpty(PlayerDataContainer.DisplayServerName) == false)
-            {
-                if (m_serverName != null)
-                    m_serverName.text = string.Format("{0}", PlayerDataContainer.DisplayServerName);
-            }
         }
         //------------------------------------------------------------------------------------
         private void SetNotice(GameBerry.Event.SetNoticeMsg msg)

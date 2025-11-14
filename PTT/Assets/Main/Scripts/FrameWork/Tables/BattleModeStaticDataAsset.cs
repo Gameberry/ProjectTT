@@ -10,6 +10,10 @@ namespace GameBerry
     [CreateAssetMenu(fileName = "BattleModeStaticData", menuName = "Table/BattleModeStaticData", order = 1)]
     public class BattleModeStaticDataAsset : ScriptableObject
     {
+        [Header("-----------TestStage-----------")]
+        public List<MonsterController> MonsterPrefab = new List<MonsterController>();
+        public int SpawnCount = 30;
+
         [Header("-----------Stage-----------")]
         public float Stage_StartXPos = 0.0f;
         public double Stage_NexusCreateDistance = 5.0f;

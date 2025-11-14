@@ -123,10 +123,10 @@ namespace GameBerry.TheBackEnd
         $"| content : {content}\n" +
         $"| author : {author}\n"
     );
-                        mainThreadQueue.Enqueue(() =>
-                        {
-                            Managers.PostManager.Instance.OnNewPostCreated(postRepeatType, title, content, author);
-                        });
+                        //mainThreadQueue.Enqueue(() =>
+                        //{
+                        //    Managers.PostManager.Instance.OnNewPostCreated(postRepeatType, title, content, author);
+                        //});
                     };
 
                     Backend.Notification.OnNewNoticeCreated = (string title, string content) => {
@@ -205,40 +205,40 @@ namespace GameBerry.TheBackEnd
                 return;
 
 
-            if (ShopContainer.TotalBuyPrice > 0)
-                return;
+            //if (ShopContainer.TotalBuyPrice > 0)
+            //    return;
 
-            int daycount = Managers.TimeManager.Instance.GetDayCount();
-            if (daycount <= 3)
-            {
-                double diacount = PointDataContainer.DiaAmountRecord + PointDataContainer.AccumUseDia.GetDecrypted();
-                if (diacount > 2000000)
-                {
-                    SendSelfReport();
-                    return;
-                }
+            //int daycount = Managers.TimeManager.Instance.GetDayCount();
+            //if (daycount <= 3)
+            //{
+            //    double diacount = PointDataContainer.DiaAmountRecord + PointDataContainer.AccumUseDia.GetDecrypted();
+            //    if (diacount > 2000000)
+            //    {
+            //        SendSelfReport();
+            //        return;
+            //    }
 
-                foreach (var pair in SummonContainer.m_summonInfo)
-                {
-                    if(pair.Value.Level >= 9)
-                    {
-                        SendSelfReport();
-                        return;
-                    }
-                }
-            }
+            //    foreach (var pair in SummonContainer.m_summonInfo)
+            //    {
+            //        if(pair.Value.Level >= 9)
+            //        {
+            //            SendSelfReport();
+            //            return;
+            //        }
+            //    }
+            //}
         }
         //------------------------------------------------------------------------------------
         public void SendSelfReport()
         {
             sendreport = true;
 
-            Param viewParam = TheBackEnd_PlayerTable.GetPlayerViewDataParam();
+            //Param viewParam = TheBackEnd_PlayerTable.GetPlayerViewDataParam();
 
-            Backend.Question.SendQuestion(QuestionType.Report, GetUserID(), viewParam.GetJson(), (callback) =>
-            {
+            //Backend.Question.SendQuestion(QuestionType.Report, GetUserID(), viewParam.GetJson(), (callback) =>
+            //{
 
-            });
+            //});
         }
         //------------------------------------------------------------------------------------
         #region TheBackEnd_Login
@@ -375,15 +375,6 @@ namespace GameBerry.TheBackEnd
         public void ReceiveCoupon(string coupon, Backend.BackendCallback action)
         {
             TheBackEnd_Utils.ReceiveCoupon(coupon, action);
-        }
-        //------------------------------------------------------------------------------------
-        #endregion
-        //------------------------------------------------------------------------------------
-        #region TheBackEnd_Rank
-        //------------------------------------------------------------------------------------
-        public void GetRankTableList(Action action)
-        {
-            TheBackEnd_Rank.GetRankTableList(action);
         }
         //------------------------------------------------------------------------------------
         #endregion
@@ -610,492 +601,408 @@ namespace GameBerry.TheBackEnd
         //------------------------------------------------------------------------------------
         public Param GetTableParam(string tableName)
         {
-            switch (tableName)
-            {
-                case Define.PlayerInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerInfoParam();
+            //switch (tableName)
+            //{
+            //    case Define.PlayerInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerInfoParam();
 
-                case Define.PlayerARRRInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerARRRInfoParam();
+            //    case Define.PlayerARRRInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerARRRInfoParam();
 
-                case Define.PlayerStaminaInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerStaminaInfoParam();
+            //    case Define.PlayerStaminaInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerStaminaInfoParam();
 
-                case Define.PlayerJobInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerJobInfoParam();
+            //    case Define.PlayerJobInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerJobInfoParam();
 
-                case Define.PlayerVipPackageInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerVipPackageInfoParam();
+            //    case Define.PlayerVipPackageInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerVipPackageInfoParam();
 
-                case Define.PlayerSynergyInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerSynergyInfoParam();
-                case Define.PlayerDescendInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerDescendInfoParam();
-                case Define.PlayerSynergyRuneInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerSynergyRuneInfoParam();
-                case Define.PlayerRelicInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerRelicInfoParam();
+            //    case Define.PlayerDungeonInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerDungeonParam();
 
-                case Define.PlayerDungeonInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerDungeonParam();
+            //    case Define.PlayerPointTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerPointParam();
+            //    case Define.PlayerSummonTicketTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerSummonTicketParam();
+            //    case Define.PlayerBoxTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerBoxParam();
 
-                case Define.PlayerPointTable:
-                    return TheBackEnd_PlayerTable.GetPlayerPointParam();
-                case Define.PlayerSummonTicketTable:
-                    return TheBackEnd_PlayerTable.GetPlayerSummonTicketParam();
-                case Define.PlayerBoxTable:
-                    return TheBackEnd_PlayerTable.GetPlayerBoxParam();
+            //    case Define.PlayerGearTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerGearParam();
+            //    case Define.PlayerSkinTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerSkinParam();
 
-                case Define.PlayerTrainingTable:
-                    return TheBackEnd_PlayerTable.GetPlayerTrainingParam();
+            //    case Define.PlayerSkillInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerSkillParam();
 
-                case Define.PlayerGearTable:
-                    return TheBackEnd_PlayerTable.GetPlayerGearParam();
-                case Define.PlayerSkinTable:
-                    return TheBackEnd_PlayerTable.GetPlayerSkinParam();
+            //    case Define.PlayerResearchInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerResearchParam();
 
-                case Define.PlayerSkillInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerSkillParam();
-
-                case Define.PlayerResearchInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerResearchParam();
-
-                case Define.PlayerMapInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerMapParam();
+            //    case Define.PlayerMapInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerMapParam();
                 
-                case Define.PlayerSummonInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerSummonParam();
+            //    case Define.PlayerSummonInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerSummonParam();
 
-                case Define.PlayerTimeInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerTimeParam();
-                case Define.PlayerAdBuffInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerAdBuffParam();
-                case Define.PlayerCheckInInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerCheckInParam();
-                case Define.PlayerShopInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerShopParam();
-                case Define.PlayerShopRandomStoreInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerShopRandomStoreParam();
-                case Define.PlayerPassInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerPassParam();
-                case Define.PlayerQuestInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerQuestParam();
-                case Define.PlayerTimeAttackMissionInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerTimeAttackMissionParam();
-                case Define.PlayerExchangeInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerExchangeParam();
-                case Define.PlayerRankInfoTable:
-                    return TheBackEnd_PlayerTable.GetPlayerRankParam();
-            }
+            //    case Define.PlayerTimeInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerTimeParam();
+            //    case Define.PlayerAdBuffInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerAdBuffParam();
+            //    case Define.PlayerCheckInInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerCheckInParam();
+            //    case Define.PlayerShopInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerShopParam();
+            //    case Define.PlayerShopRandomStoreInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerShopRandomStoreParam();
+            //    case Define.PlayerPassInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerPassParam();
+            //    case Define.PlayerQuestInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerQuestParam();
+            //    case Define.PlayerTimeAttackMissionInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerTimeAttackMissionParam();
+            //    case Define.PlayerExchangeInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerExchangeParam();
+            //    case Define.PlayerRankInfoTable:
+            //        return TheBackEnd_PlayerTable.GetPlayerRankParam();
+            //}
 
             return null;
         }
         //------------------------------------------------------------------------------------
-        public void GetPlayerInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerARRRInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerARRRInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerARRRInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerARRRInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerARRRInfoTable);
+        //public void GetPlayerInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerARRRInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerARRRInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerARRRInfoTable()
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerARRRInfoTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerARRRInfoTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerARRRInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerStaminaInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerStaminaInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerStaminaInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerStaminaInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerStaminaInfoTable);
+        //    TheBackEnd_PlayerTable.UpdatePlayerARRRInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerStaminaInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerStaminaInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerStaminaInfoTable()
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerStaminaInfoTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerStaminaInfoTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerStaminaInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerJobInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerJobInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerJobInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerJobInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerVipPackageInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerVipPackageInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerVipPackageInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerVipPackageInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerVipPackageInfoTable);
+        //    TheBackEnd_PlayerTable.UpdatePlayerStaminaInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerJobInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerJobInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerJobInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerJobInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerVipPackageInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerVipPackageInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerVipPackageInfoTable()
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerVipPackageInfoTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerVipPackageInfoTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerVipPackageInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerSynergyInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerSynergyInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerSynergyInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerSynergyInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerSynergyInfoTable);
+        //    TheBackEnd_PlayerTable.UpdatePlayerVipPackageInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerPointTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerPointTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerPointTable()
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerPointTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerPointTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerSynergyInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerDescendInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerDescendInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerDescendInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerDescendInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerDescendInfoTable);
+        //    TheBackEnd_PlayerTable.UpdatePlayerPointTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerSummonTicketTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerSummonTicketTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerSummonTicketTable()
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerSummonTicketTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerSummonTicketTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerDescendInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerSynergyRuneInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerSynergyRuneInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerSynergyRuneInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerSynergyRuneInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerSynergyRuneInfoTable);
+        //    TheBackEnd_PlayerTable.UpdatePlayerSummonTicketTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerBoxTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerBoxTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerBoxTable()
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerBoxTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerBoxTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerSynergyRuneInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerRelicInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerRelicInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerRelicInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerRelicInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerRelicInfoTable);
+        //    TheBackEnd_PlayerTable.UpdatePlayerBoxTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerGearInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerGearInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerGearInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerGearInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerSkinInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerSkinInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerSkinInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerSkinInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerSkillinfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerSkillinfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerSkillInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerSkillInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerResearchinfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerResearchinfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerResearchInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerResearchInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerDungeonInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerDungeonInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerDungeonInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerDungeonInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerSummoninfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerSummoninfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerSummonInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerSummonInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerTimeinfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerTimeinfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerTimeInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerTimeInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerAdBuffinfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerAdBuffinfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerAdBuffInfoTable()
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerAdBuffInfoTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerAdBuffInfoTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerRelicInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerPointTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerPointTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerPointTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerPointTable) == true)
-                updateWaitDatas.Remove(Define.PlayerPointTable);
+        //    TheBackEnd_PlayerTable.UpdatePlayerAdBuffInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerMapInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerMapInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerMapInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerMapInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerCheckInInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerCheckInInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerCheckInInfoTable(System.Action onFinish)
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerCheckInInfoTable(onFinish);
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerShopInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerShopInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerShopInfoTable(System.Action onFinish)
+        //{
+        //    if (updateWaitDatas.ContainsKey(Define.PlayerShopInfoTable) == true)
+        //        updateWaitDatas.Remove(Define.PlayerShopInfoTable);
 
-            TheBackEnd_PlayerTable.UpdatePlayerPointTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerSummonTicketTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerSummonTicketTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerSummonTicketTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerSummonTicketTable) == true)
-                updateWaitDatas.Remove(Define.PlayerSummonTicketTable);
-
-            TheBackEnd_PlayerTable.UpdatePlayerSummonTicketTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerBoxTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerBoxTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerBoxTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerBoxTable) == true)
-                updateWaitDatas.Remove(Define.PlayerBoxTable);
-
-            TheBackEnd_PlayerTable.UpdatePlayerBoxTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerTrainingTable()
-        {
-            TheBackEnd_PlayerTable.GetPlayerTrainingTable();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerTrainingTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerTrainingTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerGearInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerGearInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerGearInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerGearInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerSkinInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerSkinInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerSkinInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerSkinInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerSkillinfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerSkillinfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerSkillInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerSkillInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerResearchinfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerResearchinfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerResearchInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerResearchInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerDungeonInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerDungeonInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerDungeonInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerDungeonInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerSummoninfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerSummoninfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerSummonInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerSummonInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerTimeinfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerTimeinfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerTimeInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerTimeInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerAdBuffinfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerAdBuffinfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerAdBuffInfoTable()
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerAdBuffInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerAdBuffInfoTable);
-
-            TheBackEnd_PlayerTable.UpdatePlayerAdBuffInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerMapInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerMapInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerMapInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerMapInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerCheckInInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerCheckInInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerCheckInInfoTable(System.Action onFinish)
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerCheckInInfoTable(onFinish);
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerShopInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerShopInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerShopInfoTable(System.Action onFinish)
-        {
-            if (updateWaitDatas.ContainsKey(Define.PlayerShopInfoTable) == true)
-                updateWaitDatas.Remove(Define.PlayerShopInfoTable);
-
-            TheBackEnd_PlayerTable.UpdatePlayerShopInfoTable(onFinish);
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerShopRandomStoreInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerShopRandomStoreInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerShopRandomStoreInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerShopRandomStoreInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerPassInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerPassInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerPassInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerPassInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerQuestInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerQuestInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerQuestInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerQuestInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerTimeAttackMissionInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerTimeAttackMissionInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerTimeAttackMissionInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerTimeAttackMissionInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerExchangeInfoTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerExchangeInfoTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerExchangeInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerExchangeInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerRankTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerRankTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerRankInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerRankInfoTable();
-        }
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------
-        public void GetPlayerViewDataTableData()
-        {
-            TheBackEnd_PlayerTable.GetPlayerViewDataTableData();
-        }
-        //------------------------------------------------------------------------------------
-        public void UpdatePlayerViewDataInfoTable()
-        {
-            TheBackEnd_PlayerTable.UpdatePlayerViewDataInfoTable();
-        }
+        //    TheBackEnd_PlayerTable.UpdatePlayerShopInfoTable(onFinish);
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerShopRandomStoreInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerShopRandomStoreInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerShopRandomStoreInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerShopRandomStoreInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerPassInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerPassInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerPassInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerPassInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerQuestInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerQuestInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerQuestInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerQuestInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerTimeAttackMissionInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerTimeAttackMissionInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerTimeAttackMissionInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerTimeAttackMissionInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerExchangeInfoTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerExchangeInfoTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerExchangeInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerExchangeInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerRankTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerRankTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerRankInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerRankInfoTable();
+        //}
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        ////------------------------------------------------------------------------------------
+        //public void GetPlayerViewDataTableData()
+        //{
+        //    TheBackEnd_PlayerTable.GetPlayerViewDataTableData();
+        //}
+        ////------------------------------------------------------------------------------------
+        //public void UpdatePlayerViewDataInfoTable()
+        //{
+        //    TheBackEnd_PlayerTable.UpdatePlayerViewDataInfoTable();
+        //}
         //------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------
@@ -1215,8 +1122,8 @@ namespace GameBerry.TheBackEnd
         {
             isCheatingUser = true;
 
-            PlayerDataContainer.PlayerCheatingCount++;
-            UpdatePlayerInfoTable();
+            //PlayerDataContainer.PlayerCheatingCount++;
+            //UpdatePlayerInfoTable();
 
             ShowDisConnectGame("common/ui/abuseAlarm");
         }
@@ -1337,8 +1244,8 @@ namespace GameBerry.TheBackEnd
                 if (Managers.TimeManager.isAlive == true)
                     Managers.TimeManager.Instance.RefreshServerTime(); // 서버시간 동기화
 
-                UpdatePlayerTimeInfoTable();
-                UpdatePlayerViewDataInfoTable();
+                //UpdatePlayerTimeInfoTable();
+                //UpdatePlayerViewDataInfoTable();
                 if (Managers.SceneManager.isAlive == true)
                 {
                     if (Managers.SceneManager.Instance.BuildElement != BuildEnvironmentEnum.Develop)
@@ -1450,8 +1357,8 @@ namespace GameBerry.TheBackEnd
 
             ForcdSendWaitDatas();
 
-            UpdatePlayerTimeInfoTable();
-            UpdatePlayerViewDataInfoTable();
+            //UpdatePlayerTimeInfoTable();
+            //UpdatePlayerViewDataInfoTable();
             if (dynamicUpdateData_Wait1Second.Count > 0)
             {
                 foreach (var key in dynamicUpdateData_Wait1Second.Keys.ToList())

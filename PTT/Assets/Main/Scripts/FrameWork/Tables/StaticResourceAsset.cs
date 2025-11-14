@@ -36,14 +36,6 @@ namespace GameBerry
         public Sprite GradeSprite;
     }
 
-    [System.Serializable]
-    public class VarianceColor
-    {
-        public HpMpVarianceType VarianceType = HpMpVarianceType.None;
-        public Color color;
-        public Material VarianceMaterial;
-        public TMPro.TMP_ColorGradient VarianceColorGradient;
-    }
 
     [System.Serializable]
     public class ElementFrameResource
@@ -171,37 +163,6 @@ namespace GameBerry
     }
 
     [System.Serializable]
-    public class GambleCardSprite
-    {
-        public Enum_SynergyType CardType;
-
-        public Sprite SynergyIcon;
-
-        public Color SpotBar;
-        public Color Bar;
-
-        public Color CircleBg;
-
-        public Sprite JobGearIcon;
-        public Sprite JobRuneIcon;
-    }
-
-    [System.Serializable]
-    public class GambleGradeBGSprite
-    {
-        public V2Enum_Grade GradeType;
-
-        public Sprite GradeSprite;
-    }
-
-    [System.Serializable]
-    public class TotalLevelEffectColorData
-    {
-        public Enum_ARRR_TotalLevelType EffectType;
-        public Color EffectColor = Color.white;
-    }
-
-    [System.Serializable]
     public class GearResourceData
     {
         public V2Enum_GearType v2Enum_GearType;
@@ -212,19 +173,11 @@ namespace GameBerry
     [CreateAssetMenu(fileName = "StaticResource", menuName = "Table/StaticResource", order = 1)]
     public class StaticResourceAsset : ScriptableObject
     {
-        public List<GambleCardSprite> GambleCardSprites = new List<GambleCardSprite>();
-
-        public List<GambleGradeBGSprite> GambleGradeBGSprites = new List<GambleGradeBGSprite>();
-
         public ElementFrameResourceData elementFrameResourceData;
 
         public List<V2SkillTriggerColorData> SkillTriggerColorDatas = new List<V2SkillTriggerColorData>();
 
         public List<V2GradeColorData> GradeColorDatas = new List<V2GradeColorData>();
-
-        public List<VarianceColor> m_varianceColor_List = new List<VarianceColor>();
-
-        public List<TotalLevelEffectColorData> TotalLevelEffectColor = new List<TotalLevelEffectColorData>();
 
         public List<GearResourceData> GearResourceDatas = new List<GearResourceData>();
 

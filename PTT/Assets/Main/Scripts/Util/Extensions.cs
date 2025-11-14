@@ -367,24 +367,6 @@ namespace GameBerry
 		}
 	}
 
-	public static class SpineExtensions
-	{
-		public static void SetARRRSkin(this Spine.Skin myEquipsSkin, Spine.SkeletonData skeletonData)
-		{
-			SpineModelData _currentSpineModelData = StaticResource.Instance.GetARRRSpineModelData();
-
-			myEquipsSkin.Clear();
-
-			foreach (var skinname in _currentSpineModelData.DefaultAttackSkin)
-			{
-				if (!string.IsNullOrEmpty(skinname))
-					myEquipsSkin.AddSkin(skeletonData.FindSkin(skinname));
-			}
-
-			myEquipsSkin.AddSkin(skeletonData.FindSkin(Managers.JobManager.Instance.GetWeaponSkin()));
-		}
-	}
-
 
 	public static class Vector3Extensions
 	{

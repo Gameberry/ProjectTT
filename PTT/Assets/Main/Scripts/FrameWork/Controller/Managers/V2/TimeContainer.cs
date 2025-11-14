@@ -7,7 +7,6 @@ namespace GameBerry
 {
     public static class TimeContainer
     {
-        public static ObscuredDouble LastRecvStageCoolTimeReward = 0.0;
         public static ObscuredDouble AccumLoginTime = 0.0;
         public static ObscuredDouble DailyInitTimeStamp = 0.0;
         public static ObscuredInt AccumLoginCount = 0;

@@ -31,21 +31,10 @@ namespace GameBerry.Managers
         private WaitForSecondsRealtime m_addTimeWaitForSecondsRealtime = new WaitForSecondsRealtime(0.1f);
         //private WaitForSeconds m_addTimeWaitForSecondsRealtime = new WaitForSeconds(0.1f);
 
-        private Event.ReadyStageCooltimeRewardMsg m_readyStageCooltimeRewardMsg = new Event.ReadyStageCooltimeRewardMsg();
-
-        private bool m_checkCheckStageCoolTimeReward = false;
-
-        private int m_rewardMinute = 0;
-
-        private List<RewardData> m_stageCoolTimeRewards = new List<RewardData>();
-
-        private List<string> m_changeInfoUpdate = new List<string>();
-
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
-            m_changeInfoUpdate.Add(Define.PlayerTimeInfoTable);
-            m_changeInfoUpdate.Add(Define.PlayerPointTable);
+
         }
         //------------------------------------------------------------------------------------
         public IEnumerator InitTimeManager()
@@ -73,8 +62,6 @@ namespace GameBerry.Managers
                 TimeContainer.DailyInitTimeStamp = DailyInit_TimeStamp;
 
                 Debug.LogWarning(string.Format("{0}ÀÏ", TimeContainer.AccumLoginCount.GetDecrypted()));
-
-                TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData(m_changeInfoUpdate, null);
             }
         }
         //------------------------------------------------------------------------------------
@@ -97,17 +84,6 @@ namespace GameBerry.Managers
 
                 Current_TimeStamp = refreshTime.GetDecrypted();
             });
-        }
-        //------------------------------------------------------------------------------------
-        public void PlayCheckStageCoolTimeReward()
-        {
-            if (TimeContainer.LastRecvStageCoolTimeReward == 0)
-            {
-                TimeContainer.LastRecvStageCoolTimeReward = Current_TimeStamp;
-                TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData(m_changeInfoUpdate, null);
-            }
-
-            m_checkCheckStageCoolTimeReward = true;
         }
         //------------------------------------------------------------------------------------
         private void ConvertServerTime(DateTime dateTime)
@@ -188,7 +164,6 @@ namespace GameBerry.Managers
                 if (AddQeustTimeCheck > 60)
                 {
                     AddQeustTimeCheck -= 60;
-                    Managers.QuestManager.Instance.AddMissionCount(V2Enum_QuestGoalType.LoginTime, 1);
                 }
 
                 if (Current_TimeStamp >= DailyInit_TimeStamp)
@@ -204,10 +179,6 @@ namespace GameBerry.Managers
                         TimeContainer.DailyInitTimeStamp = DailyInit_TimeStamp;
 
                         Debug.LogWarning(string.Format("{0}ÀÏ", TimeContainer.AccumLoginCount.GetDecrypted()));
-
-                        TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData(m_changeInfoUpdate, null);
-
-                        Managers.ContentOpenConditionManager.Instance.RefreshOpenCondition(V2Enum_OpenConditionType.StackLogin);
                     }
                 }
 
@@ -272,252 +243,6 @@ namespace GameBerry.Managers
                     RemainInitMonthContent_Text?.Invoke(RemainInitMonthContent_String);
                 }
 
-
-                if (m_checkCheckStageCoolTimeReward == true)
-                {
-                    if (Current_TimeStamp - TimeContainer.LastRecvStageCoolTimeReward >= Define.StageCoolTimeRewardTimeGab)
-                    {
-                        m_checkCheckStageCoolTimeReward = false;
-                        Message.Send(m_readyStageCooltimeRewardMsg);
-                    }
-                }
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public double GetIdleRewardTime_Second()
-        {
-            double currentIdleTime = Current_TimeStamp - TimeContainer.LastRecvStageCoolTimeReward;
-
-            if (currentIdleTime > Define.StageCooltimeRewardMaxSecond)
-                currentIdleTime = Define.StageCooltimeRewardMaxSecond;
-
-            return currentIdleTime;
-        }
-        //------------------------------------------------------------------------------------
-        public int GetIdleRewardTime_Minute()
-        {
-            double currentIdleTime = Current_TimeStamp - TimeContainer.LastRecvStageCoolTimeReward;
-
-            if (currentIdleTime > Define.StageCooltimeRewardMaxSecond)
-                currentIdleTime = Define.StageCooltimeRewardMaxSecond;
-
-            return (int)Math.Truncate(currentIdleTime / 60);
-        }
-        //------------------------------------------------------------------------------------
-        public void DoIdleReward()
-        {
-        //    double currentIdleTime = Current_TimeStamp - TimeContainer.LastRecvStageCoolTimeReward;
-
-        //    if (currentIdleTime < Define.StageCoolTimeRewardTimeGab)
-        //        return;
-
-        //    if (currentIdleTime > Define.StageCooltimeRewardMaxSecond)
-        //        currentIdleTime = Define.StageCooltimeRewardMaxSecond;
-
-        //    m_rewardMinute = (int)Math.Truncate(currentIdleTime / 60);
-
-        //    while (m_stageCoolTimeRewards.Count > 0)
-        //    {
-        //        RewardData rewardData = m_stageCoolTimeRewards[0];
-        //        RewardManager.Instance.PoolRewardData(rewardData);
-        //        m_stageCoolTimeRewards.Remove(rewardData);
-        //    }
-
-        //    int rewardloopcount = (int)Math.Truncate(currentIdleTime / Define.StageCoolTimeRewardTimeGab);
-
-
-        //    MapRewardData mapRewardData = MapManager.Instance.GetMaxClearMapRewardData();
-
-        //    List<int> reward_type = new List<int>();
-        //    List<double> before_quan = new List<double>();
-        //    List<double> reward_quan = new List<double>();
-        //    List<double> after_quan = new List<double>();
-
-        //    Dictionary<int, RewardData> coolreward = new Dictionary<int, RewardData>();
-
-        //    if (mapRewardData == null)
-        //    {
-        //        RewardData rewardData = null;
-        //        if (coolreward.ContainsKey(V2Enum_Point.Gold.Enum32ToInt()) == true)
-        //            rewardData = coolreward[V2Enum_Point.Gold.Enum32ToInt()];
-        //        else
-        //        {
-        //            rewardData = RewardManager.Instance.GetRewardData();
-        //            rewardData.V2Enum_Goods = V2Enum_Goods.Point;
-        //            rewardData.Index = V2Enum_Point.Dia.Enum32ToInt();
-        //            rewardData.Amount = 0;
-
-        //            coolreward.Add(rewardData.Index, rewardData);
-        //        }
-
-        //        rewardData.Amount += Define.DefaultGainGold* rewardloopcount;
-        //    }
-        //    else
-        //    {
-        //        for (int i = 0; i < rewardloopcount; ++i)
-        //        {
-        //            RewardData pickRewardData = mapRewardData.WeightedRandomPicker.Pick();
-
-        //            RewardData rewardData = null;
-        //            if (coolreward.ContainsKey(pickRewardData.Index) == true)
-        //                rewardData = coolreward[pickRewardData.Index];
-        //            else
-        //            {
-        //                rewardData = RewardManager.Instance.GetRewardData();
-        //                rewardData.V2Enum_Goods = Managers.GoodsManager.Instance.GetGoodsType(pickRewardData.Index);
-        //                rewardData.Index = pickRewardData.Index;
-        //                rewardData.Amount = 0;
-
-        //                coolreward.Add(rewardData.Index, rewardData);
-        //            }
-
-        //            rewardData.Amount += pickRewardData.Amount;
-        //        }
-        //    }
-
-        //    foreach (var pair in coolreward)
-        //    {
-        //        RewardData rewardData = pair.Value;
-
-        //        reward_type.Add(rewardData.Index);
-        //        before_quan.Add(GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
-        //        reward_quan.Add(rewardData.Amount);
-
-        //        GoodsManager.Instance.AddGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index, rewardData.Amount);
-
-        //        after_quan.Add((int)GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
-
-        //        m_stageCoolTimeRewards.Add(rewardData);
-        //    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //    //int currentstage = DungeonDataManager.Instance.GetMaxClearFarmStageStep();
-
-        //    //StageCooltimeRewardData stageCooltimeRewardData = DungeonDataOperator.GetStageCooltimeRewardData(currentstage);
-
-        //    //if (stageCooltimeRewardData == null)
-        //    //    return;
-
-
-
-            
-        //    //for (int i = 0; i < stageCooltimeRewardData.StageCooltimeRewardElementDatas.Count; ++i)
-        //    //{
-        //    //    StageCooltimeRewardElementData stageCooltimeRewardElementData = stageCooltimeRewardData.StageCooltimeRewardElementDatas[i];
-
-        //    //    int selectcount = 0;
-
-        //    //    for (int j = 0; j < rewardloopcount; ++j)
-        //    //    {
-        //    //        int selectweight = UnityEngine.Random.Range(0, 10000);
-        //    //        if (selectweight < stageCooltimeRewardElementData.Chance)
-        //    //            selectcount++;
-        //    //    }
-
-        //    //    if (selectcount > 0)
-        //    //    {
-        //    //        double rewardamount = stageCooltimeRewardElementData.Amount;
-        //    //        rewardamount = rewardamount * selectcount;
-        //    //        rewardamount += rewardamount;
-        //    //        rewardamount = Math.Floor(rewardamount);
-
-        //    //        RewardData rewardData = RewardManager.Instance.GetRewardData();
-        //    //        rewardData.V2Enum_Goods = stageCooltimeRewardElementData.GoodsType;
-        //    //        rewardData.Index = stageCooltimeRewardElementData.GoodsIndex;
-        //    //        rewardData.Amount = rewardamount;
-
-        //    //        reward_type.Add(rewardData.Index);
-        //    //        before_quan.Add(GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
-        //    //        reward_quan.Add(rewardData.Amount);
-
-        //    //        GoodsManager.Instance.AddGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index, rewardData.Amount);
-
-        //    //        after_quan.Add((int)GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
-
-        //    //        m_stageCoolTimeRewards.Add(rewardData);
-        //    //    }
-        //    //}
-
-        //    //GuideQuestManager.Instance.AddEventCount(V2Enum_EventType.CooltimeRewardClaim, 1);
-
-        //    TimeContainer.LastRecvStageCoolTimeReward = Current_TimeStamp;
-
-        //    TheBackEnd.TheBackEndManager.Instance.DynamicUpdateData(m_changeInfoUpdate, null);
-
-        //    ThirdPartyLog.Instance.SendLog_OfflineEvent(m_rewardMinute,
-        //                    reward_type, before_quan, reward_quan, after_quan);
-
-        //    ThirdPartyLog.Instance.SendLog_Acc_Reward(MapContainer.MapLastEnter);
-
-        //    UI.UIManager.DialogEnter<UI.StageCooltimeRewardDialog>();
-
-        //    m_checkCheckStageCoolTimeReward = true;
-        }
-        //------------------------------------------------------------------------------------
-        public List<RewardData> GetStageCoolTimeRewardDatas()
-        {
-            return m_stageCoolTimeRewards;
-        }
-        //------------------------------------------------------------------------------------
-        public int GetStageCoolTimeRewardMinute()
-        {
-            return m_rewardMinute;
-        }
-        //------------------------------------------------------------------------------------
-        public void DoAdStageCoolTimeReward()
-        {
-            List<int> reward_type = new List<int>();
-            List<double> before_quan = new List<double>();
-            List<double> reward_quan = new List<double>();
-            List<double> after_quan = new List<double>();
-
-            while (m_stageCoolTimeRewards.Count > 0)
-            {
-                RewardData rewardData = m_stageCoolTimeRewards[0];
-
-                reward_type.Add(rewardData.Index);
-                before_quan.Add(GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
-                reward_quan.Add(rewardData.Amount);
-
-                GoodsManager.Instance.AddGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index, rewardData.Amount);
-
-                after_quan.Add((int)GoodsManager.Instance.GetGoodsAmount(rewardData.V2Enum_Goods.Enum32ToInt(), rewardData.Index));
-
-                RewardManager.Instance.PoolRewardData(rewardData);
-                m_stageCoolTimeRewards.Remove(rewardData);
-            }
-
-            TheBackEnd.TheBackEndManager.Instance.UpdatePlayerPointTable();
-
-            ThirdPartyLog.Instance.SendLog_Offline_AdEvent(m_rewardMinute,
-                                        reward_type, before_quan, reward_quan, after_quan,
-                                        Define.IsAdFree == true ? 1 : 2);
-        }
-        //------------------------------------------------------------------------------------
-        public void ReleaseStageCoolTimeReward()
-        {
-            while (m_stageCoolTimeRewards.Count > 0)
-            {
-                RewardData rewardData = m_stageCoolTimeRewards[0];
-
-                RewardManager.Instance.PoolRewardData(rewardData);
-                m_stageCoolTimeRewards.Remove(rewardData);
             }
         }
         //------------------------------------------------------------------------------------
@@ -606,11 +331,6 @@ namespace GameBerry.Managers
                         break;
                     }
             }
-        }
-        //------------------------------------------------------------------------------------
-        public void SetCheat_FullStageCoolTimeReward()
-        {
-            TimeContainer.LastRecvStageCoolTimeReward = Current_TimeStamp - Define.StageCooltimeRewardMaxSecond;
         }
         //------------------------------------------------------------------------------------
         public string GetSecendToDayString_HMS(int rawSecond)

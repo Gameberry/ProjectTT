@@ -39,7 +39,7 @@ namespace GameBerry.Managers
     {
         public List<NoticeData> noticeList = new List<NoticeData>();
 
-        private GameBerry.Event.RefreshNoticeMsg refreshNotice = new Event.RefreshNoticeMsg();
+        //private GameBerry.Event.RefreshNoticeMsg refreshNotice = new Event.RefreshNoticeMsg();
 
         //------------------------------------------------------------------------------------
         public void InitNoticeContent()
@@ -75,39 +75,26 @@ namespace GameBerry.Managers
                     notice.isPublic = jsonList[i]["isPublic"].ToString() == "y" ? true : false;
                     notice.author = jsonList[i]["author"].ToString();
 
-                    //if (jsonList[i].ContainsKey("imageKey"))
-                    //{
-                    //    notice.imageKey = "http://upload-console.thebackend.io" + jsonList[i]["imageKey"].ToString();
-                    //}
-                    //if (jsonList[i].ContainsKey("linkUrl"))
-                    //{
-                    //    notice.linkUrl = jsonList[i]["linkUrl"].ToString();
-                    //}
-                    //if (jsonList[i].ContainsKey("linkButtonName"))
-                    //{
-                    //    notice.linkButtonName = jsonList[i]["linkButtonName"].ToString();
-                    //}
-
                     noticeList.Add(notice);
                 }
 
-                if (noticeList.Count > 0)
-                {
-                    string index = PlayerPrefs.GetString("LastNotice", string.Empty);
+                //if (noticeList.Count > 0)
+                //{
+                //    string index = PlayerPrefs.GetString("LastNotice", string.Empty);
 
-                    if (string.IsNullOrEmpty(index))
-                    { 
-                        RedDotManager.Instance.ShowRedDot(ContentDetailList.Notice);
-                        PlayerPrefs.SetString("LastNotice", noticeList[0].inDate);
-                    }
-                    if (index != noticeList[0].inDate)
-                    { 
-                        RedDotManager.Instance.ShowRedDot(ContentDetailList.Notice);
-                        PlayerPrefs.SetString("LastNotice", noticeList[0].inDate);
-                    }
-                }
+                //    if (string.IsNullOrEmpty(index))
+                //    { 
+                //        RedDotManager.Instance.ShowRedDot(ContentDetailList.Notice);
+                //        PlayerPrefs.SetString("LastNotice", noticeList[0].inDate);
+                //    }
+                //    if (index != noticeList[0].inDate)
+                //    { 
+                //        RedDotManager.Instance.ShowRedDot(ContentDetailList.Notice);
+                //        PlayerPrefs.SetString("LastNotice", noticeList[0].inDate);
+                //    }
+                //}
 
-                Message.Send(refreshNotice);
+                //Message.Send(refreshNotice);
             });
         }
         //------------------------------------------------------------------------------------

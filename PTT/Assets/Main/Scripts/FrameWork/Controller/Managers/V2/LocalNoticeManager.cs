@@ -98,7 +98,6 @@ namespace GameBerry.Managers
                 return;
 
             SetBaseNotice();
-            SetCoolTimeNotice();
             //SetClanMissionNotice();
         }
 
@@ -154,34 +153,6 @@ namespace GameBerry.Managers
             return true;
         }
 
-        public void SetCoolTimeNotice()
-        {
-            if (TimeManager.isAlive == false)
-                return;
-
-            int addTime = (int)(Define.StageCooltimeRewardMaxSecond - TimeManager.Instance.GetIdleRewardTime_Second());
-
-            if (addTime < 60)
-                addTime = 60;
-
-            DateTime NowTime = DateTime.Now;
-
-            LocalNoticeData localNoticeData = coolTimeRewardNotice;
-            DateTime fireTime = NowTime.AddSeconds(addTime);
-
-            if (ApplyPush(fireTime) == false)
-                return;
-
-            if (fireTime.Ticks < NowTime.Ticks)
-            {
-                fireTime = fireTime.AddDays(1);
-            }
-
-            SetNotice(localNoticeData.noticeType.ToString(),
-                LocalStringManager.Instance.GetLocalString(localNoticeData.LocalHead),
-                LocalStringManager.Instance.GetLocalString(localNoticeData.LocalBody),
-                fireTime);
-        }
 
         //public void SetClanMissionNotice()
         //{

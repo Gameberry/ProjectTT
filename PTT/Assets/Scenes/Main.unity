@@ -1141,10 +1141,6 @@ MonoBehaviour:
   _arrrSpineModelAsset: {fileID: 11400000, guid: 8377e62a5259fad4fb42d1c04362d1de, type: 2}
   _battleModeStaticDataAsset: {fileID: 11400000, guid: 5e62c1953d15e92469e803129ad278f5, type: 2}
   _iconTableAsset: {fileID: 11400000, guid: 353f1b9e144824645b180982da700620, type: 2}
-  _animationTableAsset: {fileID: 11400000, guid: 9898518003efe554897de8d2c9330c44, type: 2}
-  _spriteEffectPoolElement: {fileID: 4798020687961423727, guid: f88b4a3b171b63947b1d460131966790, type: 3}
-  _cCState_PaintIcon: {fileID: 8502356031188090642, guid: 1a32da599b4c6ac45a3dfb3cb5cbf10c, type: 3}
-  _cCState_AnimationSpriteLibraryAsset: {fileID: 11400000, guid: 495e1c45ecd4ac84580721a82c81160e, type: 2}
   _soundTableAsset: {fileID: 11400000, guid: 65f777fc40eaf4a5494e57813d3e601c, type: 2}
 --- !u!4 &640594841
 Transform:
@@ -2127,52 +2123,6 @@ MonoBehaviour:
   ProjectLoadingContent: {fileID: 985185066}
   screenCanvasPowerSavingContent: {fileID: 736612588}
   IgnoreEnterDialog: 0
---- !u!1 &2144934717
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2144934719}
-  - component: {fileID: 2144934718}
-  m_Layer: 0
-  m_Name: LobbyContent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2144934718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2144934717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aae3c2b61b667c341b69811f66a89eb7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ContentName: 
-  dontDestroy: 0
---- !u!4 &2144934719
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2144934717}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!222 &161658886123802570
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2776,6 +2726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LocalizeID: connecterror/common
+  TextTarget: {fileID: 0}
 --- !u!222 &6308537719046620987
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2889,4 +2840,3 @@ SceneRoots:
   - {fileID: 257499289}
   - {fileID: 784261860}
   - {fileID: 640594841}
-  - {fileID: 2144934719}

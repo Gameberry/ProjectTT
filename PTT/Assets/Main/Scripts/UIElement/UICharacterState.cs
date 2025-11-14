@@ -14,9 +14,6 @@ namespace GameBerry
         private SpriteRenderer m_charHPShadowBer;
 
         [SerializeField]
-        private SpriteRenderer m_charShieldBer;
-
-        [SerializeField]
         private Transform m_charCoolTime_Group;
 
         [SerializeField]
@@ -94,71 +91,6 @@ namespace GameBerry
                 size.x = m_hpDefaultWidth * (float)ratio;
                 m_charHPBer.size = size;
             }
-        }
-        //------------------------------------------------------------------------------------
-        public void SetShieldBar(double ratio)
-        {
-            if (m_charShieldBer == null)
-                return;
-
-            Vector2 size = m_charShieldBer.size;
-
-            if (ratio <= 0.0f)
-            {
-                size.x = 0.0f;
-                m_charShieldBer.size = size;
-            }
-            else if (ratio >= 1.0f)
-            {
-                size.x = m_hpDefaultWidth;
-
-                m_charShieldBer.size = size;
-
-                if (m_charHPShadowBer != null)
-                    m_charHPShadowBer.size = size;
-            }
-            else
-            {
-                size.x = m_hpDefaultWidth * (float)ratio;
-                m_charShieldBer.size = size;
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public void EnableCoolTimeBar(bool enable)
-        {
-            if (m_charCoolTime_Group != null)
-                m_charCoolTime_Group.gameObject.SetActive(enable);
-        }
-        //------------------------------------------------------------------------------------
-        public void SetCoolTimeBar(double ratio)
-        {
-            if (m_charCoolTime == null)
-                return;
-
-            Vector2 size = m_charCoolTime.size;
-
-            if (ratio <= 0.0f)
-            {
-                size.x = 0.0f;
-                m_charCoolTime.size = size;
-            }
-            else if (ratio >= 1.0f)
-            {
-                size.x = m_mpDefaultWidth;
-
-                m_charCoolTime.size = size;
-            }
-            else
-            {
-                size.x = m_mpDefaultWidth * (float)ratio;
-                m_charCoolTime.size = size;
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public void SetBarColor(Color color)
-        {
-            if (m_charHPBer != null)
-                m_charHPBer.color = color;
         }
         //------------------------------------------------------------------------------------
     }

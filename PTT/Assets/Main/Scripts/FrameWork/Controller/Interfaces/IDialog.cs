@@ -17,11 +17,6 @@ namespace GameBerry.UI
 
 		public bool UseBackBtn = false;
 
-		public bool GuideInteractorInView = false;
-
-		private static Event.ShowDialogMsg showDialogMsg = new Event.ShowDialogMsg();
-		private static Event.HideDialogMsg hideDialogMsg = new Event.HideDialogMsg();
-
 		public event OnCallBack exitCallBack;
 		protected bool ignoreExit = false;
 
@@ -43,16 +38,6 @@ namespace GameBerry.UI
 			UIManager.Instance.SetSibling(_rt, sibling);
 
 			dialogView.SetActive(false);
-
-			if (GuideInteractorInView == true)
-			{
-				List<UIGuideInteractor> uIGuideInteractors = dialogView.transform.GetComponentsInAllChildren<UIGuideInteractor>();
-				for (int i = 0; i < uIGuideInteractors.Count; ++i)
-				{
-					if (uIGuideInteractors[i].FocusParent == null)
-						uIGuideInteractors[i].FocusParent = dialogView.transform;
-				}
-			}
 
 
 			if (_exitBtn != null)

@@ -24,7 +24,7 @@ namespace GameBerry.Scene
             await UniTask.Yield();
 
             UI.UIManager.Instance.Unload(nameof(UI.AppLoadingDialog));
-            SceneManager.Instance.Load(Constants.SceneName.Lobby, true);
+            SceneManager.Instance.Load(Constants.SceneName.InGame, true);
         }
 	}
 }

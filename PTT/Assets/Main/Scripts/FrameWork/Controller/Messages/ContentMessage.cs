@@ -7,4 +7,9 @@
 	public class ExitContentMsg : Message
 	{
 	}
+
+    public class RefreshNoticeMsg : Message
+    {
+
+    }
 }

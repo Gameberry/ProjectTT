@@ -29,20 +29,12 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
-            UIManager.DialogEnter<GlobalPopupDialog>();
-            UIManager.DialogEnter<GlobalDungeonFadeDialog>();
-            UIManager.DialogEnter<GlobalFadeDialog>();
-            UIManager.DialogEnter<GlobalNoticeDialog>();
+            
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()
         {
-            UIManager.DialogExit<GlobalPopupDialog>();
-            UIManager.DialogExit<GlobalBufferingDialog>();
-            UIManager.DialogExit<GlobalButtonLockDialog>();
-            UIManager.DialogExit<GlobalDungeonFadeDialog>();
-            UIManager.DialogExit<GlobalFadeDialog>();
-            UIManager.DialogExit<GlobalNoticeDialog>();
+            
         }
         //------------------------------------------------------------------------------------
         public static void ShowMaintenanceError()
@@ -96,56 +88,56 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         private static bool showBufferingUI = false;
         private static bool showNetWorkBufferingUI = false;
-        public static void VisibleBufferingUI(bool visible)
-        {
-            if (visible == true)
-                UIManager.DialogEnter<GlobalBufferingDialog>();
-            else
-            {
-                if (showNetWorkBufferingUI == false)
-                    UIManager.DialogExit<GlobalBufferingDialog>();
-            }
+        //public static void VisibleBufferingUI(bool visible)
+        //{
+        //    if (visible == true)
+        //        UIManager.DialogEnter<GlobalBufferingDialog>();
+        //    else
+        //    {
+        //        if (showNetWorkBufferingUI == false)
+        //            UIManager.DialogExit<GlobalBufferingDialog>();
+        //    }
 
-            showBufferingUI = visible;
-        }
-        //------------------------------------------------------------------------------------
-        public static void VisibleBufferingUI(bool visible, string buffstring)
-        {
-            if (visible == true)
-                UIManager.DialogEnter<GlobalBufferingDialog>();
-            else
-            {
-                if (showNetWorkBufferingUI == false)
-                    UIManager.DialogExit<GlobalBufferingDialog>();
-            }
+        //    showBufferingUI = visible;
+        //}
+        ////------------------------------------------------------------------------------------
+        //public static void VisibleBufferingUI(bool visible, string buffstring)
+        //{
+        //    if (visible == true)
+        //        UIManager.DialogEnter<GlobalBufferingDialog>();
+        //    else
+        //    {
+        //        if (showNetWorkBufferingUI == false)
+        //            UIManager.DialogExit<GlobalBufferingDialog>();
+        //    }
 
-            showBufferingUI = visible;
+        //    showBufferingUI = visible;
 
-            _setBuffStringMsg.buffstr = buffstring;
-            Message.Send(_setBuffStringMsg);
-        }
-        //------------------------------------------------------------------------------------
-        public static void VisibleNetWorkBufferingUI(bool visible)
-        {
-            if (visible == true)
-                UIManager.DialogEnter<GlobalBufferingDialog>();
-            else
-            {
-                if (showBufferingUI == false)
-                    UIManager.DialogExit<GlobalBufferingDialog>();
-            }
+        //    _setBuffStringMsg.buffstr = buffstring;
+        //    Message.Send(_setBuffStringMsg);
+        //}
+        ////------------------------------------------------------------------------------------
+        //public static void VisibleNetWorkBufferingUI(bool visible)
+        //{
+        //    if (visible == true)
+        //        UIManager.DialogEnter<GlobalBufferingDialog>();
+        //    else
+        //    {
+        //        if (showBufferingUI == false)
+        //            UIManager.DialogExit<GlobalBufferingDialog>();
+        //    }
 
-            showNetWorkBufferingUI = visible;
-        }
-        //------------------------------------------------------------------------------------
-        public static void SetButtonLock(bool btnlock)
-        {
-            if (btnlock == true)
-                UIManager.DialogEnter<GlobalButtonLockDialog>();
-            else
-                UIManager.DialogExit<GlobalButtonLockDialog>();
-        }
-        //------------------------------------------------------------------------------------
+        //    showNetWorkBufferingUI = visible;
+        //}
+        ////------------------------------------------------------------------------------------
+        //public static void SetButtonLock(bool btnlock)
+        //{
+        //    if (btnlock == true)
+        //        UIManager.DialogEnter<GlobalButtonLockDialog>();
+        //    else
+        //        UIManager.DialogExit<GlobalButtonLockDialog>();
+        //}
+        ////------------------------------------------------------------------------------------
         public static void ShowPopup_Ok(string titletext, string contenttext, System.Action okAction = null, System.Action<bool> toDayHide = null)
         {
             _showPopup_OkMsg.titletext = titletext;
@@ -266,31 +258,31 @@ namespace GameBerry.Contents
             Message.Send(_globalUnLockContentNoticeMsg);
         }
         //------------------------------------------------------------------------------------
-        public static void ShowSelectGoodsPopup(V2Enum_Goods v2Enum_Goods, List<ObscuredInt> SelectIndexList, System.Action<int> SelectedCallBack)
-        {
-            UI.UIManager.DialogEnter<InGameSelectGoodsPopupDialog>();
+        //public static void ShowSelectGoodsPopup(V2Enum_Goods v2Enum_Goods, List<ObscuredInt> SelectIndexList, System.Action<int> SelectedCallBack)
+        //{
+        //    UI.UIManager.DialogEnter<InGameSelectGoodsPopupDialog>();
 
-            _setSelectGoodsPopupMsg.v2Enum_Goods = v2Enum_Goods;
-            _setSelectGoodsPopupMsg.SelectIndexList = SelectIndexList;
-            _setSelectGoodsPopupMsg.SelectedCallBack = SelectedCallBack;
+        //    _setSelectGoodsPopupMsg.v2Enum_Goods = v2Enum_Goods;
+        //    _setSelectGoodsPopupMsg.SelectIndexList = SelectIndexList;
+        //    _setSelectGoodsPopupMsg.SelectedCallBack = SelectedCallBack;
 
-            Message.Send(_setSelectGoodsPopupMsg);
-        }
-        //------------------------------------------------------------------------------------
-        public static void ShowGoodsDescPopup(V2Enum_Goods v2Enu_Goods, int index, double timegoodstime = 0.0)
-        {
-            UI.UIManager.DialogEnter<InGameGoodsDescPopupDialog>();
+        //    Message.Send(_setSelectGoodsPopupMsg);
+        //}
+        ////------------------------------------------------------------------------------------
+        //public static void ShowGoodsDescPopup(V2Enum_Goods v2Enu_Goods, int index, double timegoodstime = 0.0)
+        //{
+        //    UI.UIManager.DialogEnter<InGameGoodsDescPopupDialog>();
 
-            _setGoodsDescPopupMsg.v2Enum_Goods = v2Enu_Goods;
+        //    _setGoodsDescPopupMsg.v2Enum_Goods = v2Enu_Goods;
 
-            if (_setGoodsDescPopupMsg.v2Enum_Goods == V2Enum_Goods.Max)
-                _setGoodsDescPopupMsg.v2Enum_Goods = Managers.GoodsManager.Instance.GetGoodsType(index);
+        //    if (_setGoodsDescPopupMsg.v2Enum_Goods == V2Enum_Goods.Max)
+        //        _setGoodsDescPopupMsg.v2Enum_Goods = Managers.GoodsManager.Instance.GetGoodsType(index);
 
-            _setGoodsDescPopupMsg.index = index;
-            _setGoodsDescPopupMsg.timeGoodsTime = timegoodstime;
+        //    _setGoodsDescPopupMsg.index = index;
+        //    _setGoodsDescPopupMsg.timeGoodsTime = timegoodstime;
 
-            Message.Send(_setGoodsDescPopupMsg);
-        }
+        //    Message.Send(_setGoodsDescPopupMsg);
+        //}
         //------------------------------------------------------------------------------------
     }
 }

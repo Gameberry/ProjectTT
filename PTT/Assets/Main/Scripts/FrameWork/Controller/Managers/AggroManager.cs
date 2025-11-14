@@ -46,191 +46,32 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-        public CharacterControllerBase GetIFFTargetCharacter(Enum_TargetConditionType v2Enum_TargetSearchType, CharacterControllerBase myControllerBase, float range = -1)
+        public CharacterControllerBase GetIFFTargetCharacter(CharacterControllerBase myControllerBase)
         {
             CharacterControllerBase target = null;
 
             List<CharacterControllerBase> iFF_Target = myControllerBase.IFFType == IFFType.IFF_Friend ? m_iFF_FoeCharacterControllerBases : m_iFF_FriendCharacterControllerBases;
 
-            switch (v2Enum_TargetSearchType)
+            float neardis = float.MaxValue;
+
+            for (int i = 0; i < iFF_Target.Count; ++i)
             {
-                case Enum_TargetConditionType.HpHigh:
-                    {
-                        double hPHigh = 0.0;
+                if (iFF_Target[i] == null)
+                    continue;
 
-                        for (int i = 0; i < iFF_Target.Count; ++i)
-                        {
-                            if (iFF_Target[i] == null)
-                                continue;
+                if (iFF_Target[i].IsDead == true)
+                    continue;
 
-                            if (iFF_Target[i].IsDead == true)
-                                continue;
+                if (target == null)
+                    target = iFF_Target[i];
 
-                            float distance = GetDistance(myControllerBase, iFF_Target[i]);
-                            if (range > 0.0f && distance > range)
-                                continue;
-
-                            if (target == null)
-                                target = iFF_Target[i];
-
-                            double hp = iFF_Target[i].CurrentHP;
-
-                            if (hPHigh < hp)
-                            {
-                                target = iFF_Target[i];
-                                hPHigh = hp;
-                            }
-                        }
-
-                        break;
-                    }
-                case Enum_TargetConditionType.HpLow:
-                    {
-                        double hPLow = double.MaxValue;
-
-                        for (int i = 0; i < iFF_Target.Count; ++i)
-                        {
-                            if (iFF_Target[i] == null)
-                                continue;
-
-                            if (iFF_Target[i].IsDead == true)
-                                continue;
-
-                            float distance = GetDistance(myControllerBase, iFF_Target[i]);
-                            if (range > 0.0f && distance > range)
-                                continue;
-
-                            if (target == null)
-                                target = iFF_Target[i];
-
-                            double hp = iFF_Target[i].CurrentHP;
-
-                            if (hPLow > hp)
-                            {
-                                target = iFF_Target[i];
-                                hPLow = hp;
-                            }
-                        }
-
-                        break;
-                    }
-                case Enum_TargetConditionType.AtkHigh:
-                    {
-                        double aTKHigh = 0.0;
-
-                        for (int i = 0; i < iFF_Target.Count; ++i)
-                        {
-                            if (iFF_Target[i] == null)
-                                continue;
-
-                            if (iFF_Target[i].IsDead == true)
-                                continue;
-
-                            float distance = GetDistance(myControllerBase, iFF_Target[i]);
-                            if (range > 0.0f && distance > range)
-                                continue;
-
-                            if (target == null)
-                                target = iFF_Target[i];
-
-                            double atk = iFF_Target[i].GetOutPutMyStat(V2Enum_Stat.Attack);
-
-                            if (aTKHigh < atk)
-                            {
-                                target = iFF_Target[i];
-                                aTKHigh = atk;
-                            }
-                        }
-
-                        break;
-                    }
-                case Enum_TargetConditionType.Far:
-                    {
-                        float fardis = 0.0f;
-
-                        for (int i = 0; i < iFF_Target.Count; ++i)
-                        {
-                            if (iFF_Target[i] == null)
-                                continue;
-
-                            if (iFF_Target[i].IsDead == true)
-                                continue;
-
-                            float distance = GetDistance(myControllerBase, iFF_Target[i]);
-                            if (range > 0.0f && distance > range)
-                                continue;
-
-                            if (target == null)
-                                target = iFF_Target[i];
-
-                            if (fardis < distance)
-                            {
-                                target = iFF_Target[i];
-                                fardis = distance;
-                            }
-                        }
-
-                        break;
-                    }
-                case Enum_TargetConditionType.Range:
-                case Enum_TargetConditionType.RangeAll:
-                case Enum_TargetConditionType.RangeNear:
-                    {
-                        float neardis = 0.0f;
-
-                        for (int i = 0; i < iFF_Target.Count; ++i)
-                        {
-                            if (iFF_Target[i] == null)
-                                continue;
-
-                            if (iFF_Target[i].IsDead == true)
-                                continue;
-
-                            float distance = GetDistance(myControllerBase, iFF_Target[i]);
-                            if (range > 0.0f && distance > range)
-                                continue;
-
-                            if (target == null)
-                                target = iFF_Target[i];
-
-                            if (neardis > distance)
-                            {
-                                target = iFF_Target[i];
-                                neardis = distance;
-                            }
-                        }
-
-                        break;
-                    }
-                default: //case Enum_TargetConditionType.Near:
-                    {
-                        float neardis = float.MaxValue;
-
-                        for (int i = 0; i < iFF_Target.Count; ++i)
-                        {
-                            if (iFF_Target[i] == null)
-                                continue;
-
-                            if (iFF_Target[i].IsDead == true)
-                                continue;
-
-                            if (target == null)
-                                target = iFF_Target[i];
-
-                            float distance = GetDistance(myControllerBase, iFF_Target[i]); 
-                            if (neardis > distance)
-                            {
-                                target = iFF_Target[i];
-                                neardis = distance;
-                            }
-                        }
-
-                        break;
-                    }
+                float distance = GetDistance(myControllerBase, iFF_Target[i]);
+                if (neardis > distance)
+                {
+                    target = iFF_Target[i];
+                    neardis = distance;
+                }
             }
-
-            //if (target == null && range > 0.0f)
-            //    target = GetIFFTargetCharacter(Enum_TargetConditionType.Near, myControllerBase);
 
             return target;
         }

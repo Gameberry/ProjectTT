@@ -3,48 +3,9 @@ using System.Collections.Generic;
 
 namespace GameBerry.Event
 {
-    /// <summary>
-    /// QuickLink
-    /// </summary>
-
-    public class SetCharacterContentNavBarStateMsg : Message
+    public class RefreshBattleSceneUIMsg : Message
     {
-        public ContentDetailList ContentDetailList;
-    }
 
-    public class SetAllyContentNavBarStateMsg : Message
-    {
-        public ContentDetailList ContentDetailList;
-    }
-
-    public class ShowShortCutAllyJewelryViewMsg : Message
-    {
-        
-    }
-
-    public class SetShopContentNavBarStateMsg : Message
-    {
-        public ContentDetailList ContentDetailList;
-    }
-
-    public class SetDungeonContentDialogStateMsg : Message
-    {
-        public ContentDetailList ContentDetailList;
-    }
-
-    public class SetShopSummonDialogStateMsg : Message
-    {
-        public ContentDetailList ContentDetailList;
-    }
-
-    public class SetShopGerneralDialogStateMsg : Message
-    {
-        public ContentDetailList ContentDetailList;
-    }
-
-    public class SetPassDialogStateMsg : Message
-    {
-        public ContentDetailList ContentDetailList;
     }
 
     public class VisibleDungeonExitPopupMsg : Message

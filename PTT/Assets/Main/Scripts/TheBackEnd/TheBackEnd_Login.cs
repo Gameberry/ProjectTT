@@ -699,7 +699,7 @@ namespace GameBerry.TheBackEnd
                 {
                     Debug.Log("NickNameCreate!!");
 
-                    PlayerDataContainer.PlayerName = Backend.UserNickName;
+                    //PlayerDataContainer.PlayerName = Backend.UserNickName;
 
                     m_createNickNameResultMsg.IsSuccess = callback.IsSuccess();
                     m_createNickNameResultMsg.ErrorMessage = callback.IsSuccess() == true ? string.Empty : callback.GetMessage();

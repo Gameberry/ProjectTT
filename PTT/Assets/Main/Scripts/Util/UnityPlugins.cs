@@ -266,8 +266,8 @@ public class UnityIAP : IDetailedStoreListener
             item.localizedPrice = product.metadata.localizedPrice;
         }
 
-        if (GameBerry.Managers.ShopManager.isAlive == true)
-            GameBerry.Managers.ShopManager.Instance.RefreshPrice();
+        //if (GameBerry.Managers.ShopManager.isAlive == true)
+        //    GameBerry.Managers.ShopManager.Instance.RefreshPrice();
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
@@ -543,7 +543,7 @@ public class UnityAppLovin
     {
         if (GameBerry.Define.IsAdFree == true)
         {
-            GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.WatchingAd, 1);
+            //GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.WatchingAd, 1);
 
             if (onComplete != null)
                 onComplete();
@@ -608,8 +608,8 @@ public class UnityAppLovin
 
     void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
     {
-        GameBerry.Managers.TimeManager.Instance.RefreshServerTime();
-        GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.WatchingAd, 1);
+        //GameBerry.Managers.TimeManager.Instance.RefreshServerTime();
+        //GameBerry.Managers.QuestManager.Instance.AddMissionCount(GameBerry.V2Enum_QuestGoalType.WatchingAd, 1);
         _onRewardedAdComplete?.Invoke();
     }
 

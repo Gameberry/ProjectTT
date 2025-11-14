@@ -25,26 +25,11 @@ namespace GameBerry
         [SerializeField]
         private SpineModelAsset _arrrSpineModelAsset;
 
-        private Dictionary<Enum_SynergyType, GambleCardSprite> _gambleCardSprites_Dic = new Dictionary<Enum_SynergyType, GambleCardSprite>();
-        private Dictionary<V2Enum_Grade, GambleGradeBGSprite> _gambleGradeBGSprites_Dic = new Dictionary<V2Enum_Grade, GambleGradeBGSprite>();
-
         [SerializeField]
         private BattleModeStaticDataAsset _battleModeStaticDataAsset;
 
         [SerializeField]
         private IconTableAsset _iconTableAsset;
-
-        [SerializeField]
-        private AnimationTableAsset _animationTableAsset;
-
-        [SerializeField]
-        private SpriteEffectPoolElement _spriteEffectPoolElement;
-
-        [SerializeField]
-        private CCState_PaintIcon _cCState_PaintIcon;
-
-        [SerializeField]
-        private AnimationSpriteLibraryAsset _cCState_AnimationSpriteLibraryAsset;
 
         [SerializeField]
         private SoundTableAsset _soundTableAsset;
@@ -68,20 +53,6 @@ namespace GameBerry
 
                 _creatureSpineModelDatas_Dic.Add(spineModelData.ResourceIndex, spineModelData);
             }
-
-            for (int i = 0; i < _staticResourceAsset.GambleCardSprites.Count; ++i)
-            {
-                GambleCardSprite gambleCardSprite = _staticResourceAsset.GambleCardSprites[i];
-
-                _gambleCardSprites_Dic.Add(gambleCardSprite.CardType, gambleCardSprite);
-            }
-
-            for (int i = 0; i < _staticResourceAsset.GambleGradeBGSprites.Count; ++i)
-            {
-                GambleGradeBGSprite gambleGradeBGSprite = _staticResourceAsset.GambleGradeBGSprites[i];
-
-                _gambleGradeBGSprites_Dic.Add(gambleGradeBGSprite.GradeType, gambleGradeBGSprite);
-            }
         }
         //------------------------------------------------------------------------------------
         #region Frame
@@ -92,22 +63,6 @@ namespace GameBerry
                 return;
 
             _staticResourceAsset.elementFrameResourceData.SetFrame(v2Enum_Grade, frame);
-        }
-        //------------------------------------------------------------------------------------
-        public void SetAllyFrame(V2Enum_Grade v2Enum_Grade, Image frame)
-        {
-            if (frame == null || _staticResourceAsset == null)
-                return;
-
-            _staticResourceAsset.elementFrameResourceData.SetAllyFrame(v2Enum_Grade, frame);
-        }
-        //------------------------------------------------------------------------------------
-        public void SetGradeFrame(V2Enum_Grade v2Enum_Grade, Image frame)
-        {
-            if (frame == null || _staticResourceAsset == null)
-                return;
-
-            _staticResourceAsset.elementFrameResourceData.SetGradeFrame(v2Enum_Grade, frame);
         }
         //------------------------------------------------------------------------------------
         #endregion
@@ -207,16 +162,6 @@ namespace GameBerry
             return _staticResourceAsset.DeadDirectionSwingRotationSpeed;
         }
         //------------------------------------------------------------------------------------
-        public List<VarianceColor> GetVarianceColorList()
-        {
-            return _staticResourceAsset.m_varianceColor_List;
-        }
-        //------------------------------------------------------------------------------------
-        public TotalLevelEffectColorData GetTotalLevelEffectColorData(Enum_ARRR_TotalLevelType enumArrrTotalLevelType)
-        {
-            return _staticResourceAsset.TotalLevelEffectColor.Find(x => x.EffectType == enumArrrTotalLevelType);
-        }
-        //------------------------------------------------------------------------------------
         public GearResourceData GetGearResourceData(V2Enum_GearType v2Enum_GearType)
         {
             return _staticResourceAsset.GearResourceDatas.Find(x => x.v2Enum_GearType == v2Enum_GearType);
@@ -246,26 +191,6 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
-        #region Gamble
-        //------------------------------------------------------------------------------------
-        public GambleCardSprite GetGambleCardSpriteData(Enum_SynergyType Enum_Card)
-        {
-            if (_gambleCardSprites_Dic.ContainsKey(Enum_Card) == true)
-                return _gambleCardSprites_Dic[Enum_Card];
-
-            return null;
-        }
-        //------------------------------------------------------------------------------------
-        public GambleGradeBGSprite GetGambleGradeBGSpriteData(V2Enum_Grade V2Enum_Grade)
-        {
-            if (_gambleGradeBGSprites_Dic.ContainsKey(V2Enum_Grade) == true)
-                return _gambleGradeBGSprites_Dic[V2Enum_Grade];
-
-            return null;
-        }
-        //------------------------------------------------------------------------------------
-        #endregion
-        //------------------------------------------------------------------------------------
         public BattleModeStaticDataAsset GetBattleModeStaticData()
         {
             return _battleModeStaticDataAsset;
@@ -279,30 +204,6 @@ namespace GameBerry
                 return null;
 
             return _iconTableAsset.GetIcon(key);
-        }
-        //------------------------------------------------------------------------------------
-        #endregion
-        //------------------------------------------------------------------------------------
-        #region AnimationTable
-        //------------------------------------------------------------------------------------
-        public AnimationTableAsset GetAnimationTableAsset()
-        {
-            return _animationTableAsset;
-        }
-        //------------------------------------------------------------------------------------
-        public SpriteEffectPoolElement GetSpriteEffectPoolElement()
-        {
-            return _spriteEffectPoolElement;
-        }
-        //------------------------------------------------------------------------------------
-        public CCState_PaintIcon GetCCState_PaintIcon()
-        {
-            return _cCState_PaintIcon;
-        }
-        //------------------------------------------------------------------------------------
-        public AnimationSpriteLibraryAsset GetCCState_AnimationSpriteLibraryAsset()
-        {
-            return _cCState_AnimationSpriteLibraryAsset;
         }
         //------------------------------------------------------------------------------------
         #endregion

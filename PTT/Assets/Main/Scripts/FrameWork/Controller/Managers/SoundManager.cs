@@ -55,9 +55,6 @@ namespace GameBerry.Managers
 
             SetBGMVolume(PlayerPrefs.GetFloat(m_bgmKey, 0.5f));
             SetFXVolume(PlayerPrefs.GetFloat(m_fxKey, 1.0f));
-
-            GameSettingManager.Instance.AddListener(GameSettingBtn.BGSound, RefreshBGVolum);
-            GameSettingManager.Instance.AddListener(GameSettingBtn.FXSound, RefreshFXVolum);
         }
 
         protected override void Release()
@@ -67,25 +64,6 @@ namespace GameBerry.Managers
 
             Message.RemoveListener<Event.SetBGMVolumeMsg>(SetBGMVolume);
             Message.RemoveListener<Event.SetFXVolumeMsg>(SetFXVolume);
-
-            GameSettingManager.Instance.RemoveListener(GameSettingBtn.BGSound, RefreshBGVolum);
-            GameSettingManager.Instance.RemoveListener(GameSettingBtn.FXSound, RefreshFXVolum);
-        }
-
-        private void RefreshBGVolum()
-        {
-            if (GameSettingManager.Instance.IsOn(GameSettingBtn.BGSound) == false)
-                SetBGMVolume(0.0f);
-            else
-                SetBGMVolume(1.0f);
-        }
-
-        private void RefreshFXVolum()
-        {
-            if (GameSettingManager.Instance.IsOn(GameSettingBtn.FXSound) == false)
-                SetFXVolume(0.0f);
-            else
-                SetFXVolume(1.0f);
         }
 
         public void Setup()
@@ -98,48 +76,6 @@ namespace GameBerry.Managers
                 OnPostLoadProcess(soundData, true);
             }
         }
-
-        //private IEnumerator LoadAsync(string id, bool instant = true, bool loop = false)
-        //{
-        //    if (string.IsNullOrEmpty(id) == true)
-        //        yield break;
-
-        //    if (_caches.ContainsKey(id))
-        //        yield break;
-
-        //    var data = _table.GetSoundDataList().Find(x => x.FileName == id);
-        //    if (data == null)
-        //    {
-        //        Debug.LogErrorFormat("Could not found 'BT_SoundRow' : {0} of {1}", id, gameObject.name);
-        //        yield break;
-        //    }
-
-        //    var fullpath = string.Format("{0}{1}", data.FilePath, data.FileName);
-
-        //    yield return StartCoroutine(ResourceLoader.Instance.LoadAsync<AudioClip>(fullpath, 
-        //        o => OnPostLoadProcess(o, id, data, instant, loop)));
-        //}
-
-        //private void Load(string id, bool instant = true, bool loop = false)
-        //{
-        //    if (string.IsNullOrEmpty(id) == true)
-        //        return;
-
-        //    if (_caches.ContainsKey(id))
-        //        return;
-
-        //    var data = _table.GetSoundDataList().Find(x => x.FileName == id);
-        //    if (data == null)
-        //    {
-        //        Debug.LogErrorFormat("Could not found 'BT_SoundRow' : {0} of {1}", id, gameObject.name);
-        //        return;
-        //    }
-
-        //    var fullpath = string.Format("{0}{1}", data.FilePath, data.FileName);
-
-        //    ResourceLoader.Instance.Load<AudioClip>(fullpath,
-        //        o => OnPostLoadProcess(o, id, data, instant, loop));
-        //}
 
         void OnPostLoadProcess(SoundData data, bool instant)
         {

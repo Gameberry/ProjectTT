@@ -13,49 +13,30 @@ namespace GameBerry
 
     public enum Enum_Dungeon
     {
-        None = 0,
-        LobbyScene,
+        None,
         StageScene,
-
-        DiamondDungeon = 11,
-        TowerDungeon = 12,
     }
+
+    public enum CharacterState : byte
+    {
+        None = 0,
+        Idle,
+        Run,
+        Attack,
+        Hit,
+        Dead,
+
+        Skill,
+
+        Max,
+    }
+
 
     public enum Enum_LookDirection
     {
         None = 0,
         Left,
         Right,
-    }
-
-    public enum V2Enum_MonsterRoleType
-    {
-        Warrior = 11, //전사
-        Assassin = 12, //암살
-        Magic = 13, //마법
-        Defence = 14, //방어
-        RangeSup = 15, //원거리
-        Support = 16, //지원
-
-        Max,
-    }
-
-
-    public enum Enum_MonsterGradeType
-    {
-        Normal = 11, //일반 몬스터
-        Named = 12, //네임드 몬스터
-        Boss = 13, //보스 몬스터
-
-        Max
-    }
-
-    public enum Enum_RoomType
-    {
-        Normal = 0, //일반 몬스터
-        Slot = 11, //슬롯 이벤트가 출현하는 웨이브
-
-        Max
     }
 
     public enum V2Enum_Grade
@@ -72,40 +53,6 @@ namespace GameBerry
 
         Max,
     }
-
-    // 트리거
-    public enum Enum_CoolTimeType
-    {
-        Default = 0, // 메인 캐릭터 스킬 쿨타임
-        GamebleCoolTime = 11, // 겜블 스킬 쿨타임
-        AttackCount = 12, // 공격 횟수
-        KillingCount = 13, // 적을 죽인 횟수
-        HitCount = 14, // 내가 피격된 횟수
-
-        HPPercentOver = 15, // 현재 HP가 50% 이상
-        HPPercentBelow = 16, // 현재 HP가 50% 미만
-
-        CriticalAttack = 17, // 치명타 공격 시 (메인 캐릭터의 공격에만 해당)
-        IsBoss = 18, // 보스 몬스터 공격 시
-        IsNormal = 19, // 일반 몬스터 공격 시
-        Interest = 20, // 이자 획득 시
-        WaveClear = 21, // 웨이브 클리어 시
-        WaveStart = 22, // 웨이브 시작 시
-
-        GambleCardReward = 23, //카드 뽑기 도박 결과 획득 시
-        FailGasGamble = 24, //가스 카드 도박 실패 시
-        GainGasReward = 25, //가스 Reward 조건이 1 이상인 곳 클리어 시
-        MissionComplete = 26, //미션 완료 시
-
-        GambleCardRewardFire = 27, //  카드 뽑기 도박 결과 불 획득 시 (횟수)
-        GambleCardRewardGold = 28, //  카드 뽑기 도박 결과 금 획득시
-        GambleCardRewardWater = 29, //  카드 뽑기 도박 결과 물 획득시
-        GambleCardRewardThunder = 30, //  카드 뽑기 도박 결과 번개 획득시
-        Revive = 31, //  부활 발동 시 
-
-        Max,
-    }
-
 
     // 트리거
     public enum Enum_TriggerType
@@ -126,72 +73,6 @@ namespace GameBerry
         Max,
     }
 
-    public enum Enum_TargetCheckType
-    {
-        Self = 11,
-        Friendly = 12,
-        Enemy = 13,
-        Mother = 14,
-
-        Max,
-    }
-
-    public enum Enum_TargetStateType
-    {
-        All = 11, //모든 상황에
-        HPPercentOver = 12, //현재 HP가 50% 이상
-        HPPercentBelow = 13, //현재 HP가 50% 미만
-        BossMonster = 14, //보스 몹에게
-        NormalMonster = 15, //일반 몹에게
-
-        Max,
-    }
-
-    // 대상탐색
-    public enum Enum_TargetConditionType
-    {
-        Range = 11,
-        RangeAll = 12,
-        HpHigh = 13,
-        HpLow = 14,
-        AtkHigh = 15,
-        Far = 16, // 먼
-        Near = 17, // 가까운
-
-        RangeNear = 20,
-
-        Max,
-    }
-
-    public enum Enum_PowerType
-    {
-        Stat = 11, // Stat값 파싱
-        Synergy = 12, // 시너지
-        Descend = 13, // 강림
-        Relic = 14, // 유물
-    }
-
-    public enum Enum_SynergyPowerType
-    {
-        LevelUpSynergy = 11, // 시너지 1 레벨업
-        GetCSynergyRune = 12, // C등급 룬 획득
-        GetBSynergyRune = 13, // B등급 룬 획득
-        GetASynergyRune = 14, // A등급 룬 획득
-        GetSSynergyRune = 15, // S등급 룬 획득
-    }
-
-    public enum Enum_RelicPowerType
-    {
-        GetRelic = 11, // 유물 최초 획득
-        LevelUpRelic = 12, // 유물 레벨업
-    }
-
-    public enum Enum_DescendPowerType
-    {
-        GetDescend = 11, // 강림 획득
-        LevelupDescend = 12, // 강림 레벨업
-    }
-
     // 대미지
     public enum Enum_DamageType
     {
@@ -206,97 +87,9 @@ namespace GameBerry
         Max,
     }
 
-    public enum Enum_SynergyType
-    {
-        Red = 11, // 공격형 증강체
-        Yellow = 12, // 자원형 증강체
-        Blue = 13, // 캐릭터 유틸 지원형 증강체
-        White = 14, // 적군 디버프형 증강체
-
-        Max,
-    }
-
-    public enum Enum_ARRR_TotalLevelType
-    {
-        BasicStat = 11, // 일반 스테이터스
-        SynergyUnlock = 12, // 시너지 레벨 해금
-        CardGradeLimitBreak = 13, // 할리갈리 결과 레벨업 GambleGradeProb값 파싱해서 확률안내
-        JokerLimitBreak = 14, // 조커 해금
-        DescendSlotOpen = 15, // 강림 슬롯 오픈
-    }
-
-    public enum Enum_DescendType
-    {
-        DescendSkill = 11, // 쿨타임마다 나와서 액티브 하는 형태
-        DescendPassive = 12, // 지속적으로 영향을 미치는 형태 (아바타 타입)
-
-        Max,
-    }
-
-    public enum Enum_MainSkillType
-    {
-        AddSkill = 11, // 새로운 겜블 스킬 추가
-        SkillEnforge = 12, // 특정 스킬 모듈 추가
-        AfterSkill = 13, // 특정 스킬 에프터 추가
-        AfterGroupSkill = 14, //특정 스킬 타입 에프터 추가 
-                              //(11:메인스킬 12:등급별스킬 13:모든 데미지스킬)
-
-        SkillEnforgeGroupSkill = 15, //특정 스킬 타입 에프터 추가 
-                              //(11:메인스킬 12:등급별스킬 13:모든 데미지스킬)
-        Max,
-    }
-
-    public enum Enum_GambleSlotType
-    {
-        SlotStat = 11, // 스테이터스 관련 슬롯
-        SlotValue = 12, // 수치 관련 슬롯
-
-        Max,
-    }
-
-    public enum Enum_GambleSlotGrade
-    {
-        One = 11, // 슬롯 숫자 1
-        Two = 12, // 슬롯 숫자 2
-        Three = 13, // 슬롯 숫자 3
-        Four = 14, // 슬롯 숫자 4
-        Five = 15, // 슬롯 숫자 5
-        Six = 16, // 슬롯 숫자 6
-
-        Max,
-    }
-
-
-    public enum Enum_GambleType
-    {
-        Card = 11, // 짝맞추기
-        Slot = 12, // 슬롯
-        Reinforcement = 13, // 강화 관련
-
-        Max,
-    }
-
-
-    public enum Enum_BattleSpeed
-    {
-        x1 = 11,
-        x1Dot5 = 12,
-        x2 = 13,
-        x3 = 14,
-        xHalf = 15,
-        Pause = 16,
-
-        Max,
-    }
-
-
-
-
-
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);
     public delegate void CallSendDamage(double damage);
     public delegate void RefreshOpenCondition(V2Enum_OpenConditionType v2Enum_OpenConditionType, int conditionValue);
-    public delegate void CallCharacterState(CharacterState characterState);
 
     public delegate void OnCallBack();
     public delegate void OnCallBack_Int(int intcallback);
@@ -341,24 +134,6 @@ namespace GameBerry
 
 
 
-
-
-
-    public enum V2Enum_OnlyStatDetailView
-    {
-        FinalAttack = 0,
-        FinalHP,
-        FinalDefence,
-        FinalCriticalDamage,
-        FinalSuperCriticalDamage,
-        FinalHyperCriticalDamage,
-
-        Max,
-    }
-
-    // 등급
-    
-
     // 재화
     public enum V2Enum_Goods
     {
@@ -398,31 +173,6 @@ namespace GameBerry
     {
         PackageTypeBox = 11,
         RandomTypeBox = 12,
-
-        Max,
-    }
-
-    public enum V2Enum_ResearchType
-    {
-        FireGambleLevel = 11, // 불 속성 뽑기 레벨
-        GoldGambleLevel = 12, // 금 속성 뽑기 레벨
-        WaterGambleLevel = 13, // 물 속성 뽑기 레벨
-        ThunderGambleLevel = 14, // 번개 속성 뽑기 레벨
-        Attack = 15, // 공격력
-        Hp = 16, // 체력
-        Defence = 17, // 방어력
-        StageRewardIncrease = 18, // 스테이지 보상량 증가 %
-        SkillCoolTimeReduce = 19, // 스킬 쿨타임 감소 %
-        DailyDia = 20, // 접속 시 매일 다이아 지급 // 사용안함
-        ResearchTimeReduce = 21, // 연구 시간 감소 %
-        WaveRewardIncrease = 22, // 웨이브 클리어 시 골드 지급
-        DungeonRewardIncrease = 23, // 던전 보상량 증가 %
-        GasHpIncrease = 24, // 진주 회복 회복량 증가 %
-        GasGambleIncrease = 25, // 진주 카드 뽑기 확률 증가 %
-        MissionRewardIncrease = 26, // 미션 보상량 증가 %
-        FreeGoodsCountIncrease = 27, // 무료 지급 연구 재화 개수 증가
-        FreeGoodsTimeDecrease = 28, // 무료 지급 연구 재화 인터벌 감소
-        FreeGoodsSaveIncrease = 29, // 무료 지급 연구 재화 최대치 증가
 
         Max,
     }
@@ -498,15 +248,6 @@ namespace GameBerry
         Max,
     }
 
-    public enum V2Enum_BuffEffectType
-    {
-        IncreaseStat = 11, // 공방체 증가 %
-        IncreaseReward = 12, // 스테이지 결과 보상 지급량 증가 %
-        IncreaseDungeonReward = 13, // 던전 결과 보상 지급량 증가 %
-
-        Max,
-    }
-
     public enum V2Enum_ContentType
     {
         AdBuff = 11, // 광고버프
@@ -559,28 +300,6 @@ namespace GameBerry
         Custom = 17, // 커스텀 (이벤트 등 버전 관리 목적용)
     }
 
-    public enum V2Enum_TargetType
-    {
-        Character = 11,
-        Ally = 12,
-        Monster = 13,
-        CharacterAndAlly = 14,
-    }
-
-    // 속성
-    public enum V2Enum_ElementType
-    {
-        None = 11,
-        Light = 12,
-        Darkness = 13,
-        Water = 14,
-        Fire = 15,
-        Grass = 16,
-
-        Max,
-    }
-
-
     // 군중제어
     public enum V2Enum_SkillEffectType
     {
@@ -592,62 +311,6 @@ namespace GameBerry
         IncreaseArmor = 15, // 방어력 증가 %
 
 
-
-        // 완료
-        IncreaseMoveSpeed = 16, //이동속도 증가 %
-        KillingMoney = 17, //적 처치 시 1골드 획득
-        DoubleInterest = 18, //이자 획득 시 2배 획득
-        SkillCooltimeReduce = 19, //스킬 쿨타임 %만큼 상시 감소
-        Revive = 20, //부활 (Value 로 부활 시 HP제어)
-        GoldIncreaseAtt = 21, //보유 골드의 일정 %만큼 공격력 증가
-        GoldIncreaseArmor = 22, //보유 골드의 일정 %만큼 방어력 증가
-        DecreaseAtt = 23, //공격력 감소 %
-        DecreaseArmor = 24, //방어력 감소 %
-        GoldGainTimer = 25, //10초 마다 추가 골드 획득 Value 1만당 1골드획득
-        WasteGoldBuff = 26, //소모 골드량에 비례하여 공방 버프
-
-        EarnInterest = 27, //이자 획득 (스킬 시전 시 보유 금액의 10% / Value 100만당 맥시멈 획득 골드량)
-        IncreaseHp = 28, //생명력 증가 %
-        RandomSynergyGain = 29, //랜덤한 시너지 게이지 획득 (Value 100만당 1개 획득)
-        GetSameSynergy = 30, //뽑기 결과에서 획득한 동일한 시너지를 Value 만큼 획득함
-        GetGas = 31, //Value 만큼의 가스 획득
-        IncreaseGasGambleProb = 32, //Value 1만당 가스 도박 성공확률 1% 증가
-        MinorJoker = 33, //"조커 카드 효과 (4개 시너지 중 1개 획득) Value 에 맞춰서 결과에서 얻을 수 있는 시너지 카운트 제어"
-        IncreaseGasHpHeal = 34, //Value 1만당 가스 HP 회복률 1% 증가
-        IncreaseJokerProb = 35, //조커 카드 등장 확률 증가 (Value 1만당 1% 상승)
-        DecreaseGamblePrice = 36, //카드 뽑기 시행 비용 감소 (1만당 1% 감소 / 소숫점 올림처리)
-
-        GetSynergyFire = 37, //불 속성 시너지 획득 (Value 100만당 1)
-        GetSynergyGold = 38, //금 속성 시너지 획득 (Value 100만당 1)
-        GetSynergyWater = 39, //물 속성 시너지 획득 (Value 100만당 1)
-        GetSynergyThunder = 40, //번개 속성 시너지 획득 (Value 100만당 1)
-        ReduceSynergyFire = 41, //불 시너지 요구 조건 감소 (Value 100만당 1)
-        ReduceSynergyGold = 42, //금 시너지 요구 조건 감소 (Value 100만당 1)
-        ReduceSynergyWater = 43, //물 시너지 요구 조건 감소 (Value 100만당 1)
-        ReduceSynergyThunder = 44, //번개 시너지 요구 조건 감소 (Value 100만당 1)
-        ReduceDescendExp = 45, //모든 속성타입 시너지 요구 조건 감소 (Value 100만당 1)
-        // 완료
-
-        IncreaseInterestRate = 46, //이자 획득 비율 증가
-        IncreaseSynergyCount = 47, //속성 뽑기 결과 카운트 +1
-
-        IncreaseAttFireCount = 48, //불 시너지 개수 비례 공격력 % 증가
-        IncreaseAttGoldCount = 49, //금 시너지 개수 비례 공격력 % 증가
-        IncreaseAttWaterCount = 50, //물 시너지 개수 비례 공격력 % 증가
-        IncreaseAttThunderCount = 51, //번개 시너지 개수 비례 공격력 % 증가
-
-        IncreaseDefFireCount = 52, //불 시너지 개수 비례 방어력 % 증가
-        IncreaseDefGoldCount = 53, //금 시너지 개수 비례 방어력 % 증가
-        IncreaseDefWaterCount = 54, //물 시너지 개수 비례 방어력 % 증가
-        IncreaseDefThunderCount = 55, //번개 시너지 개수 비례 방어력 % 증가
-
-        IncreaseHpFireCount = 56, //불 시너지 개수 비례 생명력 % 증가
-        IncreaseHpGoldCount = 57, //금 시너지 개수 비례 생명력 % 증가
-        IncreaseHpWaterCount = 58, //물 시너지 개수 비례 생명력 % 증가
-        IncreaseHpThunderCount = 59, //번개 시너지 개수 비례 생명력 % 증가
-
-        GetDescendGoods = 60, //Value 만큼의 강림 강화 재료 획득
-        IncreaseHealEffect = 61, //회복효과 % 증가
 
         Stun = 1001, // 스턴(이동, 평타, 스킬 모두 불능)      있던거
         Silence = 1002, // 침묵 (스킬 불능)      있던거
@@ -665,32 +328,10 @@ namespace GameBerry
         AdditionalDmg = 2003, // 추가데미지 %
 
         // 완료
-        ResetUsedSkillCooltime = 2004, //사용한 스킬 쿨타임 초기화
-        RandomSkillCooltimeDecrease = 2005, //랜덤한 메인 캐릭터 스킬 쿨타임 감소(1당 1초)
-        VampiricDmg = 2006, //피해량에 비례한 HP 회복
         Heal = 2007, //공격력에 비례한 HP 즉시 회복
         DotHeal = 2008, //공격력에 비례한 HP를 0.5초마다 회복 (Duration 만큼 지속)
         Death = 2009, //일정 HP 이하 적 즉사(Value로 % 수치 제어)
         // 완료
-
-        Shield = 2010, //HP %에 비례한 방어막 생성
-        DamageBoost = 2011, //데미지 증폭 (1만당 1%, 최종계산식에서 곱해지는 형태)
-        DamageReduce = 2012, //데미지 경감 (1만당 1%, 최종 피해량에서 곱해지는 형태)
-
-        VampiricDmgFire = 2013, // 불 시너지 개수 비례 흡혈효과
-        VampiricDmgGold = 2014, // 금 시너지 개수 비례 흡혈효과
-        VampiricDmgWater = 2015, // 물 시너지 개수 비례 흡혈효과
-        VampiricDmgThunder = 2016, // 번개 시너지 개수 비례 흡혈효과
-
-        SheildFireCount = 2017, // 불 시너지 개수 비례 방어막 생성 %
-        SheildGoldCount = 2018, // 금 시너지 개수 비례 방어막 생성 %
-        SheildWaterCount = 2019, // 물 시너지 개수 비례 방어막 생성 %
-        SheildThunderCount = 2020, // 번개 시너지 개수 비례 방어막 생성 %
-
-        DescendDmgFireCount = 2021, // 불 시너지 개수 비례 강림 피해량 증가
-        DescendDmgGoldCount = 2022, // 금 시너지 개수 비례 강림 피해량 증가
-        DescendDmgWaterCount = 2023, // 물 시너지 개수 비례 강림 피해량 증가
-        DescendDmgThunderCount = 2024, // 번개 시너지 개수 비례 강림 피해량 증가
 
         Max,
     }
@@ -1230,93 +871,6 @@ namespace GameBerry
 
 
         Notice = 99000,
-    }
-
-    public struct V2SkillAttackData
-    {
-        public V2DamageData DamageData;
-        public List<V2CCData> CcDatas;
-
-        public SkillBaseData skillBaseData;
-        public CharacterControllerBase characterControllerBase;
-        public Vector3 HitPos;
-        public int HitCount;
-
-        public List<V2CCData> SelfEffecter;
-
-        public List<V2CCData> AddDamageEffecter;
-
-        public List<V2CCData> DeadEffecter;
-
-        public List<V2CCData> VampiricDmgEffecter;
-
-        public double criticalChance;
-        public IFFType actorType;
-
-        public double DamageBoost;
-
-        public bool IsMain;
-
-        public bool IsAfter;
-    }
-
-    public struct V2DamageData
-    {
-        public double AttackValue;
-        public double SkillValue;
-    }
-
-    public struct V2CCData
-    {
-        public V2Enum_SkillEffectType CCTypeEnum;
-
-        public Enum_TargetStateType TargetCondition;
-
-        public float CCTime;
-        public double CCValue;
-        public double CCProb;
-
-        public Vector3 AttackerPos;
-    }
-
-    public struct ARR_CardGambleResultData
-    {
-        public V2Enum_Grade Fake_GambleGrade;
-        public V2Enum_Grade V2Enum_Grade;
-
-        public ARR_CardGambleData[] FinalSkillData;
-    }
-
-    public struct SynergyViewDirectionOrderData
-    {
-        public Enum_SynergyType Enum_SynergyType;
-        public Vector3 startpos;
-        public ARR_CardGambleData gambleSkillData;
-
-        public SynergyEffectData beforeData;
-        public int beforeStack;
-        public SynergyEffectData afterData;
-        public int afterStack;
-
-        public int DescendEnhance;
-    }
-
-    public class ARR_CardGambleData
-    {
-        public V2Enum_Grade SynergyGrade;
-        public ObscuredInt SynergyStack;
-        public Enum_SynergyType SynergyType;
-    }
-
-    public enum V2Enum_ObjectType
-    {
-        ObjectCombat = 11,
-        ObjectReward = 12,
-        ObjectBonus = 13,
-        ObjectBuff = 14,
-        ObjectNerf = 15,
-
-        Max,
     }
 
     public enum V2Enum_ReportType

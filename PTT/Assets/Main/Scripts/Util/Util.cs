@@ -723,32 +723,6 @@ namespace GameBerry
                 return converted;
         }
 
-        public static string GetAddStatPrintValue(double value, CharacterBaseStatData statdata)
-        {
-            double statvalue = GetPrintStatValue(value, statdata);
-
-            if (statdata.VisibleType == V2Enum_PrintType.Percent)
-                return string.Format("+{0:#,0.##}%", statvalue);
-            
-            return string.Format("+{0:#,0.##}", statvalue);
-        }
-
-        public static string GetPercentPrintValue(double value)
-        {
-            double statvalue = value * Define.PerStatPrintRecoverValue;
-
-            return string.Format("+{0:#,0.##}%", statvalue);
-        }
-
-        public static double GetPrintStatValue(double value, CharacterBaseStatData statdata)
-        {
-            double printValue = value;
-
-            if (statdata.VisibleType == V2Enum_PrintType.Percent)
-                printValue = value * Define.PerStatPrintRecoverValue;
-
-            return printValue;
-        }
 
         static Vector2 CoinFlipDistance = new Vector2(1.5f, 2.2f);
         static int _coinFloorCheckCount = 50;

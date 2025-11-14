@@ -55,29 +55,25 @@ namespace GameBerry.Contents
 
             // 로딩 카운트 버그 방지를 위해 LoadTableList로 변경
 
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerPointTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerARRRInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerStaminaInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerJobInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerVipPackageInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerSynergyInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerDescendInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerSynergyRuneInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerRelicInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerMapInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerTimeinfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerTimeAttackMissionInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerQuestInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerAdBuffinfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerShopInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerShopRandomStoreInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerPassInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerRankTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerGearInfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerSkillinfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerResearchinfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerSummoninfoTableData);
-            LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerDungeonInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerPointTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerARRRInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerStaminaInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerJobInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerVipPackageInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerMapInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerTimeinfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerTimeAttackMissionInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerQuestInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerAdBuffinfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerShopInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerShopRandomStoreInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerPassInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerRankTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerGearInfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerSkillinfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerResearchinfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerSummoninfoTableData);
+            //LoadTable.Add(TheBackEnd.TheBackEndManager.Instance.GetPlayerDungeonInfoTableData);
 
             for (int i = 0; i < LoadTable.Count; ++i)
                 LoadTable[i]?.Invoke();
@@ -118,7 +114,6 @@ namespace GameBerry.Contents
             //    Managers.CharacterStatManager.Instance.SetDefaultStatValue(m_characterBaseStatDatas[i].BaseStat, m_characterBaseStatDatas[i].BaseValue);
             //}
 
-            PlayerDataContainer.PlayerName = TheBackEnd.TheBackEndManager.Instance.GetNickPlayerName();
 
             string tableLoadLocalString = Managers.LocalStringManager.Instance.GetLocalString("title/user");
 
@@ -144,35 +139,7 @@ namespace GameBerry.Contents
 
             Managers.TimeManager.Instance.InitTimeContent();
 
-            Managers.ResearchManager.Instance.InitResearchContent();
-            Managers.SummonManager.Instance.InitSummonContent();
-            Managers.AdBuffManager.Instance.InitAdBuffContent();
-            Managers.PostManager.Instance.InitPostContent();
-            Managers.ShopManager.Instance.InitShopContent();
-            Managers.ShopPostManager.Instance.InitShopPostContent();
-            Managers.ShopRandomStoreManager.Instance.InitShopRandomStoreContent();
-            Managers.QuestManager.Instance.InitQuestContent();
-
             Managers.NoticeManager.Instance.InitNoticeContent();
-
-            Managers.DungeonDataManager.Instance.InitDungeonDataContent();
-
-            Managers.CreatureManager.Instance.InitCreatureContent();
-            Managers.ARRRManager.Instance.InitCreatureContent();
-            Managers.StaminaManager.Instance.InitStaminaRpg();
-            Managers.ARRRSkillManager.Instance.InitARRRSkillContent();
-            Managers.ARRRStatManager.Instance.InitARRRStatContent();
-            Managers.PetManager.Instance.InitCreatureContent();
-            Managers.MapManager.Instance.InitMapContent();
-            Managers.GambleManager.Instance.InitGambleContent();
-            Managers.SynergyManager.Instance.InitSynergyContent();
-            Managers.DescendManager.Instance.InitDescendContent();
-            Managers.SynergyRuneManager.Instance.InitSynergyRuneContent();
-            Managers.GearManager.Instance.InitSynergyRuneContent();
-            Managers.RelicManager.Instance.InitRelicContent();
-            Managers.TimeAttackMissionManager.Instance.InitTimeAttackMissionContent();
-            Managers.VipPackageManager.Instance.InitVipPackageContent();
-            Managers.JobManager.Instance.InitJobContent();
 
             m_setNoticeMsg.NoticeStr = Managers.LocalStringManager.Instance.GetLocalString("common/gameLoading");
 

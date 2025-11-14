@@ -93,11 +93,10 @@ namespace GameBerry.Managers
 // 푸쉬 때문에 함수 추가. 토큰 받아오면 좋은거고 안되면 말고...
             StartCoroutine(RequestAuthorization());
 #endif
-
-            if (!completeAppInit)
-                StartCoroutine(InitializeApp());
-            else
+            TableManager.Instance.LoadDeviceLocalString(() =>
+            {
                 LoadStartScene();
+            }).Forget();
         }
         //------------------------------------------------------------------------------------
         void LoadStartScene()
@@ -150,23 +149,23 @@ namespace GameBerry.Managers
 #endregion
         //------------------------------------------------------------------------------------
         // 혹시라도 yield return StartCoroutine 사용해서 싱글톤 초기화를 할 수 있기 때문에 IEnumerator로 냅둠
-        IEnumerator InitializeApp()
-        {
-            bool completeString = false;
+        //IEnumerator InitializeApp()
+        //{
+        //    bool completeString = false;
 
-            // 디바이스에 있는 스트링만 로드하자
-            TableManager.Instance.LoadDeviceLocalString(() =>
-            {
-                completeString = true;
-            }).Forget();
+        //    // 디바이스에 있는 스트링만 로드하자
+        //    TableManager.Instance.LoadDeviceLocalString(() =>
+        //    {
+        //        completeString = true;
+        //    }).Forget();
 
-            while (completeString == false)
-                yield return null;
+        //    while (completeString == false)
+        //        yield return null;
 
-            completeAppInit = true;
+        //    completeAppInit = true;
 
-            LoadStartScene();
-        }
+        //    LoadStartScene();
+        //}
         //------------------------------------------------------------------------------------
         GameObject GetRoot(Constants.SceneName sceneName)
         {

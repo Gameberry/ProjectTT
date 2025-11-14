@@ -58,40 +58,6 @@ namespace GameBerry.Managers
 
 
 
-            AddTable(new CharacterLocalTable());
-
-            AddTable(new DefineLocalTable());
-            AddTable(new GambleLocalTable());
-            AddTable(new SynergyLocalTable());
-            AddTable(new DescendLocalTable());
-            AddTable(new RelicLocalTable());
-
-            AddTable(new MapLocalTable());
-            AddTable(new CreatureLocalTable());
-            AddTable(new MonsterSetLocalTable());
-            AddTable(new PetLocalTable());
-            AddTable(new SkillLocalTable());
-            AddTable(new StackableLocalTable());
-
-            AddTable(new SummonLocalTable());
-
-            AddTable(new QuestLocalTable());
-            AddTable(new TimeAttackMissionLocalTable());
-
-            AddTable(new ContentUnlockLocalTable());
-
-            AddTable(new PassLocalTable());
-            AddTable(new ShopLocalTable());
-            AddTable(new ShopRandomStoreLocalTable());
-
-            AddTable(new AdBuffLocalTable());
-            AddTable(new VipPackageLocalTable());
-
-            AddTable(new SynergyRuneLocalTable());
-            AddTable(new ResearchLocalTable());
-            AddTable(new GearLocalTable());
-            AddTable(new JobLocalTable());
-
             //AddTable(new GuideQuestLocalTable());
             //AddTable(new StageAutoGenLocalTable());
             //AddTable(new CharacterSkillLocalTable());
@@ -106,10 +72,7 @@ namespace GameBerry.Managers
             //AddTable(new TrialTowerLocalTable());
 
             //AddTable(new TraitLocalTable());
-            AddTable(new DungeonLocalTable());
 
-
-            AddTable(new DiamondDungeonLocalTable());
             //AddTable(new MasteryDungeonLocalTable());
             //AddTable(new GoldDungeonLocalTable());
             //AddTable(new SoulStoneDungeonLocalTable());

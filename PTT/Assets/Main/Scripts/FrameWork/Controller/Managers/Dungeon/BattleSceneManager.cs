@@ -19,8 +19,8 @@ namespace GameBerry.Managers
 
         public Enum_Dungeon _prevBattleType = Enum_Dungeon.None;
 
-        private BGManager _bgManager = null;
-        public BGManager CurrentBgManager { get { return _bgManager; } }
+        private GameObject _bgManager = null;
+        public GameObject CurrentBgManager { get { return _bgManager; } }
 
         private string m_lastBGName = string.Empty;
 
@@ -39,7 +39,6 @@ namespace GameBerry.Managers
         public float releaseCraeturePosTime = 1.0f;
 
         public GameBerry.Event.RefreshBattleSceneUIMsg _refreshBattleSceneUIMsg = new Event.RefreshBattleSceneUIMsg();
-        public GameBerry.Event.RefreshBattleSpeedMsg _refreshBattleSpeedMsg = new Event.RefreshBattleSpeedMsg();
         private Event.VisibleDungeonExitPopupMsg m_visibleDungeonExitPopupMsg = new Event.VisibleDungeonExitPopupMsg();
 
         protected override void Init()
@@ -51,15 +50,12 @@ namespace GameBerry.Managers
                     _battleSceneCamera = clone.GetComponent<BattleSceneCamera>();
             });
 
-            //SetBGIndex(0);
+            SetBGIndex(0);
         }
         //------------------------------------------------------------------------------------
         public void InitBattleScene()
         {
-            AddBattleScene(Enum_Dungeon.LobbyScene, new Battle_LobbyScene());
-            AddBattleScene(Enum_Dungeon.StageScene, new Battle_StageScene());
-            AddBattleScene(Enum_Dungeon.DiamondDungeon, new Battle_DiaDungeonScene());
-            AddBattleScene(Enum_Dungeon.TowerDungeon, new Battle_DiaDungeonScene());
+            AddBattleScene(Enum_Dungeon.StageScene, new BattleScene_Stage());
 
             foreach (var pair in _battleScene_Dic)
             {
@@ -83,40 +79,12 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         private void Update()
         {
-            if (_currentBattleScene != null)
-                _currentBattleScene.Updated();
-
-#if DEV_DEFINE
-            if (Managers.SceneManager.Instance.BuildElement == BuildEnvironmentEnum.Develop)
-            {
-                if (Input.GetKeyUp(KeyCode.Minus))
-                    ChangeBattleScene(Enum_Dungeon.LobbyScene);
-
-                if (Input.GetKeyUp(KeyCode.Plus))
-                    ChangeBattleScene(Enum_Dungeon.StageScene);
-
-                if (Input.GetKeyUp(KeyCode.KeypadPlus))
-                {
-                    Time.timeScale += 1.0f;
-                }
-
-                if (Input.GetKeyUp(KeyCode.KeypadMinus))
-                {
-                    Time.timeScale -= 0.5f;
-                }
-
-                if (Input.GetKeyUp(KeyCode.KeypadEnter))
-                {
-                    Time.timeScale = 1.0f;
-                }
-            }
-#endif
+            _currentBattleScene?.Updated();
         }
         //------------------------------------------------------------------------------------
         private void LateUpdate()
         {
-            if (_currentBattleScene != null)
-                _currentBattleScene.LateUpdated();
+            _currentBattleScene?.LateUpdated();
         }
         //------------------------------------------------------------------------------------
         private bool doChanged = false;
@@ -143,18 +111,8 @@ namespace GameBerry.Managers
             Contents.GlobalContent.DoFade(false, 0.5f);
             await UniTask.Delay(500);
 
-            if (_currentBattleScene != null)
-                _currentBattleScene.ReleaseBattleScene();
-
-            ChangeTimeScale(Enum_BattleSpeed.x1);
-
+            _currentBattleScene?.ReleaseBattleScene();
             _currentBattleScene = _battleScene_Dic[_currentBattleType];
-            if (Define.IsSpeedUpMode == false)
-            {
-                if (_currentBattleScene.BattleSpeedType == Enum_BattleSpeed.x2
-                    || _currentBattleScene.BattleSpeedType == Enum_BattleSpeed.x3)
-                    _currentBattleScene.ChangeBattleSpeed(Enum_BattleSpeed.x1);
-            }
 
             await UniTask.Delay(500);
 
@@ -162,7 +120,7 @@ namespace GameBerry.Managers
 
             ResetCameraPos();
 
-            _currentBattleScene.SetBattleScene();
+            _currentBattleScene?.SetBattleScene();
             
             Message.Send(_refreshBattleSceneUIMsg);
 
@@ -175,12 +133,6 @@ namespace GameBerry.Managers
         {
             if (doChanged == true)
                 return;
-
-            if (BattleType == Enum_Dungeon.StageScene && Managers.MapManager.Instance.NeedTutotial1() == true)
-                return;
-
-            //if (BattleType == Enum_BattleType.StageScene && Managers.MapManager.Instance.NeedTutotial2() == true)
-            //    return;
 
             m_visibleDungeonExitPopupMsg.Visible = visible;
 
@@ -214,12 +166,6 @@ namespace GameBerry.Managers
                 if (_bgManager != null)
                     Destroy(_bgManager.gameObject);
 
-                _bgManager = clone.GetComponent<BGManager>();
-                if (_bgManager != null)
-                {
-                    _bgManager.SetFocusTransform(_battleSceneCamera.transform);
-                }
-
                 m_lastBGName = mapName;
             }
         }
@@ -244,164 +190,16 @@ namespace GameBerry.Managers
         {
             if(_bgManager == null)
                 SelectMap("BattleScene/MapResources/Map_Coast", "Map_Coast_Aurora_1");
-
-            if (_bgManager != null)
-                _bgManager.ShowBGIndex(index);
         }
         //------------------------------------------------------------------------------------
-        public float GetCreatureLimitLine()
+        public void DeadPlayer(PlayerController playerController)
         {
-            if (_currentBattleScene == null)
-                return -1;
-
-            return _currentBattleScene.CreatureLimitLine;
+            _currentBattleScene?.DeadPlayer(playerController);
         }
         //------------------------------------------------------------------------------------
-        public Enum_BattleSpeed CurrentBattleSpeed()
+        public void DeadMonster(MonsterController monsterController)
         {
-            if (_currentBattleScene != null)
-                return _currentBattleScene.BattleSpeedType;
-
-            return Enum_BattleSpeed.x1;
-        }
-        //------------------------------------------------------------------------------------
-        public void ChangeTimeScale(Enum_BattleSpeed Enum_BattleSpeed)
-        {
-            switch (Enum_BattleSpeed)
-            {
-                case Enum_BattleSpeed.x1:
-                    Time.timeScale = 1.0f;
-                    break;
-                case Enum_BattleSpeed.x1Dot5:
-                    Time.timeScale = 1.5f;
-                    break;
-                case Enum_BattleSpeed.x2:
-                    Time.timeScale = 2.0f;
-                    break;
-                case Enum_BattleSpeed.x3:
-                    Time.timeScale = 3.0f;
-                    break;
-                case Enum_BattleSpeed.xHalf:
-                    Time.timeScale = 0.5f;
-                    break;
-                case Enum_BattleSpeed.Pause:
-                    Time.timeScale = 0.0f;
-                    break;
-                default:
-                    Time.timeScale = 1.0f;
-                    break;
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public void ChangeBattleSpeed_UI()
-        { // UI 에서 바꾸는건 토글 방식으로만 바꿔준다.
-            Enum_BattleSpeed Enum_BattleSpeed = Enum_BattleSpeed.x1;
-
-            if (_currentBattleScene != null)
-            {
-                switch (_currentBattleScene.BattleSpeedType)
-                {
-                    case Enum_BattleSpeed.x1:
-                        Enum_BattleSpeed = Enum_BattleSpeed.x1Dot5;
-                        break;
-                    case Enum_BattleSpeed.x1Dot5:
-                        if (Define.IsSpeedUpMode == true)
-                            Enum_BattleSpeed = Enum_BattleSpeed.x2;
-                        else
-                            Enum_BattleSpeed = Enum_BattleSpeed.x1;
-                        break;
-                    case Enum_BattleSpeed.x2:
-#if DEV_DEFINE
-                        Enum_BattleSpeed = Enum_BattleSpeed.x3;
-#else
-                        Enum_BattleSpeed = Enum_BattleSpeed.x1;
-#endif
-                        break;
-                    case Enum_BattleSpeed.x3:
-                        Enum_BattleSpeed = Enum_BattleSpeed.x1;
-                        break;
-                }
-            }
-
-            _currentBattleScene.ChangeBattleSpeed(Enum_BattleSpeed);
-
-            ThirdPartyLog.Instance.SendLog_log_playmode(Enum_BattleSpeed);
-
-            Message.Send(_refreshBattleSpeedMsg);
-        }
-        //------------------------------------------------------------------------------------
-        public void ChangeOriginBattleSpeed()
-        {
-            if (_currentBattleScene != null)
-            {
-                ChangeTimeScale(_currentBattleScene.BattleSpeedType);
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public void CallDeadCreature(CreatureController creatureController)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.CallDeadCreature(creatureController);
-        }
-        //------------------------------------------------------------------------------------
-        public void CallReleaseCreature(CreatureController creatureController)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.CallReleaseCreature(creatureController);
-        }
-        //------------------------------------------------------------------------------------
-        public void CallDeadARRR(ARRRController creatureController)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.CallDeadARRR(creatureController);
-        }
-        //------------------------------------------------------------------------------------
-        public void CallReleaseARRR(ARRRController creatureController)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.CallReleaseARRR(creatureController);
-        }
-        //------------------------------------------------------------------------------------
-        public void RefreshMyARRRStat()
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.RefreshMyARRRControllerStat();
-        }
-        //------------------------------------------------------------------------------------
-        public void AddMyARRRBuff(V2Enum_Stat v2Enum_Stat, ObscuredDouble buffValue)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.AddMyARRRBuff(v2Enum_Stat, buffValue);
-        }
-        //------------------------------------------------------------------------------------
-        public void SetBuff(SkillManageInfo skillManageInfo, IFFType iFFType)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.SetBuff(skillManageInfo, iFFType, true);
-        }
-        //------------------------------------------------------------------------------------
-        public void ReleaseBuff(SkillManageInfo skillManageInfo, IFFType iFFType)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.SetBuff(skillManageInfo, iFFType, false);
-        }
-        //------------------------------------------------------------------------------------
-        public void AddGambleSkill(MainSkillData gambleSkillData, Enum_SynergyType Enum_SynergyType = Enum_SynergyType.Max, SkillInfo skillInfo = null)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.AddGambleSkill(gambleSkillData, Enum_SynergyType, skillInfo);
-        }
-        //------------------------------------------------------------------------------------
-        public void AddPet(PetData petData, SkillInfo skillInfo = null)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.AddPet(petData, skillInfo);
-        }
-        //------------------------------------------------------------------------------------
-        public void AddPetAfterSkill(PetData petData, MainSkillData gambleSkillData, SkillInfo skillInfo = null)
-        {
-            if (_currentBattleScene != null)
-                _currentBattleScene.AddPetAfterSkill(petData, gambleSkillData, skillInfo);
+            _currentBattleScene?.DeadMonster(monsterController);
         }
         //------------------------------------------------------------------------------------
     }
