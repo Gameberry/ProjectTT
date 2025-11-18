@@ -69,7 +69,7 @@ namespace GameBerry
         None = 0,
         Circle = 11,
         Line = 12,
-
+        Sector = 13, // ∫Œ√§≤√
         Max,
     }
 
@@ -99,6 +99,7 @@ namespace GameBerry
         public int TargetCount;
 
         public Enum_AttackRangeType TargetAttackType;
+        public float HitAngle;
 
         public float Cooltime = 1.0f;
         public float NextPlayTime = 0.0f;
