@@ -67,7 +67,7 @@ namespace GameBerry.Managers
 
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = -1;
 
             Input.multiTouchEnabled = false;
             _inSettingsScenes = new List<GameObject>();
