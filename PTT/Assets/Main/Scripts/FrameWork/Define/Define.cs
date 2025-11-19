@@ -103,6 +103,8 @@ namespace GameBerry
 
         public float Cooltime = 1.0f;
         public float NextPlayTime = 0.0f;
+
+        public float MeleeAttackDelay = 0.1f;
     }
 
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);

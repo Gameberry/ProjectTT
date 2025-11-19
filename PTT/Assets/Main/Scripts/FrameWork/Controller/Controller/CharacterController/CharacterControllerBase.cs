@@ -246,6 +246,26 @@ namespace GameBerry
                 return;
 
             _characterState = state;
+
+            switch (state)
+            {
+                case CharacterState.Attack:
+                    {
+                        _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterAttackSpeed);
+                        break;
+                    }
+                case CharacterState.Run:
+                    {
+                        _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterMoveSpeed);
+                        break;
+                    }
+                default:
+                    {
+                        _mySkeletonAnimationHandler?.SetAnimationSpeed(1);
+                        break;
+                    }
+            }
+
             PlayAnimation(state);
             if (state == CharacterState.Dead)
             {

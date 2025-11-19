@@ -50,7 +50,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -5097,7 +5097,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -10403,7 +10403,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -15282,17 +15282,22 @@ MonoBehaviour:
     HitAngle: 120
     Cooltime: 0.2
     NextPlayTime: 0
+    MeleeAttackDelay: 0.1
   _criticalAttackData:
     ResourceIndex: 4
     Hitter: {fileID: 0}
     DamageRate: 4
     AttackRange: 3
-    HitRange: 3
+    HitRange: 6
     TargetCount: 100
     TargetAttackType: 13
     HitAngle: 200
     Cooltime: 0.5
     NextPlayTime: 0
+    MeleeAttackDelay: 0.1
+  _attackDuration: 1
+  _attackDamageNormalTime: 0.5
+  _tempCritical: 0.5
   _skillDatas:
   - ResourceIndex: 1
     Hitter: {fileID: 0}
@@ -15302,8 +15307,9 @@ MonoBehaviour:
     TargetCount: 10
     TargetAttackType: 11
     HitAngle: 0
-    Cooltime: 5
+    Cooltime: 55555
     NextPlayTime: 0
+    MeleeAttackDelay: 0.1
   - ResourceIndex: 2
     Hitter: {fileID: 0}
     DamageRate: 5
@@ -15312,8 +15318,9 @@ MonoBehaviour:
     TargetCount: 1000
     TargetAttackType: 11
     HitAngle: 0
-    Cooltime: 7
+    Cooltime: 55555
     NextPlayTime: 0
+    MeleeAttackDelay: 0.1
 --- !u!114 &5437201128437125724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15699,7 +15706,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -20887,7 +20894,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -25796,7 +25803,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -30629,7 +30636,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:

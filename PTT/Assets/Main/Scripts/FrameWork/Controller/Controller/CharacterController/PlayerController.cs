@@ -22,6 +22,13 @@ namespace GameBerry
         [SerializeField]
         private AttackData _criticalAttackData = new AttackData();
 
+        [SerializeField]
+        private float _attackDuration = 0.5f;
+
+        [SerializeField][Range(0.0f, 1.0f)]
+        private float _attackDamageNormalTime = 0.5f;
+
+        [SerializeField]
         private float _tempCritical = 0.5f;
 
         [SerializeField]
@@ -146,25 +153,35 @@ namespace GameBerry
                 if (distance <= _attackData.AttackRange)
                 {
                     ChangeState(CharacterState.Attack);
-                    _attackTimming = Time.time + _attackData.Cooltime;
+                    float attackduration = _attackDuration / _characterAttackSpeed;
+                    float attackdelay = attackduration * _attackDamageNormalTime;
+                    _attackTimming = Time.time + attackduration;
+                    ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+
+                    if (Random.Range(0.0f, 1.0f) <= _tempCritical)
+                    {
+                        _criticalAttackData.MeleeAttackDelay = attackdelay;
+                        _skillPlayer.PlaySkill(_criticalAttackData, AttackTarget);
+                    }
+                    else
+                    {
+                        _attackData.MeleeAttackDelay = attackdelay;
+                        _skillPlayer.PlaySkill(_attackData, AttackTarget);
+                    }
                 }
             }
             else if (CharacterState == CharacterState.Attack)
             {
                 if (_attackTimming <= Time.time)
                 {
-                    if (AttackTarget != null)
-                    {
-                        ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                        if (Random.Range(0.0f, 1.0f) <= _tempCritical)
-                            _skillPlayer.PlaySkill(_criticalAttackData, AttackTarget);
-                        else
-                            _skillPlayer.PlaySkill(_attackData, AttackTarget);
-                        if (AttackTarget.IsDead)
-                            ChangeState(CharacterState.Idle);
-                        else
-                            _attackTimming = Time.time + _attackData.Cooltime;
-                    }
+                    ChangeState(CharacterState.Idle);
+                    //if (AttackTarget != null)
+                    //{
+                    //    if (AttackTarget.IsDead)
+                    //        ChangeState(CharacterState.Idle);
+                    //    else
+                    //        _attackTimming = Time.time + _attackData.Cooltime;
+                    //}
                 }
             }
         }
