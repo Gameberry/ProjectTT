@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameBerry
 {
-    public class SkillProjectilAction_PositionAttack : SkillProjectilAction
+    public class SkillProjectilAction_PositionAttack : SkillAction
     {
         [SerializeField]
         private Transform _shootObj;
@@ -69,7 +69,7 @@ namespace GameBerry
             Vector3 dirvec = TargetPos - MyPos;
             dirvec.Normalize();
 
-            transform.rotation = Quaternion.FromToRotation(Vector3.right, dirvec);
+            transform.rotation = Quaternion.FromToRotation(Vector3.left, dirvec);
 
             if (_speed == -1)
             {
@@ -116,7 +116,7 @@ namespace GameBerry
                 Vector3 dirvec = TargetPos - MyPos;
                 dirvec.Normalize();
 
-                transform.rotation = Quaternion.FromToRotation(Vector3.right, dirvec);
+                transform.rotation = Quaternion.FromToRotation(Vector3.left, dirvec);
 
                 transform.position += dirvec * _speed * Time.deltaTime;
             }

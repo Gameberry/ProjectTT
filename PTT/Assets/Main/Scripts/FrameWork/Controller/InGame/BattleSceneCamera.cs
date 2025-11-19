@@ -35,7 +35,7 @@ namespace GameBerry
 
 
 
-        Vector3 velocity = Vector3.zero;
+        Vector2 velocity = Vector2.zero;
 
         private void LateUpdate()
         {
@@ -48,12 +48,15 @@ namespace GameBerry
             if (Managers.BattleSceneManager.Instance.CurrentBattleScene.PlayerController == null)
                 return;
 
-            float xpos = Managers.BattleSceneManager.Instance.CurrentBattleScene.PlayerController.transform.position.x;
 
-            Vector3 cameraPos = Vector3.zero;
-            cameraPos.x = xpos + _focusMove_X;
+            //float xpos = Managers.BattleSceneManager.Instance.CurrentBattleScene.PlayerController.transform.position.x;
 
-            transform.position = Vector3.SmoothDamp(transform.position, cameraPos, ref velocity, _cameraSmoothTime);
+            //Vector3 cameraPos = Vector3.zero;
+            //cameraPos.x = xpos + _focusMove_X;
+
+            Vector2 pos = Managers.BattleSceneManager.Instance.CurrentBattleScene.PlayerController.transform.position;
+
+            transform.position = Vector2.SmoothDamp(transform.position, pos, ref velocity, _cameraSmoothTime);
 
 
         }

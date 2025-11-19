@@ -9,14 +9,8 @@ namespace GameBerry
     public class PlayerController : CharacterControllerBase
     {
         [SerializeField]
-        private SkillProjectilePlayer _projectilePlayer;
+        private SkillPlayer _skillPlayer;
 
-        [SerializeField]
-        private SkillMeleePlayer _meleePlayer;
-
-
-        [SerializeField]
-        private float attackRange = 3.0f;
 
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
         [SerializeField]
@@ -24,6 +18,11 @@ namespace GameBerry
 
         [SerializeField]
         private AttackData _attackData = new AttackData();
+
+        [SerializeField]
+        private AttackData _criticalAttackData = new AttackData();
+
+        private float _tempCritical = 0.5f;
 
         [SerializeField]
         private List<AttackData> _skillDatas = new List<AttackData>();
@@ -47,6 +46,7 @@ namespace GameBerry
         protected override void OnPlay()
         {
             _attackData.Hitter = this;
+            _criticalAttackData.Hitter = this;
 
             for (int i = 0; i < _skillDatas.Count; ++i)
             {
@@ -82,7 +82,7 @@ namespace GameBerry
                         float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                         if (distance <= attackData.AttackRange)
                         {
-                            _projectilePlayer.PlaySkill(attackData, _attackTarget);
+                            _skillPlayer.PlaySkill(attackData, _attackTarget);
                             attackData.NextPlayTime = Time.time + attackData.Cooltime;
                         }
                     }
@@ -143,7 +143,7 @@ namespace GameBerry
                 }
 
                 float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                if (distance <= attackRange)
+                if (distance <= _attackData.AttackRange)
                 {
                     ChangeState(CharacterState.Attack);
                     _attackTimming = Time.time + _attackData.Cooltime;
@@ -156,7 +156,10 @@ namespace GameBerry
                     if (AttackTarget != null)
                     {
                         ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                        _meleePlayer.PlaySkill(_attackData, AttackTarget);
+                        if (Random.Range(0.0f, 1.0f) <= _tempCritical)
+                            _skillPlayer.PlaySkill(_criticalAttackData, AttackTarget);
+                        else
+                            _skillPlayer.PlaySkill(_attackData, AttackTarget);
                         if (AttackTarget.IsDead)
                             ChangeState(CharacterState.Idle);
                         else

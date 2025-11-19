@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameBerry
 {
-    public class SkillProjectilAction_PositionAttack_SpawnPos : SkillProjectilAction
+    public class SkillProjectilAction_PositionAttack_SpawnPos : SkillAction
     {
         [SerializeField]
         private Transform _shootObj;

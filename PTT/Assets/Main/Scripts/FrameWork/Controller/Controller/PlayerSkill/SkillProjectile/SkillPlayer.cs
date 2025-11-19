@@ -7,21 +7,21 @@ using Cysharp.Threading.Tasks;
 namespace GameBerry
 {
     [System.Serializable]
-    public class SkillProjectileData
+    public class SkillObjData
     {
         public int Index;
 
         public Transform ProjectileRoot;
-        public SkillProjectilAction Projectile;
+        public SkillAction Projectile;
 
-        private Queue<SkillProjectilAction> _projectilePool = new Queue<SkillProjectilAction>();
+        private Queue<SkillAction> _projectilePool = new Queue<SkillAction>();
 
-        public SkillProjectilAction GetParticle()
+        public SkillAction GetParticle()
         {
             if (Projectile == null)
                 return null;
 
-            SkillProjectilAction skillProjectilAction;
+            SkillAction skillProjectilAction;
             if (_projectilePool.Count > 0)
             {
                 skillProjectilAction = _projectilePool.Dequeue();
@@ -30,7 +30,7 @@ namespace GameBerry
             {
                 GameObject clone = Object.Instantiate(Projectile.gameObject, ProjectileRoot);
                 clone.transform.localPosition = Projectile.gameObject.transform.localPosition;
-                skillProjectilAction = clone.GetComponent<SkillProjectilAction>();
+                skillProjectilAction = clone.GetComponent<SkillAction>();
 
                 skillProjectilAction.AddStopCallback(PoolParticle);
             }
@@ -43,7 +43,7 @@ namespace GameBerry
             return skillProjectilAction;
         }
 
-        private void PoolParticle(SkillProjectilAction skillProjectilAction)
+        private void PoolParticle(SkillAction skillProjectilAction)
         {
             if (skillProjectilAction == null)
                 return;
@@ -55,32 +55,47 @@ namespace GameBerry
         }
     }
 
-    public class SkillProjectilePlayer : MonoBehaviour
+    public class SkillPlayer : MonoBehaviour
     {
         public CharacterControllerBase CharacterControllerBase;
 
         [SerializeField]
-        private List<SkillProjectileData> _skillParticleDatas = new List<SkillProjectileData>();
+        private List<SkillObjData> _skillParticleDatas = new List<SkillObjData>();
 
         private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //비활성화시 취소처리
 
         public void PlaySkill(AttackData attackData, CharacterControllerBase target)
         {
-            PlaySkill(attackData, target.transform.position);
-        }
-
-        public void PlaySkill(AttackData attackData, Vector3 pos)
-        {
-            SkillProjectileData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.ResourceIndex);
+            SkillObjData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.ResourceIndex);
 
             if (skillParticleData == null)
                 return;
 
             //SkillProjectilAction particleSystem = skillParticleData.Particle;
-            SkillProjectilAction particleSystem = skillParticleData.GetParticle();
+            SkillAction particleSystem = skillParticleData.GetParticle();
+            if (particleSystem != null)
+            {
+                particleSystem.SetSkillTarget(target.transform.position);
+                particleSystem.SetSkillTarget(target);
+                particleSystem.SetSkillProjectilePlayer(this);
+                particleSystem.SetSkillManageInfo(attackData);
+                particleSystem.Play();
+            }
+        }
+
+        public void PlaySkill(AttackData attackData, Vector3 pos)
+        {
+            SkillObjData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.ResourceIndex);
+
+            if (skillParticleData == null)
+                return;
+
+            //SkillProjectilAction particleSystem = skillParticleData.Particle;
+            SkillAction particleSystem = skillParticleData.GetParticle();
             if (particleSystem != null)
             {
                 particleSystem.SetSkillTarget(pos);
+                particleSystem.SetSkillTarget(null);
                 particleSystem.SetSkillProjectilePlayer(this);
                 particleSystem.SetSkillManageInfo(attackData);
                 particleSystem.Play();

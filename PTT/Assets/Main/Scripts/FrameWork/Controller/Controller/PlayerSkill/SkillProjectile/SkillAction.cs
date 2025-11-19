@@ -4,29 +4,36 @@ using UnityEngine;
 
 namespace GameBerry
 {
-    public class SkillProjectilAction : MonoBehaviour
+    public class SkillAction : MonoBehaviour
     {
         protected Vector3 _targetPosition;
-        protected SkillProjectilePlayer _skillProjectilePlayer;
-        public System.Action<SkillProjectilAction> _stopCallBack;
+        protected SkillPlayer _skillProjectilePlayer;
+        public System.Action<SkillAction> _stopCallBack;
         protected AttackData _attackData;
+        protected CharacterControllerBase _target;
 
         public void SetSkillTarget(Vector3 pos)
         {
             _targetPosition = pos;
         }
 
-        public void SetSkillProjectilePlayer(SkillProjectilePlayer skillProjectilePlayer)
+        public void SetSkillProjectilePlayer(SkillPlayer skillProjectilePlayer)
         {
             _skillProjectilePlayer = skillProjectilePlayer;
         }
+
+        public void SetSkillTarget(CharacterControllerBase characterControllerBase)
+        {
+            _target = characterControllerBase;
+        }
+
 
         public void SetSkillManageInfo(AttackData attackData)
         {
             _attackData = attackData;
         }
 
-        public void AddStopCallback(System.Action<SkillProjectilAction> action)
+        public void AddStopCallback(System.Action<SkillAction> action)
         {
             _stopCallBack = action;
         }
