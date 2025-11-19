@@ -12,6 +12,10 @@ namespace GameBerry
         private SkillProjectilePlayer _projectilePlayer;
 
         [SerializeField]
+        private SkillMeleePlayer _meleePlayer;
+
+
+        [SerializeField]
         private float attackRange = 3.0f;
 
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
@@ -65,12 +69,29 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void Updated()
         {
+            if (CharacterState == CharacterState.Dead)
+                return;
+
+            for (int i = 0; i < _skillDatas.Count; ++i)
+            {
+                AttackData attackData = _skillDatas[i];
+                if (attackData.NextPlayTime <= Time.time)
+                {
+                    if (_attackTarget != null && _attackTarget.IsDead != true)
+                    {
+                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                        if (distance <= attackData.AttackRange)
+                        {
+                            _projectilePlayer.PlaySkill(attackData, _attackTarget);
+                            attackData.NextPlayTime = Time.time + attackData.Cooltime;
+                        }
+                    }
+                }
+            }
 
 #if DEV_DEFINE
             _useCustomDirVec = false;
             _customDieVec = Vector3.zero;
-
-
 
             if (Input.GetKey(KeyCode.W))
             {
@@ -104,63 +125,42 @@ namespace GameBerry
             }
 #endif
 
-            if (CharacterState != CharacterState.Dead)
+            if (CharacterState == CharacterState.Idle || CharacterState == CharacterState.Run)
             {
-                for (int i = 0; i < _skillDatas.Count; ++i)
+                if (_attackTarget == null || _attackTarget.IsDead == true)
                 {
-                    AttackData attackData = _skillDatas[i];
-                    if (attackData.NextPlayTime <= Time.time)
-                    {
-                        if (_attackTarget != null && _attackTarget.IsDead != true)
-                        { 
-                            float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                            if (distance <= attackData.AttackRange)
-                            {
-                                _projectilePlayer.PlayProjectile(attackData, _attackTarget);
-                                attackData.NextPlayTime = Time.time + attackData.Cooltime;
-                            }
-                        }
-                    }
+                    SetNewTarget();
                 }
 
-                if (CharacterState == CharacterState.Idle || CharacterState == CharacterState.Run)
+                if (_attackTarget != null)
                 {
-                    if (_attackTarget == null || _attackTarget.IsDead == true)
-                    {
-                        SetNewTarget();
-                    }
-
-                    if (_attackTarget != null)
-                    {
-                        ChangeState(CharacterState.Run);
-                    }
-                    else
-                    {
-                        ChangeState(CharacterState.Idle);
-                        return;
-                    }
-
-                    float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                    if (distance <= attackRange)
-                    {
-                        ChangeState(CharacterState.Attack);
-                        _attackTimming = Time.time + _attackData.Cooltime;
-                    }
+                    ChangeState(CharacterState.Run);
                 }
-                else if (CharacterState == CharacterState.Attack)
+                else
                 {
-                    if (_attackTimming <= Time.time)
+                    ChangeState(CharacterState.Idle);
+                    return;
+                }
+
+                float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                if (distance <= attackRange)
+                {
+                    ChangeState(CharacterState.Attack);
+                    _attackTimming = Time.time + _attackData.Cooltime;
+                }
+            }
+            else if (CharacterState == CharacterState.Attack)
+            {
+                if (_attackTimming <= Time.time)
+                {
+                    if (AttackTarget != null)
                     {
-                        if (AttackTarget != null)
-                        {
-                            ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                            _projectilePlayer.PlayProjectile(_attackData, AttackTarget);
-                            AttackTarget.OnDamage(MyDamage);
-                            if (AttackTarget.IsDead)
-                                ChangeState(CharacterState.Idle);
-                            else
-                                _attackTimming = Time.time + _attackData.Cooltime;
-                        }
+                        ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+                        _meleePlayer.PlaySkill(_attackData, AttackTarget);
+                        if (AttackTarget.IsDead)
+                            ChangeState(CharacterState.Idle);
+                        else
+                            _attackTimming = Time.time + _attackData.Cooltime;
                     }
                 }
             }

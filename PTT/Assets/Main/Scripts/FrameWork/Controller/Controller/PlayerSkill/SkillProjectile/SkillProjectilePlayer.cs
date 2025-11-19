@@ -62,16 +62,14 @@ namespace GameBerry
         [SerializeField]
         private List<SkillProjectileData> _skillParticleDatas = new List<SkillProjectileData>();
 
-        private Dictionary<int, SkillProjectileData> _skillParticleDatas_Dic = new Dictionary<int, SkillProjectileData>();
-
         private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //비활성화시 취소처리
 
-        public void PlayProjectile(AttackData damage, CharacterControllerBase target)
+        public void PlaySkill(AttackData attackData, CharacterControllerBase target)
         {
-            PlayProjectile(damage, target.transform.position);
+            PlaySkill(attackData, target.transform.position);
         }
 
-        public void PlayProjectile(AttackData attackData, Vector3 pos)
+        public void PlaySkill(AttackData attackData, Vector3 pos)
         {
             SkillProjectileData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.ResourceIndex);
 

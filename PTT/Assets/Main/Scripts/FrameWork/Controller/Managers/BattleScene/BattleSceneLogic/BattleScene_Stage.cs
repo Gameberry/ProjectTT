@@ -72,6 +72,9 @@ namespace GameBerry
                 monsterController.SetMonster(StaticResource.Instance.GetBattleModeStaticData().MonsterModelIdxs.GetRandom());
                 monsterController.Play();
             }
+
+            // 방금 몬스터가 스폰되어서 가까이 생긴 몬스터가 있을 수 있으니 플레이어 타겟 재설정
+            PlayerController.SetNewTarget();
         }
         //------------------------------------------------------------------------------------
         protected override void OnReleaseBattleScene()

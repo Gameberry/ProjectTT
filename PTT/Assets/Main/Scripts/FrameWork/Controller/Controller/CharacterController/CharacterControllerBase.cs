@@ -299,7 +299,7 @@ namespace GameBerry
             ChangeCharacterLookAtDirection(direction.x < 0 ? Enum_LookDirection.Left : Enum_LookDirection.Right);
         }
         //------------------------------------------------------------------------------------
-        protected void SetNewTarget()
+        public void SetNewTarget()
         {
             _attackTarget = Managers.AggroManager.Instance.GetIFFTargetCharacter(this);
         }

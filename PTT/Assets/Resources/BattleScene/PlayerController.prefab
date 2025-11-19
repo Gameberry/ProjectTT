@@ -651,6 +651,54 @@ Transform:
   - {fileID: 8388945886941452204}
   m_Father: {fileID: 1315824922108164856}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5960726436226718676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5728249885936046131}
+  - component: {fileID: 7478050650506880037}
+  m_Layer: 11
+  m_Name: MeleePlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5728249885936046131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5960726436226718676}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1315824922108164856}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7478050650506880037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5960726436226718676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a4a20e74309d724e9744de9d012d8b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterControllerBase: {fileID: 855757172161657773}
+  _skillParticleDatas:
+  - Index: 0
+    particle: {fileID: 0}
 --- !u!1 &6041542616060576352
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,6 +1128,7 @@ Transform:
   - {fileID: 8859946580866414405}
   - {fileID: 6194194955978614866}
   - {fileID: 1177005559233527879}
+  - {fileID: 5728249885936046131}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &855757172161657773
@@ -1125,6 +1174,7 @@ MonoBehaviour:
   _currentHP: 0
   _aniControllerSpeed: 1
   _projectilePlayer: {fileID: 8234622918251947681}
+  _meleePlayer: {fileID: 0}
   attackRange: 3
   _attackTimming: 0.2
   _attackData:

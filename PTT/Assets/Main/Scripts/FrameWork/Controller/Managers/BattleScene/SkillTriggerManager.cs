@@ -13,15 +13,14 @@ namespace GameBerry.Managers
         // 광역기에서 한 번에 맞을 수 있는 최대 타겟 수 (성능/연출상 제한)
         private const int MaxAoeTargets = 100;
 
-        public void EffectDamage(AttackData attackData, CharacterControllerBase actortrans, Vector3 damagePos, CharacterControllerBase fixSkillHitReceiver)
+        public void EffectDamage(AttackData attackData, CharacterControllerBase actortrans, Vector3 attackPos, CharacterControllerBase fixSkillHitReceiver)
         {
             int targetCount = attackData.TargetCount;
             if (targetCount == 0)
                 return;
 
             float range = attackData.HitRange;
-            Vector3 pos3 = damagePos;
-            Vector2 pos = damagePos; // 2D 좌표 기준
+            Vector2 pos = attackPos; // 2D 좌표 기준
 
             // Line 타입 위치 보정 (X축 기준, 필요 없으면 삭제해도 됨)
             if (attackData.TargetAttackType == Enum_AttackRangeType.Line)
@@ -39,30 +38,12 @@ namespace GameBerry.Managers
 
             // 부채꼴 기준점: 발/무기 피벗 우선, 없으면 캐릭터 위치
             Vector2 sectorOrigin = pos;
-            if (useSector)
-            {
-                //if (actortrans.AttackPivot != null)
-                //    sectorOrigin = actortrans.AttackPivot.position;
-                //else
-                    sectorOrigin = actortrans.transform.position;
-            }
+            Vector2 sectorForward = attackPos - actortrans.transform.position;
 
-            // Forward: LookDirection 기준으로 2D 방향 잡기
-            Vector2 sectorForward = damagePos - actortrans.transform.position;
-            if (actortrans.transform.right.x < 0) // 왼쪽 보는 스프라이트라면 이런 식
-            {
-                // 또는 LookDirection Enum 기준으로:
-                // sectorForward = (actortrans.LookDirection == Enum_LookDirection.Left) ? Vector2.left : Vector2.right;
-                sectorForward = (actortrans.LookDirection == Enum_LookDirection.Left)
-                    ? Vector2.left
-                    : Vector2.right;
-            }
+            if (fixSkillHitReceiver != null)
+                sectorForward = fixSkillHitReceiver.transform.position - attackPos;
             else
-            {
-                sectorForward = (actortrans.LookDirection == Enum_LookDirection.Left)
-                    ? Vector2.left
-                    : Vector2.right;
-            }
+                sectorForward = attackPos - actortrans.transform.position;
 
             // 레이어 마스크
             int searchLayer = LayerMask.NameToLayer(Util.GetEnemyIFFType(actortrans.IFFType).ToString());
