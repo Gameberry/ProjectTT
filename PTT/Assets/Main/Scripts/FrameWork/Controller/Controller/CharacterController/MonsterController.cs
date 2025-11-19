@@ -16,7 +16,6 @@ namespace GameBerry
 
         public override void Init()
         {
-            Managers.AggroManager.Instance.AddIFFCharacterAggro(this);
             MoveController_Base creatureBaseMove = gameObject.AddComponent<MoveController_Base>();
             creatureBaseMove.SetCharacterController(this);
         }

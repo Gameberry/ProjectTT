@@ -145,6 +145,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void Play()
         {
+            Managers.AggroManager.Instance.AddIFFCharacterAggro(this);
             OnPlay();
         }
         //------------------------------------------------------------------------------------
@@ -248,6 +249,7 @@ namespace GameBerry
             PlayAnimation(state);
             if (state == CharacterState.Dead)
             {
+                Managers.AggroManager.Instance.RemoveIFFCharacterAggro(this);
                 OnDead();
             }
         }
