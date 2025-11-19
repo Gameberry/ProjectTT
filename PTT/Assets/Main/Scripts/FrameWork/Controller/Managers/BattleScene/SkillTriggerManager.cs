@@ -6,9 +6,12 @@ namespace GameBerry.Managers
 {
     public class SkillTriggerManager : MonoSingleton<SkillTriggerManager>
     {
-        private Dictionary<int, Collider[]> _recvColliderPools = new Dictionary<int, Collider[]>();
+        private Dictionary<int, Collider2D[]> _recvColliderPools = new Dictionary<int, Collider2D[]>();
 
         private List<CharacterControllerBase> _skillHitReceivers = new List<CharacterControllerBase>();
+
+        // 광역기에서 한 번에 맞을 수 있는 최대 타겟 수 (성능/연출상 제한)
+        private const int MaxAoeTargets = 100;
 
         public void EffectDamage(AttackData attackData, CharacterControllerBase actortrans, Vector3 damagePos, CharacterControllerBase fixSkillHitReceiver)
         {
@@ -17,130 +20,136 @@ namespace GameBerry.Managers
                 return;
 
             float range = attackData.HitRange;
-            Vector3 pos = damagePos;
+            Vector3 pos3 = damagePos;
+            Vector2 pos = damagePos; // 2D 좌표 기준
 
-            // Line 타입일 때 기존 로직 유지
+            // Line 타입 위치 보정 (X축 기준, 필요 없으면 삭제해도 됨)
             if (attackData.TargetAttackType == Enum_AttackRangeType.Line)
             {
+                float offset = attackData.HitRange * 0.5f;
                 if (actortrans.LookDirection == Enum_LookDirection.Left)
-                {
-                    pos.x -= attackData.HitRange * 0.5f;
-                }
+                    pos.x -= offset;
                 else
-                    pos.x += attackData.HitRange * 0.5f;
+                    pos.x += offset;
             }
 
-            // ★ 부채꼴 사용할지 여부
+            // 부채꼴 쓸지 여부
             bool useSector = attackData.TargetAttackType == Enum_AttackRangeType.Sector;
             float sectorAngle = attackData.HitAngle;
-            Vector3 sectorForward = damagePos - actortrans.transform.position;
-            sectorForward.y = 0f;
-            if (sectorForward.sqrMagnitude < 0.0001f)
-            {
-                sectorForward = (actortrans.LookDirection == Enum_LookDirection.Left)
-                    ? Vector3.left
-                    : Vector3.right;
-            }
 
-            // ★ 부채꼴 기준점 (발/무기 위치로 쓰고 싶으면 여기서 지정)
-            // TODO: 실제 발/무기 Transform으로 교체해서 쓰면 됨
-            Vector3 sectorOrigin = pos;
+            // 부채꼴 기준점: 발/무기 피벗 우선, 없으면 캐릭터 위치
+            Vector2 sectorOrigin = pos;
             if (useSector)
             {
-                sectorOrigin = actortrans.transform.position;
+                //if (actortrans.AttackPivot != null)
+                //    sectorOrigin = actortrans.AttackPivot.position;
+                //else
+                    sectorOrigin = actortrans.transform.position;
             }
 
-            int searchLayer = 0;
-            searchLayer = LayerMask.NameToLayer(Util.GetEnemyIFFType(actortrans.IFFType).ToString());
-            searchLayer = 1 << searchLayer;
-
-            Collider[] colliders = null;
-            int colliderCount = 0;
-
-            // ★ Overlap 중심도 부채꼴이면 sectorOrigin 기준
-            Vector3 overlapCenter = useSector ? sectorOrigin : pos;
-
-            if (targetCount < 0)
+            // Forward: LookDirection 기준으로 2D 방향 잡기
+            Vector2 sectorForward = damagePos - actortrans.transform.position;
+            if (actortrans.transform.right.x < 0) // 왼쪽 보는 스프라이트라면 이런 식
             {
-                colliders = Physics.OverlapSphere(overlapCenter, range, searchLayer);
-                colliderCount = colliders.Length;
+                // 또는 LookDirection Enum 기준으로:
+                // sectorForward = (actortrans.LookDirection == Enum_LookDirection.Left) ? Vector2.left : Vector2.right;
+                sectorForward = (actortrans.LookDirection == Enum_LookDirection.Left)
+                    ? Vector2.left
+                    : Vector2.right;
             }
             else
             {
-                if (_recvColliderPools.ContainsKey(targetCount) == false)
-                {
-                    colliders = new Collider[targetCount];
-                    _recvColliderPools.Add(targetCount, colliders);
-                }
-                else
-                    colliders = _recvColliderPools[targetCount];
-
-                colliderCount = Physics.OverlapSphereNonAlloc(overlapCenter, range, colliders, searchLayer);
+                sectorForward = (actortrans.LookDirection == Enum_LookDirection.Left)
+                    ? Vector2.left
+                    : Vector2.right;
             }
 
+            // 레이어 마스크
+            int searchLayer = LayerMask.NameToLayer(Util.GetEnemyIFFType(actortrans.IFFType).ToString());
+            LayerMask layerMask = 1 << searchLayer;
+
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.useLayerMask = true;
+            filter.layerMask = layerMask;
+            filter.useTriggers = true; // 트리거도 포함할지 여부
+
+            Collider2D[] colliders;
+            int colliderCount;
+
+            Vector2 overlapCenter = useSector ? sectorOrigin : pos;
+
+            if (targetCount < 0)
+            {
+                // 광역 스킬: 상한(MaxAoeTargets) 두고 OverlapCircle(ContactFilter2D) 사용
+                int bufferSize = MaxAoeTargets;
+                if (!_recvColliderPools.TryGetValue(bufferSize, out colliders))
+                {
+                    colliders = new Collider2D[bufferSize];
+                    _recvColliderPools.Add(bufferSize, colliders);
+                }
+
+                colliderCount = Physics2D.OverlapCircle(overlapCenter, range, filter, colliders);
+            }
+            else
+            {
+                // 타겟 제한 있음 → 그 크기만큼만 버퍼 할당
+                if (!_recvColliderPools.TryGetValue(targetCount, out colliders))
+                {
+                    colliders = new Collider2D[targetCount];
+                    _recvColliderPools.Add(targetCount, colliders);
+                }
+
+                colliderCount = Physics2D.OverlapCircle(overlapCenter, range, filter, colliders);
+            }
+
+            // 디버그용 값 세팅
             if (actortrans.IFFType == IFFType.IFF_Friend)
             {
+                debugPos = overlapCenter;
                 debugRadius = range;
-                debugPos = useSector ? sectorOrigin : overlapCenter;
                 debugAngle = useSector ? sectorAngle : 0f;
-                debugForward = useSector ? sectorForward : actortrans.transform.forward;
+                debugForward = new Vector3(sectorForward.x, sectorForward.y, 0f);
 
                 if (attackData.TargetAttackType == Enum_AttackRangeType.Line)
-                {
-                    // 라인 범위 크기(예시는 X 방향 range, Z는 적당히 너비 값)
-                    //float width = attackData.HitWidth > 0 ? attackData.HitWidth : range * 0.3f; // HitWidth 필드 있으면 사용
-                    debugLineSize = new Vector3(range, 0.1f, range);
                     debugRangeType = DebugRangeType.Line;
-                }
                 else if (useSector)
-                {
                     debugRangeType = DebugRangeType.Sector;
-                }
                 else
-                {
                     debugRangeType = DebugRangeType.Circle;
-                }
             }
 
             _skillHitReceivers.Clear();
 
-            bool needAddRecver = true;
-
-            if (fixSkillHitReceiver == null)
-            {
-                needAddRecver = false;
-            }
-
+            bool needAddRecver = fixSkillHitReceiver != null;
 
             for (int i = 0; i < colliderCount; i++)
             {
                 if (colliders[i] == null)
                     continue;
 
-                CharacterControllerBase skillHitReceiver = colliders[i].gameObject.GetComponent<CharacterControllerBase>();
+                CharacterControllerBase skillHitReceiver = colliders[i].GetComponent<CharacterControllerBase>();
                 if (skillHitReceiver == null)
                     continue;
 
-                // ★ 부채꼴이면 XZ 평면 기준 각도 체크
+                // 부채꼴이면 각도 체크
                 if (useSector)
                 {
-                    Vector3 targetPos = skillHitReceiver.transform.position;
-                    if (!IsInSectorXZ(sectorOrigin, sectorForward, range, sectorAngle, targetPos))
+                    Vector2 targetPos = skillHitReceiver.transform.position;
+                    if (!IsInSector2D(sectorOrigin, sectorForward, range, sectorAngle, targetPos))
                         continue;
                 }
 
                 _skillHitReceivers.Add(skillHitReceiver);
 
-                if (needAddRecver == true)
-                {
-                    if (skillHitReceiver == fixSkillHitReceiver)
-                        needAddRecver = false;
-                }
+                if (needAddRecver && skillHitReceiver == fixSkillHitReceiver)
+                    needAddRecver = false;
             }
 
+            // 거리 / 보스 우선 정렬 + N명 자르기 (이전 SetHitTarget 그대로 사용)
             SetHitTarget(actortrans, attackData, ref _skillHitReceivers);
 
-            if (needAddRecver == true)
+            // fixSkillHitReceiver 보정 로직 (원래 코드 유지)
+            if (fixSkillHitReceiver != null && needAddRecver)
             {
                 if (targetCount < 0)
                     _skillHitReceivers.Add(fixSkillHitReceiver);
@@ -157,10 +166,8 @@ namespace GameBerry.Managers
 
             for (int i = 0; i < _skillHitReceivers.Count; ++i)
             {
-                if (_skillHitReceivers[i] != null)   // <- 여기 null 체크를 리스트 요소로
-                {
+                if (_skillHitReceivers[i] != null)
                     _skillHitReceivers[i].OnDamage(attackData);
-                }
             }
         }
         //------------------------------------------------------------------------------------
@@ -186,85 +193,76 @@ namespace GameBerry.Managers
         {
 #if UNITY_EDITOR
             switch (debugRangeType)
-                {
-                    case DebugRangeType.Circle:
-                        Gizmos.color = Color.blue;
-                        Gizmos.DrawWireSphere(debugPos, debugRadius);
-                        break;
+            {
+                case DebugRangeType.Circle:
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawWireSphere(debugPos, debugRadius);
+                    break;
 
-                    case DebugRangeType.Line:
-                        Gizmos.color = Color.green;
-                        Gizmos.DrawWireCube(debugPos, debugLineSize);
-                        break;
+                //case DebugRangeType.Line:
+                //    Gizmos.color = Color.green;
+                //    Gizmos.DrawWireCube(debugPos, new Vector3(attackLineLength, 0.01f, attackLineWidth)); // 필요하면 필드로 빼기
+                //    break;
 
-                    case DebugRangeType.Sector:
-                        Gizmos.color = Color.red;
-                        DrawSectorGizmoXZ(debugPos, debugForward, debugRadius, debugAngle);
-                        break;
-
-                    case DebugRangeType.None:
-                    default:
-                        break;
-                }
+                case DebugRangeType.Sector:
+                    Gizmos.color = Color.red;
+                    DrawSectorGizmo2D(debugPos, debugForward, debugRadius, debugAngle);
+                    break;
+            }
 #endif
         }
 
-        private void DrawSectorGizmoXZ(Vector3 origin, Vector3 forward, float radius, float angle)
+        private void DrawSectorGizmo2D(Vector3 origin, Vector3 forward, float radius, float angle)
         {
-            forward.y = 0f;
-            if (forward.sqrMagnitude < 0.0001f)
-                forward = Vector3.forward;
-
-            forward.Normalize();
+            Vector3 fwd = forward;
+            if (fwd.sqrMagnitude < 0.0001f)
+                fwd = Vector3.right;
+            fwd.Normalize();
 
             int segments = 20;
             float halfAngle = angle * 0.5f;
             float step = angle / segments;
 
-            Quaternion baseRot = Quaternion.LookRotation(forward, Vector3.up);
+            Quaternion baseRot = Quaternion.LookRotation(Vector3.forward, Vector3.up); // 2D에서는 z-forward
+            Vector3 baseDir = new Vector3(fwd.x, fwd.y, 0f);
 
-            // 왼쪽 끝 방향
-            Vector3 prevDir = baseRot * Quaternion.AngleAxis(-halfAngle, Vector3.up) * Vector3.forward;
+            Vector3 prevDir = Quaternion.AngleAxis(-halfAngle, Vector3.forward) * baseDir;
             Vector3 prevPoint = origin + prevDir * radius;
 
-            // 부채꼴 테두리
             for (int i = 1; i <= segments; i++)
             {
                 float currentAngle = -halfAngle + step * i;
-                Vector3 dir = baseRot * Quaternion.AngleAxis(currentAngle, Vector3.up) * Vector3.forward;
+                Vector3 dir = Quaternion.AngleAxis(currentAngle, Vector3.forward) * baseDir;
                 Vector3 point = origin + dir * radius;
 
                 Gizmos.DrawLine(prevPoint, point);
                 prevPoint = point;
             }
 
-            // 중심에서 양 끝으로 가는 선 2개
-            Vector3 leftDir = baseRot * Quaternion.AngleAxis(-halfAngle, Vector3.up) * Vector3.forward;
-            Vector3 rightDir = baseRot * Quaternion.AngleAxis(halfAngle, Vector3.up) * Vector3.forward;
+            Vector3 leftDir = Quaternion.AngleAxis(-halfAngle, Vector3.forward) * baseDir;
+            Vector3 rightDir = Quaternion.AngleAxis(halfAngle, Vector3.forward) * baseDir;
             Gizmos.DrawLine(origin, origin + leftDir * radius);
             Gizmos.DrawLine(origin, origin + rightDir * radius);
         }
         //------------------------------------------------------------------------------------
-        private bool IsInSectorXZ(Vector3 origin, Vector3 forward, float radius, float angle, Vector3 targetPos)
+        private bool IsInSector2D(Vector2 origin, Vector2 forward, float radius, float angle, Vector2 targetPos)
         {
-            // XZ 평면에서만 거리/각도 계산
-            origin.y = 0f;
-            targetPos.y = 0f;
-            forward.y = 0f;
+            Vector2 toTarget = targetPos - origin;
 
-            Vector3 toTarget = targetPos - origin;
             float distSqr = toTarget.sqrMagnitude;
-
             if (distSqr > radius * radius || distSqr <= Mathf.Epsilon)
                 return false;
 
-            Vector3 dir = toTarget.normalized;
-            Vector3 fwd = forward.sqrMagnitude < 0.0001f ? Vector3.forward : forward.normalized;
+            if (forward.sqrMagnitude < 0.0001f)
+                forward = Vector2.right;
+
+            forward.Normalize();
+            Vector2 dir = toTarget.normalized;
 
             float halfRad = angle * 0.5f * Mathf.Deg2Rad;
             float cosHalf = Mathf.Cos(halfRad);
 
-            float dot = Vector3.Dot(fwd, dir);
+            float dot = Vector2.Dot(forward, dir);
 
             return dot >= cosHalf;
         }

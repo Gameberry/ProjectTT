@@ -146,6 +146,11 @@ namespace GameBerry.Managers
             _battleSceneCamera.transform.position = pos;
         }
         //------------------------------------------------------------------------------------
+        public BattleSceneCamera GetBattleSceneCamera()
+        {
+            return _battleSceneCamera;
+        }
+        //------------------------------------------------------------------------------------
         public void SelectMap(string mapPath, string mapName)
         {
             if (ShowTestBG == true)

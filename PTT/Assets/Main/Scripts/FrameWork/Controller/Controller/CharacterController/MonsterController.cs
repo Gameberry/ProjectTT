@@ -62,7 +62,7 @@ namespace GameBerry
                         return;
                     }
 
-                    float distance = MathDatas.GetDistance(transform.position.x, transform.position.z, _attackTarget.transform.position.x, _attackTarget.transform.position.z);
+                    float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                     if (distance <= attackRange)
                     {
                         ChangeState(CharacterState.Attack);

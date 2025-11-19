@@ -76,13 +76,13 @@ namespace GameBerry
             if (Input.GetKey(KeyCode.W))
             {
                 _useCustomDirVec = true;
-                _customDieVec.z = 1;
+                _customDieVec.y = 1;
             }
 
             if (Input.GetKey(KeyCode.S))
             {
                 _useCustomDirVec = true;
-                _customDieVec.z = -1;
+                _customDieVec.y = -1;
             }
 
             if (Input.GetKey(KeyCode.D))
@@ -114,7 +114,7 @@ namespace GameBerry
                     {
                         if (_attackTarget != null && _attackTarget.IsDead != true)
                         { 
-                            float distance = MathDatas.GetDistance(transform.position.x, transform.position.z, _attackTarget.transform.position.x, _attackTarget.transform.position.z);
+                            float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                             if (distance <= attackData.AttackRange)
                             {
                                 _projectilePlayer.PlayProjectile(attackData, _attackTarget);
@@ -141,7 +141,7 @@ namespace GameBerry
                         return;
                     }
 
-                    float distance = MathDatas.GetDistance(transform.position.x, transform.position.z, _attackTarget.transform.position.x, _attackTarget.transform.position.z);
+                    float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                     if (distance <= attackRange)
                     {
                         ChangeState(CharacterState.Attack);

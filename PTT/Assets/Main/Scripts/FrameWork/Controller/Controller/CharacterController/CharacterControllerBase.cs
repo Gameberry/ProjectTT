@@ -16,6 +16,8 @@ namespace GameBerry
         [SerializeField]
         private Vector3 _element_rightRot;
 
+        [SerializeField]
+        private CharacterBillboardController _characterBillboardController;
 
         [SerializeField]
         protected IFFType _iFFType = IFFType.IFF_None;
@@ -37,8 +39,8 @@ namespace GameBerry
 
 
         [SerializeField]
-        protected Rigidbody _rigidbody2D;
-        public Rigidbody MyRigidbody2D { get { return _rigidbody2D; } }
+        protected Rigidbody2D _rigidbody2D;
+        public Rigidbody2D MyRigidbody2D { get { return _rigidbody2D; } }
 
         [SerializeField]
         protected CharacterControllerBase _attackTarget;
@@ -275,25 +277,16 @@ namespace GameBerry
             _lookDirection = direction;
             Vector3 rotate = transform.eulerAngles;
 
-            Vector3 elementRot = _element_leftRot;
-
             float selectRatote = 0.0f;
 
             if (_lookDirection == Enum_LookDirection.Right)
-            {
-                elementRot = _element_rightRot;
                 selectRatote = 180.0f;
-            }
 
             rotate.y = selectRatote;
 
             transform.eulerAngles = rotate;
 
-            if (_mySkeletonAnimationHandler != null)
-                _mySkeletonAnimationHandler.transform.localEulerAngles = elementRot;
-
-            if (_uiCharacterState != null)
-                _uiCharacterState.transform.localEulerAngles = elementRot;
+            _characterBillboardController?.RefreshBillboard();
         }
         //------------------------------------------------------------------------------------
         public void ChangeCharacterLookAtDirection_Target(Transform targetTrans)

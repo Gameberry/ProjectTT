@@ -57,7 +57,7 @@ namespace GameBerry
             Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
             Vector3 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
             pos.x = Random.Range(minpos.x, maxpos.x);
-            pos.z = Random.Range(minpos.z, maxpos.z);
+            pos.y = Random.Range(minpos.y, maxpos.y);
 
             trans.transform.position = pos;
         }

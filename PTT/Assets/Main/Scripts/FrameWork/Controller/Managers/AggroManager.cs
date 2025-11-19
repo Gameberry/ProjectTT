@@ -81,7 +81,7 @@ namespace GameBerry.Managers
             if (my == null || enemy == null)
                 return -1.0f;
 
-            return MathDatas.GetDistance(my.transform.position.x, my.transform.position.z, enemy.transform.position.x, enemy.transform.position.z);
+            return MathDatas.GetDistance(my.transform.position, enemy.transform.position);
         }
         //------------------------------------------------------------------------------------
         public List<CharacterControllerBase> GetAllTargetCharacter(CharacterControllerBase characterControllerBase)
