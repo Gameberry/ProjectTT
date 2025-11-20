@@ -50,7 +50,7 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
-        private void SetRandomStartPos(Transform trans)
+        private void SetMonsterRandomStartPos(Transform trans)
         {
             Vector3 pos = trans.transform.position;
 
@@ -68,7 +68,7 @@ namespace GameBerry
             {
                 MonsterController monsterController = Managers.MonsterManager.Instance.GetMonster();
                 monsterController.gameObject.SetActive(true);
-                SetRandomStartPos(monsterController.transform);
+                SetMonsterRandomStartPos(monsterController.transform);
                 monsterController.SetMonster(StaticResource.Instance.GetBattleModeStaticData().MonsterModelIdxs.GetRandom());
                 monsterController.Play();
             }
