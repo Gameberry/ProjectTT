@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CodeStage.AntiCheat.ObscuredTypes;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using GameBerry.Common;
 
 namespace GameBerry
 {
@@ -13,6 +16,8 @@ namespace GameBerry
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
         [SerializeField]
         private float _attackTimming = 1.0f;
+
+        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //비활성화시 취소처리
 
         public override void Init()
         {
@@ -28,6 +33,18 @@ namespace GameBerry
             SetSpineModelData(_currentSpineModelData);
 
             attackRange = Random.Range(0.9f, 1.1f);
+        }
+        //------------------------------------------------------------------------------------
+        protected override void OnDamage()
+        {
+            OnDamageDirection().Forget();
+        }
+        //------------------------------------------------------------------------------------
+        private async UniTask OnDamageDirection()
+        {
+            ChangeSpineColor(StaticResource.Instance.GetBattleModeStaticData().MonsterHitColor);
+            await UniTask.WaitForSeconds(StaticResource.Instance.GetBattleModeStaticData().MonsterHitDuration, false, PlayerLoopTiming.Update, disableCancellation.Token);
+            ChangeSpineColor(Color.white);
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()
@@ -75,7 +92,7 @@ namespace GameBerry
                         if (AttackTarget != null)
                         {
                             ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                            AttackTarget.OnDamage(MyDamage);
+                            AttackTarget.Damage(MyDamage);
                             ChangeState(CharacterState.Idle);
                         }   
                     }

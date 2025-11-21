@@ -100,6 +100,11 @@ namespace GameBerry
             _mySkeletonAnimationHandler?.SetSpineModel(_currentSpineModelData);
         }
         //------------------------------------------------------------------------------------
+        public void ChangeSpineColor(Color color)
+        {
+            _mySkeletonAnimationHandler?.SetColor(color);
+        }
+        //------------------------------------------------------------------------------------
         [ContextMenu("RefreshCheatStat()")]
         public void RefreshCheatStat()
         {// 데이터가 없어서...
@@ -113,7 +118,7 @@ namespace GameBerry
             RefreshStat(true);
         }
         //------------------------------------------------------------------------------------
-        public void OnDamage(double damage)
+        public void Damage(double damage)
         {
             if (IsDead == true)
                 return;
@@ -121,12 +126,21 @@ namespace GameBerry
             DeCreaseHP(damage);
             if (CurrentHP <= 0)
                 ChangeState(CharacterState.Dead);
+            else
+            {
+                OnDamage();
+            }
         }
         //------------------------------------------------------------------------------------
-        public void OnDamage(AttackData damage)
+        public void Damage(AttackData damage)
         {
             if (damage.Hitter != null && damage.Hitter.IsDead == false)
-                OnDamage(damage.DamageRate * damage.Hitter.MyDamage);
+                Damage(damage.DamageRate * damage.Hitter.MyDamage);
+        }
+        //------------------------------------------------------------------------------------
+        protected virtual void OnDamage()
+        { 
+
         }
         //------------------------------------------------------------------------------------
         public void PlaySkill(AttackData attackData, Vector3 pos)

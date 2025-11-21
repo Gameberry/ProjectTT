@@ -22,6 +22,9 @@ namespace GameBerry
         public List<StatViewer> TempPlayerStat = new List<StatViewer>();
         public List<StatViewer> TempMonsterStat = new List<StatViewer>();
 
+        public float MonsterHitDuration = 0.2f;
+        public Color MonsterHitColor = Color.white;
+
         [Header("-----------Stage-----------")]
         public float Stage_StartXPos = 0.0f;
         public double Stage_NexusCreateDistance = 5.0f;

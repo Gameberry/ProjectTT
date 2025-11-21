@@ -148,7 +148,7 @@ namespace GameBerry.Managers
             for (int i = 0; i < _skillHitReceivers.Count; ++i)
             {
                 if (_skillHitReceivers[i] != null)
-                    _skillHitReceivers[i].OnDamage(attackData);
+                    _skillHitReceivers[i].Damage(attackData);
             }
         }
         //------------------------------------------------------------------------------------
