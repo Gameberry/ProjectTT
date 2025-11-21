@@ -14,22 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpineModelDatas:
   - ResourceIndex: 0
-    SkeletonData: {fileID: 11400000, guid: d0d4ef05008d6b94c9298067ea968716, type: 2}
+    SkeletonData: {fileID: 11400000, guid: 776b228bfaca5b4499addb6c8fe70f48, type: 2}
     Name: "ai\uCE90\uB9AD\uD130\uC2A4\uD30C\uC778\uD14C\uC2A4\uD2B8_skeletondata"
     SkinList: []
     DefaultAttackSkin: []
     AnimationList:
-    - stateName: attack_01
+    - stateName: Attack_01
+    - stateName: Attack_02_1
+    - stateName: Attack_02_2
+    - stateName: Attack_03
+    - stateName: Attack_guide_123
     - stateName: Idle
-    - stateName: Idle2
-    - stateName: Run&gun
+    - stateName: Idle2_gun
+    - stateName: Run
     AnimationState:
     - characterState: 1
       animationName: Idle
     - characterState: 2
-      animationName: Run&gun
+      animationName: Run
     - characterState: 3
-      animationName: attack_01
+      animationName: Attack_02_1
     - characterState: 4
       animationName: Idle
     - characterState: 5

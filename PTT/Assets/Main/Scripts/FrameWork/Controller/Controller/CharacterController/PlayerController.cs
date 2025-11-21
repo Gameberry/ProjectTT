@@ -13,20 +13,22 @@ namespace GameBerry
 
 
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
-        [SerializeField]
         private float _attackTimming = 0.2f;
 
         [SerializeField]
-        private AttackData _attackData = new AttackData();
+        private float _attackRange = 1.5f;
 
         [SerializeField]
-        private AttackData _criticalAttackData = new AttackData();
+        private List<AttackData> _attackData = new List<AttackData>();
 
         [SerializeField]
-        private float _attackDuration = 0.5f;
+        private List<AttackData> _criticalAttackData = new List<AttackData>();
 
-        [SerializeField][Range(0.0f, 1.0f)]
-        private float _attackDamageNormalTime = 0.5f;
+        [SerializeField]
+        private int _dataSelectIndex = -1;
+
+        [SerializeField]
+        private bool _setRandom = false;
 
         [SerializeField]
         private float _tempCritical = 0.5f;
@@ -52,14 +54,23 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void OnPlay()
         {
-            _attackData.Hitter = this;
-            _criticalAttackData.Hitter = this;
+            for (int i = 0; i < _attackData.Count; ++i)
+            {
+                _attackData[i].Hitter = this;
+            }
+
+            for (int i = 0; i < _criticalAttackData.Count; ++i)
+            {
+                _criticalAttackData[i].Hitter = this;
+            }
 
             for (int i = 0; i < _skillDatas.Count; ++i)
             {
                 _skillDatas[i].Hitter = this;
                 _skillDatas[i].NextPlayTime = Time.time + _skillDatas[i].Cooltime;
             }
+
+            _dataSelectIndex = 0;
 
             ChangeState(CharacterState.Idle);
         }
@@ -150,24 +161,40 @@ namespace GameBerry
                 }
 
                 float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                if (distance <= _attackData.AttackRange)
+                if (distance <= _attackRange)
                 {
-                    ChangeState(CharacterState.Attack);
-                    float attackduration = _attackDuration / _characterAttackSpeed;
-                    float attackdelay = attackduration * _attackDamageNormalTime;
-                    _attackTimming = Time.time + attackduration;
-                    ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+                    List<AttackData> attackDatas = Random.Range(0.0f, 1.0f) <= _tempCritical ? _criticalAttackData : _attackData;
 
-                    if (Random.Range(0.0f, 1.0f) <= _tempCritical)
+                    AttackData selectAttackData = attackDatas.GetRandom();
+
+                    if (_setRandom == false)
                     {
-                        _criticalAttackData.MeleeAttackDelay = attackdelay;
-                        _skillPlayer.PlaySkill(_criticalAttackData, AttackTarget);
+                        if (attackDatas.Count <= _dataSelectIndex)
+                            _dataSelectIndex = 0;
+                        
+                        selectAttackData = attackDatas[_dataSelectIndex];
+
+                        _dataSelectIndex++;
+                    }
+                    
+
+                    float attackduration = selectAttackData.AttackDuration / _characterAttackSpeed;
+                    float attackdelay = attackduration * selectAttackData.AttackDamageNormalTime;
+                    _attackTimming = Time.time + attackduration;
+
+                    if (string.IsNullOrEmpty(selectAttackData.CustomAni) == false)
+                    { 
+                        ChangeState(CharacterState.Attack, false);
+                        PlayAnimation_AniName(selectAttackData.CustomAni);
                     }
                     else
-                    {
-                        _attackData.MeleeAttackDelay = attackdelay;
-                        _skillPlayer.PlaySkill(_attackData, AttackTarget);
-                    }
+                        ChangeState(CharacterState.Attack);
+
+                    
+                    ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+
+                    selectAttackData.MeleeAttackDelay = attackdelay;
+                    _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
                 }
             }
             else if (CharacterState == CharacterState.Attack)

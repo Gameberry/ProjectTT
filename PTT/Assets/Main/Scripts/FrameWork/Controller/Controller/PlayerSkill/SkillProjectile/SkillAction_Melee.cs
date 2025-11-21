@@ -43,7 +43,23 @@ namespace GameBerry
             _onHit = false;
 
             _playHit = Time.time + _attackData.MeleeAttackDelay;
-            transform.rotation = Quaternion.FromToRotation(Vector3.left, dirvec);
+            //transform.rotation = Quaternion.FromToRotation(Vector3.left, dirvec);
+
+            Enum_LookDirection stageGenerateDirections = MyPos.x < TargetPos.x ? Enum_LookDirection.Right : Enum_LookDirection.Left;
+
+
+            if (stageGenerateDirections == Enum_LookDirection.Left)
+            {
+                Vector3 rotate = transform.eulerAngles;
+                rotate.y = 0.0f;
+                transform.eulerAngles = rotate;
+            }
+            else if (stageGenerateDirections == Enum_LookDirection.Right)
+            {
+                Vector3 rotate = transform.eulerAngles;
+                rotate.y = 180.0f;
+                transform.eulerAngles = rotate;
+            }
             _endTime = Time.time + _attackData.MeleeAttackDelay + _hitDuraion;
         }
         //------------------------------------------------------------------------------------

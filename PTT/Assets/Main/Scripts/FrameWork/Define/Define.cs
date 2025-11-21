@@ -105,6 +105,10 @@ namespace GameBerry
         public float NextPlayTime = 0.0f;
 
         public float MeleeAttackDelay = 0.1f;
+        public string CustomAni = string.Empty;
+        public float AttackDuration = 0.5f;
+        [Range(0.0f, 1.0f)]
+        public float AttackDamageNormalTime = 0.5f;
     }
 
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);

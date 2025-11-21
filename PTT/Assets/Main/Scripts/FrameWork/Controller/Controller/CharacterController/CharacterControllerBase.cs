@@ -121,10 +121,6 @@ namespace GameBerry
             DeCreaseHP(damage);
             if (CurrentHP <= 0)
                 ChangeState(CharacterState.Dead);
-            else
-            { 
-
-            }
         }
         //------------------------------------------------------------------------------------
         public void OnDamage(AttackData damage)
@@ -240,7 +236,7 @@ namespace GameBerry
             ChangeState(state);
         }
         //------------------------------------------------------------------------------------
-        protected virtual void ChangeState(CharacterState state)
+        protected virtual void ChangeState(CharacterState state, bool playAni = true)
         {
             if (_characterState == state)
                 return;
@@ -283,6 +279,14 @@ namespace GameBerry
             if (_mySkeletonAnimationHandler != null)
             {
                 _mySkeletonAnimationHandler.PlayAnimation_Once(state, true);
+            }
+        }
+        //------------------------------------------------------------------------------------
+        public void PlayAnimation_AniName(string aniName)
+        {
+            if (_mySkeletonAnimationHandler != null)
+            {
+                _mySkeletonAnimationHandler.PlayAnimation_Once(aniName, true);
             }
         }
         //------------------------------------------------------------------------------------
