@@ -13,6 +13,8 @@ namespace GameBerry.Managers
         // 광역기에서 한 번에 맞을 수 있는 최대 타겟 수 (성능/연출상 제한)
         private const int MaxAoeTargets = 100;
 
+        public bool FixDirec = true;
+
         public void EffectDamage(AttackData attackData, CharacterControllerBase actortrans, Vector3 attackPos, CharacterControllerBase fixSkillHitReceiver)
         {
             int targetCount = attackData.TargetCount;
@@ -40,10 +42,18 @@ namespace GameBerry.Managers
             Vector2 sectorOrigin = pos;
             Vector2 sectorForward = attackPos - actortrans.transform.position;
 
-            if (fixSkillHitReceiver != null)
-                sectorForward = fixSkillHitReceiver.transform.position - attackPos;
+            if (FixDirec == true)
+            {
+                sectorForward = actortrans.LookDirection == Enum_LookDirection.Left ? Vector2.left : Vector2.right;
+            }
             else
-                sectorForward = attackPos - actortrans.transform.position;
+            {
+                if (fixSkillHitReceiver != null)
+                    sectorForward = fixSkillHitReceiver.transform.position - attackPos;
+                else
+                    sectorForward = attackPos - actortrans.transform.position;
+            }
+            
 
             // 레이어 마스크
             int searchLayer = LayerMask.NameToLayer(Util.GetEnemyIFFType(actortrans.IFFType).ToString());

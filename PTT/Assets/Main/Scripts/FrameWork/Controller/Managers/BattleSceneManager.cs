@@ -19,9 +19,6 @@ namespace GameBerry.Managers
 
         public Enum_Dungeon _prevBattleType = Enum_Dungeon.None;
 
-        private GameObject _bgManager = null;
-        public GameObject CurrentBgManager { get { return _bgManager; } }
-
         private string m_lastBGName = string.Empty;
 
         public bool ShowTestBG = false;
@@ -31,6 +28,8 @@ namespace GameBerry.Managers
         public string TestBGResMapName = string.Empty;
 
         private BattleSceneCamera _battleSceneCamera;
+
+        private BattleSceneMap _battleSceneMap;
 
         public float releaseOperXPos = 2.0f;
         public float releaseWaitPosTime = 0.1f;
@@ -50,7 +49,14 @@ namespace GameBerry.Managers
                     _battleSceneCamera = clone.GetComponent<BattleSceneCamera>();
             });
 
-            SetBGIndex(0);
+            ResourceLoader.Instance.Load<GameObject>("BattleScene/BattleSceneMap", o =>
+            {
+                GameObject clone = Instantiate(o, transform) as GameObject;
+                if (clone != null)
+                    _battleSceneMap = clone.GetComponent<BattleSceneMap>();
+            });
+
+            SetBattleMap(0);
         }
         //------------------------------------------------------------------------------------
         public void InitBattleScene()
@@ -151,50 +157,9 @@ namespace GameBerry.Managers
             return _battleSceneCamera;
         }
         //------------------------------------------------------------------------------------
-        public void SelectMap(string mapPath, string mapName)
+        public void SetBattleMap(int index)
         {
-            if (ShowTestBG == true)
-            {
-                mapPath = TestBGResMapPath;
-                mapName = TestBGResMapName;
-            }
-
-            if (m_lastBGName == mapName)
-                return;
-
-            GameObject clone = GetMapObject(mapPath, mapName, transform);
-
-            if (clone != null)
-            {
-                clone.SetLayerInChildren(LayerMask.NameToLayer("InGame"));
-
-                if (_bgManager != null)
-                    Destroy(_bgManager.gameObject);
-
-                m_lastBGName = mapName;
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public GameObject GetMapObject(string mapKey, string mapName, Transform parent)
-        {
-            string bundlePath = string.Format("{0}/{1}", mapKey, mapName);
-            GameObject clone = null;
-
-            ResourceLoader.Instance.Load<GameObject>(bundlePath, o =>
-            {
-                if (o == null)
-                    return;
-                GameObject obj = o as GameObject;
-                clone = Instantiate(obj, parent);
-            });
-
-            return clone;
-        }
-        //------------------------------------------------------------------------------------
-        public void SetBGIndex(int index)
-        {
-            if(_bgManager == null)
-                SelectMap("BattleScene/MapResources", "BattleMap");
+            _battleSceneMap?.SetMap(index);
         }
         //------------------------------------------------------------------------------------
         public void DeadPlayer(PlayerController playerController)

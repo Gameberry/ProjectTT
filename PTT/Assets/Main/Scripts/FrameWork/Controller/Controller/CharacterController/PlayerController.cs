@@ -40,6 +40,9 @@ namespace GameBerry
         private bool _useCustomDirVec = false;
 
         private Vector3 _customDieVec = Vector3.zero;
+
+        public bool _refreshAggro = false;
+
         // 조이스틱 넣기 전에 임시 변수
         //------------------------------------------------------------------------------------
         public override void Init()
@@ -206,6 +209,8 @@ namespace GameBerry
                 if (_attackTimming <= Time.time)
                 {
                     ChangeState(CharacterState.Idle);
+                    if (_refreshAggro == true)
+                        SetNewTarget();
                     //if (AttackTarget != null)
                     //{
                     //    if (AttackTarget.IsDead)

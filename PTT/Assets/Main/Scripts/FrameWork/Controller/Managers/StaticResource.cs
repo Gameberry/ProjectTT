@@ -23,9 +23,6 @@ namespace GameBerry
         private Dictionary<int, SpineModelData> _creatureSpineModelDatas_Dic = new Dictionary<int, SpineModelData>();
 
         [SerializeField]
-        private SpineModelAsset _arrrSpineModelAsset;
-
-        [SerializeField]
         private BattleModeStaticDataAsset _battleModeStaticDataAsset;
 
         [SerializeField]
@@ -186,11 +183,6 @@ namespace GameBerry
                 return _creatureSpineModelDatas_Dic[index];
 
             return null;
-        }
-        //------------------------------------------------------------------------------------
-        public SpineModelData GetARRRSpineModelData()
-        {
-            return _arrrSpineModelAsset.SpineModelDatas[0];
         }
         //------------------------------------------------------------------------------------
         #endregion

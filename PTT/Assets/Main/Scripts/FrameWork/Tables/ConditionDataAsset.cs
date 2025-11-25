@@ -84,7 +84,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         public ConditionMeta GetMeta(Enum_ConditionType type)
-            => _table.TryGetValue(type, out var meta) ? meta : null;
+            => conditionMetas.Find(x => x.Type == type);
         //------------------------------------------------------------------------------------
         public ConditionData GetData(int index)
             => conditionDatas.Find(x => x.Index == index);
