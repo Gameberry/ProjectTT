@@ -100,6 +100,9 @@ namespace GameBerry
             if (conditionData == null)
                 return;
 
+            if (Random.Range(0.0f, 1.0f) > conditionData.Rate)
+                return;
+
             var meta = StaticResource.Instance.GetConditionData().GetMeta(conditionData.Type);
             if (meta == null)
                 return;
@@ -129,7 +132,7 @@ namespace GameBerry
                         break;
                     }
                     
-                case ConditionStackPolicy.AccumulateValue:
+                case ConditionStackPolicy.MergyValue:
                     {
                         var existing = FindFirst(conditionData.Type);
 

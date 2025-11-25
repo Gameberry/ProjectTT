@@ -64,6 +64,10 @@ namespace GameBerry
         }
     }
 
+    public class InvincibleCondition : BaseCondition
+    {
+        public InvincibleCondition() : base(Enum_ConditionType.Invincible) { }
+    }
 
     public class StunCondition : BaseCondition
     {
@@ -74,17 +78,9 @@ namespace GameBerry
         public override bool BlocksSkill => true;
     }
 
-
     public class SnareCondition : BaseCondition
     {
         public SnareCondition() : base(Enum_ConditionType.Snare) { }
-
-        public override bool BlocksMove => true;
-    }
-
-    public class InvincibleCondition : BaseCondition
-    {
-        public InvincibleCondition() : base(Enum_ConditionType.Invincible) { }
 
         public override bool BlocksMove => true;
     }
@@ -107,14 +103,24 @@ namespace GameBerry
         public override float AttackSpeedMultiplier => _attackRate;
     }
 
-
     public class KnockbackCondition : BaseCondition
     {
-        private Vector2 _direction;
-        private float _force;
+        private Vector2 _direction;      // 넉백 방향 (정규화)
+        private float _distance;         // 총 넉백 거리
+        private float _baseDuration;     // 요청된 기본 지속 시간
 
+        private Rigidbody2D _rb;
+        private Vector2 _startPos;       // 넉백 시작 위치
+        private Vector2 _prevPos;        // 직전 프레임에서의 목표 위치 (delta 계산용)
+
+        /// <summary>넉백 방향 (정규화된 벡터)</summary>
         public Vector2 Direction => _direction;
-        public float Force => _force;
+
+        /// <summary>넉백 총 거리</summary>
+        public float Distance => _distance;
+
+        /// <summary>설정된 기본 지속 시간 (Merge 전에 요청된 값)</summary>
+        public float BaseDuration => _baseDuration;
 
         public KnockbackCondition() : base(Enum_ConditionType.Knockback) { }
 
@@ -126,6 +132,8 @@ namespace GameBerry
         {
             base.Initialize(conditionData);
 
+            _rb = Owner.MyRigidbody2D;
+
             Vector2 ownerPos = Owner.transform.position;
 
             Vector2 direction = ownerPos - conditionData.EffectPos;
@@ -135,16 +143,85 @@ namespace GameBerry
             else
                 _direction = Vector2.zero;
 
-            _force = Mathf.Max(0f, conditionData.Param1);
+            if (_rb != null)
+            {
+                _startPos = _rb.position;
+                _prevPos = _startPos;
+            }
+            else
+            {
+                _startPos = Owner.transform.position;
+                _prevPos = _startPos;
+            }
+
+            _distance = Mathf.Max(0f, conditionData.Param1);
+
+            _baseDuration = Mathf.Max(0.0001f, conditionData.Duration); // 0이면 나눗셈 터지니 최소값
         }
 
-        public override void OnApply()
+        public override void OnUpdate(float deltaTime)
         {
-            if (_direction == Vector2.zero || _force <= 0f)
+            base.OnUpdate(deltaTime);
+
+            if (_direction == Vector2.zero || _distance <= 0f)
                 return;
 
-            // 필요에 따라 이 부분은 커스텀
-            Owner.AddForce(_direction * _force, ForceMode2D.Impulse);
+            if (Duration <= 0f)
+                return;
+
+            float t = Mathf.Clamp01(_elapsed / Duration); // 0~1
+            // Ease-Out 적용 (Quadratic Ease-Out)
+            // t가 처음엔 빨리, 끝으로 갈수록 천천히 증가하는 느낌
+            float easedT = 1f - (1f - t) * (1f - t);
+
+            float currentDist = _distance * easedT;
+            Vector2 targetPos = _startPos + _direction * currentDist;
+
+            Vector2 delta = targetPos - _prevPos;
+            _prevPos = targetPos;
+
+            if (_rb != null)
+            {
+                _rb.MovePosition(_rb.position + delta);
+            }
+            else
+            {
+                Owner.transform.position += (Vector3)delta;
+            }
+        }
+
+        /// <summary>
+        /// 이미 넉백 중일 때, 추가 넉백이 들어온 경우:
+        /// - 거리: 추가 거리만큼 더 멀리
+        /// - 시간: 추가 duration만큼 더 오래 넉백
+        /// </summary>
+        public override void Merge(ConditionData conditionData)
+        {
+
+            // --- 방향/거리 누적 방식 (Additive) ---
+
+            // 기존 넉백 벡터
+            Vector2 oldVec = _direction * _distance;
+
+            Vector2 ownerPos = Owner.transform.position;
+            Vector2 direction = ownerPos - conditionData.EffectPos;
+
+
+            // 새 넉백 벡터
+            Vector2 newVec = direction * conditionData.Param1;
+
+            // 합산
+            Vector2 merged = oldVec + newVec;
+
+            // 거리 갱신
+            _distance = merged.magnitude;
+
+            // 방향 갱신
+            if (_distance > 0.0001f)
+                _direction = merged.normalized;
+
+            // 시간 누적 (원하면 Replace or Max로 변경해도 됨)
+            Duration += conditionData.Duration;
         }
     }
 

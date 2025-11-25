@@ -359,7 +359,7 @@ namespace GameBerry
     {
         MultipleInstances,   // 공속/이속/공격력 버프처럼 여러 개 각각 타이머
         RefreshDuration,     // 스턴처럼 하나만 존재, 듀레이션만 최신으로 갱신
-        AccumulateValue,     // 넉백처럼 값만 누적 (더 멀리 밀림)
+        MergyValue,     // 넉백처럼 값이 누적
     }
 
     public enum V2Enum_Point

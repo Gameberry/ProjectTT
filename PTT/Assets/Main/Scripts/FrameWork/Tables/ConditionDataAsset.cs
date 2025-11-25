@@ -26,6 +26,7 @@ namespace GameBerry
         public float Param1;
         public float Param2;
         public float Duration;
+        public float Rate = 1.0f;
         [HideInInspector]
         public Vector2 EffectPos;
     }
@@ -50,7 +51,7 @@ namespace GameBerry
                 Add(Enum_ConditionType.Snare, ConditionCategory.CrowdControl, ConditionStackPolicy.RefreshDuration, 3f, "icon_snare");
                 Add(Enum_ConditionType.Slow, ConditionCategory.CrowdControl, ConditionStackPolicy.RefreshDuration, 4f, "icon_slow");
 
-                Add(Enum_ConditionType.Knockback, ConditionCategory.CrowdControl, ConditionStackPolicy.MultipleInstances, 0.1f, "icon_knockback");
+                Add(Enum_ConditionType.Knockback, ConditionCategory.CrowdControl, ConditionStackPolicy.MergyValue, 0.1f, "icon_knockback");
 
                 Add(Enum_ConditionType.AttackUp, ConditionCategory.Buff, ConditionStackPolicy.MultipleInstances, 1f, "icon_AttackUp");
                 Add(Enum_ConditionType.DefenseUp, ConditionCategory.Buff, ConditionStackPolicy.MultipleInstances, 1f, "icon_DefenseUp");

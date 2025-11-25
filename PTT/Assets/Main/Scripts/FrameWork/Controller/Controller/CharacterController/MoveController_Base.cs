@@ -15,7 +15,7 @@ namespace GameBerry
 
         public void Move()
         {
-            if (_characterControllerBase.CharacterState == CharacterState.Run)
+            if (_characterControllerBase.CharacterState == CharacterState.Run && _characterControllerBase._blockMove == false)
             {
                 float operMoveSpeed = _characterControllerBase.FinalMoveSpeed;
 

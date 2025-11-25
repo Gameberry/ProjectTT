@@ -35,7 +35,7 @@ MonoBehaviour:
     IconKey: icon_slow
   - Type: 17
     Category: 3
-    StackPolicy: 0
+    StackPolicy: 2
     DefaultDuration: 0.1
     IconKey: icon_knockback
   - Type: 101
@@ -61,37 +61,50 @@ MonoBehaviour:
   conditionDatas:
   - Index: 0
     Type: 17
-    Param1: 1
+    Param1: 2
     Param2: 0
-    Duration: 0.3
-    EffectPos: {x: -10, y: 6}
+    Duration: 0.5
+    Rate: 1
+    EffectPos: {x: 7.0214076, y: -1.7413826}
   - Index: 1
     Type: 14
     Param1: 0
     Param2: 0
-    Duration: 1
-    EffectPos: {x: -6.3119736, y: 1.8128595}
+    Duration: 0.5
+    Rate: 1
+    EffectPos: {x: 7.0214076, y: -1.7413826}
   - Index: 2
     Type: 16
     Param1: 0.5
     Param2: 0.5
-    Duration: 1
-    EffectPos: {x: -8.521676, y: -1.9010355}
+    Duration: 2
+    Rate: 1
+    EffectPos: {x: 7.0214076, y: -1.7413826}
   - Index: 100
     Type: 101
-    Param1: 1.2
+    Param1: 2
     Param2: 0
     Duration: 3
-    EffectPos: {x: -5.971352, y: -0.2593312}
+    Rate: 1
+    EffectPos: {x: 7.0214076, y: -1.7413826}
   - Index: 101
     Type: 103
     Param1: 1.5
     Param2: 0
     Duration: 1
-    EffectPos: {x: -6.3119736, y: 1.8128595}
+    Rate: 1
+    EffectPos: {x: 7.0214076, y: -1.7413826}
   - Index: 102
-    Type: 103
+    Type: 104
     Param1: 1.5
     Param2: 0
     Duration: 1
-    EffectPos: {x: -8.521676, y: -1.9010355}
+    Rate: 1
+    EffectPos: {x: 7.0214076, y: -1.7413826}
+  - Index: 103
+    Type: 11
+    Param1: 0
+    Param2: 0
+    Duration: 1
+    Rate: 0.5
+    EffectPos: {x: 7.0214076, y: -1.7413826}

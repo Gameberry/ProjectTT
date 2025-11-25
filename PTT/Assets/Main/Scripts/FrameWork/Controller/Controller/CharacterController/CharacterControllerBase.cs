@@ -79,7 +79,7 @@ namespace GameBerry
         protected float _characterAttackSpeed = 1.0f;
         protected float _characterMoveSpeed = 1.0f;
 
-        protected bool _blockMove { get; private set; }
+        public bool _blockMove { get; private set; }
         protected bool _blockAttack { get; private set; }
         protected bool _blockSkill { get; private set; }
 
@@ -154,6 +154,12 @@ namespace GameBerry
         {
             if (IsDead == true)
                 return;
+
+            if (_conditionController.HasCondition(Enum_ConditionType.Invincible))
+            {
+                Debug.Log("무적으로 인해 데미지 안입음");
+                return;
+            }
 
             DeCreaseHP(damage);
             if (CurrentHP <= 0)
