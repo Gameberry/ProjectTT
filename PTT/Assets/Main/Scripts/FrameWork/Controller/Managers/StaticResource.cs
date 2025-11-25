@@ -29,10 +29,14 @@ namespace GameBerry
         private BattleModeStaticDataAsset _battleModeStaticDataAsset;
 
         [SerializeField]
+        private ConditionDataAsset _conditionDataAsset;
+
+        [SerializeField]
         private IconTableAsset _iconTableAsset;
 
         [SerializeField]
         private SoundTableAsset _soundTableAsset;
+
 
         //------------------------------------------------------------------------------------
         protected override void Init()
@@ -194,6 +198,11 @@ namespace GameBerry
         public BattleModeStaticDataAsset GetBattleModeStaticData()
         {
             return _battleModeStaticDataAsset;
+        }
+        //------------------------------------------------------------------------------------
+        public ConditionDataAsset GetConditionData()
+        {
+            return _conditionDataAsset;
         }
         //------------------------------------------------------------------------------------
         #region Icon

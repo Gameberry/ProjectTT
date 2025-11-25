@@ -79,10 +79,10 @@ namespace GameBerry
                     }
 
                     float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                    if (distance <= attackRange)
+                    if (distance <= attackRange && _blockAttack == false)
                     {
                         ChangeState(CharacterState.Attack);
-                        _attackTimming = Time.time + _characterAttackSpeed;
+                        _attackTimming = Time.time + FinalAttackSpeed;
                     }
                 }
                 else if (CharacterState == CharacterState.Attack)
@@ -92,7 +92,7 @@ namespace GameBerry
                         if (AttackTarget != null)
                         {
                             ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                            AttackTarget.Damage(MyDamage);
+                            AttackTarget.Damage(FinalAttack);
                             ChangeState(CharacterState.Idle);
                         }   
                     }

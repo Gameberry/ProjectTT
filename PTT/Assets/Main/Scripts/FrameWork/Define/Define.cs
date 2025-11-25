@@ -109,6 +109,9 @@ namespace GameBerry
         public float AttackDuration = 0.5f;
         [Range(0.0f, 1.0f)]
         public float AttackDamageNormalTime = 0.5f;
+
+        public List<int> EnemyConditionDatas = new List<int>();
+        public List<int> MyConditionDatas = new List<int>();
     }
 
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);
@@ -323,39 +326,40 @@ namespace GameBerry
     }
 
     // 군중제어
-    public enum V2Enum_SkillEffectType
+    public enum Enum_ConditionType
     {
         None = 0,
-        Invincible = 11, // 무적      있던거
-        Cleansing = 12, // 상태이상 해제      있던거
-        HOT = 13, // 지속 힐      있던거
-        IncreaseAtt = 14, // 공격력 증가 %
-        IncreaseArmor = 15, // 방어력 증가 %
+        Invincible = 11, // 무적
 
+        Stun = 14, // 스턴(이동, 평타, 스킬 모두 불능)
+        Snare = 15, // 속박 (이동 불능)
+        Slow = 16, // 둔화 (이속 공속 감소)
 
+        Knockback = 17, // 넉백
 
-        Stun = 1001, // 스턴(이동, 평타, 스킬 모두 불능)      있던거
-        Silence = 1002, // 침묵 (스킬 불능)      있던거
-        Blind = 1003, // 실명 (평타 불능)      있던거
-        Snare = 1004, // 속박 (이동 불능)      있던거
-        Slow = 1005, // 둔화 (이속 공속 감소)      있던거
-        DOT = 1006, // 지속 피해      있던거
-
-        BurnDOT = 1007, // 화상 지속 피해 (공격력 비례) SkillEffect가 종속된 Damage 값의 일정 %를 0.5초마다 입힌다.
-
-
-
-        Knockback = 2001, // 넉백      있던거
-        Fling = 2002, // 당기기      있던거
-        AdditionalDmg = 2003, // 추가데미지 %
-
-        // 완료
-        Heal = 2007, //공격력에 비례한 HP 즉시 회복
-        DotHeal = 2008, //공격력에 비례한 HP를 0.5초마다 회복 (Duration 만큼 지속)
-        Death = 2009, //일정 HP 이하 적 즉사(Value로 % 수치 제어)
-        // 완료
+        // --- Buffs ---
+        AttackUp = 101,      // 공격력 증가
+        DefenseUp = 102,     // 방어력 증가
+        MoveSpeedUp = 103,   // 이속 증가
+        AttackSpeedUp = 104, // 공속 증가
 
         Max,
+    }
+
+    public enum ConditionCategory
+    {
+        None,
+        Buff,
+        Debuff,
+        CrowdControl, // Stun, Snare, Slow, Knockback 등
+        Utility       // Invincible, Pull, Push 등
+    }
+
+    public enum ConditionStackPolicy
+    {
+        MultipleInstances,   // 공속/이속/공격력 버프처럼 여러 개 각각 타이머
+        RefreshDuration,     // 스턴처럼 하나만 존재, 듀레이션만 최신으로 갱신
+        AccumulateValue,     // 넉백처럼 값만 누적 (더 멀리 밀림)
     }
 
     public enum V2Enum_Point

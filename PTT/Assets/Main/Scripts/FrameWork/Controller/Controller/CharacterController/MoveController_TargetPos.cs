@@ -40,7 +40,7 @@ namespace GameBerry
 
             Vector3 posGap = _root.transform.position - _myController.transform.position;
 
-            _myController.transform.position += posGap * Time.deltaTime * _myController.MyCharacterMoveSpeed * StaticResource.Instance.GetBattleModeStaticData().PetMoveSpeed;
+            _myController.transform.position += posGap * Time.deltaTime * _myController.FinalMoveSpeed * StaticResource.Instance.GetBattleModeStaticData().PetMoveSpeed;
         }
     }
 }

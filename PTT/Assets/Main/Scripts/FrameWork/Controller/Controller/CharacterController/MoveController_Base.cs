@@ -17,7 +17,7 @@ namespace GameBerry
         {
             if (_characterControllerBase.CharacterState == CharacterState.Run)
             {
-                float operMoveSpeed = _characterControllerBase.MyCharacterMoveSpeed;
+                float operMoveSpeed = _characterControllerBase.FinalMoveSpeed;
 
                 if (_characterControllerBase.MyRigidbody2D != null)
                 {

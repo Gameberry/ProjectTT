@@ -90,22 +90,26 @@ namespace GameBerry
             if (CharacterState == CharacterState.Dead)
                 return;
 
-            for (int i = 0; i < _skillDatas.Count; ++i)
+            if (_blockSkill == false)
             {
-                AttackData attackData = _skillDatas[i];
-                if (attackData.NextPlayTime <= Time.time)
+                for (int i = 0; i < _skillDatas.Count; ++i)
                 {
-                    if (_attackTarget != null && _attackTarget.IsDead != true)
+                    AttackData attackData = _skillDatas[i];
+                    if (attackData.NextPlayTime <= Time.time)
                     {
-                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                        if (distance <= attackData.AttackRange)
+                        if (_attackTarget != null && _attackTarget.IsDead != true)
                         {
-                            _skillPlayer.PlaySkill(attackData, _attackTarget);
-                            attackData.NextPlayTime = Time.time + attackData.Cooltime;
+                            float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                            if (distance <= attackData.AttackRange)
+                            {
+                                _skillPlayer.PlaySkill(attackData, _attackTarget);
+                                attackData.NextPlayTime = Time.time + attackData.Cooltime;
+                            }
                         }
                     }
                 }
             }
+            
 
 #if DEV_DEFINE
             _useCustomDirVec = false;
@@ -161,7 +165,7 @@ namespace GameBerry
                 }
 
                 float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                if (distance <= _attackRange)
+                if (distance <= _attackRange && _blockAttack == false)
                 {
                     List<AttackData> attackDatas = Random.Range(0.0f, 1.0f) <= _tempCritical ? _criticalAttackData : _attackData;
 
@@ -178,7 +182,7 @@ namespace GameBerry
                     }
                     
 
-                    float attackduration = selectAttackData.AttackDuration / _characterAttackSpeed;
+                    float attackduration = selectAttackData.AttackDuration / FinalAttackSpeed;
                     float attackdelay = attackduration * selectAttackData.AttackDamageNormalTime;
                     _attackTimming = Time.time + attackduration;
 

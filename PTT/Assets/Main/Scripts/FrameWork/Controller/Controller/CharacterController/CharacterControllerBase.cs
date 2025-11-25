@@ -20,6 +20,9 @@ namespace GameBerry
         private CharacterBillboardController _characterBillboardController;
 
         [SerializeField]
+        private CharacterConditionController _conditionController;
+
+        [SerializeField]
         protected IFFType _iFFType = IFFType.IFF_None;
 
         public IFFType IFFType { get { return _iFFType; } }
@@ -52,8 +55,6 @@ namespace GameBerry
         protected CharacterStatOperator _characterStatOperator = new CharacterStatOperator();
         public CharacterStatOperator CharacterStatOperator { get { return _characterStatOperator; } }
 
-        protected double _myDamage = 0.0;
-        public double MyDamage { get { return _myDamage; } }
 
         [SerializeField]
         protected double _maxHP = 0.0;
@@ -73,21 +74,52 @@ namespace GameBerry
             set { _aniControllerSpeed = value; }
         }
 
+        protected double _characterAttack = 1.0f;
+        protected double _characterDefense = 1.0f;
         protected float _characterAttackSpeed = 1.0f;
         protected float _characterMoveSpeed = 1.0f;
-        public float MyCharacterMoveSpeed { get { return _characterMoveSpeed; } }
 
+        protected bool _blockMove { get; private set; }
+        protected bool _blockAttack { get; private set; }
+        protected bool _blockSkill { get; private set; }
+
+        private float _condAtkMul = 1f;
+        private float _condDefMul = 1f;
+        private float _condMoveMul = 1f;
+        private float _condAttackSpdMul = 1f;
+
+        public double FinalAttack => _characterAttack * _condAtkMul;
+        public double FinalDefense => _characterDefense * _condDefMul;
+        public float FinalMoveSpeed => _characterMoveSpeed * _condMoveMul;
+        public float FinalAttackSpeed => _characterAttackSpeed * _condAttackSpdMul;
 
         //------------------------------------------------------------------------------------
         private void Awake()
         {
             if (_mySkeletonAnimationHandler != null)
                 _mySkeletonAnimationHandler.AnimationEvent += SpineAnimationEvent;
+
+            _conditionController = gameObject.AddComponent<CharacterConditionController>();
         }
         //------------------------------------------------------------------------------------
         public virtual void Init()
         {
 
+        }
+        //------------------------------------------------------------------------------------
+        public void SetControlLocks(bool move, bool attack, bool skill)
+        {
+            _blockMove = move;
+            _blockAttack = attack;
+            _blockSkill = skill;
+        }
+        //------------------------------------------------------------------------------------
+        public void SetConditionStatMultipliers(float atkMul, float defMul, float moveMul, float aspdMul)
+        {
+            _condAtkMul = atkMul;
+            _condDefMul = defMul;
+            _condMoveMul = moveMul;
+            _condAttackSpdMul = aspdMul;
         }
         //------------------------------------------------------------------------------------
         public void SetSpineModelData(SpineModelData spineModelData)
@@ -135,7 +167,11 @@ namespace GameBerry
         public void Damage(AttackData damage)
         {
             if (damage.Hitter != null && damage.Hitter.IsDead == false)
-                Damage(damage.DamageRate * damage.Hitter.MyDamage);
+            { 
+                Damage(damage.DamageRate * damage.Hitter.FinalAttack);
+                if (IsDead == false)
+                    PlayCharacterCondition(damage.EnemyConditionDatas, damage.Hitter.transform.position);
+            }
         }
         //------------------------------------------------------------------------------------
         protected virtual void OnDamage()
@@ -145,17 +181,54 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void PlaySkill(AttackData attackData, Vector3 pos)
         {
+            if (attackData != null)
+            {
+                PlayCharacterCondition(attackData.MyConditionDatas, pos);
+            }
+
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, null);
         }
         //------------------------------------------------------------------------------------
         public void PlaySkill(AttackData attackData, Vector3 pos, CharacterControllerBase fixSkillHitReceiver)
         {
+            if (attackData != null)
+            {
+                PlayCharacterCondition(attackData.MyConditionDatas, pos);
+            }
+
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, fixSkillHitReceiver);
+        }
+        //------------------------------------------------------------------------------------
+        private void PlayCharacterCondition(List<int> index, Vector2 attackpos)
+        {
+            for (int i = 0; i < index.Count; ++i)
+            {
+                PlayCharacterCondition(index[i], attackpos);
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private void PlayCharacterCondition(int index, Vector2 attackpos)
+        {
+            ConditionData conditionData = StaticResource.Instance.GetConditionData().GetData(index);
+            conditionData.EffectPos = attackpos;
+
+            PlayCharacterCondition(conditionData);
+        }
+        //------------------------------------------------------------------------------------
+        private void PlayCharacterCondition(ConditionData conditionData)
+        {
+            if (conditionData == null)
+                return;
+
+            _conditionController?.AddCondition(conditionData);
         }
         //------------------------------------------------------------------------------------
         public void Play()
         {
             Managers.AggroManager.Instance.AddIFFCharacterAggro(this);
+            _blockMove = false;
+            _blockAttack = false;
+            _blockSkill = false;
             OnPlay();
         }
         //------------------------------------------------------------------------------------
@@ -250,6 +323,11 @@ namespace GameBerry
             ChangeState(state);
         }
         //------------------------------------------------------------------------------------
+        public void AddForce(Vector2 force, ForceMode2D forceMode2D)
+        {
+            _rigidbody2D.AddForce(force, forceMode2D);
+        }
+        //------------------------------------------------------------------------------------
         protected virtual void ChangeState(CharacterState state, bool playAni = true)
         {
             if (_characterState == state)
@@ -261,7 +339,7 @@ namespace GameBerry
             {
                 case CharacterState.Attack:
                     {
-                        _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterAttackSpeed);
+                        _mySkeletonAnimationHandler?.SetAnimationSpeed(FinalAttackSpeed);
                         break;
                     }
                 case CharacterState.Run:
@@ -367,7 +445,8 @@ namespace GameBerry
             else
                 _currentHP = _maxHP * currHpRatio;
 
-            _myDamage = GetOutPutMyStat(V2Enum_Stat.Attack);
+            _characterAttack = GetOutPutMyStat(V2Enum_Stat.Attack);
+            _characterDefense = GetOutPutMyStat(V2Enum_Stat.Defence);
         }
         //------------------------------------------------------------------------------------
     }
