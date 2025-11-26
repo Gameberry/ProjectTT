@@ -29,6 +29,9 @@ namespace GameBerry
         private ConditionDataAsset _conditionDataAsset;
 
         [SerializeField]
+        private StageDataAsset _stageDataAsset;
+
+        [SerializeField]
         private IconTableAsset _iconTableAsset;
 
         [SerializeField]
@@ -195,6 +198,11 @@ namespace GameBerry
         public ConditionDataAsset GetConditionData()
         {
             return _conditionDataAsset;
+        }
+        //------------------------------------------------------------------------------------
+        public StageDataAsset GetStageData()
+        {
+            return _stageDataAsset;
         }
         //------------------------------------------------------------------------------------
         #region Icon

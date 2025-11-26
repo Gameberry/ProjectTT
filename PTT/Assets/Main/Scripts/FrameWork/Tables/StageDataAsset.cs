@@ -1,9 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using TMPro;
-using Spine;
-using Spine.Unity;
 
 namespace GameBerry
 {
@@ -65,6 +61,9 @@ namespace GameBerry
                 }
             }
         }
+        //------------------------------------------------------------------------------------
+        public StageData GetStageData(int stagenumber)
+            => StageDatas.Find(x => x.StageNumber == stagenumber);
         //------------------------------------------------------------------------------------
     }
 }
