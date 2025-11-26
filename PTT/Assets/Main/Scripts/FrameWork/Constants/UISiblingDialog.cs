@@ -25,6 +25,7 @@
         CharacterInfoDialog,
         CharacterContentDialog,
         PetContentDialog,
+        SkinSelectDialog,
 
         LobbyRelicContentDialog,
         LobbyTimeAttackMissionDialog,

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Spine;
@@ -10,27 +9,33 @@ namespace GameBerry
     {
         [SerializeField] public SkeletonAnimation _skeletonAnimation;
 
-        [SerializeField] private List<SpineModelAnimationData> _statesAndAnimation = new List<SpineModelAnimationData>();
-        [SerializeField] private List<AnimationTransition> _transitions = new List<AnimationTransition>();
-        [SerializeField] private List<AnimationEventParticle> _eventparticle = new List<AnimationEventParticle>();
+        [Header("Animation Data")]
+        [SerializeField]
+        private List<SpineModelAnimationData> _statesAndAnimation =
+            new List<SpineModelAnimationData>();
+
+        [SerializeField]
+        private List<AnimationTransition> _transitions =
+            new List<AnimationTransition>();
+
+        [SerializeField]
+        private List<AnimationEventParticle> _eventparticle =
+            new List<AnimationEventParticle>();
 
         [SerializeField] private bool _awakeInit = false;
 
-        public Dictionary<string, Spine.Animation> AnimationList_Dic = new Dictionary<string, Spine.Animation>();
-        private Dictionary<CharacterState, string> _myAnimation = new Dictionary<CharacterState, string>();
+        public Dictionary<string, Spine.Animation> AnimationList_Dic =
+            new Dictionary<string, Spine.Animation>();
 
+        private readonly Dictionary<CharacterState, string> _myAnimation =
+            new Dictionary<CharacterState, string>();
 
         private MeshRenderer _meshRenderer;
 
-        [System.Serializable]
-        public class StateNameToAnimationReference
-        {
-            //public string stateName;
-            //public @string animation;
-            //public Spine.Animation animation;
-            [SpineAnimation] public string stateName;
-            public Spine.Animation animation;
-        }
+        // 현재 사용 중인 SpineModelData(스킨 슬롯 기본값 참조용)
+        private SpineModelData _currentModelData;
+
+        #region Nested types
 
         [System.Serializable]
         public class AnimationTransition
@@ -48,7 +53,15 @@ namespace GameBerry
             public List<ParticleSystem> particleSystem;
         }
 
+        #endregion
+
+        #region Events
+
         public System.Action<string, string> AnimationEvent;
+
+        #endregion
+
+        #region Unity
 
         private void Awake()
         {
@@ -58,50 +71,62 @@ namespace GameBerry
             if (_meshRenderer == null)
                 _meshRenderer = GetComponent<MeshRenderer>();
 
-            _skeletonAnimation.state.Event += HandleEvent;
-            _skeletonAnimation.state.Start += StartEvent;
-            _skeletonAnimation.state.Complete += EndEvent;
-
-            if (_awakeInit == true)
+            if (_skeletonAnimation != null && _skeletonAnimation.state != null)
             {
-                
+                _skeletonAnimation.state.Event += HandleEvent;
+                _skeletonAnimation.state.Start += StartEvent;
+                _skeletonAnimation.state.Complete += EndEvent;
+            }
+
+            if (_awakeInit && _skeletonAnimation != null
+                && _skeletonAnimation.skeletonDataAsset != null)
+            {
+                var skeletonData =
+                    _skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
+
                 foreach (var entry in _statesAndAnimation)
-                {
-                    SkeletonData skeletonData = _skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
-                    entry.animation = skeletonData != null ? skeletonData.FindAnimation(entry.stateName) : null;
-                }
+                    entry.animation = skeletonData?.FindAnimation(entry.stateName);
 
                 foreach (var entry in _transitions)
                 {
-                    SkeletonData skeletonData = _skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
-
-                    entry.from = skeletonData != null ? skeletonData.FindAnimation(entry.fromeName) : null;
-                    entry.to = skeletonData != null ? skeletonData.FindAnimation(entry.toName) : null;
+                    entry.from = skeletonData?.FindAnimation(entry.fromeName);
+                    entry.to = skeletonData?.FindAnimation(entry.toName);
                 }
 
                 if (skinList.Count > 0)
-                    RefreshAttachSkin();
+                    RebuildRuntimeSkin();
             }
-
         }
 
+        #endregion
+
+        #region Model & Animation Setup
+
+        /// <summary>
+        /// SpineModelData를 세팅하고, 애니메이션/스킨 슬롯 초기화
+        /// </summary>
         public void SetSpineModel(SpineModelData spineModelData)
         {
             if (spineModelData == null)
                 return;
 
+            _currentModelData = spineModelData;
+
+            // 스켈레톤 데이터 세팅
             _skeletonAnimation.skeletonDataAsset = spineModelData.SkeletonData;
-            if (spineModelData.SkinList.Count > 0)
-                _skeletonAnimation.initialSkinName = spineModelData.SkinList[0];
-            else
-                _skeletonAnimation.initialSkinName = "default";
+
+            // 최초 기본 스킨(없으면 default)
+            //if (spineModelData.SkinList.Count > 0)
+            //    _skeletonAnimation.initialSkinName = spineModelData.SkinList[0];
+            //else
+            //    _skeletonAnimation.initialSkinName = "default";
+
+            //_skeletonAnimation.initialSkinName = "default";
+
             _skeletonAnimation.Initialize(true);
 
-            _skeletonAnimation.state.Event += HandleEvent;
-            _skeletonAnimation.state.Start += StartEvent;
-            _skeletonAnimation.state.Complete += EndEvent;
-
-            SkeletonData skeletonData = _skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
+            // 애니메이션 목록 세팅
+            var skeletonData = _skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
             _statesAndAnimation = spineModelData.AnimationList;
 
             AnimationList_Dic.Clear();
@@ -109,21 +134,23 @@ namespace GameBerry
 
             foreach (var pair in spineModelData.AnimationState)
             {
-                _myAnimation.Add(pair.characterState, pair.animationName);
+                _myAnimation[pair.characterState] = pair.animationName;
             }
 
-            foreach (var pair in skeletonData.Animations)
+            foreach (var animation in skeletonData.Animations)
             {
-                if (AnimationList_Dic.ContainsKey(pair.Name) == false)
-                    AnimationList_Dic.Add(pair.Name, pair);
+                if (!AnimationList_Dic.ContainsKey(animation.Name))
+                    AnimationList_Dic.Add(animation.Name, animation);
             }
 
             foreach (var entry in _transitions)
             {
-
-                entry.from = skeletonData != null ? skeletonData.FindAnimation(entry.fromeName) : null;
-                entry.to = skeletonData != null ? skeletonData.FindAnimation(entry.toName) : null;
+                entry.from = skeletonData?.FindAnimation(entry.fromeName);
+                entry.to = skeletonData?.FindAnimation(entry.toName);
             }
+
+            // 슬롯/부가 스킨을 포함한 런타임 스킨 구성
+            ResetSlotSkinsToDefault();
         }
 
         public void SetOrderInLayer(int orderinlayer)
@@ -132,22 +159,9 @@ namespace GameBerry
                 _meshRenderer.sortingOrder = orderinlayer;
         }
 
-        //public void GetBounds()
-        //{
-        //    float x, y, width, height;
-        //    float[] vertexBuffer = null;
+        #endregion
 
-        //    _skeletonAnimation.skeleton.GetBounds(out x, out y, out width, out height, ref vertexBuffer);
-
-        //    Debug.Log(string.Format("X : {0}, Y : {1}, width : {2} height : {3}",
-        //            x, y, width, height));
-
-        //    //Debug.Log(string.Format("X : {0}, Y : {1}, ScaleX : {2} ScaleY : {3}",
-        //    //    _skeletonAnimation.skeleton.X,
-        //    //    _skeletonAnimation.skeleton.Y,
-        //    //    _skeletonAnimation.skeleton.ScaleX,
-        //    //    _skeletonAnimation.skeleton.ScaleY));
-        //}
+        #region Spine Events
 
         private void HandleEvent(TrackEntry trackEntry, Spine.Event e)
         {
@@ -155,51 +169,50 @@ namespace GameBerry
 
             foreach (var eventparticle in _eventparticle)
             {
-                if (eventparticle.eventName == eventname)
-                {
-                    if (eventparticle.particleSystem == null)
-                        continue;
+                if (eventparticle.eventName != eventname)
+                    continue;
 
-                    for (int i = 0; i < eventparticle.particleSystem.Count; ++i)
-                    {
-                        eventparticle.particleSystem[i].Stop();
-                        eventparticle.particleSystem[i].Play();
-                    }
+                if (eventparticle.particleSystem == null)
+                    continue;
+
+                for (int i = 0; i < eventparticle.particleSystem.Count; ++i)
+                {
+                    eventparticle.particleSystem[i].Stop();
+                    eventparticle.particleSystem[i].Play();
                 }
             }
 
-            if (AnimationEvent != null)
-                AnimationEvent(trackEntry.ToString(), eventname);
+            AnimationEvent?.Invoke(trackEntry.ToString(), eventname);
         }
+
+        private void StartEvent(TrackEntry trackEntry)
+        {
+            AnimationEvent?.Invoke(trackEntry.ToString(), "Start");
+        }
+
+        private void EndEvent(TrackEntry trackEntry)
+        {
+            AnimationEvent?.Invoke(trackEntry.ToString(), "End");
+        }
+
+        #endregion
+
+        #region Public Animation API
 
         public void SetAnimationSpeed(float speed)
         {
             _skeletonAnimation.AnimationState.TimeScale = speed;
         }
 
-        private void StartEvent(TrackEntry trackEntry)
-        {
-            if (AnimationEvent != null)
-                AnimationEvent(trackEntry.ToString(), "Start");
-        }
-
-        private void EndEvent(TrackEntry trackEntry)
-        {
-            if (AnimationEvent != null)
-                AnimationEvent(trackEntry.ToString(), "End");
-        }
-
         public void SetColor(Color color)
         {
             if (_skeletonAnimation != null)
-            {
                 _skeletonAnimation.skeleton.SetColor(color);
-            }
         }
 
-        [SpineEvent] public string eventname;
         [SpineAnimation] public string testAniName;
         [SpineSkin] public string testSpineSkin;
+
         [ContextMenu("TestPlayAnimation")]
         public void TestPlayAnimation()
         {
@@ -212,79 +225,26 @@ namespace GameBerry
             SetSkin(testSpineSkin);
         }
 
+        /// <summary>
+        /// Spine의 skin을 통째로 갈아끼우는 용도 (슬롯 시스템을 안 쓰고,
+        /// 스켈레톤 내 하나의 skin으로만 보여주고 싶을 때)
+        /// </summary>
         public void SetSkin(string skin)
         {
-            if (_skeletonAnimation != null)
-            {
-                _skeletonAnimation.skeleton.SetSkin(skin);
-                _skeletonAnimation.skeleton.SetSlotsToSetupPose();
-            }
-        }
+            if (_skeletonAnimation == null)
+                return;
 
-        [SpineSkin]
-        public List<string> skinList = new List<string>();
-
-        Skin myEquipsSkin = new Skin("my new skin");
-
-        public void AddAttachSkin(string attachSkin)
-        {
-            skinList.Add(attachSkin);
-        }
-
-        public void ReleaseAttachSkin()
-        {
-            skinList.Clear();
-        }
-
-        [ContextMenu("RefreshAttachSkin")]
-        public void RefreshAttachSkin()
-        {
-            if (_skeletonAnimation != null)
-            {
-                Skeleton skeleton = _skeletonAnimation.skeleton;
-                SkeletonData skeletonData = skeleton.Data;
-
-                myEquipsSkin.Clear();
-
-                for (int i = 0; i < skinList.Count; ++i)
-                {
-                    string skinname = skinList[i];
-
-                    if (string.IsNullOrEmpty(skinname) == true)
-                        continue;
-
-                    myEquipsSkin.AddSkin(skeletonData.FindSkin(skinname));
-                }
-
-                _skeletonAnimation.skeleton.SetSkin(myEquipsSkin);
-                _skeletonAnimation.skeleton.SetSlotsToSetupPose();
-                _skeletonAnimation.skeleton.SetBonesToSetupPose();
-                _skeletonAnimation.LateUpdate();
-
-                _myAnimation.Clear();
-            }
-        }
-
-        [ContextMenu("ResetAttachSkin")]
-        private void ResetAttachSkin()
-        {
-            if (_skeletonAnimation != null)
-            {
-                Skeleton skeleton = _skeletonAnimation.skeleton;
-                SkeletonData skeletonData = skeleton.Data;
-
-                myEquipsSkin.Clear();
-                _skeletonAnimation.skeleton.SetSkin(myEquipsSkin);
-                _skeletonAnimation.skeleton.SetSlotsToSetupPose();
-            }
+            var skeleton = _skeletonAnimation.skeleton;
+            skeleton.SetSkin(skin);
+            skeleton.SetSlotsToSetupPose();
+            skeleton.SetBonesToSetupPose();
+            _skeletonAnimation.AnimationState.Apply(skeleton);
         }
 
         private string GetAniClipName(CharacterState characterState)
         {
-            if (_myAnimation.ContainsKey(characterState) == false)
-            {
+            if (!_myAnimation.ContainsKey(characterState))
                 _myAnimation.Add(characterState, characterState.ToString());
-            }
 
             return _myAnimation[characterState];
         }
@@ -301,26 +261,21 @@ namespace GameBerry
 
         public void PlayAnimation_Once(string stateShortName, bool loop)
         {
-            //var foundAnimation = GetAnimationForState(StringToHash(stateShortName));
-            //if (foundAnimation == null)
-            //    return;
-
-            if (AnimationList_Dic.ContainsKey(stateShortName) == false)
+            if (!AnimationList_Dic.ContainsKey(stateShortName))
                 return;
 
             _skeletonAnimation.AnimationState.SetAnimation(0, stateShortName, loop);
         }
 
         /// <summary>
-        /// 2D 뒤집기 메서드
+        /// 2D 좌우 뒤집기
         /// </summary>
-        /// <param name="horizontal"></param>
         public void SetFlip(float horizontal)
         {
-            if (horizontal != 0)
-            {
-                _skeletonAnimation.skeleton.ScaleX = horizontal > 0 ? 1f : -1f;
-            }
+            if (horizontal == 0)
+                return;
+
+            _skeletonAnimation.skeleton.ScaleX = horizontal > 0 ? 1f : -1f;
         }
 
         public void PlayAnimationForState(string stateShortName, int layerIndex)
@@ -328,11 +283,6 @@ namespace GameBerry
             PlayAnimationForState(StringToHash(stateShortName), layerIndex);
         }
 
-        /// <summary>
-        /// PlayAnimationForState Overloading 해당 애니메이션을 실행
-        /// </summary>
-        /// <param name="stateShortName">실행하고자 하는 애니메이션 이름</param>
-        /// <param name="layerIndex">트랙/레이어 번호</param>
         public void PlayAnimationForState(int stateShortName, int layerIndex)
         {
             var foundAnimation = GetAnimationForState(stateShortName);
@@ -347,24 +297,14 @@ namespace GameBerry
             return GetAnimationForState(StringToHash(stateShortName));
         }
 
-        /// <summary>
-        /// GetAnimationForState Overloading 해당 애니메이션을 반환(없다면 null)
-        /// </summary>
-        /// <param name="stateShortName">찾고자 하는 애니메이션 이름(정수로 들어옴)</param>
-        /// <returns>해당 애니메이션</returns>
         public Spine.Animation GetAnimationForState(int stateShortName)
         {
-            var foundState = _statesAndAnimation.Find(entry => StringToHash(entry.stateName) == stateShortName);
-            return ((foundState == null) ? null : foundState.animation);
+            var foundState =
+                _statesAndAnimation.Find(entry =>
+                    StringToHash(entry.stateName) == stateShortName);
+            return foundState == null ? null : foundState.animation;
         }
 
-        /// <summary>
-        /// 애니메이션 재생 메서드
-        /// 현재 진행중인 애니메이션이 없다면 || 전환 애니메이션이 없다면 바로 애니메이션 전환
-        /// 있다면 전환 애니메이션 우선 재생 후 재생
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="layerIndex"></param>
         public void PlayNewAnimation(Spine.Animation target, int layerIndex)
         {
             Spine.Animation transition = null;
@@ -376,7 +316,8 @@ namespace GameBerry
             if (transition != null)
             {
                 _skeletonAnimation.AnimationState.SetAnimation(layerIndex, current, false);
-                _skeletonAnimation.AnimationState.AddAnimation(layerIndex, transition, true, 0f);
+                _skeletonAnimation.AnimationState.AddAnimation(layerIndex, transition, true,
+                    0f);
             }
             else
             {
@@ -384,33 +325,197 @@ namespace GameBerry
             }
         }
 
-        /// <summary>
-        /// 현재 애니메이션에서 다음 애니메이션으로 전환될 때 전환 애니메이션이 있는지 판단
-        /// </summary>
-        /// <param name="from">현재 애니메이션</param>
-        /// <param name="to">다음 애니메이션</param>
-        /// <returns>없다면 null 있다면 전환애니메이션(ex)ldel-to-jump)</returns>
         private Spine.Animation TryGetTransition(Spine.Animation from)
         {
             foreach (var transition in _transitions)
             {
                 if (transition.from == from && transition.to != null)
-                {
                     return transition.to;
-                }
             }
 
             return null;
         }
 
-        /// <summary>
-        /// 애니메이션 문자열을 해쉬값으로 반환
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
         private int StringToHash(string str)
         {
             return Animator.StringToHash(str);
         }
+
+        #endregion
+
+        #region Skin System (슬롯 + 추가 Attach)
+
+        /// <summary>
+        /// 인스펙터에서 테스트 / 예전 구조와의 하위 호환을 위해 남겨둔 리스트.
+        /// 이 리스트에 들어 있는 스킨은 항상 "추가로 덮어씌우는 애드온" 으로 처리된다.
+        /// </summary>
+        [SpineSkin]
+        public List<string> skinList = new List<string>();
+
+        /// <summary>
+        /// 런타임에서 합성해서 쓰는 스킨
+        /// </summary>
+        private readonly Skin _runtimeSkin = new Skin("runtime-equips");
+
+        /// <summary>
+        /// 슬롯별 장착 스킨 (코디)
+        /// </summary>
+        private readonly Dictionary<SpineEquipSlot, string> _equippedSlotSkins =
+            new Dictionary<SpineEquipSlot, string>();
+
+        /// <summary>
+        /// 외부에서 "추가 스킨" 등록 (예전 AddAttachSkin 하위 호환)
+        /// </summary>
+        public void AddAttachSkin(string attachSkin)
+        {
+            if (string.IsNullOrEmpty(attachSkin))
+                return;
+
+            if (!skinList.Contains(attachSkin))
+                skinList.Add(attachSkin);
+
+            RebuildRuntimeSkin();
+        }
+
+        public void ReleaseAttachSkin()
+        {
+            skinList.Clear();
+            RebuildRuntimeSkin();
+        }
+
+        /// <summary>
+        /// 예전 RefreshAttachSkin 대신 이제 전체 런타임 스킨을 다시 빌드
+        /// </summary>
+        [ContextMenu("RefreshAttachSkin")]
+        public void RefreshAttachSkin()
+        {
+            RebuildRuntimeSkin();
+        }
+
+        /// <summary>
+        /// 슬롯별 스킨 장착
+        /// </summary>
+        public void EquipSlotSkin(SpineEquipSlot slot, string skinName)
+        {
+            if (string.IsNullOrEmpty(skinName))
+            {
+                UnequipSlotSkin(slot);
+                return;
+            }
+
+            if (_equippedSlotSkins.ContainsKey(slot) == false)
+                _equippedSlotSkins.Add(slot, skinName);
+
+            _equippedSlotSkins[slot] = skinName;
+            RebuildRuntimeSkin();
+        }
+
+        /// <summary>
+        /// 슬롯별 스킨 해제 (기본 스킨으로 돌아감)
+        /// </summary>
+        public void UnequipSlotSkin(SpineEquipSlot slot)
+        {
+            if (_equippedSlotSkins.Remove(slot))
+                RebuildRuntimeSkin();
+        }
+
+        /// <summary>
+        /// 모델에 설정해 둔 DefaultSlotSkins 값으로 슬롯 전체 초기화
+        /// </summary>
+        public void ResetSlotSkinsToDefault()
+        {
+            _equippedSlotSkins.Clear();
+
+            if (_currentModelData != null &&
+                _currentModelData.DefaultSlotSkins != null)
+            {
+                foreach (var slotSkin in _currentModelData.DefaultSlotSkins)
+                {
+                    if (slotSkin == null || string.IsNullOrEmpty(slotSkin.SkinName))
+                        continue;
+
+                    _equippedSlotSkins[slotSkin.Slot] = slotSkin.SkinName;
+                }
+            }
+
+            RebuildRuntimeSkin();
+        }
+
+        /// <summary>
+        /// baseSkin + 슬롯 스킨 + 추가 attachSkin 을 모두 합쳐서
+        /// 하나의 runtime skin 으로 세팅
+        /// </summary>
+        private void RebuildRuntimeSkin()
+        {
+            if (_skeletonAnimation == null || _skeletonAnimation.skeleton == null)
+                return;
+
+            var skeleton = _skeletonAnimation.skeleton;
+            var data = skeleton.Data;
+
+            _runtimeSkin.Clear();
+
+            // 1) base skin (initialSkinName 기준)
+            if (!string.IsNullOrEmpty(_skeletonAnimation.initialSkinName))
+            {
+                var baseSkin = data.FindSkin(_skeletonAnimation.initialSkinName);
+                if (baseSkin != null)
+                    _runtimeSkin.AddSkin(baseSkin);
+            }
+
+            foreach (var pair in _equippedSlotSkins)
+            {
+                string skinName = pair.Value;
+
+                var slotSkin = data.FindSkin(skinName);
+                if (slotSkin != null)
+                    _runtimeSkin.AddSkin(slotSkin);
+            }
+
+            //// 2) 슬롯별 스킨 (장착/코디)
+            //if (_currentModelData != null && _currentModelData.DefaultSlotSkins != null)
+            //{
+            //    foreach (var defaultSlot in _currentModelData.DefaultSlotSkins)
+            //    {
+            //        if (defaultSlot == null)
+            //            continue;
+
+            //        // 슬롯에 별도 장착 스킨이 있으면 그걸 우선 사용
+            //        string skinName = null;
+            //        if (!_equippedSlotSkins.TryGetValue(defaultSlot.Slot, out skinName)
+            //            || string.IsNullOrEmpty(skinName))
+            //        {
+            //            skinName = defaultSlot.SkinName;
+            //        }
+
+            //        if (string.IsNullOrEmpty(skinName))
+            //            continue;
+
+            //        var slotSkin = data.FindSkin(skinName);
+            //        if (slotSkin != null)
+            //            _runtimeSkin.AddSkin(slotSkin);
+            //    }
+            //}
+
+            // 3) 추가 attach 스킨 (이펙트/악세사리 등)
+            for (int i = 0; i < skinList.Count; ++i)
+            {
+                var name = skinList[i];
+                if (string.IsNullOrEmpty(name))
+                    continue;
+
+                var extraSkin = data.FindSkin(name);
+                if (extraSkin != null)
+                    _runtimeSkin.AddSkin(extraSkin);
+            }
+
+            // 실제 스켈레톤에 반영
+            skeleton.SetSkin(_runtimeSkin);
+            skeleton.SetSlotsToSetupPose();
+            skeleton.SetBonesToSetupPose();
+            _skeletonAnimation.AnimationState.Apply(skeleton);
+        }
+
+        #endregion
     }
 }

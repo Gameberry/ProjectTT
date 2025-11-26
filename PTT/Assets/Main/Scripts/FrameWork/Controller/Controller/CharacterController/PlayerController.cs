@@ -51,8 +51,10 @@ namespace GameBerry
             creatureBaseMove.SetCharacterController(this);
             RefreshCheatStat();
 
-            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(0);
+            _currentSpineModelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
             SetSpineModelData(_currentSpineModelData);
+
+            Managers.SkinManager.Instance.SetTempPlayerSpineHandler(_mySkeletonAnimationHandler);
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()

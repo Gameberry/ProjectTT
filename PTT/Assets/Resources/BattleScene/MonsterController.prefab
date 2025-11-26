@@ -548,14 +548,9 @@ MonoBehaviour:
   _transitions: []
   _eventparticle: []
   _awakeInit: 0
-  eventname: 
   testAniName: 
   testSpineSkin: 
-  skinList:
-  - Beard/003
-  - Hair/002
-  - Skin/01
-  - Weapon/000
+  skinList: []
 --- !u!1 &8029402296334279264
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,6 +694,7 @@ MonoBehaviour:
   _element_leftRot: {x: 0, y: 0, z: 0}
   _element_rightRot: {x: 0, y: 0, z: 0}
   _characterBillboardController: {fileID: 6065039365546199035}
+  _conditionController: {fileID: 0}
   _iFFType: 2
   _characterState: 0
   _mySkeletonAnimationHandler: {fileID: 3050078135932545529}
@@ -707,9 +703,9 @@ MonoBehaviour:
     SkeletonData: {fileID: 0}
     Name: 
     SkinList: []
-    DefaultAttackSkin: []
     AnimationList: []
     AnimationState: []
+    DefaultSlotSkins: []
   _uiCharacterState: {fileID: 6192595543854459148}
   _rigidbody2D: {fileID: 4839396993143079626}
   _attackTarget: {fileID: 0}

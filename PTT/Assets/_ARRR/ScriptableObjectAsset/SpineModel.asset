@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: SpineModel
   m_EditorClassIdentifier: 
   SpineModelDatas:
-  - ResourceIndex: 0
+  - ResourceIndex: 3
     SkeletonData: {fileID: 11400000, guid: 52c4d9c4a5547054899bab83a46f7640, type: 2}
     Name: "ai\uCE90\uB9AD\uD130\uC2A4\uD30C\uC778\uD14C\uC2A4\uD2B8_skeletondata"
     SkinList: []
-    DefaultAttackSkin: []
     AnimationList:
     - stateName: Attack_01
     - stateName: Attack_02_1
@@ -38,11 +37,11 @@ MonoBehaviour:
       animationName: Idle
     - characterState: 5
       animationName: Idle
+    DefaultSlotSkins: []
   - ResourceIndex: 1
     SkeletonData: {fileID: 11400000, guid: 88a565b3b6f1e3f4d99a16ccf89f85b7, type: 2}
     Name: ai_mon_01_skeletondata
     SkinList: []
-    DefaultAttackSkin: []
     AnimationList:
     - stateName: Die
     - stateName: Hit
@@ -58,11 +57,11 @@ MonoBehaviour:
       animationName: Hit
     - characterState: 5
       animationName: Die
+    DefaultSlotSkins: []
   - ResourceIndex: 2
     SkeletonData: {fileID: 11400000, guid: 8581875d425e5974b80b0067ad508da7, type: 2}
     Name: ai_mon_02_skeletondata
     SkinList: []
-    DefaultAttackSkin: []
     AnimationList:
     - stateName: Die
     - stateName: Hit
@@ -78,3 +77,47 @@ MonoBehaviour:
       animationName: Hit
     - characterState: 5
       animationName: Die
+    DefaultSlotSkins: []
+  - ResourceIndex: 0
+    SkeletonData: {fileID: 11400000, guid: d2b61afad74d3484b9c04708c0eff9c7, type: 2}
+    Name: "ai\uCE90\uB9AD\uD130\uC2A4\uD30C\uC778\uD14C\uC2A4\uD2B8_skeletondata"
+    SkinList:
+    - Back_skin/001
+    - Glass/glass_01
+    - Glass/glass_02
+    - Hair/001
+    - Hair/002
+    - Hair/003
+    - Hair/004
+    - Skin/skin_00
+    - Skin/skin_01
+    - Skin/skin_02
+    - Weapon/001
+    - Weapon/002
+    AnimationList:
+    - stateName: Attack_01
+    - stateName: Attack_02_1
+    - stateName: Attack_02_2
+    - stateName: Attack_03
+    - stateName: Attack_guide_123
+    - stateName: Idle
+    - stateName: Idle2_gun
+    - stateName: Run
+    AnimationState:
+    - characterState: 1
+      animationName: Idle
+    - characterState: 2
+      animationName: Run
+    - characterState: 3
+      animationName: Attack_02_1
+    - characterState: 4
+      animationName: Idle
+    - characterState: 5
+      animationName: Idle
+    DefaultSlotSkins:
+    - Slot: 0
+      SkinName: Skin/skin_01
+    - Slot: 1
+      SkinName: Hair/001
+    - Slot: 2
+      SkinName: Weapon/001
