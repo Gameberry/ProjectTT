@@ -279,6 +279,16 @@ namespace GameBerry
 			return cp.transform as RectTransform;
 		}
 
+		public static void ModifyAnchoredPosition(this RectTransform transform, float? x = null, float? y = null)
+		{
+			transform.anchoredPosition = transform.anchoredPosition.Modify(x, y);
+		}
+
+		public static void ModifySizeDelta(this RectTransform transform, float? x = null, float? y = null)
+		{
+			transform.sizeDelta = transform.sizeDelta.Modify(x, y);
+		}
+
 		public static void FromScreenPoint(this RectTransform target, Vector2 screenPoint)
 		{
 			var canvas = target.GetComponentInParent<Canvas>();
@@ -679,6 +689,19 @@ namespace GameBerry
 				pi += 1;
 				return *pi;
 			}
+		}
+	}
+
+	public static class VectorExtension
+	{
+		public static Vector2 Modify(this Vector2 vector, float? x = null, float? y = null)
+		{
+			return new Vector2(x ?? vector.x, y ?? vector.y);
+		}
+
+		public static Vector3 Modify(this Vector3 vector, float? x = null, float? y = null, float? z = null)
+		{
+			return new Vector3(x ?? vector.x, y ?? vector.y, z ?? vector.z);
 		}
 	}
 

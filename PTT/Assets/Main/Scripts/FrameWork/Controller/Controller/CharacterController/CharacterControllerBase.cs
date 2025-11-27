@@ -292,8 +292,6 @@ namespace GameBerry
                 {
                     return;
                 }
-
-                Debug.LogError(string.Format("DeCreaseHP : {0}", hp));
             }
 
             double decreaseValue = hp;

@@ -17,11 +17,10 @@ namespace GameBerry.UI
 
 		public bool UseBackBtn = false;
 
-		public event OnCallBack exitCallBack;
-		protected bool ignoreExit = false;
-
 		[SerializeField]
 		private List<Button> _exitBtn;
+
+		private UIDialogAnimaion _uIDialogAnimaion;
 
 		void Awake()
 		{
@@ -33,6 +32,8 @@ namespace GameBerry.UI
 		{
 			_name = GetType().Name;
 			_rt = GetComponent<RectTransform>();
+			_uIDialogAnimaion = GetComponent<UIDialogAnimaion>();
+			_uIDialogAnimaion?.Init();
 
 			int sibling = EnumExtensions.ParseToInt<UISibling>(_name);
 			UIManager.Instance.SetSibling(_rt, sibling);
@@ -56,8 +57,9 @@ namespace GameBerry.UI
         {
             _name = GetType().Name;
             _rt = GetComponent<RectTransform>();
+			_uIDialogAnimaion = GetComponent<UIDialogAnimaion>();
 
-            dialogView.SetActive(false);
+			dialogView.SetActive(false);
 
 			if (_exitBtn != null)
 			{
@@ -85,11 +87,13 @@ namespace GameBerry.UI
 		{
 		}
 
+		public void ElementEnter()
+		{
+			Enter();
+		}
+
 		public void Enter()
 		{
-			if (UIManager.Instance.IgnoreEnterDialog == true)
-				return;
-
 			if (dialogView != null)
 			{
 				if (dialogView.activeSelf)
@@ -100,13 +104,17 @@ namespace GameBerry.UI
 			_isEnter = true;
 			OnEnter();
 
-			if (UseBackBtn == true)
-				Managers.AOSBackBtnManager.Instance.EnterBackBtnAction(this);
-		}
-
-		public void ElementEnter()
-		{
-            Enter();
+			if (_uIDialogAnimaion != null)
+				_uIDialogAnimaion.PlayOpening(() =>
+				{
+					if (UseBackBtn == true)
+						Managers.AOSBackBtnManager.Instance.EnterBackBtnAction(this);
+				});
+			else
+			{
+				if (UseBackBtn == true)
+					Managers.AOSBackBtnManager.Instance.EnterBackBtnAction(this);
+			}
 		}
 
 		public virtual void BackKeyCall()
@@ -114,22 +122,30 @@ namespace GameBerry.UI
 			Exit();
 		}
 
-        public void Exit()
-        {
-			if (ignoreExit == true)
-				return;
-
-			if (dialogView != null)
-				dialogView.SetActive(false);
-
-			_isEnter = false;
-			exitCallBack?.Invoke();
-			OnExit();
-		}
-
 		public void ElementExit()
 		{
 			Exit();
+		}
+
+		public void Exit()
+		{
+			if (_uIDialogAnimaion != null)
+				_uIDialogAnimaion.PlayClosing(() =>
+				{
+					if (dialogView != null)
+						dialogView.SetActive(false);
+
+					_isEnter = false;
+					OnExit();
+				});
+			else
+			{
+				if (dialogView != null)
+					dialogView.SetActive(false);
+
+				_isEnter = false;
+				OnExit();
+			}
 		}
 
 		protected virtual void OnDestroy()

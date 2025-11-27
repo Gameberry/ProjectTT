@@ -28,8 +28,6 @@ namespace GameBerry.UI
 
         private Dictionary<string, System.Delegate> _onCompleteEvents;
 
-		public bool IgnoreEnterDialog = false;
-
         private const string ASSET_PATH = "ContentResources";
 
         protected override void Init()
