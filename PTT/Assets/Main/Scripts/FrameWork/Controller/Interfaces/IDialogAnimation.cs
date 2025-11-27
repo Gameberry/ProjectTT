@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Threading;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace GameBerry.UI
 {
@@ -145,16 +147,14 @@ namespace GameBerry.UI
 
         public bool IsDoingInAnimation { get { return _doingInAnimation; } }
         private bool _doingInAnimation;
-        private float _endTime_InAnimation;
 
         public bool IsDoingOutAnimation { get { return _doingOutAnimation; } }
         private bool _doingOutAnimation;
-        private float _endTime_OutAnimation;
 
         [HideInInspector]
-        public IDialogAnimations _InAnimation = new IDialogAnimations();
+        public IDialogAnimations InAnimation = new IDialogAnimations();
         [HideInInspector]
-        public IDialogAnimations _OutAnimation = new IDialogAnimations();
+        public IDialogAnimations OutAnimation = new IDialogAnimations();
 
         private RectTransform _rectTransform;
 
@@ -163,10 +163,8 @@ namespace GameBerry.UI
         private Vector3 _startScale;
         private CanvasGroup _canvasGroup;
 
-        private Coroutine _moveCoroutine;
-        private Coroutine _rotateCoroutine;
-        private Coroutine _scaleCoroutine;
-        private Coroutine _fadeCoroutine;
+        // UniTask용 취소 토큰
+        private CancellationTokenSource _animationCts;
 
         public UnityEngine.Events.UnityEvent OnInAnimationsStart;
         public UnityEngine.Events.UnityEvent OnInAnimationsFinish;
@@ -182,301 +180,320 @@ namespace GameBerry.UI
             _startScale = _rectTransform.localScale;
             _canvasGroup = GetComponent<CanvasGroup>();
         }
-        //------------------------------------------------------------------------------------
-        private void Update()
+
+        private void OnDestroy()
         {
-            if (_doingInAnimation == true)
+            CancelAnimations();
+        }
+
+        //------------------------------------------------------------------------------------
+        private void CancelAnimations()
+        {
+            if (_animationCts != null)
             {
-                if (_endTime_InAnimation <= Time.time)
-                {
-                    if (OnInAnimationsFinish != null)
-                        OnInAnimationsFinish.Invoke();
-
-                    _doingInAnimation = false;
-                }
-            }
-
-            if (_doingOutAnimation == true)
-            {
-                if (_endTime_OutAnimation <= Time.time)
-                {
-                    if (OnOutAnimationsFinish != null)
-                        OnOutAnimationsFinish.Invoke();
-
-                    _doingOutAnimation = false;
-                }
+                _animationCts.Cancel();
+                _animationCts.Dispose();
+                _animationCts = null;
             }
         }
-        //------------------------------------------------------------------------------------
-        private void StopCoroutine_All()
+
+        private CancellationToken CreateNewToken()
         {
-            if (_moveCoroutine != null)
-            {
-                StopCoroutine(_moveCoroutine);
-                _moveCoroutine = null;
-            }
-
-            if (_rotateCoroutine != null)
-            {
-                StopCoroutine(_rotateCoroutine);
-                _rotateCoroutine = null;
-            }
-
-            if (_scaleCoroutine != null)
-            {
-                StopCoroutine(_scaleCoroutine);
-                _scaleCoroutine = null;
-            }
-
-            if (_fadeCoroutine != null)
-            {
-                StopCoroutine(_fadeCoroutine);
-                _fadeCoroutine = null;
-            }
+            CancelAnimations();
+            _animationCts = new CancellationTokenSource();
+            return _animationCts.Token;
         }
+
         //------------------------------------------------------------------------------------
+        // 기존 시그니처 유지용(외부에서 그대로 호출 가능)
         public void PlayInAnimation()
         {
-            StopCoroutine_All();
-
-            if (_doingOutAnimation == true)
-            {
-                _doingOutAnimation = false;
-
-                if (OnOutAnimationsFinish != null)
-                    OnOutAnimationsFinish.Invoke();
-            }
-
-            if (OnInAnimationsStart != null)
-                OnInAnimationsStart.Invoke();
-
-            if (useInAnimation == true)
-                _InAnimation.SetTotalDuration();
-
-            if (_InAnimation.TotalDuration == 0.0f)
-            {
-                if (OnInAnimationsFinish != null)
-                    OnInAnimationsFinish.Invoke();
-
-                return;
-            }
-            else
-            {
-                _endTime_InAnimation = Time.time + _InAnimation.TotalDuration;
-                _doingInAnimation = true;
-            }
-
-            if (gameObject.activeInHierarchy == false)
-                return;
-
-            if (_InAnimation.MoveAni.UseAnimation)
-                _moveCoroutine = StartCoroutine(PlayMove(_InAnimation.MoveAni.StartDelay,
-                    _InAnimation.MoveAni.Duration,
-                    _InAnimation.MoveAni.GetTargetPosition(_rectTransform, _startPos),
-                    _startPos,
-                    _InAnimation.MoveAni.Linear == true ? null : _InAnimation.MoveAni.AnimationCurve));
-
-            if (_InAnimation.RotateAni.UseAnimation)
-                _rotateCoroutine = StartCoroutine(PlayRotate(_InAnimation.RotateAni.StartDelay,
-                    _InAnimation.RotateAni.Duration,
-                    _InAnimation.RotateAni.Rotate,
-                    _startRotate,
-                    _InAnimation.RotateAni.Linear == true ? null : _InAnimation.RotateAni.AnimationCurve));
-
-            if (_InAnimation.ScaleAni.UseAnimation)
-                _scaleCoroutine = StartCoroutine(PlayScale(_InAnimation.ScaleAni.StartDelay,
-                    _InAnimation.ScaleAni.Duration,
-                    _InAnimation.ScaleAni.Scale,
-                    _startScale,
-                    _InAnimation.ScaleAni.Linear == true ? null : _InAnimation.ScaleAni.AnimationCurve));
-
-            if (_InAnimation.FadeAni.UseAnimation)
-                _fadeCoroutine = StartCoroutine(PlayFade(_InAnimation.FadeAni.StartDelay,
-                    _InAnimation.FadeAni.Duration,
-                    _InAnimation.FadeAni.StartAlpha,
-                    _InAnimation.FadeAni.EndAlpha,
-                    _InAnimation.FadeAni.Linear == true ? null : _InAnimation.FadeAni.AnimationCurve));
+            PlayInAnimationAsync().Forget();
         }
-        //------------------------------------------------------------------------------------
+
         public void PlayOutAnimation()
         {
-            StopCoroutine_All();
+            PlayOutAnimationAsync().Forget();
+        }
 
-            if (_doingInAnimation == true)
+        //------------------------------------------------------------------------------------
+        public async UniTask PlayInAnimationAsync()
+        {
+            var token = CreateNewToken();
+
+            // Out 애니메이션 도중에 In 이 호출되면 정리
+            if (_doingOutAnimation)
+            {
+                _doingOutAnimation = false;
+                OnOutAnimationsFinish?.Invoke();
+            }
+
+            OnInAnimationsStart?.Invoke();
+
+            if (useInAnimation)
+                InAnimation.SetTotalDuration();
+
+            if (InAnimation.TotalDuration <= 0.0f)
+            {
+                OnInAnimationsFinish?.Invoke();
+                return;
+            }
+
+            _doingInAnimation = true;
+
+            if (!gameObject.activeInHierarchy)
             {
                 _doingInAnimation = false;
-
-                if (OnInAnimationsFinish != null)
-                    OnInAnimationsFinish.Invoke();
-            }
-
-            if (OnOutAnimationsStart != null)
-                OnOutAnimationsStart.Invoke();
-
-            if (useOutAnimation == true)
-                _OutAnimation.SetTotalDuration();
-
-            if (_OutAnimation.TotalDuration == 0.0f)
-            {
-                if (OnOutAnimationsFinish != null)
-                    OnOutAnimationsFinish.Invoke();
-
                 return;
             }
-            else
-            {
-                _endTime_OutAnimation = Time.time + _OutAnimation.TotalDuration;
-                _doingOutAnimation = true;
-            }
 
-            if (gameObject.activeInHierarchy == false)
-                return;
-
-            if (_OutAnimation.MoveAni.UseAnimation)
-                _moveCoroutine = StartCoroutine(PlayMove(_OutAnimation.MoveAni.StartDelay,
-                    _OutAnimation.MoveAni.Duration,
+            // 각 애니메이션 병렬 실행
+            if (InAnimation.MoveAni.UseAnimation)
+                _ = PlayMoveAsync(InAnimation.MoveAni.StartDelay,
+                    InAnimation.MoveAni.Duration,
+                    InAnimation.MoveAni.GetTargetPosition(_rectTransform, _startPos),
                     _startPos,
-                    _OutAnimation.MoveAni.GetTargetPosition(_rectTransform, _startPos),
-                    _OutAnimation.MoveAni.Linear == true ? null : _OutAnimation.MoveAni.AnimationCurve));
+                    InAnimation.MoveAni.Linear ? null : InAnimation.MoveAni.AnimationCurve,
+                    token);
 
-            if (_OutAnimation.RotateAni.UseAnimation)
-                _rotateCoroutine = StartCoroutine(PlayRotate(_OutAnimation.RotateAni.StartDelay,
-                    _OutAnimation.RotateAni.Duration,
+            if (InAnimation.RotateAni.UseAnimation)
+                _ = PlayRotateAsync(InAnimation.RotateAni.StartDelay,
+                    InAnimation.RotateAni.Duration,
+                    InAnimation.RotateAni.Rotate,
                     _startRotate,
-                    _OutAnimation.RotateAni.Rotate,
-                    _OutAnimation.RotateAni.Linear == true ? null : _OutAnimation.RotateAni.AnimationCurve));
+                    InAnimation.RotateAni.Linear ? null : InAnimation.RotateAni.AnimationCurve,
+                    token);
 
-            if (_OutAnimation.ScaleAni.UseAnimation)
-                _scaleCoroutine = StartCoroutine(PlayScale(_OutAnimation.ScaleAni.StartDelay,
-                    _OutAnimation.ScaleAni.Duration,
+            if (InAnimation.ScaleAni.UseAnimation)
+                _ = PlayScaleAsync(InAnimation.ScaleAni.StartDelay,
+                    InAnimation.ScaleAni.Duration,
+                    InAnimation.ScaleAni.Scale,
                     _startScale,
-                    _OutAnimation.ScaleAni.Scale,
-                    _OutAnimation.ScaleAni.Linear == true ? null : _OutAnimation.ScaleAni.AnimationCurve));
+                    InAnimation.ScaleAni.Linear ? null : InAnimation.ScaleAni.AnimationCurve,
+                    token);
 
-            if (_OutAnimation.FadeAni.UseAnimation)
-                _fadeCoroutine = StartCoroutine(PlayFade(_OutAnimation.FadeAni.StartDelay,
-                    _OutAnimation.FadeAni.Duration,
-                    _OutAnimation.FadeAni.StartAlpha,
-                    _OutAnimation.FadeAni.EndAlpha,
-                    _OutAnimation.FadeAni.Linear == true ? null : _OutAnimation.FadeAni.AnimationCurve));
+            if (InAnimation.FadeAni.UseAnimation)
+                _ = PlayFadeAsync(InAnimation.FadeAni.StartDelay,
+                    InAnimation.FadeAni.Duration,
+                    InAnimation.FadeAni.StartAlpha,
+                    InAnimation.FadeAni.EndAlpha,
+                    InAnimation.FadeAni.Linear ? null : InAnimation.FadeAni.AnimationCurve,
+                    token);
+
+            try
+            {
+                // 총 시간만큼 기다렸다가 끝 이벤트 호출 (기존 Update 로직 대체)
+                int waitMs = (int)(InAnimation.TotalDuration * 1000f);
+                await UniTask.Delay(waitMs, cancellationToken: token);
+            }
+            catch (OperationCanceledException)
+            {
+                // 다른 애니메이션으로 교체된 경우
+                return;
+            }
+
+            if (token.IsCancellationRequested)
+                return;
+
+            _doingInAnimation = false;
+            OnInAnimationsFinish?.Invoke();
         }
+
         //------------------------------------------------------------------------------------
-        IEnumerator PlayMove(float delay, float duration, Vector3 startpos, Vector3 endpos, AnimationCurve animationcurve)
+        public async UniTask PlayOutAnimationAsync()
         {
+            var token = CreateNewToken();
+
+            if (_doingInAnimation)
+            {
+                _doingInAnimation = false;
+                OnInAnimationsFinish?.Invoke();
+            }
+
+            OnOutAnimationsStart?.Invoke();
+
+            if (useOutAnimation)
+                OutAnimation.SetTotalDuration();
+
+            if (OutAnimation.TotalDuration <= 0.0f)
+            {
+                OnOutAnimationsFinish?.Invoke();
+                return;
+            }
+
+            _doingOutAnimation = true;
+
+            if (!gameObject.activeInHierarchy)
+            {
+                _doingOutAnimation = false;
+                return;
+            }
+
+            if (OutAnimation.MoveAni.UseAnimation)
+                _ = PlayMoveAsync(OutAnimation.MoveAni.StartDelay,
+                    OutAnimation.MoveAni.Duration,
+                    _startPos,
+                    OutAnimation.MoveAni.GetTargetPosition(_rectTransform, _startPos),
+                    OutAnimation.MoveAni.Linear ? null : OutAnimation.MoveAni.AnimationCurve,
+                    token);
+
+            if (OutAnimation.RotateAni.UseAnimation)
+                _ = PlayRotateAsync(OutAnimation.RotateAni.StartDelay,
+                    OutAnimation.RotateAni.Duration,
+                    _startRotate,
+                    OutAnimation.RotateAni.Rotate,
+                    OutAnimation.RotateAni.Linear ? null : OutAnimation.RotateAni.AnimationCurve,
+                    token);
+
+            if (OutAnimation.ScaleAni.UseAnimation)
+                _ = PlayScaleAsync(OutAnimation.ScaleAni.StartDelay,
+                    OutAnimation.ScaleAni.Duration,
+                    _startScale,
+                    OutAnimation.ScaleAni.Scale,
+                    OutAnimation.ScaleAni.Linear ? null : OutAnimation.ScaleAni.AnimationCurve,
+                    token);
+
+            if (OutAnimation.FadeAni.UseAnimation)
+                _ = PlayFadeAsync(OutAnimation.FadeAni.StartDelay,
+                    OutAnimation.FadeAni.Duration,
+                    OutAnimation.FadeAni.StartAlpha,
+                    OutAnimation.FadeAni.EndAlpha,
+                    OutAnimation.FadeAni.Linear ? null : OutAnimation.FadeAni.AnimationCurve,
+                    token);
+
+            try
+            {
+                int waitMs = (int)(OutAnimation.TotalDuration * 1000f);
+                await UniTask.Delay(waitMs, cancellationToken: token);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            if (token.IsCancellationRequested)
+                return;
+
+            _doingOutAnimation = false;
+            OnOutAnimationsFinish?.Invoke();
+        }
+
+        //------------------------------------------------------------------------------------
+        private async UniTask PlayMoveAsync(float delay, float duration, Vector3 startpos, Vector3 endpos,
+            AnimationCurve animationcurve, CancellationToken token)
+        {
+            if (delay > 0f)
+                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+
             float starttime = Time.time;
-            float endtime = starttime + delay;
-
-            while (Time.time <= endtime)
-                yield return null;
-
-            starttime = Time.time;
-            endtime = starttime + duration;
+            float endtime = starttime + duration;
 
             Vector3 posGap = startpos - endpos;
 
-            float ratio = 0.0f;
             while (Time.time <= endtime)
             {
-                ratio = (Time.time - starttime) / duration;
+                if (token.IsCancellationRequested)
+                    return;
+
+                float ratio = (Time.time - starttime) / duration;
                 if (animationcurve != null)
                     ratio = animationcurve.Evaluate(ratio);
 
                 _rectTransform.anchoredPosition3D = startpos - (posGap * ratio);
 
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
 
             _rectTransform.anchoredPosition3D = endpos;
-            _moveCoroutine = null;
         }
+
         //------------------------------------------------------------------------------------
-        IEnumerator PlayRotate(float delay, float duration, Vector3 startrotate, Vector3 endrotate, AnimationCurve animationcurve)
+        private async UniTask PlayRotateAsync(float delay, float duration, Vector3 startrotate, Vector3 endrotate,
+            AnimationCurve animationcurve, CancellationToken token)
         {
+            if (delay > 0f)
+                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+
             float starttime = Time.time;
-            float endtime = starttime + delay;
-
-            while (Time.time <= endtime)
-                yield return null;
-
-            starttime = Time.time;
-            endtime = starttime + duration;
+            float endtime = starttime + duration;
 
             Vector3 rotateGap = startrotate - endrotate;
 
-            float ratio = 0.0f;
             while (Time.time <= endtime)
             {
-                ratio = (Time.time - starttime) / duration;
+                if (token.IsCancellationRequested)
+                    return;
+
+                float ratio = (Time.time - starttime) / duration;
                 if (animationcurve != null)
                     ratio = animationcurve.Evaluate(ratio);
 
                 _rectTransform.eulerAngles = startrotate - (rotateGap * ratio);
 
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
 
             _rectTransform.eulerAngles = endrotate;
-            _rotateCoroutine = null;
         }
+
         //------------------------------------------------------------------------------------
-        IEnumerator PlayScale(float delay, float duration, Vector3 startscale, Vector3 endscale, AnimationCurve animationcurve)
+        private async UniTask PlayScaleAsync(float delay, float duration, Vector3 startscale, Vector3 endscale,
+            AnimationCurve animationcurve, CancellationToken token)
         {
+            if (delay > 0f)
+                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+
             float starttime = Time.time;
-            float endtime = starttime + delay;
-
-            while (Time.time <= endtime)
-                yield return null;
-
-            starttime = Time.time;
-            endtime = starttime + duration;
+            float endtime = starttime + duration;
 
             Vector3 scaleGap = startscale - endscale;
 
-            float ratio = 0.0f;
             while (Time.time <= endtime)
             {
-                ratio = (Time.time - starttime) / duration;
+                if (token.IsCancellationRequested)
+                    return;
+
+                float ratio = (Time.time - starttime) / duration;
                 if (animationcurve != null)
                     ratio = animationcurve.Evaluate(ratio);
 
                 _rectTransform.localScale = startscale - (scaleGap * ratio);
 
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
 
             _rectTransform.localScale = endscale;
-            _scaleCoroutine = null;
         }
+
         //------------------------------------------------------------------------------------
-        IEnumerator PlayFade(float delay, float duration, float startfade, float endfade, AnimationCurve animationcurve)
+        private async UniTask PlayFadeAsync(float delay, float duration, float startfade, float endfade,
+            AnimationCurve animationcurve, CancellationToken token)
         {
             _canvasGroup.alpha = startfade;
 
+            if (delay > 0f)
+                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+
             float starttime = Time.time;
-            float endtime = starttime + delay;
-
-            while (Time.time <= endtime)
-                yield return null;
-
-            starttime = Time.time;
-            endtime = starttime + duration;
+            float endtime = starttime + duration;
 
             float fadeGap = endfade - startfade;
 
-            float ratio = 0.0f;
             while (Time.time <= endtime)
             {
-                ratio = (Time.time - starttime) / duration;
+                if (token.IsCancellationRequested)
+                    return;
+
+                float ratio = (Time.time - starttime) / duration;
                 if (animationcurve != null)
                     ratio = animationcurve.Evaluate(ratio);
 
                 _canvasGroup.alpha = startfade + (fadeGap * ratio);
 
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
 
             _canvasGroup.alpha = endfade;
-            _fadeCoroutine = null;
         }
         //------------------------------------------------------------------------------------
     }
