@@ -9,7 +9,7 @@ namespace GameBerry.Scene
     {
         protected override void OnLoadStart()
         {
-            UI.UIManager.DialogEnter<UI.AppLoadingDialog>();
+            UI.UIManager.Instance.DialogEnter<UI.AppLoadingDialog>();
 
             SetResourceLoadComplete();
         }

@@ -74,7 +74,7 @@ namespace GameBerry.UI
 			}
 		}
 
-        public static void DialogEnter<T>() where T : IDialog
+        public void DialogEnter<T>() where T : IDialog
         {
             Instance.DialogEnter(typeof(T).Name);
         }
@@ -95,7 +95,7 @@ namespace GameBerry.UI
 			}
         }
 
-        public static void DialogExit<T>() where T : IDialog
+        public void DialogExit<T>() where T : IDialog
         {
             Instance.DialogExit(typeof(T).Name);
         }

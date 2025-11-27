@@ -44,6 +44,7 @@ namespace GameBerry.Contents
         {
             Managers.AOSBackBtnManager.Instance.InitManager();
             Managers.BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
+            UIManager.Instance.DialogEnter<HUDDialog>();
         }
         //------------------------------------------------------------------------------------
     }

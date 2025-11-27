@@ -10,10 +10,17 @@
         // Login
 
         // InGame
+        HUDDialog,
+        MenuDialog,
+        SkinSelectDialog,
+
+
+
 
         GlobalDungeonFadeDialog,
 
         LobbyWaveRewardDialog,
+
         InGamePlayContentDialog,
 
         LobbyEtcMenuDialog,
@@ -25,7 +32,6 @@
         CharacterInfoDialog,
         CharacterContentDialog,
         PetContentDialog,
-        SkinSelectDialog,
 
         LobbyRelicContentDialog,
         LobbyTimeAttackMissionDialog,
