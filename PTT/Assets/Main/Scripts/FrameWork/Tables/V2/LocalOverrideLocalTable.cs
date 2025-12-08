@@ -17,7 +17,7 @@ namespace GameBerry
         {
             JsonData rows = null;
 
-            TheBackEnd.TheBackEnd_GameChart.GetBackEndChart("LocalOverride", o =>
+            Chart.GameChart.GetBackEndChart("LocalOverride", o =>
             { rows = o; });
 
             await UniTask.WaitUntil(() => rows != null);

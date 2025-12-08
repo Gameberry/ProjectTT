@@ -29,7 +29,7 @@ namespace GameBerry.UI
         [Serializable]
         public class SlotSkinOption
         {
-            public SpineEquipSlot Slot;
+            public SkinSlotType Slot;
             public string SkinName;
             public string DisplayName;
         }
@@ -40,20 +40,20 @@ namespace GameBerry.UI
         private SpineModelData _modelData;
 
         // 蝸煜滌 ぬ割 議衛
-        private readonly Dictionary<SpineEquipSlot, Transform> _slotParents =
-            new Dictionary<SpineEquipSlot, Transform>();
+        private readonly Dictionary<SkinSlotType, Transform> _slotParents =
+            new Dictionary<SkinSlotType, Transform>();
 
         // ⑷營 摹鷗脹 龔
-        private SpineEquipSlot _currentSlot = SpineEquipSlot.Body;
+        private SkinSlotType _currentSlot = SkinSlotType.Body;
 
         protected override void OnLoad()
         {
             // 蝸煜 ぬ割 裘ё
-            _slotParents[SpineEquipSlot.Body] = BodyParent;
-            _slotParents[SpineEquipSlot.Hair] = HairParent;
-            _slotParents[SpineEquipSlot.Weapon] = WeaponParent;
-            _slotParents[SpineEquipSlot.Face] = FaceParent;
-            _slotParents[SpineEquipSlot.Back] = BackParent;
+            _slotParents[SkinSlotType.Body] = BodyParent;
+            _slotParents[SkinSlotType.Hair] = HairParent;
+            _slotParents[SkinSlotType.Weapon] = WeaponParent;
+            _slotParents[SkinSlotType.Face] = FaceParent;
+            _slotParents[SkinSlotType.Back] = BackParent;
 
             _modelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
             _uiHandler.SetSpineModel(_modelData);
@@ -65,15 +65,15 @@ namespace GameBerry.UI
                 SlotSkinOption slotSkinOption = new SlotSkinOption();
 
                 if (skinName.Contains("Weapon"))
-                    slotSkinOption.Slot = SpineEquipSlot.Weapon;
+                    slotSkinOption.Slot = SkinSlotType.Weapon;
                 else if (skinName.Contains("Back"))
-                    slotSkinOption.Slot = SpineEquipSlot.Back;
+                    slotSkinOption.Slot = SkinSlotType.Back;
                 else if (skinName.Contains("Glass"))
-                    slotSkinOption.Slot = SpineEquipSlot.Face;
+                    slotSkinOption.Slot = SkinSlotType.Face;
                 else if (skinName.Contains("Hair"))
-                    slotSkinOption.Slot = SpineEquipSlot.Hair;
+                    slotSkinOption.Slot = SkinSlotType.Hair;
                 else
-                    slotSkinOption.Slot = SpineEquipSlot.Body;
+                    slotSkinOption.Slot = SkinSlotType.Body;
 
                 slotSkinOption.SkinName = skinName;
                 slotSkinOption.DisplayName = skinName;
@@ -84,7 +84,7 @@ namespace GameBerry.UI
             BuildUI();
 
             // Ⅱ 晦獄戲煎 Body 龔 爾檜啪
-            ShowSlot(SpineEquipSlot.Body);
+            ShowSlot(SkinSlotType.Body);
         }
 
         private void BuildUI()
@@ -96,8 +96,8 @@ namespace GameBerry.UI
             //CreateNoneButton(SpineEquipSlot.Body, BodyParent);
             //CreateNoneButton(SpineEquipSlot.Hair, HairParent);
             //CreateNoneButton(SpineEquipSlot.Weapon, WeaponParent);
-            CreateNoneButton(SpineEquipSlot.Face, FaceParent);
-            CreateNoneButton(SpineEquipSlot.Back, BackParent);
+            CreateNoneButton(SkinSlotType.Face, FaceParent);
+            CreateNoneButton(SkinSlotType.Back, BackParent);
 
             // 褒薯 褫暮 幗が
             foreach (var opt in SkinOptions)
@@ -115,7 +115,7 @@ namespace GameBerry.UI
             }
         }
 
-        private void CreateNoneButton(SpineEquipSlot slot, Transform parent)
+        private void CreateNoneButton(SkinSlotType slot, Transform parent)
         {
             if (parent == null)
                 return;
@@ -124,7 +124,7 @@ namespace GameBerry.UI
             btn.Init(_uiHandler, slot, null, "橈擠");
         }
 
-        private Transform GetParentForSlot(SpineEquipSlot slot)
+        private Transform GetParentForSlot(SkinSlotType slot)
         {
             Transform t;
             return _slotParents.TryGetValue(slot, out t) ? t : null;
@@ -133,12 +133,12 @@ namespace GameBerry.UI
         // 式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式
         // 龔 贗葛 屬寥
         // 式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式
-        public void OnClickSlotTab(SpineEquipSlot slot)
+        public void OnClickSlotTab(SkinSlotType slot)
         {
             ShowSlot(slot);
         }
 
-        private void ShowSlot(SpineEquipSlot slot)
+        private void ShowSlot(SkinSlotType slot)
         {
             _currentSlot = slot;
 
@@ -150,11 +150,11 @@ namespace GameBerry.UI
             }
 
             // 龔 摹鷗 鼻鷓 ル衛
-            SetTabSelected(BodyTab, SpineEquipSlot.Body == slot);
-            SetTabSelected(HairTab, SpineEquipSlot.Hair == slot);
-            SetTabSelected(WeaponTab, SpineEquipSlot.Weapon == slot);
-            SetTabSelected(FaceTab, SpineEquipSlot.Face == slot);
-            SetTabSelected(BackTab, SpineEquipSlot.Back == slot);
+            SetTabSelected(BodyTab, SkinSlotType.Body == slot);
+            SetTabSelected(HairTab, SkinSlotType.Hair == slot);
+            SetTabSelected(WeaponTab, SkinSlotType.Weapon == slot);
+            SetTabSelected(FaceTab, SkinSlotType.Face == slot);
+            SetTabSelected(BackTab, SkinSlotType.Back == slot);
         }
 
         private void SetTabSelected(UISpineSkinTabButtonElement tab, bool selected)

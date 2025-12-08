@@ -360,8 +360,8 @@ namespace GameBerry
         /// <summary>
         /// 슬롯별 장착 스킨 (코디)
         /// </summary>
-        private readonly Dictionary<SpineEquipSlot, string> _equippedSlotSkins =
-            new Dictionary<SpineEquipSlot, string>();
+        private readonly Dictionary<SkinSlotType, string> _equippedSlotSkins =
+            new Dictionary<SkinSlotType, string>();
 
         /// <summary>
         /// 외부에서 "추가 스킨" 등록 (예전 AddAttachSkin 하위 호환)
@@ -395,7 +395,7 @@ namespace GameBerry
         /// <summary>
         /// 슬롯별 스킨 장착
         /// </summary>
-        public void EquipSlotSkin(SpineEquipSlot slot, string skinName)
+        public void EquipSlotSkin(SkinSlotType slot, string skinName)
         {
             if (string.IsNullOrEmpty(skinName))
             {
@@ -413,7 +413,7 @@ namespace GameBerry
         /// <summary>
         /// 슬롯별 스킨 해제 (기본 스킨으로 돌아감)
         /// </summary>
-        public void UnequipSlotSkin(SpineEquipSlot slot)
+        public void UnequipSlotSkin(SkinSlotType slot)
         {
             if (_equippedSlotSkins.Remove(slot))
                 RebuildRuntimeSkin();

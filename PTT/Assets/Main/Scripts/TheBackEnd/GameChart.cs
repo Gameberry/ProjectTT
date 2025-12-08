@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +9,59 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using System.Collections.Concurrent;
 
-namespace GameBerry.TheBackEnd
+namespace GameBerry.Chart
 {
-    public static class TheBackEnd_GameChart
+    public class ChartBase
+    {
+        public virtual bool IsLoaded()
+        {
+            return false;
+        }
+    }
+
+    public class ChartInfo
+    {
+        public bool isUpload;
+        public string name;
+        public string explain;
+        public int selectedFileId;
+        public string old;
+
+        public ChartInfo()
+        {
+
+        }
+        public ChartInfo(JsonData json)
+        {
+            name = json["chartName"].ToString();
+            explain = json["chartExplain"].ToString();
+            int outNum = 0;
+
+            if (Int32.TryParse(json["selectedChartFileId"].ToString(), out outNum))
+            {
+                isUpload = true;
+                selectedFileId = outNum;
+            }
+            else
+            {
+                isUpload = false;
+                selectedFileId = 0;
+            }
+
+            old = json["old"].ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"chartName: {name}\n" +
+            $"chartExplain: {explain}\n" +
+            $"isChartUpload: {isUpload}\n" +
+            $"selectedChartFileId: {selectedFileId}\n" +
+            $"old: {old}\n";
+        }
+    }
+
+    public static class GameChart
     {
         public static Dictionary<string, string> TableChartFileld = new Dictionary<string, string>();
         public static Dictionary<string, string> TableChartUUID = new Dictionary<string, string>();

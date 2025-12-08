@@ -6,7 +6,7 @@ namespace GameBerry.UI
     public class UISpineSkinTabButtonElement : MonoBehaviour
     {
         [SerializeField] private Button _button;
-        [SerializeField] private SpineEquipSlot _slot;
+        [SerializeField] private SkinSlotType _slot;
         [SerializeField] private SkinSelectDialog _manager;
 
         // 선택 상태 시 색 바꾸고 싶으면 여기서 처리

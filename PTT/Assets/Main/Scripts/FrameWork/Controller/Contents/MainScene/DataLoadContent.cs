@@ -97,7 +97,7 @@ namespace GameBerry.Contents
 
             stopwatch.Stop();
             tableLoadingTime = ((float)stopwatch.ElapsedMilliseconds) * 0.001f;
-            ThirdPartyLog.Instance.SendLog_TableLoadEvent(tableLoadingTime, TheBackEnd.TheBackEnd_GameChart.needSaveChart.Count);
+            ThirdPartyLog.Instance.SendLog_TableLoadEvent(tableLoadingTime, GameBerry.Chart.GameChart.needSaveChart.Count);
 
             UnityEngine.Debug.LogErrorFormat("테이블 로드 완료 : {0:0.###}s", tableLoadingTime);
 
@@ -131,7 +131,7 @@ namespace GameBerry.Contents
             float dbLoadingTime = ((float)stopwatch.ElapsedMilliseconds) * 0.001f;
             ThirdPartyLog.Instance.SendLog_DBLoadEvent(dbLoadingTime);
 
-            GameBerry.TheBackEnd.TheBackEnd_GameChart.ChartBROData = null;
+            GameBerry.Chart.GameChart.ChartBROData = null;
 
             m_setNoticeMsg.NoticeStr = string.Format("{0} {1}%", tableLoadLocalString, (int)(((float)m_completeTableCount / (float)LoadTable.Count) * 100.0f));
 
@@ -207,7 +207,7 @@ namespace GameBerry.Contents
             foreach (var pair in bro)
             {
                 JsonData data = JsonMapper.ToObject(pair.Value.contentString);
-                GameBerry.TheBackEnd.TheBackEnd_GameChart.ChartBROData.Add(pair.Key, data);
+                GameBerry.Chart.GameChart.ChartBROData.Add(pair.Key, data);
                 setcount++;
                 if (setcount > 12)
                 {

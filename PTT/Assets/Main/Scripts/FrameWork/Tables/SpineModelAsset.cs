@@ -24,7 +24,7 @@ namespace GameBerry
     /// <summary>
     /// 장비/코디용 슬롯 타입
     /// </summary>
-    public enum SpineEquipSlot
+    public enum SkinSlotType
     {
         Body,
         Hair,
@@ -39,7 +39,7 @@ namespace GameBerry
     [System.Serializable]
     public class SpineDefaultSlotSkin
     {
-        public SpineEquipSlot Slot;
+        public SkinSlotType Slot;
         [SpineSkin(dataField = "SkeletonData")]
         public string SkinName;
     }

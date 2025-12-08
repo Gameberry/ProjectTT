@@ -28,12 +28,12 @@ namespace GameBerry.Managers
             _skeletonAnimationHandler = skeletonAnimationHandler;
         }
         //------------------------------------------------------------------------------------
-        public void UnequipSlotSkin(SpineEquipSlot slot)
+        public void UnequipSlotSkin(SkinSlotType slot)
         {
             _skeletonAnimationHandler?.UnequipSlotSkin(slot);
         }
         //------------------------------------------------------------------------------------
-        public void EquipSlotSkin(SpineEquipSlot slot, string skinName)
+        public void EquipSlotSkin(SkinSlotType slot, string skinName)
         {
             _skeletonAnimationHandler?.EquipSlotSkin(slot, skinName);
         }

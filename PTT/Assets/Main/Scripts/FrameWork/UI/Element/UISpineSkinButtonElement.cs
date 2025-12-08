@@ -9,7 +9,7 @@ namespace GameBerry.UI
         [SerializeField] private TMP_Text _label;
         [SerializeField] private Button _button;
 
-        private SpineEquipSlot _slot;
+        private SkinSlotType _slot;
         private string _skinName;
         private SkeletonAnimationHandler _handler;
 
@@ -17,7 +17,7 @@ namespace GameBerry.UI
         /// UI 초기화 (외부에서 셋업)
         /// </summary>
         public void Init(SkeletonAnimationHandler handler,
-                         SpineEquipSlot slot,
+                         SkinSlotType slot,
                          string skinName,
                          string displayName)
         {
