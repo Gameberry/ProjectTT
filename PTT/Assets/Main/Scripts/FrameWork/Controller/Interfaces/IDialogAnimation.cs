@@ -15,7 +15,11 @@ namespace GameBerry.UI
 
         public bool Linear = true;
         public AnimationCurve AnimationCurve = new AnimationCurve(
-            new Keyframe[2] { new Keyframe(0.0f, 0.0f, 0.5f, 0.5f), new Keyframe(1.0f, 1.0f, 0.5f, 0.5f) });
+            new Keyframe[2]
+            {
+                new Keyframe(0.0f, 0.0f, 0.5f, 0.5f),
+                new Keyframe(1.0f, 1.0f, 0.5f, 0.5f)
+            });
     }
 
     [System.Serializable]
@@ -40,7 +44,6 @@ namespace GameBerry.UI
         }
 
         public MoveDirection MoveFrom = MoveDirection.Left;
-
         public Vector3 CustomPosition = Vector3.zero;
 
         public Vector3 GetTargetPosition(RectTransform target, Vector3 startPosition)
@@ -48,6 +51,7 @@ namespace GameBerry.UI
             Rect rootCanvasRect = target.rect;
             float xOffset = rootCanvasRect.width / 2 + target.rect.width * target.pivot.x;
             float yOffset = rootCanvasRect.height / 2 + target.rect.height * target.pivot.y;
+
             switch (MoveFrom)
             {
                 case MoveDirection.Left: return new Vector3(-xOffset, startPosition.y, startPosition.z);
@@ -124,10 +128,7 @@ namespace GameBerry.UI
 
         private float GetTotalDuration(BaseAnimationStruct ani)
         {
-            if (ani == null)
-                return 0.0f;
-
-            if (ani.UseAnimation == false)
+            if (ani == null || ani.UseAnimation == false)
                 return 0.0f;
 
             return ani.StartDelay + ani.Duration;
@@ -137,27 +138,21 @@ namespace GameBerry.UI
     [RequireComponent(typeof(CanvasGroup))]
     public class IDialogAnimation : MonoBehaviour
     {
-        [HideInInspector]
-        public Transform AnimationTarget;
+        [HideInInspector] public Transform AnimationTarget;
 
-        [HideInInspector]
-        public bool useInAnimation;
-        [HideInInspector]
-        public bool useOutAnimation;
+        [HideInInspector] public bool useInAnimation;
+        [HideInInspector] public bool useOutAnimation;
 
         public bool IsDoingInAnimation { get { return _doingInAnimation; } }
-        private bool _doingInAnimation;
-
         public bool IsDoingOutAnimation { get { return _doingOutAnimation; } }
+
+        private bool _doingInAnimation;
         private bool _doingOutAnimation;
 
-        [HideInInspector]
-        public IDialogAnimations InAnimation = new IDialogAnimations();
-        [HideInInspector]
-        public IDialogAnimations OutAnimation = new IDialogAnimations();
+        [HideInInspector] public IDialogAnimations InAnimation = new IDialogAnimations();
+        [HideInInspector] public IDialogAnimations OutAnimation = new IDialogAnimations();
 
         private RectTransform _rectTransform;
-
         private Vector3 _startPos;
         private Vector3 _startRotate;
         private Vector3 _startScale;
@@ -174,10 +169,29 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void Awake()
         {
-            _rectTransform = AnimationTarget == null ? GetComponent<RectTransform>() : AnimationTarget.GetComponent<RectTransform>();
-            _startPos = _rectTransform.anchoredPosition3D;
-            _startRotate = _rectTransform.eulerAngles;
-            _startScale = _rectTransform.localScale;
+            CacheComponents();
+        }
+
+        private void OnEnable()
+        {
+            // 에디터/런타임 둘 다에서 활성화 시점 기준으로 기준값 갱신
+            CacheComponents();
+        }
+
+        private void CacheComponents()
+        {
+            if (AnimationTarget == null)
+                _rectTransform = GetComponent<RectTransform>();
+            else
+                _rectTransform = AnimationTarget.GetComponent<RectTransform>();
+
+            if (_rectTransform != null)
+            {
+                _startPos = _rectTransform.anchoredPosition3D;
+                _startRotate = _rectTransform.eulerAngles;
+                _startScale = _rectTransform.localScale;
+            }
+
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
@@ -230,10 +244,7 @@ namespace GameBerry.UI
 
             OnInAnimationsStart?.Invoke();
 
-            if (useInAnimation)
-                InAnimation.SetTotalDuration();
-
-            if (InAnimation.TotalDuration <= 0.0f)
+            if (!useInAnimation)
             {
                 OnInAnimationsFinish?.Invoke();
                 return;
@@ -247,48 +258,12 @@ namespace GameBerry.UI
                 return;
             }
 
-            // 각 애니메이션 병렬 실행
-            if (InAnimation.MoveAni.UseAnimation)
-                _ = PlayMoveAsync(InAnimation.MoveAni.StartDelay,
-                    InAnimation.MoveAni.Duration,
-                    InAnimation.MoveAni.GetTargetPosition(_rectTransform, _startPos),
-                    _startPos,
-                    InAnimation.MoveAni.Linear ? null : InAnimation.MoveAni.AnimationCurve,
-                    token);
-
-            if (InAnimation.RotateAni.UseAnimation)
-                _ = PlayRotateAsync(InAnimation.RotateAni.StartDelay,
-                    InAnimation.RotateAni.Duration,
-                    InAnimation.RotateAni.Rotate,
-                    _startRotate,
-                    InAnimation.RotateAni.Linear ? null : InAnimation.RotateAni.AnimationCurve,
-                    token);
-
-            if (InAnimation.ScaleAni.UseAnimation)
-                _ = PlayScaleAsync(InAnimation.ScaleAni.StartDelay,
-                    InAnimation.ScaleAni.Duration,
-                    InAnimation.ScaleAni.Scale,
-                    _startScale,
-                    InAnimation.ScaleAni.Linear ? null : InAnimation.ScaleAni.AnimationCurve,
-                    token);
-
-            if (InAnimation.FadeAni.UseAnimation)
-                _ = PlayFadeAsync(InAnimation.FadeAni.StartDelay,
-                    InAnimation.FadeAni.Duration,
-                    InAnimation.FadeAni.StartAlpha,
-                    InAnimation.FadeAni.EndAlpha,
-                    InAnimation.FadeAni.Linear ? null : InAnimation.FadeAni.AnimationCurve,
-                    token);
-
             try
             {
-                // 총 시간만큼 기다렸다가 끝 이벤트 호출 (기존 Update 로직 대체)
-                int waitMs = (int)(InAnimation.TotalDuration * 1000f);
-                await UniTask.Delay(waitMs, cancellationToken: token);
+                await RunAnimationsAsync(InAnimation, isIn: true, token);
             }
             catch (OperationCanceledException)
             {
-                // 다른 애니메이션으로 교체된 경우
                 return;
             }
 
@@ -312,10 +287,7 @@ namespace GameBerry.UI
 
             OnOutAnimationsStart?.Invoke();
 
-            if (useOutAnimation)
-                OutAnimation.SetTotalDuration();
-
-            if (OutAnimation.TotalDuration <= 0.0f)
+            if (!useOutAnimation)
             {
                 OnOutAnimationsFinish?.Invoke();
                 return;
@@ -329,42 +301,9 @@ namespace GameBerry.UI
                 return;
             }
 
-            if (OutAnimation.MoveAni.UseAnimation)
-                _ = PlayMoveAsync(OutAnimation.MoveAni.StartDelay,
-                    OutAnimation.MoveAni.Duration,
-                    _startPos,
-                    OutAnimation.MoveAni.GetTargetPosition(_rectTransform, _startPos),
-                    OutAnimation.MoveAni.Linear ? null : OutAnimation.MoveAni.AnimationCurve,
-                    token);
-
-            if (OutAnimation.RotateAni.UseAnimation)
-                _ = PlayRotateAsync(OutAnimation.RotateAni.StartDelay,
-                    OutAnimation.RotateAni.Duration,
-                    _startRotate,
-                    OutAnimation.RotateAni.Rotate,
-                    OutAnimation.RotateAni.Linear ? null : OutAnimation.RotateAni.AnimationCurve,
-                    token);
-
-            if (OutAnimation.ScaleAni.UseAnimation)
-                _ = PlayScaleAsync(OutAnimation.ScaleAni.StartDelay,
-                    OutAnimation.ScaleAni.Duration,
-                    _startScale,
-                    OutAnimation.ScaleAni.Scale,
-                    OutAnimation.ScaleAni.Linear ? null : OutAnimation.ScaleAni.AnimationCurve,
-                    token);
-
-            if (OutAnimation.FadeAni.UseAnimation)
-                _ = PlayFadeAsync(OutAnimation.FadeAni.StartDelay,
-                    OutAnimation.FadeAni.Duration,
-                    OutAnimation.FadeAni.StartAlpha,
-                    OutAnimation.FadeAni.EndAlpha,
-                    OutAnimation.FadeAni.Linear ? null : OutAnimation.FadeAni.AnimationCurve,
-                    token);
-
             try
             {
-                int waitMs = (int)(OutAnimation.TotalDuration * 1000f);
-                await UniTask.Delay(waitMs, cancellationToken: token);
+                await RunAnimationsAsync(OutAnimation, isIn: false, token);
             }
             catch (OperationCanceledException)
             {
@@ -379,121 +318,171 @@ namespace GameBerry.UI
         }
 
         //------------------------------------------------------------------------------------
-        private async UniTask PlayMoveAsync(float delay, float duration, Vector3 startpos, Vector3 endpos,
-            AnimationCurve animationcurve, CancellationToken token)
+        /// <summary>
+        /// Move/Rotate/Scale/Fade를 한 번에 처리하는 메인 애니메이션 루프
+        /// </summary>
+        private async UniTask RunAnimationsAsync(IDialogAnimations anim, bool isIn, CancellationToken token)
         {
-            if (delay > 0f)
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+            if (_rectTransform == null || _canvasGroup == null)
+                CacheComponents();
 
-            float starttime = Time.time;
-            float endtime = starttime + duration;
+            anim.SetTotalDuration();
+            float total = anim.TotalDuration;
+            if (total <= 0f)
+                return;
 
-            Vector3 posGap = startpos - endpos;
+            float startTime = Time.time;
 
-            while (Time.time <= endtime)
+            // -------- Move 사전 계산 --------
+            Vector3 moveFrom = _startPos;
+            Vector3 moveTo = _startPos;
+            bool useMove = anim.MoveAni != null && anim.MoveAni.UseAnimation;
+
+            if (useMove)
+            {
+                var offPos = anim.MoveAni.GetTargetPosition(_rectTransform, _startPos);
+                if (isIn)
+                {
+                    // In : off → start
+                    moveFrom = offPos;
+                    moveTo = _startPos;
+                }
+                else
+                {
+                    // Out : start → off
+                    moveFrom = _startPos;
+                    moveTo = offPos;
+                }
+            }
+
+            // -------- Rotate 사전 계산 --------
+            Vector3 rotFrom = _startRotate;
+            Vector3 rotTo = _startRotate;
+            bool useRotate = anim.RotateAni != null && anim.RotateAni.UseAnimation;
+
+            if (useRotate)
+            {
+                if (isIn)
+                {
+                    rotFrom = anim.RotateAni.Rotate;
+                    rotTo = _startRotate;
+                }
+                else
+                {
+                    rotFrom = _startRotate;
+                    rotTo = anim.RotateAni.Rotate;
+                }
+            }
+
+            // -------- Scale 사전 계산 --------
+            Vector3 scaleFrom = _startScale;
+            Vector3 scaleTo = _startScale;
+            bool useScale = anim.ScaleAni != null && anim.ScaleAni.UseAnimation;
+
+            if (useScale)
+            {
+                if (isIn)
+                {
+                    scaleFrom = anim.ScaleAni.Scale;
+                    scaleTo = _startScale;
+                }
+                else
+                {
+                    scaleFrom = _startScale;
+                    scaleTo = anim.ScaleAni.Scale;
+                }
+            }
+
+            // -------- Fade 사전 계산 --------
+            bool useFade = anim.FadeAni != null && anim.FadeAni.UseAnimation;
+            float fadeFrom = _canvasGroup != null ? _canvasGroup.alpha : 1f;
+            float fadeTo = fadeFrom;
+
+            if (useFade)
+            {
+                fadeFrom = anim.FadeAni.StartAlpha;
+                fadeTo = anim.FadeAni.EndAlpha;
+
+                if (_canvasGroup != null)
+                    _canvasGroup.alpha = fadeFrom;
+            }
+
+            // -------- 메인 루프 --------
+            while (true)
             {
                 if (token.IsCancellationRequested)
                     return;
 
-                float ratio = (Time.time - starttime) / duration;
-                if (animationcurve != null)
-                    ratio = animationcurve.Evaluate(ratio);
+                float elapsed = Time.time - startTime;
+                float t = Mathf.Clamp(elapsed, 0f, total);
 
-                _rectTransform.anchoredPosition3D = startpos - (posGap * ratio);
+                // Move
+                if (useMove)
+                {
+                    float r = GetAnimRatio(anim.MoveAni, t);
+                    _rectTransform.anchoredPosition3D = Vector3.Lerp(moveFrom, moveTo, r);
+                }
+
+                // Rotate
+                if (useRotate)
+                {
+                    float r = GetAnimRatio(anim.RotateAni, t);
+                    _rectTransform.eulerAngles = Vector3.Lerp(rotFrom, rotTo, r);
+                }
+
+                // Scale
+                if (useScale)
+                {
+                    float r = GetAnimRatio(anim.ScaleAni, t);
+                    _rectTransform.localScale = Vector3.Lerp(scaleFrom, scaleTo, r);
+                }
+
+                // Fade
+                if (useFade && _canvasGroup != null)
+                {
+                    float r = GetAnimRatio(anim.FadeAni, t);
+                    _canvasGroup.alpha = Mathf.Lerp(fadeFrom, fadeTo, r);
+                }
+
+                if (elapsed >= total)
+                    break;
 
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
 
-            _rectTransform.anchoredPosition3D = endpos;
+            // 루프가 끝난 후, 정확히 최종 값 스냅
+            if (useMove)
+                _rectTransform.anchoredPosition3D = moveTo;
+
+            if (useRotate)
+                _rectTransform.eulerAngles = rotTo;
+
+            if (useScale)
+                _rectTransform.localScale = scaleTo;
+
+            if (useFade && _canvasGroup != null)
+                _canvasGroup.alpha = fadeTo;
         }
 
         //------------------------------------------------------------------------------------
-        private async UniTask PlayRotateAsync(float delay, float duration, Vector3 startrotate, Vector3 endrotate,
-            AnimationCurve animationcurve, CancellationToken token)
+        private float GetAnimRatio(BaseAnimationStruct ani, float time)
         {
-            if (delay > 0f)
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+            if (ani == null || !ani.UseAnimation)
+                return 0f;
 
-            float starttime = Time.time;
-            float endtime = starttime + duration;
+            float start = ani.StartDelay;
+            float end = ani.StartDelay + ani.Duration;
 
-            Vector3 rotateGap = startrotate - endrotate;
+            if (time <= start)
+                return 0f;
+            if (time >= end)
+                return 1f;
 
-            while (Time.time <= endtime)
-            {
-                if (token.IsCancellationRequested)
-                    return;
+            float t = (time - start) / ani.Duration;
+            if (!ani.Linear && ani.AnimationCurve != null)
+                t = ani.AnimationCurve.Evaluate(t);
 
-                float ratio = (Time.time - starttime) / duration;
-                if (animationcurve != null)
-                    ratio = animationcurve.Evaluate(ratio);
-
-                _rectTransform.eulerAngles = startrotate - (rotateGap * ratio);
-
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
-
-            _rectTransform.eulerAngles = endrotate;
-        }
-
-        //------------------------------------------------------------------------------------
-        private async UniTask PlayScaleAsync(float delay, float duration, Vector3 startscale, Vector3 endscale,
-            AnimationCurve animationcurve, CancellationToken token)
-        {
-            if (delay > 0f)
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
-
-            float starttime = Time.time;
-            float endtime = starttime + duration;
-
-            Vector3 scaleGap = startscale - endscale;
-
-            while (Time.time <= endtime)
-            {
-                if (token.IsCancellationRequested)
-                    return;
-
-                float ratio = (Time.time - starttime) / duration;
-                if (animationcurve != null)
-                    ratio = animationcurve.Evaluate(ratio);
-
-                _rectTransform.localScale = startscale - (scaleGap * ratio);
-
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
-
-            _rectTransform.localScale = endscale;
-        }
-
-        //------------------------------------------------------------------------------------
-        private async UniTask PlayFadeAsync(float delay, float duration, float startfade, float endfade,
-            AnimationCurve animationcurve, CancellationToken token)
-        {
-            _canvasGroup.alpha = startfade;
-
-            if (delay > 0f)
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
-
-            float starttime = Time.time;
-            float endtime = starttime + duration;
-
-            float fadeGap = endfade - startfade;
-
-            while (Time.time <= endtime)
-            {
-                if (token.IsCancellationRequested)
-                    return;
-
-                float ratio = (Time.time - starttime) / duration;
-                if (animationcurve != null)
-                    ratio = animationcurve.Evaluate(ratio);
-
-                _canvasGroup.alpha = startfade + (fadeGap * ratio);
-
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
-
-            _canvasGroup.alpha = endfade;
+            return Mathf.Clamp01(t);
         }
         //------------------------------------------------------------------------------------
     }

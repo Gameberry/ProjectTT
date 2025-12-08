@@ -62,30 +62,6 @@ namespace GameBerry
         }
 
 
-        private void HandleEvent(TrackEntry trackEntry, Spine.Event e)
-        {
-            string eventname = e.ToString();
-
-            foreach (var eventparticle in _eventparticle)
-            {
-                if (eventparticle.eventName == eventname)
-                {
-                    if (eventparticle.particleSystem == null)
-                        continue;
-
-                    for (int i = 0; i < eventparticle.particleSystem.Count; ++i)
-                    {
-                        eventparticle.particleSystem[i].Stop();
-                        eventparticle.particleSystem[i].Play();
-                    }
-                }
-            }
-
-            if (AnimationEvent != null)
-                AnimationEvent(e.ToString());
-        }
-
-
         [SpineEvent] public string eventname;
         [SpineAnimation] public string testAniName;
         [ContextMenu("TestPlayAnimation")]

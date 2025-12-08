@@ -20,26 +20,16 @@ namespace GameBerry.UI
 		[SerializeField]
 		private List<Button> _exitBtn;
 
-		private UIDialogAnimaion _uIDialogAnimaion;
+		private IDialogAnimation _iDialogAnimation;
 
 		void Awake()
 		{
 			if (dialogView == null)
 				throw new System.NullReferenceException(string.Format("{0} dialogView Null", this.name));
-		}
 
-		public void Load()
-		{
 			_name = GetType().Name;
 			_rt = GetComponent<RectTransform>();
-			_uIDialogAnimaion = GetComponent<UIDialogAnimaion>();
-			_uIDialogAnimaion?.Init();
-
-			int sibling = EnumExtensions.ParseToInt<UISibling>(_name);
-			UIManager.Instance.SetSibling(_rt, sibling);
-
-			dialogView.SetActive(false);
-
+			InitAnimation();
 
 			if (_exitBtn != null)
 			{
@@ -49,31 +39,33 @@ namespace GameBerry.UI
 						_exitBtn[i].onClick.AddListener(Exit);
 				}
 			}
+		}
+
+		public void Load()
+		{
+			int sibling = EnumExtensions.ParseToInt<UISibling>(_name);
+			UIManager.Instance.SetSibling(_rt, sibling);
+
+			dialogView.SetActive(false);
 
 			OnLoad();
 		}
 
         public void Load_Element()
         {
-            _name = GetType().Name;
-            _rt = GetComponent<RectTransform>();
-			_uIDialogAnimaion = GetComponent<UIDialogAnimaion>();
-
 			dialogView.SetActive(false);
-
-			if (_exitBtn != null)
-			{
-				for (int i = 0; i < _exitBtn.Count; ++i)
-				{
-					if (_exitBtn[i] != null)
-						_exitBtn[i].onClick.AddListener(Exit);
-				}
-			}
 
 			OnLoad();
         }
 
-        protected virtual void OnLoad()
+		private void InitAnimation()
+		{
+			_iDialogAnimation = GetComponent<IDialogAnimation>();
+			_iDialogAnimation?.OnInAnimationsFinish.AddListener(EnterFinish);
+			_iDialogAnimation?.OnOutAnimationsFinish.AddListener(ExitFinish);
+		}
+
+		protected virtual void OnLoad()
 		{
 		}
 
@@ -104,17 +96,18 @@ namespace GameBerry.UI
 			_isEnter = true;
 			OnEnter();
 
-			if (_uIDialogAnimaion != null)
-				_uIDialogAnimaion.PlayOpening(() =>
-				{
-					if (UseBackBtn == true)
-						Managers.AOSBackBtnManager.Instance.EnterBackBtnAction(this);
-				});
+			if (_iDialogAnimation != null)
+				_iDialogAnimation.PlayInAnimation();
 			else
 			{
-				if (UseBackBtn == true)
-					Managers.AOSBackBtnManager.Instance.EnterBackBtnAction(this);
+				EnterFinish();
 			}
+		}
+
+		private void EnterFinish()
+		{
+			if (UseBackBtn == true)
+				Managers.AOSBackBtnManager.Instance.EnterBackBtnAction(this);
 		}
 
 		public virtual void BackKeyCall()
@@ -129,23 +122,22 @@ namespace GameBerry.UI
 
 		public void Exit()
 		{
-			if (_uIDialogAnimaion != null)
-				_uIDialogAnimaion.PlayClosing(() =>
-				{
-					if (dialogView != null)
-						dialogView.SetActive(false);
+			_isEnter = false;
 
-					_isEnter = false;
-					OnExit();
-				});
+			if (_iDialogAnimation != null)
+				_iDialogAnimation.PlayOutAnimation();
 			else
 			{
-				if (dialogView != null)
-					dialogView.SetActive(false);
-
-				_isEnter = false;
-				OnExit();
+				ExitFinish();
 			}
+		}
+
+		private void ExitFinish()
+		{
+			if (dialogView != null)
+				dialogView.SetActive(false);
+
+			OnExit();
 		}
 
 		protected virtual void OnDestroy()

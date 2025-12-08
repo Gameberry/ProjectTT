@@ -525,11 +525,26 @@ namespace GameBerry.UI
 
         private void CreateNewPresetFromCurrent()
         {
+            const string defaultFolder = "Assets/Main/ProjectResources/DialogAnimationPreset";
+
+            // --- 폴더 없으면 생성 ---
+            if (!AssetDatabase.IsValidFolder("Assets/Main"))
+                AssetDatabase.CreateFolder("Assets", "Main");
+
+            if (!AssetDatabase.IsValidFolder("Assets/Main/ProjectResources"))
+                AssetDatabase.CreateFolder("Assets/Main", "ProjectResources");
+
+            if (!AssetDatabase.IsValidFolder(defaultFolder))
+                AssetDatabase.CreateFolder("Assets/Main/ProjectResources", "DialogAnimationPreset");
+
+            // --- 기본 경로 지정해서 저장 패널 띄우기 ---
             string path = EditorUtility.SaveFilePanelInProject(
                 "Create Dialog Animation Preset",
                 "DialogAnimationPreset",
                 "asset",
-                "새 프리셋 이름을 입력하세요.");
+                "새 프리셋 이름을 입력하세요.",
+                defaultFolder           // ✅ 여기!
+            );
 
             if (string.IsNullOrEmpty(path))
                 return;
