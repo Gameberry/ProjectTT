@@ -8,6 +8,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using Cysharp.Threading.Tasks;
 using BackEnd;
 using LitJson;
+using Newtonsoft.Json;
 
 namespace GameBerry.Contents
 {
@@ -204,10 +205,35 @@ namespace GameBerry.Contents
 
             int setcount = 0;
 
+
+
             foreach (var pair in bro)
             {
                 JsonData data = JsonMapper.ToObject(pair.Value.contentString);
-                GameBerry.Chart.GameChart.ChartBROData.Add(pair.Key, data);
+
+                string className = string.Format("GameBerry.Chart.{0}Chart", pair.Key);
+
+                var type = System.Type.GetType(className);
+                if (type == null)
+                {
+#if DEV_DEFINE
+                    Debug.LogError($"Can't convert to {className}");
+#endif
+                    continue;
+                }
+
+                var obj = JsonConvert.DeserializeObject($"{{\"rows\":{pair.Value.contentString}}}", type, new BackendChartValueConverter(false));
+
+                GameBerry.Chart.GameChart.ChartData.Add(Type.GetType(className), obj as Chart.ChartBase);
+
+                //GameBerry.Chart.GameChart.ChartBROData.Add(pair.Key, data);
+
+                if (obj == null || (obj as Chart.ChartBase).IsLoaded() == false)
+                {
+                    Debug.LogError($"LoadChart Error {className}: {data}");
+                    continue;
+                }
+
                 setcount++;
                 if (setcount > 12)
                 {

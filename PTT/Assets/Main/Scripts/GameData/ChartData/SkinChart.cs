@@ -7,7 +7,7 @@ namespace GameBerry.Chart
         public string SkinName;
     }
 
-    public class Skin : ChartBase
+    public class SkinChart : ChartBase
     {
         public SkinInfo this[int index] => rows[index];
         public SkinInfo[] rows;

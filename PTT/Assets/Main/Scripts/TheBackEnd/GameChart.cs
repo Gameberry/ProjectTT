@@ -70,6 +70,8 @@ namespace GameBerry.Chart
 
         public static Queue<string> needSaveChart = new Queue<string>();
 
+        public static Dictionary<Type, ChartBase> ChartData = new Dictionary<Type, ChartBase>();
+
         //------------------------------------------------------------------------------------
         public static void GetBackEndChart(string fileidkey, System.Action<JsonData> action)
         {

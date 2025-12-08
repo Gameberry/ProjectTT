@@ -155,6 +155,17 @@ namespace GameBerry
 
 
 
+    /// <summary>
+    /// 장비/코디용 슬롯 타입
+    /// </summary>
+    public enum SkinSlotType
+    {
+        Body,
+        Hair,
+        Weapon,
+        Face,
+        Back,
+    }
 
 
 

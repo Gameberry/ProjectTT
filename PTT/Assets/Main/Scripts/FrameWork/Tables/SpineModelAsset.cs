@@ -21,17 +21,6 @@ namespace GameBerry
         public string animationName;
     }
 
-    /// <summary>
-    /// 장비/코디용 슬롯 타입
-    /// </summary>
-    public enum SkinSlotType
-    {
-        Body,
-        Hair,
-        Weapon,
-        Face,
-        Back,
-    }
 
     /// <summary>
     /// 슬롯별 기본 스킨 정보 (캐릭터가 처음 입고 나오는 코디)

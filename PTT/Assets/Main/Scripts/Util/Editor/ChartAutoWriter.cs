@@ -38,10 +38,10 @@ public static class ChartAutoWriter
 {{
     public struct {0}Info
     {{
-{1}
+{2}
     }}
 
-    public class {0} : ChartBase
+    public class {1} : ChartBase
     {{
         public {0}Info this[int index] => rows[index];
         public {0}Info[] rows;
@@ -125,7 +125,7 @@ public static class ChartAutoWriter
                Debug.LogError($"Backend failed to get and save chart: {info.name}");
             }
             
-            var type = System.Type.GetType($"Chart.{info.name}");
+            var type = System.Type.GetType($"GameBerry.Chart.{info.name}Chart");
             if (type == null)
             {
                unwrittenChartDict.Add(info.name, local);
@@ -133,7 +133,7 @@ public static class ChartAutoWriter
          }
          else
          {
-            var type = System.Type.GetType($"Chart.{info.name}");
+            var type = System.Type.GetType($"GameBerry.Chart.{info.name}Chart");
             if (type == null)
             {
                unwrittenChartDict.Add(info.name, local);
@@ -169,7 +169,9 @@ public static class ChartAutoWriter
             Debug.Log($"{name} file exist: {path}");
             continue;
          }
-         
+            string chartClassName = $"{name}Chart";
+
+
          var json = JsonMapper.ToObject(str);
          if (!json.ContainsKey("rows"))
          {
@@ -183,7 +185,7 @@ public static class ChartAutoWriter
             variables += $"{string.Format(VariableFormat, GetTypeName(row[key]["S"].ToString()), key)}\n";
          }
 
-         var result = string.Format(ScriptFormat, name, variables[..^1]);
+         var result = string.Format(ScriptFormat, name, chartClassName, variables[..^1]);
          
          File.WriteAllText(path, result);
          AssetDatabase.Refresh();
