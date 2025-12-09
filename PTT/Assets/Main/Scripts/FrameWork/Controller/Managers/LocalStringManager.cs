@@ -17,9 +17,9 @@ namespace GameBerry.Managers
 
     public class LocalStringManager : MonoSingleton<LocalStringManager>
     {
-        private StringLocalChart m_stringLocalChart = null;
-        private LocalizeType m_localizeType = LocalizeType.Korean;
-        private Dictionary<TMP_Text, string> m_localizeUIs = new Dictionary<TMP_Text, string>();
+        private StringLocalChart _stringLocalChart = null;
+        private LocalizeType _localizeType = LocalizeType.Korean;
+        private Dictionary<TMP_Text, string> _localizeUIs = new Dictionary<TMP_Text, string>();
 
 #if DEV_DEFINE
         public Dictionary<string, Showlocallog> OldString = new Dictionary<string, Showlocallog>();
@@ -37,7 +37,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
-            m_stringLocalChart = TableManager.Instance.GetTableClass<StringLocalChart>();
+            _stringLocalChart = LocalTableManager.Instance.GetTableClass<StringLocalChart>();
 
             int localtype = PlayerPrefs.GetInt(Define.DeviceLocalizeKey, -1);
 
@@ -99,20 +99,20 @@ namespace GameBerry.Managers
                 }
             }
 
-            m_localizeType = localizeType;
+            _localizeType = localizeType;
 
             ChangeLocalize(localizeType);
         }
         //------------------------------------------------------------------------------------
         public void SetLocalizeText(TMP_Text textmesh, string id)
         {
-            if (m_localizeUIs.ContainsKey(textmesh) == true)
-                m_localizeUIs[textmesh] = id;
+            if (_localizeUIs.ContainsKey(textmesh) == true)
+                _localizeUIs[textmesh] = id;
             else
-                m_localizeUIs.Add(textmesh, id);
+                _localizeUIs.Add(textmesh, id);
 
 #if DEV_DEFINE
-            StringLocalData data = m_stringLocalChart.GetLocalString(id);
+            StringLocalData data = _stringLocalChart.GetLocalString(id);
 
             if (data != null)
             {
@@ -147,21 +147,21 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void RemoveLocalizeText(TMP_Text textmesh)
         {
-            if (m_localizeUIs.ContainsKey(textmesh) == true)
-                m_localizeUIs.Remove(textmesh);
+            if (_localizeUIs.ContainsKey(textmesh) == true)
+                _localizeUIs.Remove(textmesh);
         }
         //------------------------------------------------------------------------------------
         public string GetLocalString(string id)
         {
-            if (m_stringLocalChart == null)
+            if (_stringLocalChart == null)
                 return id;
 
-            StringLocalData data = m_stringLocalChart.GetLocalString(id);
+            StringLocalData data = _stringLocalChart.GetLocalString(id);
 
             if (data == null)
                 return id;
 
-            if (data.LocalizeString.ContainsKey(m_localizeType) == true)
+            if (data.LocalizeString.ContainsKey(_localizeType) == true)
             {
 #if DEV_DEFINE
                 if (data.isOldString == true)
@@ -177,19 +177,19 @@ namespace GameBerry.Managers
                     }
                 }
 #endif
-                return data.LocalizeString[m_localizeType];
+                return data.LocalizeString[_localizeType];
             }
             else
             {
-                if (m_localizeType != LocalizeType.English
-                    && m_localizeType != LocalizeType.Korean
-                    && m_localizeType != LocalizeType.Japanese
-                    && m_localizeType != LocalizeType.ChineseTraditional
-                    && m_localizeType != LocalizeType.Portuguesa
-                    && m_localizeType != LocalizeType.Spanish)
+                if (_localizeType != LocalizeType.English
+                    && _localizeType != LocalizeType.Korean
+                    && _localizeType != LocalizeType.Japanese
+                    && _localizeType != LocalizeType.ChineseTraditional
+                    && _localizeType != LocalizeType.Portuguesa
+                    && _localizeType != LocalizeType.Spanish)
                 {
                     ChangeLocalize(LocalizeType.English);
-                    if (data.LocalizeString.ContainsKey(m_localizeType) == true)
+                    if (data.LocalizeString.ContainsKey(_localizeType) == true)
                     {
 #if DEV_DEFINE
                         if (data.isOldString == true)
@@ -206,7 +206,7 @@ namespace GameBerry.Managers
                             }
                         }
 #endif
-                        return data.LocalizeString[m_localizeType];
+                        return data.LocalizeString[_localizeType];
                     }
                 }
 
@@ -216,9 +216,9 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void ChangeLocalize(LocalizeType type)
         {
-            m_stringLocalChart.AddLanguage(type, () =>
+            _stringLocalChart.AddLanguage(type, () =>
             {
-                m_localizeType = type;
+                _localizeType = type;
 
                 ApplyAllLocalizeText();
 
@@ -232,7 +232,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         private void ApplyAllLocalizeText()
         {
-            foreach (KeyValuePair<TMP_Text, string> pair in m_localizeUIs)
+            foreach (KeyValuePair<TMP_Text, string> pair in _localizeUIs)
             {
                 if (pair.Key != null)
                     pair.Key.text = GetLocalString(pair.Value);
@@ -291,7 +291,7 @@ namespace GameBerry.Managers
 #endif
         public LocalizeType GetLocalizeType()
         {
-            return m_localizeType;
+            return _localizeType;
         }
         //------------------------------------------------------------------------------------
     }

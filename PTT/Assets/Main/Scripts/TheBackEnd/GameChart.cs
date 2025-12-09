@@ -17,125 +17,120 @@ namespace GameBerry.Chart
         {
             return false;
         }
-    }
 
-    public class ChartInfo
-    {
-        public bool isUpload;
-        public string name;
-        public string explain;
-        public int selectedFileId;
-        public string old;
-
-        public ChartInfo()
-        {
+        public virtual void LoadComplete()
+        { 
 
         }
-        public ChartInfo(JsonData json)
-        {
-            name = json["chartName"].ToString();
-            explain = json["chartExplain"].ToString();
-            int outNum = 0;
 
-            if (Int32.TryParse(json["selectedChartFileId"].ToString(), out outNum))
-            {
-                isUpload = true;
-                selectedFileId = outNum;
-            }
-            else
-            {
-                isUpload = false;
-                selectedFileId = 0;
-            }
+        public virtual void OnReLoadComplete()
+        { 
 
-            old = json["old"].ToString();
-        }
-
-        public override string ToString()
-        {
-            return $"chartName: {name}\n" +
-            $"chartExplain: {explain}\n" +
-            $"isChartUpload: {isUpload}\n" +
-            $"selectedChartFileId: {selectedFileId}\n" +
-            $"old: {old}\n";
         }
     }
 
     public static class GameChart
     {
-        public static Dictionary<string, string> TableChartFileld = new Dictionary<string, string>();
-        public static Dictionary<string, string> TableChartUUID = new Dictionary<string, string>();
-
-        public static Dictionary<string, JsonData> ChartBROData = new Dictionary<string, JsonData>();
-
-        public static Queue<string> needSaveChart = new Queue<string>();
-
         public static Dictionary<Type, ChartBase> ChartData = new Dictionary<Type, ChartBase>();
 
         //------------------------------------------------------------------------------------
-        public static void GetBackEndChart(string fileidkey, System.Action<JsonData> action)
+        public static bool TryGet<T>(out T chart) where T : ChartBase
         {
-            if (Managers.SceneManager.Instance.UseLocalChart == false)
+            if (ChartData.TryGetValue(typeof(T), out var table))
             {
-                if (ChartBROData.ContainsKey(fileidkey) == false)
+                chart = (T)table;
+                return true;
+            }
+
+#if UNITY_EDITOR
+            Debug.LogError($"{typeof(T).Name} is null");
+#endif
+            chart = null;
+            return false;
+        }
+        //------------------------------------------------------------------------------------
+        public static T Get<T>() where T : ChartBase
+        {
+            ChartBase table;
+            if (ChartData.TryGetValue(typeof(T), out table))
+                return (T)table;
+
+            Debug.LogErrorFormat("{0} is null", typeof(T).Name);
+            return null;
+        }
+        //------------------------------------------------------------------------------------
+        public static IEnumerator LoadGameChart(BackEnd.Content.ContentProgressDelegate loadingProcess)
+        {
+            BackEnd.Content.BackendContentTableReturnObject tableCallback = null;
+
+            Backend.CDN.Content.Table.Get(bro =>
+            {
+                tableCallback = bro;
+            });
+
+            yield return new WaitUntil(() => tableCallback != null);
+
+            if (tableCallback.IsSuccess() == false)
+            {
+                Debug.LogError(tableCallback);
+                yield break;
+            }
+
+
+            BackEnd.Content.BackendContentReturnObject callback = null;
+
+            Backend.CDN.Content.Local.Update(tableCallback.GetContentTableItemList(), loadingProcess, bro => {
+                callback = bro;
+            });
+
+            yield return new WaitUntil(() => callback != null);
+
+            if (callback.IsSuccess() == false)
+            {
+                Debug.LogError("GetContents : Fail : " + callback);
+                yield break;
+            }
+
+            Dictionary<string, BackEnd.Content.ContentItem> bro = callback.GetContentDictionarySortByChartName();
+
+            int setcount = 0;
+
+            foreach (var pair in bro)
+            {
+                JsonData data = JsonMapper.ToObject(pair.Value.contentString);
+
+                string className = string.Format("GameBerry.Chart.{0}Chart", pair.Key);
+
+                var type = System.Type.GetType(className);
+                if (type == null)
                 {
-                    Debug.LogError(string.Format("{0} is null", fileidkey));
-                    return;
+#if DEV_DEFINE
+                    Debug.LogError($"Can't convert to {className}");
+#endif
+                    continue;
                 }
 
-                action?.Invoke(ChartBROData[fileidkey]);
-            }
-            else
-            {
-                GetBackEndChart_LocalJson(fileidkey, action);
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public static void GetBackEndChart_LocalJson(string jsonstr, System.Action<JsonData> action)
-        {
-            string jsonstring = ClientLocalChartManager.GetLocalChartData_V2(string.Format("{0}.json", jsonstr));
+                var obj = JsonConvert.DeserializeObject($"{{\"rows\":{pair.Value.contentString}}}", type, new BackendChartValueConverter(false));
 
-            JsonData jsonData = JsonMapper.ToObject(jsonstring);
-
-            action?.Invoke(jsonData);
-        }
-        //------------------------------------------------------------------------------------
-        public static async UniTask<List<T>> GetListDat_Async<T>(string fileidkey)
-        {
-           
-
-            if (Managers.SceneManager.Instance.UseLocalChart == false)
-            {
-                if (ChartBROData.ContainsKey(fileidkey) == false)
+                if (obj == null || (obj as Chart.ChartBase).IsLoaded() == false)
                 {
-                    Debug.LogError(string.Format("{0} is null", fileidkey));
-                    return null;
+                    Debug.LogError($"LoadChart Error {className}: {data}");
+                    continue;
                 }
 
-                List<T> ts = null;
+                Chart.ChartBase chart = obj as Chart.ChartBase;
 
-                await Task.Run(() =>
+                ChartData.Add(Type.GetType(className), chart);
+
+                chart.LoadComplete();
+
+                setcount++;
+                if (setcount > 12)
                 {
-                    //string jsonstr = ChartBROData[fileidkey].contentJson.ToJson();
-                    ts = JsonConvert.DeserializeObject<List<T>>(ChartBROData[fileidkey].ToJson());
-                });
-
-                return ts;
+                    setcount = 0;
+                    yield return null;
+                }
             }
-            else
-            {
-                List<T> ts = null;
-
-                string jsonstr = fileidkey;
-
-                string jsonstring = ClientLocalChartManager.GetLocalChartData_V2(string.Format("{0}.json", jsonstr));
-
-                ts = JsonConvert.DeserializeObject<List<T>>(jsonstring);
-
-                return ts;
-            }
-            
         }
-        //------------------------------------------------------------------------------------
     }
 }

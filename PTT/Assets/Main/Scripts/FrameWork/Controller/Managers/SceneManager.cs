@@ -93,7 +93,7 @@ namespace GameBerry.Managers
 // 푸쉬 때문에 함수 추가. 토큰 받아오면 좋은거고 안되면 말고...
             StartCoroutine(RequestAuthorization());
 #endif
-            TableManager.Instance.LoadDeviceLocalString(() =>
+            LocalTableManager.Instance.LoadDeviceLocalString(() =>
             {
                 LoadStartScene();
             }).Forget();

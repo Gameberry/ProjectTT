@@ -6,10 +6,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using CodeStage.AntiCheat.ObscuredTypes;
 using LitJson;
+using GameBerry.TheBackEnd;
 
-namespace GameBerry.TheBackEnd
+namespace GameBerry.Table
 {
-    public static class TheBackEnd_PlayerTable
+    public static class UserTable
     {
         private static Dictionary<string, string> InDatas = new Dictionary<string, string>();
 

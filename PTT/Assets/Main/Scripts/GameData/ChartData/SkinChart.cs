@@ -3,7 +3,7 @@ namespace GameBerry.Chart
     public struct SkinInfo
     {
         public int Index;
-        public string SkinType;
+        public SkinSlotType SkinType;
         public string SkinName;
     }
 

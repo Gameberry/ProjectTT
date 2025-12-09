@@ -10,27 +10,50 @@ using UnityEngine;
 // 애쉬앤베일에서 슥 가져옴
 public static class ChartAutoWriter
 {
-   #if UNITY_EDITOR
-   private const string FilePath = "Assets/Main/Scripts/GameData/ChartData/ChartData.cs";
+    public class ChartAutoWriteInfo
+    {
+        public bool isUpload;
+        public string name;
+        public string explain;
+        public int selectedFileId;
+        public string old;
 
-   private const string InfoFormat = @"    public struct {0}Info
-    {{
-{1}
-    }}";
-   
+        public ChartAutoWriteInfo()
+        {
+
+        }
+        public ChartAutoWriteInfo(JsonData json)
+        {
+            name = json["chartName"].ToString();
+            explain = json["chartExplain"].ToString();
+            int outNum = 0;
+
+            if (System.Int32.TryParse(json["selectedChartFileId"].ToString(), out outNum))
+            {
+                isUpload = true;
+                selectedFileId = outNum;
+            }
+            else
+            {
+                isUpload = false;
+                selectedFileId = 0;
+            }
+
+            old = json["old"].ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"chartName: {name}\n" +
+            $"chartExplain: {explain}\n" +
+            $"isChartUpload: {isUpload}\n" +
+            $"selectedChartFileId: {selectedFileId}\n" +
+            $"old: {old}\n";
+        }
+    }
+
+#if UNITY_EDITOR
    private const string VariableFormat = "        public {0} {1};";
-
-   private const string ClassFormat = @"    public class {0} : ChartBase
-    {{
-        public {0}Info this[int index] => rows[index];
-        public {0}Info[] rows;
-
-        public override bool IsLoaded()
-        {{
-            return rows != null;
-        }}
-    }}";
-   
    
    private const string FolderPath = "Assets/Main/Scripts/GameData/ChartData";
 
@@ -115,8 +138,11 @@ public static class ChartAutoWriter
       var json = chartList.FlattenRows();
       for (var i = 0; i < json.Count; i++)
       {
-         var info = new GameBerry.Chart.ChartInfo(json[i]);
+         var info = new ChartAutoWriteInfo(json[i]);
          var local = Backend.Chart.GetLocalChartData(info.selectedFileId.ToString());
+
+            string chartClass = $"GameBerry.Chart.{info.name}Chart, Assembly-CSharp";
+
          if (local.IsNullOrEmpty())
          {
             var server = Backend.Chart.GetOneChartAndSave(info.selectedFileId.ToString());
@@ -124,8 +150,9 @@ public static class ChartAutoWriter
             {
                Debug.LogError($"Backend failed to get and save chart: {info.name}");
             }
-            
-            var type = System.Type.GetType($"GameBerry.Chart.{info.name}Chart");
+
+
+            System.Type type = System.Type.GetType(chartClass);
             if (type == null)
             {
                unwrittenChartDict.Add(info.name, local);
@@ -133,7 +160,7 @@ public static class ChartAutoWriter
          }
          else
          {
-            var type = System.Type.GetType($"GameBerry.Chart.{info.name}Chart");
+            System.Type type = System.Type.GetType(chartClass);
             if (type == null)
             {
                unwrittenChartDict.Add(info.name, local);
@@ -141,7 +168,7 @@ public static class ChartAutoWriter
          }
       }
 
-      if (EditorUtility.DisplayCancelableProgressBar("차트 자동 생성", "차트 생성 중", 0.8f))
+        if (EditorUtility.DisplayCancelableProgressBar("차트 자동 생성", "차트 생성 중", 0.8f))
       {
          EditorUtility.ClearProgressBar();
          return;
@@ -193,36 +220,6 @@ public static class ChartAutoWriter
       
       EditorUtility.ClearProgressBar();
       EditorUtility.DisplayDialog("완료", $"자동 생성 완료\n{string.Join(", ", chartData.Keys)}", "굿");
-      
-      // var add = "";
-      //  
-      // foreach (var pair in chartData)
-      // {
-      //    var json = JsonMapper.ToObject(pair.Value);
-      //    if (!json.ContainsKey("rows"))
-      //    {
-      //       continue;
-      //    }
-      //    var row = json["rows"][0];
-      //    var variables = "";
-      //    for (var j = 0; j < row.Count; j++)
-      //    {
-      //       var key = row.Keys.ElementAt(j);
-      //       variables += $"{string.Format(VariableFormat, GetTypeName(row[key]["S"].ToString()), key)}\n";
-      //    }
-      //
-      //    add += $"{string.Format(InfoFormat, pair.Key, variables[..^1])}\n{string.Format(ClassFormat, pair.Key)}\n\n";
-      //    
-      // }
-      //
-      //
-      // lines.Insert(i, add[..^1]);
-      //
-      // File.WriteAllText(FilePath, string.Join("\n", lines));
-      // AssetDatabase.Refresh();
-      //
-      // EditorUtility.ClearProgressBar();
-      // EditorUtility.DisplayDialog("완료", $"자동 생성 완료\n{string.Join(", ", chartData.Keys)}", "굿");
    }
    
    private static string GetTypeName(string value)

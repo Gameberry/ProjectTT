@@ -38,7 +38,7 @@ namespace GameBerry
 
     public class StringLocalChart : LocalTableBase
     {
-        private Dictionary<string, StringLocalData> m_stringLocalDatas_Dic = new Dictionary<string, StringLocalData>();
+        private Dictionary<string, StringLocalData> _stringLocalDatas_Dic = new Dictionary<string, StringLocalData>();
         private List<LocalizeType> loadCompleteLanguage = new List<LocalizeType>();
 
         public override async UniTask InitData_Async()
@@ -209,12 +209,12 @@ namespace GameBerry
                 }
 
 
-                if (m_stringLocalDatas_Dic.ContainsKey(stringlocaldata.LocalStringID) == true)
+                if (_stringLocalDatas_Dic.ContainsKey(stringlocaldata.LocalStringID) == true)
                 {
                     Debug.Log("¿Ãªı≥¢¥Ÿ" + stringlocaldata.LocalStringID);
                 }
                 else
-                    m_stringLocalDatas_Dic.Add(stringlocaldata.LocalStringID, stringlocaldata);
+                    _stringLocalDatas_Dic.Add(stringlocaldata.LocalStringID, stringlocaldata);
             }
         }
         //------------------------------------------------------------------------------------
@@ -226,10 +226,10 @@ namespace GameBerry
             await UniTask.Yield();
             for (int i = 0; i < v2LocalDatas.Count; ++i)
             {
-                if (m_stringLocalDatas_Dic.ContainsKey(v2LocalDatas[i].key) == false)
-                    m_stringLocalDatas_Dic.Add(v2LocalDatas[i].key, new StringLocalData());
+                if (_stringLocalDatas_Dic.ContainsKey(v2LocalDatas[i].key) == false)
+                    _stringLocalDatas_Dic.Add(v2LocalDatas[i].key, new StringLocalData());
 
-                StringLocalData stringLocalData = m_stringLocalDatas_Dic[v2LocalDatas[i].key];
+                StringLocalData stringLocalData = _stringLocalDatas_Dic[v2LocalDatas[i].key];
                 if (stringLocalData.LocalizeString.ContainsKey(localizeType) == false)
                 {
                     stringLocalData.LocalStringID = v2LocalDatas[i].key;
@@ -242,9 +242,9 @@ namespace GameBerry
         {
             StringLocalData data = null;
             
-            if (m_stringLocalDatas_Dic.ContainsKey(id) == true)
+            if (_stringLocalDatas_Dic.ContainsKey(id) == true)
             {
-                m_stringLocalDatas_Dic.TryGetValue(id, out data);
+                _stringLocalDatas_Dic.TryGetValue(id, out data);
             }
 
             return data;
@@ -252,11 +252,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void AddLocalString(StringLocalData stringLocalData)
         {
-            if (m_stringLocalDatas_Dic.ContainsKey(stringLocalData.LocalStringID) == true)
+            if (_stringLocalDatas_Dic.ContainsKey(stringLocalData.LocalStringID) == true)
             {
             }
             else
-                m_stringLocalDatas_Dic.Add(stringLocalData.LocalStringID, stringLocalData);
+                _stringLocalDatas_Dic.Add(stringLocalData.LocalStringID, stringLocalData);
         }
         //------------------------------------------------------------------------------------
     }

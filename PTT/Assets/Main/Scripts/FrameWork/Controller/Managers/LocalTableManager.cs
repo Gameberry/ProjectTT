@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 
 namespace GameBerry.Managers
 {
-    public class TableManager : MonoSingleton<TableManager>
+    public class LocalTableManager : MonoSingleton<LocalTableManager>
     {
         bool _alreadyLoading = false;
         bool _loadComplete = false;

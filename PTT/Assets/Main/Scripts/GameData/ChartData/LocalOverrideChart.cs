@@ -1,34 +1,39 @@
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using LitJson;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
-using Cysharp.Threading.Tasks;
-
-namespace GameBerry
+namespace GameBerry.Chart
 {
-    public class LocalOverrideLocalTable : LocalTableBase
+    public struct LocalOverrideInfo
     {
-        //------------------------------------------------------------------------------------
-        public override async UniTask InitData_Async()
+        public int Index;
+        public string TextKey;
+        public string TextKR;
+        public string TextEN;
+        public string TextJP;
+        public string TextTW;
+        public string TextPT;
+        public string TextSP;
+    }
+
+    public class LocalOverrideChart : ChartBase
+    {
+        public LocalOverrideInfo this[int index] => rows[index];
+        public LocalOverrideInfo[] rows;
+
+        public override bool IsLoaded()
         {
-            JsonData rows = null;
+            return rows != null;
+        }
 
-            Chart.GameChart.GetBackEndChart("LocalOverride", o =>
-            { rows = o; });
+        public override void LoadComplete()
+        {
+            StringLocalChart stringLocalChart = Managers.LocalTableManager.Instance.GetTableClass<StringLocalChart>();
 
-            await UniTask.WaitUntil(() => rows != null);
+            if (stringLocalChart == null)
+                return;
 
-            StringLocalChart stringLocalChart = Managers.TableManager.Instance.GetTableClass<StringLocalChart>();
-
-            for (int i = 0; i < rows.Count; ++i)
+            for (int i = 0; i < rows.Length; ++i)
             {
                 try
                 {
-                    string id = rows[i]["TextKey"].ToString();
+                    string id = rows[i].TextKey;
 
                     StringLocalData stringlocaldata = stringLocalChart.GetLocalString(id);
                     if (stringlocaldata == null)
@@ -56,18 +61,19 @@ namespace GameBerry
                     if (stringlocaldata.LocalizeString.ContainsKey(LocalizeType.Spanish) == false)
                         stringlocaldata.LocalizeString.Add(LocalizeType.Spanish, string.Empty);
 
-                    stringlocaldata.LocalizeString[LocalizeType.Korean] = rows[i]["TextKR"].ToString().Replace("\\n", "\n");
-                    stringlocaldata.LocalizeString[LocalizeType.English] = rows[i]["TextEN"].ToString().Replace("\\n", "\n");
-                    stringlocaldata.LocalizeString[LocalizeType.Japanese] = rows[i]["TextJP"].ToString().Replace("\\n", "\n");
-                    stringlocaldata.LocalizeString[LocalizeType.ChineseTraditional] = rows[i]["TextTW"].ToString().Replace("\\n", "\n");
-                    stringlocaldata.LocalizeString[LocalizeType.Portuguesa] = rows[i]["TextPT"].ToString().Replace("\\n", "\n");
-                    stringlocaldata.LocalizeString[LocalizeType.Spanish] = rows[i]["TextSP"].ToString().Replace("\\n", "\n");
+                    stringlocaldata.LocalizeString[LocalizeType.Korean] = rows[i].TextKR;
+                    stringlocaldata.LocalizeString[LocalizeType.English] = rows[i].TextEN;
+                    stringlocaldata.LocalizeString[LocalizeType.Japanese] = rows[i].TextJP;
+                    stringlocaldata.LocalizeString[LocalizeType.ChineseTraditional] = rows[i].TextTW;
+                    stringlocaldata.LocalizeString[LocalizeType.Portuguesa] = rows[i].TextPT;
+                    stringlocaldata.LocalizeString[LocalizeType.Spanish] = rows[i].TextSP;
                 }
                 catch
                 {
-                    Debug.LogError(string.Format("LocalOverrideChart 터짐 범인 : {0} 번째", i));
+                    UnityEngine.Debug.LogError(string.Format("LocalOverrideChart 터짐 범인 : {0} 번째", i));
                 }
             }
         }
     }
+
 }

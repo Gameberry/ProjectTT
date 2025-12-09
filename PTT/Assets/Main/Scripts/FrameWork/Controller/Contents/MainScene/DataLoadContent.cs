@@ -79,8 +79,6 @@ namespace GameBerry.Contents
             for (int i = 0; i < LoadTable.Count; ++i)
                 LoadTable[i]?.Invoke();
 
-            //Backend.CDN.Content.Local.Reset();
-
             m_setNoticeMsg.NoticeStr = serverCheckString;
             Message.Send(m_setNoticeMsg);
 
@@ -89,32 +87,19 @@ namespace GameBerry.Contents
 
             stopwatch.Start();
 
-            if (Managers.SceneManager.Instance.UseLocalChart == false)
-            {
-                yield return StartCoroutine(LocalUpdateAsyncIEnumerator());
-            }
-            
-            yield return StartCoroutine(Managers.TableManager.Instance.Load());
+            // 디바이스에 있는 테이블들 로드
+            yield return StartCoroutine(Managers.LocalTableManager.Instance.Load());
+
+            // 뒤끝 차트 로드
+            yield return StartCoroutine(Chart.GameChart.LoadGameChart(GetProgress));
 
             stopwatch.Stop();
             tableLoadingTime = ((float)stopwatch.ElapsedMilliseconds) * 0.001f;
-            ThirdPartyLog.Instance.SendLog_TableLoadEvent(tableLoadingTime, GameBerry.Chart.GameChart.needSaveChart.Count);
+            ThirdPartyLog.Instance.SendLog_TableLoadEvent(tableLoadingTime, Chart.GameChart.ChartData.Count);
 
             UnityEngine.Debug.LogErrorFormat("테이블 로드 완료 : {0:0.###}s", tableLoadingTime);
 
-
-            //m_setNoticeMsg.NoticeStr = "시간 가져오기 끝";
-            //Message.Send(m_setNoticeMsg);
-
             stopwatch.Start();
-
-            //CharacterBaseStatLocalTable characterBaseStatLocalTable = Managers.TableManager.Instance.GetTableClass<CharacterBaseStatLocalTable>();
-            //List<CharacterBaseStatData> m_characterBaseStatDatas = characterBaseStatLocalTable.GetAllData();
-            //for (int i = 0; i < m_characterBaseStatDatas.Count; ++i)
-            //{
-            //    Managers.CharacterStatManager.Instance.SetDefaultStatValue(m_characterBaseStatDatas[i].BaseStat, m_characterBaseStatDatas[i].BaseValue);
-            //}
-
 
             string tableLoadLocalString = Managers.LocalStringManager.Instance.GetLocalString("title/user");
 
@@ -132,8 +117,6 @@ namespace GameBerry.Contents
             float dbLoadingTime = ((float)stopwatch.ElapsedMilliseconds) * 0.001f;
             ThirdPartyLog.Instance.SendLog_DBLoadEvent(dbLoadingTime);
 
-            GameBerry.Chart.GameChart.ChartBROData = null;
-
             m_setNoticeMsg.NoticeStr = string.Format("{0} {1}%", tableLoadLocalString, (int)(((float)m_completeTableCount / (float)LoadTable.Count) * 100.0f));
 
             Message.Send(m_setNoticeMsg);
@@ -146,11 +129,54 @@ namespace GameBerry.Contents
 
             Message.Send(m_setNoticeMsg);
 
+            Chart.SkinChart skinChart = Chart.GameChart.Get<Chart.SkinChart>();
+
+
+            var bro = Backend.PlayerData.GetTableList();
+
+            if (bro.IsSuccess())
+            {
+                Debug.LogError(bro.ToString());
+            }
+
+            List<TableItem> tableList = new List<TableItem>();
+            LitJson.JsonData tableListJson = bro.GetReturnValuetoJSON()["tables"];
+
+            for (int i = 0; i < tableListJson.Count; i++)
+            {
+                TableItem tableItem = new TableItem();
+
+                tableItem.tableName = tableListJson[i]["tableName"].ToString();
+                tableItem.tableExplaination = tableListJson[i]["tableExplaination"].ToString();
+                tableItem.isChecked = tableListJson[i]["isChecked"].ToString() == "true" ? true : false;
+                tableItem.hasSchema = tableListJson[i]["hasSchema"].ToString() == "true" ? true : false;
+
+                tableList.Add(tableItem);
+                Debug.Log(tableItem.ToString());
+            }
+
             while (completeGroup == false)
                 yield return null;
 
             SetLoadComplete();
         }
+
+        public class TableItem
+        {
+            public string tableName;
+            public string tableExplaination;
+            public bool isChecked;
+            public bool hasSchema;
+
+            public override string ToString()
+            {
+                return $"tableName : {tableName}\n" +
+                $"tableExplaination : {tableExplaination}\n" +
+                $"isChecked : {isChecked}\n" +
+                $"hasSchema : {hasSchema}\n";
+            }
+        }
+
         //------------------------------------------------------------------------------------
         private void CompleteTableLoad(GameBerry.Event.CompleteTableLoadMsg msg)
         {
@@ -167,94 +193,6 @@ namespace GameBerry.Contents
 
             //m_setNoticeMsg.NoticeStr = serverCheckString;
             Message.Send(m_setNoticeMsg);
-        }
-
-        IEnumerator LocalUpdateAsyncIEnumerator()
-        {
-            BackEnd.Content.BackendContentTableReturnObject tableCallback = null;
-
-            Backend.CDN.Content.Table.Get(bro =>
-            {
-                tableCallback = bro;
-            });
-
-            yield return new WaitUntil(() => tableCallback != null);
-
-            if (tableCallback.IsSuccess() == false)
-            {
-                Debug.LogError(tableCallback);
-                yield break;
-            }
-
-
-            BackEnd.Content.BackendContentReturnObject callback = null;
-
-            Backend.CDN.Content.Local.Update(tableCallback.GetContentTableItemList(), GetProgress, bro => {
-                callback = bro;
-            });
-
-            yield return new WaitUntil(() => callback != null);
-
-            if (callback.IsSuccess() == false)
-            {
-                Debug.LogError("GetContents : Fail : " + callback);
-                yield break;
-            }
-
-            Dictionary<string, BackEnd.Content.ContentItem> bro = callback.GetContentDictionarySortByChartName();
-
-            int setcount = 0;
-
-
-
-            foreach (var pair in bro)
-            {
-                JsonData data = JsonMapper.ToObject(pair.Value.contentString);
-
-                string className = string.Format("GameBerry.Chart.{0}Chart", pair.Key);
-
-                var type = System.Type.GetType(className);
-                if (type == null)
-                {
-#if DEV_DEFINE
-                    Debug.LogError($"Can't convert to {className}");
-#endif
-                    continue;
-                }
-
-                var obj = JsonConvert.DeserializeObject($"{{\"rows\":{pair.Value.contentString}}}", type, new BackendChartValueConverter(false));
-
-                GameBerry.Chart.GameChart.ChartData.Add(Type.GetType(className), obj as Chart.ChartBase);
-
-                //GameBerry.Chart.GameChart.ChartBROData.Add(pair.Key, data);
-
-                if (obj == null || (obj as Chart.ChartBase).IsLoaded() == false)
-                {
-                    Debug.LogError($"LoadChart Error {className}: {data}");
-                    continue;
-                }
-
-                setcount++;
-                if (setcount > 12)
-                {
-                    setcount = 0;
-                    yield return null;
-                }
-            }
-
-            //// 확률 파일 이름이 Content일 경우
-            //// contentJson은 아래 Success Cases를 참고해주세요
-            //if(dic.ContainsKey("Content")) {
-
-            //    LitJson.JsonData json = dic["Content"].contentJson;
-
-            //    foreach(LitJson.JsonData item in json) {
-            //        Debug.Log(item["itemID"]);
-            //        Debug.Log(item["itemName"]);
-            //        Debug.Log(item["hpPower"]);
-            //        Debug.Log(item["num"]);
-            //    }
-            //}
         }
     }
 }
