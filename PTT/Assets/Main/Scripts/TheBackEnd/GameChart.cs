@@ -79,9 +79,7 @@ namespace GameBerry.Chart
 
             BackEnd.Content.BackendContentReturnObject callback = null;
 
-            Backend.CDN.Content.Local.Update(tableCallback.GetContentTableItemList(), loadingProcess, bro => {
-                callback = bro;
-            });
+            Backend.CDN.Content.Local.Update(tableCallback.GetContentTableItemList(), loadingProcess, bro => { callback = bro; });
 
             yield return new WaitUntil(() => callback != null);
 

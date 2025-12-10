@@ -8,30 +8,15 @@ using Cysharp.Threading.Tasks;
 
 namespace GameBerry.TheBackEnd
 {
-    public class UpdateDataWaitStruct
-    {
-        public List<string> TableNames;
-        public float SendTime;
-        public Action<BackendReturnObject> CallBack;
-    }
-
     public class TheBackEndManager : MonoSingleton<TheBackEndManager>
     {
         public LoginType UserLoginType = LoginType.None;
 
-        private bool ReadyUpdateData = false;
+        public static bool ReadyUpdateData = false;
 
-        private Dictionary<string, int> updateWaitDatas = new Dictionary<string, int>();
+        private static float updateWaitDataTimer = 0.0f;
 
-        private float updateWaitDataTimer = 0.0f;
-
-        private float updateWaitDataTimerTurm = 300.0f;
-
-        private Dictionary<List<string>, UpdateDataWaitStruct> dynamicUpdateData_Wait1Second = new Dictionary<List<string>, UpdateDataWaitStruct>();
-
-        private Queue<UpdateDataWaitStruct> updateDataWaitStruct_Pool = new Queue<UpdateDataWaitStruct>();
-
-        private Dictionary<List<string>, UpdateDataWaitStruct> reconnectUpdateData = new Dictionary<List<string>, UpdateDataWaitStruct>();
+        private static float updateWaitDataTimerTurm = 300.0f;
 
         private Coroutine disConnectGameCoroutine;
 
@@ -180,7 +165,7 @@ namespace GameBerry.TheBackEnd
         private void OnReconnected()
         {
             netWorkState = true;
-            SendReconnectUpdateData();
+            Table.UserTable.AllUpdata();
         }
         //------------------------------------------------------------------------------------
         public bool CheckNetworkState()
@@ -380,224 +365,6 @@ namespace GameBerry.TheBackEnd
         #endregion
         //------------------------------------------------------------------------------------
         #region TheBackEnd_PlayerTable
-        //------------------------------------------------------------------------------------
-        public void AddUpdateWaitDatas(string tableName)
-        {
-            CheckNetworkState();
-
-            if (updateWaitDatas.ContainsKey(tableName) == true)
-            {
-                updateWaitDatas[tableName]++;
-                return;
-            }
-
-
-            updateWaitDatas.Add(tableName, 0);
-            if (updateWaitDatas.Count >= 10)
-            {
-                SendUpdateWaitData();
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public void SendUpdateWaitData(bool allSend = false)
-        {
-            if (CheckNetworkState() == false)
-                return;
-
-            if (updateWaitDatas.Count <= 0)
-                return;
-
-            List<TransactionValue> transactionList = new List<TransactionValue>();
-
-            int updateCount = 0;
-
-            foreach (var key in updateWaitDatas.Keys.ToList())
-            {
-                string tableName = key;
-                Param updateParam = GetTableParam(tableName);
-                if (updateParam == null)
-                {
-                    Debug.LogWarning(string.Format("{0} Param is Null", updateParam));
-                    continue;
-                }
-
-                transactionList.Add(TransactionValue.SetUpdate(tableName, new Where(), updateParam));
-
-                updateWaitDatas.Remove(key);
-
-                updateCount++;
-                if (updateCount >= 10)
-                    break;
-            }
-
-            SendTransaction(transactionList, null);
-
-            updateWaitDataTimer = Time.time + updateWaitDataTimerTurm;
-
-            if (allSend == true)
-            {
-                if (updateWaitDatas.Count > 0)
-                    SendUpdateWaitData(true);
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public void DynamicUpdateData(List<string> tableNames, Action<BackendReturnObject> action = null)
-        {
-            if (tableNames == null)
-                return;
-
-            if (CheckNetworkState() == false)
-            {
-                AddReconnectUpdateData(tableNames, action);
-                return;
-            }
-
-            List<TransactionValue> transactionList = GetTransactionValues(tableNames);
-
-            SendTransaction(transactionList, action);
-        }
-        //------------------------------------------------------------------------------------
-        private UpdateDataWaitStruct GetUpdateDataWaitStruct()
-        {
-            if (updateDataWaitStruct_Pool.Count > 0)
-                return updateDataWaitStruct_Pool.Dequeue();
-
-            return new UpdateDataWaitStruct();
-        }
-        //------------------------------------------------------------------------------------
-        public void DynamicUpdateData_WaitSecond(List<string> tableNames, Action<BackendReturnObject> action = null)
-        { // 주의 action 저장은 테이블 첫 콜백에 대한것만 사용하므로, 같은 테이블이름에 다른 함수포인터를 사용하면 런타임에러를 만들 수 있음
-            if (tableNames == null)
-                return;
-
-            if (dynamicUpdateData_Wait1Second.ContainsKey(tableNames) == true)
-            {
-                UpdateDataWaitStruct updateDataWaitStruct = dynamicUpdateData_Wait1Second[tableNames];
-                updateDataWaitStruct.SendTime = Time.time + 1.0f;
-            }
-            else
-            {
-                UpdateDataWaitStruct updateDataWaitStruct = GetUpdateDataWaitStruct();
-                updateDataWaitStruct.TableNames = tableNames;
-                updateDataWaitStruct.SendTime = Time.time + 1.0f;
-                updateDataWaitStruct.CallBack = action;
-
-                dynamicUpdateData_Wait1Second.Add(tableNames, updateDataWaitStruct);
-            }
-            
-        }
-        //------------------------------------------------------------------------------------
-        private List<TransactionValue> GetTransactionValues(List<string> tableNames)
-        {
-            if (tableNames == null)
-                return null;
-
-            List<TransactionValue> transactionList = new List<TransactionValue>();
-
-            for (int i = 0; i < tableNames.Count; ++i)
-            {
-                string tableName = tableNames[i];
-                if (updateWaitDatas.ContainsKey(tableName) == true)
-                    updateWaitDatas.Remove(tableName);
-
-                Param updateParam = GetTableParam(tableName);
-                if (updateParam == null)
-                {
-                    Debug.LogWarning(string.Format("{0} Param is Null", updateParam));
-                    continue;
-                }
-
-                transactionList.Add(TransactionValue.SetUpdate(tableName, new Where(), updateParam));
-            }
-
-            return transactionList;
-        }
-        //------------------------------------------------------------------------------------
-        private void SendTransaction(List<TransactionValue> transactionValues, Action<BackendReturnObject> action)
-        {
-            if (isCheatingUser == true)
-                return;
-
-            if (transactionValues == null)
-                return;
-
-            if (transactionValues.Count <= 0)
-                return;
-
-            SendQueue.Enqueue(Backend.GameData.TransactionWriteV2, transactionValues, (callback) =>
-            {
-                action?.Invoke(callback);
-
-                //for (int i = 0; i < transactionValues.Count; ++i)
-                //{
-                //    if (ThirdPartyLog.isAlive == true)
-                //        ThirdPartyLog.Instance.SendLog_InGame(transactionValues[i].table, transactionValues[i].param.GetJson());
-                //}
-
-                if (callback.IsSuccess() == false)
-                {
-                    BackEndErrorCode(callback);
-                }
-            });
-        }
-        //------------------------------------------------------------------------------------
-        private void ForcdSendWaitDatas()
-        {
-            if (isCheatingUser == true)
-                return;
-
-            if (CheckNetworkState() == false)
-                return;
-
-            if (updateWaitDatas.Count <= 0)
-                return;
-
-            List<TransactionValue> transactionList = new List<TransactionValue>();
-
-            int updateCount = 0;
-
-            foreach (var key in updateWaitDatas.Keys.ToList())
-            {
-                string tableName = key;
-                Param updateParam = GetTableParam(tableName);
-                if (updateParam == null)
-                {
-                    Debug.LogWarning(string.Format("{0} Param is Null", updateParam));
-                    continue;
-                }
-
-                transactionList.Add(TransactionValue.SetUpdate(tableName, new Where(), updateParam));
-
-                updateWaitDatas.Remove(key);
-
-                updateCount++;
-                if (updateCount >= 10)
-                {
-                    Backend.GameData.TransactionWriteV2(transactionList);
-
-                    transactionList.Clear();
-                    updateCount = 0;
-                }
-            }
-
-            if (updateCount > 0)
-            {
-                Backend.GameData.TransactionWriteV2(transactionList);
-            }
-        }
-        //------------------------------------------------------------------------------------
-        private void AddReconnectUpdateData(List<string> tableNames, Action<BackendReturnObject> action)
-        {
-            if (reconnectUpdateData.ContainsKey(tableNames) == true)
-                return;
-
-            UpdateDataWaitStruct updateDataWaitStruct = GetUpdateDataWaitStruct();
-            updateDataWaitStruct.TableNames = tableNames;
-            updateDataWaitStruct.SendTime = Time.time + 1.0f;
-            updateDataWaitStruct.CallBack = action;
-
-            reconnectUpdateData.Add(tableNames, updateDataWaitStruct);
-        }
         //------------------------------------------------------------------------------------
         public Param GetTableParam(string tableName)
         {
@@ -1239,8 +1006,6 @@ namespace GameBerry.TheBackEnd
                 //Managers.SocialManager.Instance.RefreshGuildSupport();
                 //Managers.RankManager.Instance.RefreshMyRankData();
 
-                SendUpdateWaitData(true);
-
                 if (Managers.TimeManager.isAlive == true)
                     Managers.TimeManager.Instance.RefreshServerTime(); // 서버시간 동기화
 
@@ -1261,19 +1026,8 @@ namespace GameBerry.TheBackEnd
                 updateWaitDataTimer = Time.time + updateWaitDataTimerTurm;
             }
 
-            if (dynamicUpdateData_Wait1Second.Count > 0)
-            {
-                foreach (var key in dynamicUpdateData_Wait1Second.Keys.ToList())
-                {
-                    UpdateDataWaitStruct updateDataWaitStruct = dynamicUpdateData_Wait1Second[key];
-
-                    if (updateDataWaitStruct.SendTime < Time.time)
-                    {
-                        DynamicUpdateData(key, updateDataWaitStruct.CallBack);
-                        dynamicUpdateData_Wait1Second.Remove(key);
-                    }
-                }
-            }
+            if (ReadyUpdateData == true)
+                Table.UserTable.Updated();
         }
         //------------------------------------------------------------------------------------
         void ExceptionHandler(Exception e)
@@ -1352,46 +1106,8 @@ namespace GameBerry.TheBackEnd
         //------------------------------------------------------------------------------------
         public void AllUpdateTable()
         {
-            if (ReadyUpdateData == false)
-                return;
-
-            ForcdSendWaitDatas();
-
-            //UpdatePlayerTimeInfoTable();
-            //UpdatePlayerViewDataInfoTable();
-            if (dynamicUpdateData_Wait1Second.Count > 0)
-            {
-                foreach (var key in dynamicUpdateData_Wait1Second.Keys.ToList())
-                {
-                    UpdateDataWaitStruct updateDataWaitStruct = dynamicUpdateData_Wait1Second[key];
-
-                    DynamicUpdateData(key, updateDataWaitStruct.CallBack);
-                    dynamicUpdateData_Wait1Second.Remove(key);
-
-                    updateDataWaitStruct_Pool.Enqueue(updateDataWaitStruct);
-                }
-            }
-
-            if (SendQueue.UnprocessedFuncCount > 0)
-            {
-                SendQueue.Poll();
-            }
-        }
-        //------------------------------------------------------------------------------------
-        public void SendReconnectUpdateData()
-        {
-            if (reconnectUpdateData.Count > 0)
-            {
-                foreach (var key in reconnectUpdateData.Keys.ToList())
-                {
-                    UpdateDataWaitStruct updateDataWaitStruct = reconnectUpdateData[key];
-
-                    DynamicUpdateData(key, updateDataWaitStruct.CallBack);
-                    reconnectUpdateData.Remove(key);
-
-                    updateDataWaitStruct_Pool.Enqueue(updateDataWaitStruct);
-                }
-            }
+            if (ReadyUpdateData == true)
+                Table.UserTable.AllUpdata();
         }
         //------------------------------------------------------------------------------------
     }
