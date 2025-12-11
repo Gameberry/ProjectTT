@@ -12,6 +12,17 @@ namespace GameBerry.Managers
 
         public SkeletonAnimationHandler _skeletonAnimationHandler;
 
+//        private readonly Type[] SaveTargets = new Type[]
+//{
+//        typeof(SkinTable),
+//// 필요한 table을 여기에 추가하면 끝
+//};
+
+        private List<Table.TableBase> TransTest = new List<Table.TableBase>()
+        {
+            Table.UserTable.Get<Table.SkinTable>()
+        };
+
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
@@ -36,6 +47,21 @@ namespace GameBerry.Managers
         public void EquipSlotSkin(SkinSlotType slot, string skinName)
         {
             _skeletonAnimationHandler?.EquipSlotSkin(slot, skinName);
+        }
+        //------------------------------------------------------------------------------------
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.H))
+            {
+                Table.UserTable.Get<Table.SkinTable>().test++;
+                Table.UserTable.UpdateTable<Table.SkinTable>();
+            }
+
+            if (Input.GetKeyUp(KeyCode.J))
+            {
+                Table.UserTable.Get<Table.SkinTable>().test++;
+                Table.UserTable.DynamicUpdateData(TransTest);
+            }
         }
         //------------------------------------------------------------------------------------
     }

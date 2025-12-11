@@ -14,15 +14,11 @@ namespace GameBerry.Table
 
     public class SkinTable : TableBase
     {
-        private readonly Type[] SaveTargets = new Type[]
-{
-        typeof(SkinTable),
-// 필요한 table을 여기에 추가하면 끝
-};
-
         public const string SkinEquipDataKey = "SkinEquip";
 
         public Dictionary<SkinSlotType, SkinData> SkinEquipData = new Dictionary<SkinSlotType, SkinData>();
+
+        public int test = 0;
 
         public override void SetData(JsonData data)
         {
@@ -38,19 +34,27 @@ namespace GameBerry.Table
                         {
                             SetInData(data[i][key].ToString());
                         }
-                        else if (key == SkinEquipDataKey)
+                        //else if (key == SkinEquipDataKey)
+                        //{
+                        //    //SkinEquipData = data[i][key].ToString().ToInt(); 데이터 셋팅
+                        //}
+                        else if (key == "test")
                         {
-                            //SkinEquipData = data[i][key].ToString().ToInt(); 데이터 셋팅
+                            test = data[i][key].ToString().ToInt();
+                            UnityEngine.Debug.Log("SkinTest " + test);
                         }
                     }
                 }
             }
+
+            test++;
         }
 
         public override Param GetParam()
         {
             Param param = new Param();
-            param.Add(SkinEquipDataKey, SkinEquipData.ToArray().ToString());
+            //param.Add(SkinEquipDataKey, SkinEquipData.ToArray().ToString());
+            param.Add("test", test);
 
             return param;
         }

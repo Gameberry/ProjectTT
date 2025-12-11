@@ -32,7 +32,7 @@ namespace GameBerry.Table
     public abstract class TableBase
     {
         public string TableName = string.Empty;
-        public string InData = string.Empty;
+        public string InData { get; private set; }
 
         public bool UpdateWaitData = false;
 
@@ -45,14 +45,9 @@ namespace GameBerry.Table
 
         }
 
-        protected void SetInData(string inData)
+        public void SetInData(string inData)
         {
             InData = inData;
-        }
-
-        public void SetInData(BackendReturnObject backendReturnObject)
-        {
-
         }
 
         public void InsertTable()
@@ -62,11 +57,11 @@ namespace GameBerry.Table
                 if (o.IsSuccess() == false)
                     return;
 
-                InData = o.GetInDate();
+                SetInData(o.GetInDate());
             });
         }
 
-        public void UpdateTable()
+        public void UpdateTable(System.Action<BackendReturnObject> action = null)
         {
             if (string.IsNullOrEmpty(TableName) == true)
                 return;
@@ -77,7 +72,17 @@ namespace GameBerry.Table
                 return;
             }
 
-            UserTable.UpdateTable(TableName, InData, GetParam());
+            SendQueue.Enqueue(Backend.GameData.UpdateV2, TableName, InData, Backend.UserInDate, GetParam(), (callback) =>
+            {
+                if (callback.IsSuccess() == false)
+                {
+                    TheBackEndManager.Instance.BackEndErrorCode(callback);
+                }
+                else
+                {
+                    action?.Invoke(callback);
+                }
+            });
         }
     }
 
@@ -85,10 +90,7 @@ namespace GameBerry.Table
     {
         public static Dictionary<Type, TableBase> TableData = new Dictionary<Type, TableBase>();
 
-        private static Dictionary<TableBase, int> updateWaitDatas = new Dictionary<TableBase, int>();
-
         private static float updateWaitDataTimer = 0.0f;
-
         private static float updateWaitDataTimerTurm = 300.0f;
 
         public static Common.ObjectPoolClass<UpdateDataWaitStruct> updateDataWaitStruct_Pool = new Common.ObjectPoolClass<UpdateDataWaitStruct>();
@@ -101,19 +103,6 @@ namespace GameBerry.Table
         //------------------------------------------------------------------------------------
         public static IEnumerator LoadUserTable(Action<int, int> process)
         {
-            SendQueue.Enqueue(Backend.GameData.GetTableList, (callback) =>
-            {
-                // 이후 처리
-                Debug.Log(callback.GetReturnValue());
-
-                if (callback.IsSuccess() == true)
-                {
-                    var data = callback.GetReturnValuetoJSON();
-                }
-                else
-                    TheBackEndManager.Instance.BackEndErrorCode(callback);
-            });
-
             BackendReturnObject callback = null;
 
             Backend.GameData.GetTableList(bro => { callback = bro; });
@@ -135,7 +124,7 @@ namespace GameBerry.Table
 
             LitJson.JsonData tableListJson = callback.GetReturnValuetoJSON()["tables"];
 
-            int totalTableCount = 0;
+            int totalTableCount = tableListJson.Count;
             int completeTableCount = 0;
 
             for (int i = 0; i < tableListJson.Count; i++)
@@ -147,15 +136,47 @@ namespace GameBerry.Table
                 if (type != null && typeof(TableBase).IsAssignableFrom(type))
                 {
                     var table = (TableBase)Activator.CreateInstance(type);
-                    TableData[type] = table;
                     table.TableName = TableName;
 
+                    TableData.Add(type, table);
 
+                    GetTableData_Task(table, () => 
+                    { 
+                        completeTableCount++; 
+                        process?.Invoke(totalTableCount, completeTableCount); 
+                    }).Forget();
                 }
                 else
                 {
                     Debug.LogError($"{tableClass} is invalid Table class");
                 }
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private static async UniTask GetTableData_Task(TableBase tableBase, Action action)
+        {
+            BackendReturnObject callback = null;
+
+            Backend.PlayerData.GetMyData(tableBase.TableName, bro => { callback = bro; });
+
+            await UniTask.WaitUntil(() => callback != null);
+
+            action?.Invoke();
+
+            if (callback.IsSuccess() == false)
+            {
+                BackEndErrorCode(callback);
+                Debug.Log("데이터 읽기 중에 문제가 발생했습니다 : " + callback.ToString());
+            }
+            else
+            {
+                var data = callback.FlattenRows();
+
+                // 불러오기에는 성공했으나 데이터가 존재하지 않는 경우
+                if (data.Count <= 0)
+                    Debug.Log("데이터가 존재하지 않습니다");
+
+                tableBase.SetData(data);
             }
         }
         //------------------------------------------------------------------------------------
@@ -248,6 +269,8 @@ namespace GameBerry.Table
                 transactionList.Add(GetTransactionValue(pair.Value));
 
                 waitcount++;
+                pair.Value.UpdateWaitData = false;
+
                 if (waitcount >= 10)
                     break;
             }
@@ -258,7 +281,7 @@ namespace GameBerry.Table
 
             if (allSend == true)
             {
-                if (updateWaitDatas.Count > 0)
+                if (waitcount > 0)
                     SendUpdateWaitData(true);
             }
         }
@@ -366,33 +389,66 @@ namespace GameBerry.Table
             if (transactionValues.Count <= 0)
                 return;
 
-            SendQueue.Enqueue(Backend.GameData.TransactionWriteV2, transactionValues, (callback) =>
+            SendTransaction_Task(transactionValues, action).Forget();
+        }
+        //------------------------------------------------------------------------------------
+        private static async UniTask SendTransaction_Task(List<TransactionValue> transactionValues, Action<BackendReturnObject> action)
+        {
+            BackendReturnObject callback = null;
+
+            Backend.GameData.TransactionWriteV2(transactionValues, bro => { callback = bro; });
+
+            await UniTask.WaitUntil(() => callback != null);
+
+            if (callback.IsSuccess() == false)
+            {
+                BackEndErrorCode(callback);
+            }
+            else
             {
                 action?.Invoke(callback);
-
+                
                 for (int i = 0; i < transactionValues.Count; ++i)
-                {
+                { 
                     TransactionValue transactionValue = transactionValues[i];
                     if (transactionValue.action == TransactionAction.Put)
                     {
-                        string chartClass = $"GameBerry.Table.{transactionValue.table}Table, Assembly-CSharp";
-                        System.Type type = System.Type.GetType(chartClass);
-                        if (type == null)
-                        {
-                            Debug.LogError($"{transactionValue.table} is null");
+                        // Insert한 데이터들 InData셋팅
+                        var data = callback.GetReturnValuetoJSON();
+
+                        // 불러오기에는 성공했으나 데이터가 존재하지 않는 경우
+                        if (data.Count <= 0)
+                        { 
+                            Debug.Log("데이터가 존재하지 않습니다");
+                            continue;
                         }
-                        else
+
+                        if (data.ContainsKey("putItem"))
                         {
-                            Get(type)?.SetInData(callback);
+                            var putItem = data["putItem"];
+                            for (int j = 0; j < putItem.Count; ++j)
+                            {
+                                if (putItem[j]["table"].ToString() == transactionValue.table)
+                                {
+                                    string chartClass = $"GameBerry.Table.{transactionValue.table}Table, Assembly-CSharp";
+                                    System.Type type = System.Type.GetType(chartClass);
+                                    if (type == null)
+                                    {
+                                        Debug.LogError($"{transactionValue.table} is null");
+                                    }
+                                    else
+                                    {
+                                        Get(type)?.SetInData(putItem[j]["inDate"].ToString());
+                                    }
+                                    break;
+                                }
+                            }
                         }
+
+                        
                     }
                 }
-
-                if (callback.IsSuccess() == false)
-                {
-                    BackEndErrorCode(callback);
-                }
-            });
+            }
         }
         //------------------------------------------------------------------------------------
         public static void AllUpdata()
@@ -421,21 +477,6 @@ namespace GameBerry.Table
         public static void UpdateTable<T>() where T : TableBase
         {
             Get<T>()?.UpdateTable();
-        }
-        //------------------------------------------------------------------------------------
-        public static void UpdateTable(string tableName, string inDate, Param param, System.Action<BackendReturnObject> action = null)
-        {
-            SendQueue.Enqueue(Backend.GameData.UpdateV2, tableName, inDate, Backend.UserInDate, param, (callback) =>
-            {
-                if (callback.IsSuccess() == false)
-                {
-                    TheBackEndManager.Instance.BackEndErrorCode(callback);
-                }
-                else
-                {
-                    action?.Invoke(callback);
-                }
-            });
         }
         //------------------------------------------------------------------------------------
         public static void Updated()
@@ -489,11 +530,6 @@ namespace GameBerry.Table
             TableData.Clear();
 
             PlayerPrefs.DeleteAll();
-        }
-        //------------------------------------------------------------------------------------
-        public static void DeleteTable(string tableName)
-        {
-            
         }
         //------------------------------------------------------------------------------------
         #endregion

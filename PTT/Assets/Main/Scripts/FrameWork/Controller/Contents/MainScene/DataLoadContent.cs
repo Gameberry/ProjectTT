@@ -60,6 +60,17 @@ namespace GameBerry.Contents
 
             stopwatch.Start();
 
+
+            int totalTableCount = 0;
+            int completeTableCount = 0;
+
+            // 유저 데이터 로드
+            StartCoroutine(Table.UserTable.LoadUserTable((x, y) =>
+            {
+                totalTableCount = x;
+                completeTableCount = y;
+            }));
+
             // 디바이스에 있는 테이블들 로드
             yield return StartCoroutine(Managers.LocalTableManager.Instance.Load());
 
@@ -76,8 +87,6 @@ namespace GameBerry.Contents
 
             string tableLoadLocalString = Managers.LocalStringManager.Instance.GetLocalString("title/user");
 
-            int totalTableCount = 0;
-            int completeTableCount = 0;
 
             while (completeTableCount < totalTableCount)
             {
@@ -91,7 +100,7 @@ namespace GameBerry.Contents
             float dbLoadingTime = ((float)stopwatch.ElapsedMilliseconds) * 0.001f;
             ThirdPartyLog.Instance.SendLog_DBLoadEvent(dbLoadingTime);
 
-            m_setNoticeMsg.NoticeStr = string.Format("{0} {1}%", tableLoadLocalString, (int)(((float)m_completeTableCount / (float)LoadTable.Count) * 100.0f));
+            m_setNoticeMsg.NoticeStr = string.Format("{0} {1}%", tableLoadLocalString, (int)(((float)completeTableCount / (float)totalTableCount) * 100.0f));
 
             Message.Send(m_setNoticeMsg);
 
@@ -118,5 +127,6 @@ namespace GameBerry.Contents
             //m_setNoticeMsg.NoticeStr = serverCheckString;
             Message.Send(m_setNoticeMsg);
         }
+        //------------------------------------------------------------------------------------
     }
 }
