@@ -1,15 +1,12 @@
-// File: PackUtil.cs
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace GameBerry
+namespace YourGame.Serialization
 {
     public static class PackUtil
     {
-        // ========= 공통 상수 / 유틸 =========
-
         private const char EntrySep = ';';
         private const char KeyValueSep = '|';
 
@@ -24,48 +21,60 @@ namespace GameBerry
                 sb = new StringBuilder(initialCapacity);
                 _cachedBuilder = sb;
             }
-
             sb.Clear();
             return sb;
         }
 
+        // ========================
+        // ESCAPE / UNESCAPE
+        // ========================
+
         private static string Escape(string s)
         {
-            if (s == null) return string.Empty;
-            return s.Replace("\\", "\\\\")
-                    .Replace(";", "\\;")
-                    .Replace("|", "\\|");
+            if (string.IsNullOrEmpty(s))
+                return string.Empty;
+
+            return s
+                .Replace("\\", "\\\\")
+                .Replace(";", "\\;")
+                .Replace("|", "\\|");
         }
 
         private static string Unescape(string s)
         {
-            if (s == null) return string.Empty;
-            return s.Replace("\\|", "|")
-                    .Replace("\\;", ";")
-                    .Replace("\\\\", "\\");
+            if (string.IsNullOrEmpty(s))
+                return string.Empty;
+
+            return s
+                .Replace("\\|", "|")
+                .Replace("\\;", ";")
+                .Replace("\\\\", "\\");
         }
 
-        // ========= 단일 값 =========
+        private static string EscapeSeg(string raw) => Escape(raw);
+        private static string UnescapeSeg(string raw) => Unescape(raw);
+
+        // ========================
+        // PACK VALUE (primitive)
+        // ========================
 
         public static string PackValue<T>(T value)
         {
-            if (value == null) return string.Empty;
+            if (value == null)
+                return string.Empty;
 
             var t = typeof(T);
 
-            // enum -> int
+            // enum → int
             if (t.IsEnum)
                 return Convert.ToInt32(value).ToString(CultureInfo.InvariantCulture);
 
-            // bool -> 1 / 0
             if (t == typeof(bool))
                 return ((bool)(object)value) ? "1" : "0";
 
-            // string
             if (t == typeof(string))
                 return Escape((string)(object)value);
 
-            // 정수 계열
             if (t == typeof(int))
                 return ((int)(object)value).ToString(CultureInfo.InvariantCulture);
             if (t == typeof(long))
@@ -73,7 +82,6 @@ namespace GameBerry
             if (t == typeof(short))
                 return ((short)(object)value).ToString(CultureInfo.InvariantCulture);
 
-            // 실수 계열
             if (t == typeof(float))
                 return ((float)(object)value).ToString(CultureInfo.InvariantCulture);
             if (t == typeof(double))
@@ -81,7 +89,7 @@ namespace GameBerry
             if (t == typeof(decimal))
                 return ((decimal)(object)value).ToString(CultureInfo.InvariantCulture);
 
-            return value.ToString();
+            return Escape(value.ToString());
         }
 
         public static T UnpackValue<T>(string str)
@@ -120,7 +128,9 @@ namespace GameBerry
         private static string PackKey<TKey>(TKey key) => PackValue(key);
         private static TKey UnpackKey<TKey>(string s) => UnpackValue<TKey>(s);
 
-        // ========= List<IPackable> =========
+        // ========================
+        // LIST<IPackable>
+        // ========================
 
         public static string PackList<TPack>(List<TPack> list)
             where TPack : IPackable
@@ -131,13 +141,13 @@ namespace GameBerry
             var sb = GetBuilder();
             bool first = true;
 
-            for (int i = 0; i < list.Count; i++)
+            foreach (var item in list)
             {
-                if (!first)
-                    sb.Append(EntrySep);
+                if (!first) sb.Append(EntrySep);
                 first = false;
 
-                sb.Append(list[i]?.Pack() ?? string.Empty);
+                string raw = item?.Pack() ?? string.Empty;
+                sb.Append(EscapeSeg(raw));
             }
 
             return sb.ToString();
@@ -161,6 +171,8 @@ namespace GameBerry
                     if (segLen > 0)
                     {
                         string segment = str.Substring(start, segLen);
+                        segment = UnescapeSeg(segment);
+
                         var item = new TPack();
                         item.Unpack(segment);
                         result.Add(item);
@@ -172,7 +184,9 @@ namespace GameBerry
             return result;
         }
 
-        // ========= List<primitive> =========
+        // ========================
+        // LIST<PRIMITIVE>
+        // ========================
 
         public static string PackPrimitiveList<T>(List<T> list)
         {
@@ -182,13 +196,12 @@ namespace GameBerry
             var sb = GetBuilder();
             bool first = true;
 
-            for (int i = 0; i < list.Count; i++)
+            foreach (var v in list)
             {
-                if (!first)
-                    sb.Append(EntrySep);
+                if (!first) sb.Append(EntrySep);
                 first = false;
 
-                sb.Append(PackValue(list[i]));
+                sb.Append(PackValue(v));
             }
 
             return sb.ToString();
@@ -221,7 +234,9 @@ namespace GameBerry
             return result;
         }
 
-        // ========= Dictionary<TKey, TPack> (IPackable) =========
+        // ========================
+        // DICT<KEY, IPackable>
+        // ========================
 
         public static string PackDict<TKey, TPack>(Dictionary<TKey, TPack> dict)
             where TPack : IPackable
@@ -234,12 +249,11 @@ namespace GameBerry
 
             foreach (var kv in dict)
             {
-                if (!first)
-                    sb.Append(EntrySep);
+                if (!first) sb.Append(EntrySep);
                 first = false;
 
                 string keyStr = PackKey(kv.Key);
-                string valueStr = kv.Value?.Pack() ?? string.Empty;
+                string valueStr = EscapeSeg(kv.Value?.Pack() ?? string.Empty);
 
                 sb.Append(keyStr);
                 sb.Append(KeyValueSep);
@@ -266,11 +280,11 @@ namespace GameBerry
                     int segLen = i - start;
                     if (segLen > 0)
                     {
-                        int kvStart = start;
-                        int kvEnd = i;
+                        int segStart = start;
+                        int segEnd = i;
 
                         int sepIdx = -1;
-                        for (int j = kvStart; j < kvEnd; j++)
+                        for (int j = segStart; j < segEnd; j++)
                         {
                             if (str[j] == KeyValueSep)
                             {
@@ -279,22 +293,18 @@ namespace GameBerry
                             }
                         }
 
-                        if (sepIdx > kvStart)
+                        if (sepIdx > segStart)
                         {
-                            int keyLen = sepIdx - kvStart;
-                            int valLen = kvEnd - (sepIdx + 1);
-
-                            string keyStr = str.Substring(kvStart, keyLen);
-                            string valueStr = valLen > 0
-                                ? str.Substring(sepIdx + 1, valLen)
-                                : string.Empty;
+                            string keyStr = str.Substring(segStart, sepIdx - segStart);
+                            string valueStr = str.Substring(sepIdx + 1, segEnd - (sepIdx + 1));
 
                             TKey key = UnpackKey<TKey>(keyStr);
 
-                            var packObj = new TPack();
-                            packObj.Unpack(valueStr);
+                            valueStr = UnescapeSeg(valueStr);
 
-                            result[key] = packObj;
+                            var item = new TPack();
+                            item.Unpack(valueStr);
+                            result[key] = item;
                         }
                     }
 
@@ -305,7 +315,9 @@ namespace GameBerry
             return result;
         }
 
-        // ========= Dictionary<TKey, TValue> (primitive) =========
+        // ========================
+        // DICT<KEY, PRIMITIVE>
+        // ========================
 
         public static string PackPrimitiveDict<TKey, TValue>(
             Dictionary<TKey, TValue> dict)
@@ -318,8 +330,7 @@ namespace GameBerry
 
             foreach (var kv in dict)
             {
-                if (!first)
-                    sb.Append(EntrySep);
+                if (!first) sb.Append(EntrySep);
                 first = false;
 
                 sb.Append(PackKey(kv.Key));
@@ -347,11 +358,11 @@ namespace GameBerry
                     int segLen = i - start;
                     if (segLen > 0)
                     {
-                        int kvStart = start;
-                        int kvEnd = i;
+                        int segStart = start;
+                        int segEnd = i;
 
                         int sepIdx = -1;
-                        for (int j = kvStart; j < kvEnd; j++)
+                        for (int j = segStart; j < segEnd; j++)
                         {
                             if (str[j] == KeyValueSep)
                             {
@@ -360,15 +371,10 @@ namespace GameBerry
                             }
                         }
 
-                        if (sepIdx > kvStart)
+                        if (sepIdx > segStart)
                         {
-                            int keyLen = sepIdx - kvStart;
-                            int valLen = kvEnd - (sepIdx + 1);
-
-                            string keyStr = str.Substring(kvStart, keyLen);
-                            string valueStr = valLen > 0
-                                ? str.Substring(sepIdx + 1, valLen)
-                                : string.Empty;
+                            string keyStr = str.Substring(segStart, sepIdx - segStart);
+                            string valueStr = str.Substring(sepIdx + 1, segEnd - (sepIdx + 1));
 
                             TKey key = UnpackKey<TKey>(keyStr);
                             TValue value = UnpackValue<TValue>(valueStr);
