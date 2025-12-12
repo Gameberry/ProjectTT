@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Spine;
+using Spine.Unity;
 using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace GameBerry.Managers
@@ -10,23 +12,21 @@ namespace GameBerry.Managers
     {
         private SpineModelData _characterSpineModel;
 
-        public SkeletonAnimationHandler _skeletonAnimationHandler;
-
-//        private readonly Type[] SaveTargets = new Type[]
-//{
-//        typeof(SkinTable),
-//// 필요한 table을 여기에 추가하면 끝
-//};
+        public Event.RefreshPlayerSkinMsg refreshPlayerSkinMsg = new Event.RefreshPlayerSkinMsg();
 
         private List<Table.TableBase> TransTest = new List<Table.TableBase>()
         {
             Table.UserTable.Get<Table.SkinTable>()
         };
 
+        private readonly Skin _runtimeSkin = new Skin("runtime-equips");
+
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
             _characterSpineModel = StaticResource.Instance.GetCreatureSpineModelData(0);
+
+            SetRuntimeSkin();
         }
         //------------------------------------------------------------------------------------
         public SpineModelData GetPlayerSpineModelData()
@@ -34,52 +34,75 @@ namespace GameBerry.Managers
             return _characterSpineModel;
         }
         //------------------------------------------------------------------------------------
-        public void SetTempPlayerSpineHandler(SkeletonAnimationHandler skeletonAnimationHandler)
+        private void SetRuntimeSkin()
         {
-            _skeletonAnimationHandler = skeletonAnimationHandler;
+            if (_characterSpineModel == null)
+                return;
+
+            _runtimeSkin.Clear();
+
+            Table.SkinTable skinTable = Table.UserTable.Get<Table.SkinTable>();
+            Chart.SkinChart skinChart = Chart.GameChart.Get<Chart.SkinChart>();
+
+            for (int i = 0; i < (int)SkinSlotType.Max; ++i)
+            {
+                SkinSlotType skinSlotType = (SkinSlotType)i;
+
+                Table.SkinData skinData = skinTable.GetSkinEquipData(skinSlotType);
+
+                string skinname = string.Empty;
+
+                if (skinData == null)
+                    skinname = _characterSpineModel.DefaultSkin(skinSlotType);
+                else
+                    skinname = skinChart.GetSkinName(skinData.index);
+
+                if (string.IsNullOrEmpty(skinname))
+                    continue;
+
+                _runtimeSkin.AddSkin(_characterSpineModel.SkeletonData.GetSkeletonData(true).FindSkin(skinname));
+            }
         }
+        //------------------------------------------------------------------------------------
+        public Skin GetRuntimeSkin() => _runtimeSkin;
         //------------------------------------------------------------------------------------
         public void UnequipSlotSkin(SkinSlotType slot)
         {
-            _skeletonAnimationHandler?.UnequipSlotSkin(slot);
+            Table.UserTable.Get<Table.SkinTable>()?.UnequipSlotSkin(slot);
+            Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
+
+            SetRuntimeSkin();
+
+            Message.Send(refreshPlayerSkinMsg);
         }
         //------------------------------------------------------------------------------------
         public void EquipSlotSkin(SkinSlotType slot, string skinName)
         {
-            _skeletonAnimationHandler?.EquipSlotSkin(slot, skinName);
+            //Table.UserTable.Get<Table.SkinTable>()?.EquipSlotSkin(slot, skinName);
+            Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
+
+            SetRuntimeSkin();
+
+            Message.Send(refreshPlayerSkinMsg);
         }
         //------------------------------------------------------------------------------------
         private void Update()
         {
             if (Input.GetKeyUp(KeyCode.H))
             {
-                Table.UserTable.Get<Table.SkinTable>().test++;
                 Table.UserTable.UpdateTable<Table.SkinTable>();
             }
 
             if (Input.GetKeyUp(KeyCode.J))
             {
-                Table.UserTable.Get<Table.SkinTable>().test++;
                 Table.UserTable.DynamicUpdateData(TransTest);
             }
 
             if (Input.GetKeyUp(KeyCode.K))
             {
                 Table.SkinTable skinTable = Table.UserTable.Get<Table.SkinTable>();
-
-                skinTable.SkinEquipData.Add(SkinSlotType.Back, new Table.SkinData { index = 12, visible = true });
-                skinTable.SkinEquipData.Add(SkinSlotType.Face, new Table.SkinData { index = 11, visible = false });
-                skinTable.SkinEquipData.Add(SkinSlotType.Body, new Table.SkinData { index = 14, visible = true });
-
-                for (int i = 0; i < 555; ++i)
-                {
-                    skinTable.tsett.Add(i * 3);
-                    skinTable.SkinDataddd.Add(new Table.SkinData { index = i*2, visible = i % 3 == 0 });
-                }
-
                 Table.UserTable.DynamicUpdateData(TransTest);
             }
-
         }
         //------------------------------------------------------------------------------------
     }

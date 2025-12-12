@@ -33,4 +33,9 @@ namespace GameBerry.Event
         public int index;
         public double timeGoodsTime;
     }
+
+    public class RefreshPlayerSkinMsg : Message
+    { 
+
+    }
 }

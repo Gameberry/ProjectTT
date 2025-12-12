@@ -36,25 +36,36 @@ namespace GameBerry
         [SerializeField]
         private List<AttackData> _skillDatas = new List<AttackData>();
 
+        public bool _refreshAggro = false;
+
         // 조이스틱 넣기 전에 임시 변수
         private bool _useCustomDirVec = false;
 
         private Vector3 _customDieVec = Vector3.zero;
-
-        public bool _refreshAggro = false;
-
         // 조이스틱 넣기 전에 임시 변수
+
         //------------------------------------------------------------------------------------
         public override void Init()
         {
+            Message.AddListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
+
             MoveController_Base creatureBaseMove = gameObject.AddComponent<MoveController_Base>();
             creatureBaseMove.SetCharacterController(this);
             RefreshCheatStat();
 
             _currentSpineModelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
             SetSpineModelData(_currentSpineModelData);
-
-            Managers.SkinManager.Instance.SetTempPlayerSpineHandler(_mySkeletonAnimationHandler);
+            RefreshPlayerSkin(null);
+        }
+        //------------------------------------------------------------------------------------
+        public override void Release()
+        {
+            Message.RemoveListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
+        }
+        //------------------------------------------------------------------------------------
+        private void RefreshPlayerSkin(Event.RefreshPlayerSkinMsg msg)
+        {
+            SetSpineSkin(Managers.SkinManager.Instance.GetRuntimeSkin());
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()

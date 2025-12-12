@@ -43,13 +43,13 @@ namespace GameBerry.UI
             if (string.IsNullOrEmpty(_skinName))
             {
                 // “없음” 버튼일 경우 → 슬롯 해제
-                _handler.UnequipSlotSkin(_slot);
+                //_handler.UnequipSlotSkin(_slot);
                 Managers.SkinManager.Instance.UnequipSlotSkin(_slot);
             }
             else
             {
                 // 스킨 장착
-                _handler.EquipSlotSkin(_slot, _skinName);
+                //_handler.EquipSlotSkin(_slot, _skinName);
                 Managers.SkinManager.Instance.EquipSlotSkin(_slot, _skinName);
             }
         }

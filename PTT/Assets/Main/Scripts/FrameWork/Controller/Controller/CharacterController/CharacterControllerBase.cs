@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameBerry.Managers;
+using Spine;
+using Spine.Unity;
 
 namespace GameBerry
 {
@@ -107,6 +109,11 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
+        public virtual void Release()
+        { 
+
+        }
+        //------------------------------------------------------------------------------------
         public void SetControlLocks(bool move, bool attack, bool skill)
         {
             _blockMove = move;
@@ -130,6 +137,11 @@ namespace GameBerry
             _currentSpineModelData = spineModelData;
 
             _mySkeletonAnimationHandler?.SetSpineModel(_currentSpineModelData);
+        }
+        //------------------------------------------------------------------------------------
+        public void SetSpineSkin(Skin skin)
+        {
+            _mySkeletonAnimationHandler?.SetSkin(skin);
         }
         //------------------------------------------------------------------------------------
         public void ChangeSpineColor(Color color)

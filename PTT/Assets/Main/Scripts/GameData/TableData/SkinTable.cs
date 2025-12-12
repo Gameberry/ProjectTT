@@ -32,16 +32,13 @@ namespace GameBerry.Table
 
     public class SkinTable : TableBase
     {
-        public const string SkinEquipDataKey = "SkinEquip";
+        private const string hasSkinListKey = "Skin";
+        private List<SkinData> hasSkinList = new List<SkinData>();
 
-        public Dictionary<SkinSlotType, SkinData> SkinEquipData = new Dictionary<SkinSlotType, SkinData>();
+        private const string equipSkinKey = "Equip";
+        private Dictionary<SkinSlotType, int> equipSkinDict = new Dictionary<SkinSlotType, int>();
 
-        public List<int> tsett = new List<int>();
-
-        public List<SkinData> SkinDataddd = new List<SkinData>();
-
-        public int test = 0;
-
+        //------------------------------------------------------------------------------------
         public override void SetData(JsonData data)
         {
             if (data.Count == 0)
@@ -56,38 +53,62 @@ namespace GameBerry.Table
                         {
                             SetInData(data[i][key].ToString());
                         }
-                        else if (key == SkinEquipDataKey)
+                        else if (key == hasSkinListKey)
                         {
-                            SkinEquipData = PackUtil.UnpackDict<SkinSlotType, SkinData>(data[i][key].ToString());
+                            hasSkinList = PackUtil.UnpackList<SkinData>(data[i][key].ToString());
                         }
-                        else if (key == "tsett")
+                        else if (key == equipSkinKey)
                         {
-                            tsett = PackUtil.UnpackPrimitiveList<int>(data[i][key].ToString());
-                        }
-                        else if (key == "SkinDataddd")
-                        {
-                            SkinDataddd = PackUtil.UnpackList<SkinData>(data[i][key].ToString());
-                        }
-                        else if (key == "test")
-                        {
-                            test = data[i][key].ToString().ToInt();
-                            UnityEngine.Debug.Log("SkinTest " + test);
+                            equipSkinDict = PackUtil.UnpackPrimitiveDict<SkinSlotType, int>(data[i][key].ToString());
                         }
                     }
                 }
             }
         }
-
+        //------------------------------------------------------------------------------------
         public override Param GetParam()
         {
             Param param = new Param();
-            param.Add(SkinEquipDataKey, PackUtil.PackDict(SkinEquipData));
-            param.Add("tsett", PackUtil.PackPrimitiveList(tsett));
-            param.Add("SkinDataddd", PackUtil.PackList(SkinDataddd));
-            param.Add("test", test);
+            param.Add(hasSkinList, PackUtil.PackList(hasSkinList));
+            param.Add(equipSkinKey, PackUtil.PackPrimitiveDict(equipSkinDict));
 
             return param;
         }
+        //------------------------------------------------------------------------------------
+        public SkinData GetSkinData(int index)
+        {
+            return hasSkinList.Find(x => x.index == index);
+        }
+        //------------------------------------------------------------------------------------
+        public SkinData GetSkinEquipData(SkinSlotType skinSlotType)
+        {
+            if (equipSkinDict.TryGetValue(skinSlotType, out int index))
+                return GetSkinData(index);
+
+            return null;
+        }
+        //------------------------------------------------------------------------------------
+        public void UnequipSlotSkin(SkinSlotType slot)
+        {
+            if (equipSkinDict.ContainsKey(slot) == false)
+                return;
+
+            equipSkinDict.Remove(slot);
+        }
+        //------------------------------------------------------------------------------------
+        public void EquipSlotSkin(SkinSlotType slot, int index)
+        {
+            if (equipSkinDict.ContainsKey(slot) == false)
+                return;
+
+            SkinData skinData = GetSkinData(index);
+
+            if (skinData == null)
+                return;
+
+            equipSkinDict[slot] = skinData.index;
+        }
+        //------------------------------------------------------------------------------------
     }
 
 }

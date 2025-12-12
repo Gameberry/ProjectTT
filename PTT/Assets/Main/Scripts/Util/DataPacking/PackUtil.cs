@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace YourGame.Serialization
+namespace GameBerry
 {
     public static class PackUtil
     {

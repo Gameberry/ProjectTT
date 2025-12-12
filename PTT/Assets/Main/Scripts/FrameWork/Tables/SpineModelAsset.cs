@@ -63,6 +63,15 @@ namespace GameBerry
         /// </summary>
         public List<SpineDefaultSlotSkin> DefaultSlotSkins =
             new List<SpineDefaultSlotSkin>();
+
+        public string DefaultSkin(SkinSlotType skinSlotType)
+        {
+            SpineDefaultSlotSkin spineDefaultSlotSkin = DefaultSlotSkins.Find(x => x.Slot == skinSlotType);
+            if (spineDefaultSlotSkin == null)
+                return string.Empty;
+
+            return spineDefaultSlotSkin.SkinName;
+        }
     }
 
     [CreateAssetMenu(fileName = "SpineModel", menuName = "Table/SpineModel", order = 1)]

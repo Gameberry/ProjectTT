@@ -122,8 +122,6 @@ namespace GameBerry
     public delegate void OnCallBack_Int(int intcallback);
     public delegate void OnCallBack_String(string text);
     public delegate void OnCallBack_Double(double doublecallback);
-    public delegate void OnCallBack_UnequipSlotSkin(SkinSlotType slot);
-    public delegate void OnCallBack_EquipSlotSkin(SkinSlotType slot, string skinName);
 
     // Ω∫≈»
     public enum V2Enum_Stat
@@ -160,11 +158,13 @@ namespace GameBerry
     /// </summary>
     public enum SkinSlotType
     {
-        Body,
+        Body = 0,
         Hair,
         Weapon,
         Face,
         Back,
+
+        Max,
     }
 
 
