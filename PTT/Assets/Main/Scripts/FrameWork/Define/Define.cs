@@ -104,6 +104,7 @@ namespace GameBerry
         public float Cooltime = 1.0f;
         public float NextPlayTime = 0.0f;
 
+        [HideInInspector]
         public float MeleeAttackDelay = 0.1f;
         public string CustomAni = string.Empty;
         public float AttackDuration = 0.5f;

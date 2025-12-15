@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 1042867761938088414}
   - component: {fileID: 3686817409429190360}
   - component: {fileID: 4533567737159895524}
-  - component: {fileID: 2952612396921969893}
+  - component: {fileID: 4440208102729498815}
   - component: {fileID: 4092458463801307870}
   m_Layer: 5
-  m_Name: UISpineSkinButtonElement
+  m_Name: UISkinElement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2952612396921969893
+--- !u!114 &4440208102729498815
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1071821908071073262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f4f8e8049d795b4584576ad7b1eb52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -97,7 +97,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -122,6 +122,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  _btn_Sprite: {fileID: 21300000, guid: 5d7c39e6e6f1b6c4abc14cdafc5738ef, type: 3}
+  _btn_Dimmed_Sprite: {fileID: 21300000, guid: b852aa10c1992ca4386b491fbf707331, type: 3}
+  _text:
+  - {fileID: 3916865185123111833}
+  _text_Color: {r: 1, g: 1, b: 1, a: 1}
+  _text_Dimmed_Color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &4092458463801307870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _label: {fileID: 3916865185123111833}
-  _button: {fileID: 2952612396921969893}
+  _button: {fileID: 4440208102729498815}
 --- !u!1 &2755957773969245480
 GameObject:
   m_ObjectHideFlags: 0

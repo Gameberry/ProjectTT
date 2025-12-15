@@ -9,6 +9,9 @@ namespace GameBerry
 
         public OnCallBack_Int AddListener;
 
+        // 선택 상태 시 색 바꾸고 싶으면 여기서 처리
+        [SerializeField] private GameObject _selectedIndicator;
+
         void Start()
         {
             Button btn = GetComponent<Button>();
@@ -19,6 +22,12 @@ namespace GameBerry
                     AddListener?.Invoke(Num);
                 });
             }
+        }
+
+        public void SetSelected(bool selected)
+        {
+            if (_selectedIndicator != null)
+                _selectedIndicator.SetActive(selected);
         }
     }
 }

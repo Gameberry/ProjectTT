@@ -199,20 +199,20 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void PlaySkill(AttackData attackData, Vector3 pos)
         {
-            if (attackData != null)
-            {
-                PlayCharacterCondition(attackData.MyConditionDatas, pos);
-            }
+            //if (attackData != null)
+            //{
+            //    PlayCharacterCondition(attackData.MyConditionDatas, pos);
+            //}
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, null);
         }
         //------------------------------------------------------------------------------------
         public void PlaySkill(AttackData attackData, Vector3 pos, CharacterControllerBase fixSkillHitReceiver)
         {
-            if (attackData != null)
-            {
-                PlayCharacterCondition(attackData.MyConditionDatas, pos);
-            }
+            //if (attackData != null)
+            //{
+            //    PlayCharacterCondition(attackData.MyConditionDatas, pos);
+            //}
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, fixSkillHitReceiver);
         }

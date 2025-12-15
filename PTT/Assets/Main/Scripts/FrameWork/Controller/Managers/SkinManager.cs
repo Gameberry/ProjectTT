@@ -8,7 +8,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace GameBerry.Managers
 {
-    public class SkinManager : MonoSingleton<SkinManager>
+    public class SkinManager : Singleton<SkinManager>
     {
         private SpineModelData _characterSpineModel;
 
@@ -29,6 +29,24 @@ namespace GameBerry.Managers
             SetRuntimeSkin();
         }
         //------------------------------------------------------------------------------------
+        #region Chart Func
+        //------------------------------------------------------------------------------------
+        public Chart.SkinInfo GetSkinInfo(int index) => Chart.GameChart.Get<Chart.SkinChart>()?.GetSkinInfo(index);
+        //------------------------------------------------------------------------------------
+        public List<Chart.SkinInfo> GetSkinSlotInfoList(SkinSlotType skinSlotType) => Chart.GameChart.Get<Chart.SkinChart>()?.GetSkinSlotInfoList(skinSlotType);
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
+        #region Table Func
+        //------------------------------------------------------------------------------------
+        public void CapyEquipSkinDict(ref Dictionary<SkinSlotType, int> data) => Table.UserTable.Get<Table.SkinTable>()?.CapyEquipSkinDict(ref data);
+        //------------------------------------------------------------------------------------
+        public Table.SkinData GetSkinData(int index) => Table.UserTable.Get<Table.SkinTable>()?.GetSkinData(index);
+        //------------------------------------------------------------------------------------
+        public Table.SkinData GetSkinEquipData(SkinSlotType skinSlotType) => Table.UserTable.Get<Table.SkinTable>()?.GetSkinEquipData(skinSlotType);
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
         public SpineModelData GetPlayerSpineModelData()
         {
             return _characterSpineModel;
@@ -43,6 +61,8 @@ namespace GameBerry.Managers
 
             Table.SkinTable skinTable = Table.UserTable.Get<Table.SkinTable>();
             Chart.SkinChart skinChart = Chart.GameChart.Get<Chart.SkinChart>();
+
+            SkeletonData skeletonData = _characterSpineModel.SkeletonData.GetSkeletonData(true);
 
             for (int i = 0; i < (int)SkinSlotType.Max; ++i)
             {
@@ -60,7 +80,37 @@ namespace GameBerry.Managers
                 if (string.IsNullOrEmpty(skinname))
                     continue;
 
-                _runtimeSkin.AddSkin(_characterSpineModel.SkeletonData.GetSkeletonData(true).FindSkin(skinname));
+                _runtimeSkin.AddSkin(skeletonData.FindSkin(skinname));
+            }
+        }
+        //------------------------------------------------------------------------------------
+        public void SetDynamicSkin(Dictionary<SkinSlotType, int> skindata, ref Skin skin)
+        {
+            if (_characterSpineModel == null)
+                return;
+
+            skin.Clear();
+
+            Table.SkinTable skinTable = Table.UserTable.Get<Table.SkinTable>();
+            Chart.SkinChart skinChart = Chart.GameChart.Get<Chart.SkinChart>();
+
+            SkeletonData skeletonData = _characterSpineModel.SkeletonData.GetSkeletonData(true);
+
+            for (int i = 0; i < (int)SkinSlotType.Max; ++i)
+            {
+                SkinSlotType skinSlotType = (SkinSlotType)i;
+
+                string skinname = string.Empty;
+
+                if (skindata.ContainsKey(skinSlotType) == true)
+                    skinname = skinChart.GetSkinName(skindata[skinSlotType]);
+                else
+                    skinname = _characterSpineModel.DefaultSkin(skinSlotType);
+
+                if (string.IsNullOrEmpty(skinname))
+                    continue;
+
+                skin.AddSkin(skeletonData.FindSkin(skinname));
             }
         }
         //------------------------------------------------------------------------------------
@@ -76,14 +126,23 @@ namespace GameBerry.Managers
             Message.Send(refreshPlayerSkinMsg);
         }
         //------------------------------------------------------------------------------------
-        public void EquipSlotSkin(SkinSlotType slot, string skinName)
+        public void EquipSlotSkin(SkinSlotType slot, int index)
         {
-            //Table.UserTable.Get<Table.SkinTable>()?.EquipSlotSkin(slot, skinName);
+            Table.UserTable.Get<Table.SkinTable>()?.EquipSlotSkin(slot, index);
             Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
 
             SetRuntimeSkin();
 
             Message.Send(refreshPlayerSkinMsg);
+        }
+        //------------------------------------------------------------------------------------
+        public Table.SkinData GetSkin(Chart.SkinInfo skinInfo)
+        {
+            Table.SkinData skinData = Table.UserTable.Get<Table.SkinTable>()?.CreateNewSkinData(skinInfo);
+            if(skinData != null)
+                Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
+
+            return skinData;
         }
         //------------------------------------------------------------------------------------
         private void Update()

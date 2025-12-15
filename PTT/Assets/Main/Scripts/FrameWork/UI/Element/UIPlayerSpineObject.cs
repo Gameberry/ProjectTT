@@ -10,31 +10,42 @@ namespace GameBerry
         [SerializeField]
         private SkeletonGraphic _skeletonGraphic;
 
+        [SerializeField]
+        private bool _addMessage = true;
+
         private SpineModelData _currentModelData;
 
         //------------------------------------------------------------------------------------
         private void Awake()
         {
-            Message.AddListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
-            RefreshPlayerSkin(null);
+            if (_addMessage == true)
+                Message.AddListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
 
             _currentModelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
 
             _skeletonGraphic.skeletonDataAsset = _currentModelData.SkeletonData;
             _skeletonGraphic.Initialize(true);
+
+            RefreshPlayerSkin(null);
         }
         //------------------------------------------------------------------------------------
         private void OnDestroy()
         {
-            Message.RemoveListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
+            if (_addMessage == true)
+                Message.RemoveListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
         }
         //------------------------------------------------------------------------------------
         private void RefreshPlayerSkin(Event.RefreshPlayerSkinMsg msg)
         {
-            Skeleton skeleton = _skeletonGraphic.Skeleton;
-            SkeletonData skeletonData = skeleton.Data;
+            SetSkin(Managers.SkinManager.Instance.GetRuntimeSkin());
+        }
+        //------------------------------------------------------------------------------------
+        public void SetSkin(Skin skin)
+        {
+            if (skin == null)
+                return;
 
-            Skin skin = Managers.SkinManager.Instance.GetRuntimeSkin();
+            Skeleton skeleton = _skeletonGraphic.Skeleton;
 
             skeleton.SetSkin(skin);
             skeleton.SetSlotsToSetupPose();

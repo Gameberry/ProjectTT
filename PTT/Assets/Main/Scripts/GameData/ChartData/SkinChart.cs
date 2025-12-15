@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 
 namespace GameBerry.Chart
@@ -15,20 +15,16 @@ namespace GameBerry.Chart
         public SkinInfo this[int index] => rows[index];
         public SkinInfo[] rows;
 
-        // Lookup¿ë Dictionaryµé
+        // Lookupìš© Dictionaryë“¤
         private Dictionary<int, SkinInfo> _indexToSkin;
         private Dictionary<SkinSlotType, List<SkinInfo>> _skinTypeToSkins;
 
-
+        //------------------------------------------------------------------------------------
         public override bool IsLoaded()
         {
             return rows != null;
         }
-
-        /// <summary>
-        /// Chart ·Îµå°¡ ³¡³­ ÈÄ, Lookup¿ë Dictionary¸¦ ºôµåÇØÁØ´Ù.
-        /// ·Îµù Á÷ÈÄ 1¹ø¸¸ È£ÃâÇØµµ µÇ°í, ¾Æ·¡ ¸Þ¼­µå¿¡¼­ lazyÇÏ°Ô È£ÃâÇØµµ µÊ.
-        /// </summary>
+        //------------------------------------------------------------------------------------
         public override void LoadComplete()
         {
             if (rows == null)
@@ -45,10 +41,10 @@ namespace GameBerry.Chart
                 if (row == null)
                     continue;
 
-                // Index ¡æ SkinInfo
+                // Index â†’ SkinInfo
                 _indexToSkin[row.Index] = row;
 
-                // SkinType ¡æ List<SkinInfo>
+                // SkinType â†’ List<SkinInfo>
                 if (!_skinTypeToSkins.TryGetValue(row.SkinType, out var list))
                 {
                     list = new List<SkinInfo>();
@@ -58,44 +54,19 @@ namespace GameBerry.Chart
                 list.Add(row);
             }
         }
-
-        /// <summary>
-        /// Index·Î SkinInfo ´Ü°Ç Á¶È¸ (¾øÀ¸¸é default/null)
-        /// </summary>
+        //------------------------------------------------------------------------------------
         public SkinInfo GetSkinInfo(int index)
         {
             return _indexToSkin.TryGetValue(index, out var info)
                 ? info
                 : null;
         }
-
-        /// <summary>
-        /// Index·Î SkinInfo¸¦ ¾ÈÀüÇÏ°Ô Á¶È¸ÇÏ´Â TryGet ÆÐÅÏ
-        /// </summary>
+        //------------------------------------------------------------------------------------
         public bool TryGetSkinInfo(int index, out SkinInfo info)
         {
             return _indexToSkin.TryGetValue(index, out info);
         }
-
-        /// <summary>
-        /// SkinSlotType ±âÁØÀ¸·Î ÇØ´ç Å¸ÀÔÀÇ ½ºÅ² ¸®½ºÆ® ¹ÝÈ¯
-        /// (¾øÀ¸¸é ºó ¹è¿­ ¹ÝÈ¯)
-        /// </summary>
-        public SkinInfo[] GetSkinSlotInfoList(SkinSlotType type)
-        {
-            if (_skinTypeToSkins.TryGetValue(type, out var list))
-            {
-                // ¿ÜºÎ¿¡¼­ ¼öÁ¤ ¸øÇÏ°Ô ¹è¿­ º¹»ç or ToArray
-                return list.ToArray();
-            }
-
-            return System.Array.Empty<SkinInfo>();
-        }
-
-        /// <summary>
-        /// Index·Î ÀÌ¸§¸¸ °¡Á®¿À±â.
-        /// ¸ø Ã£À¸¸é ºó ¹®ÀÚ¿­ ¹ÝÈ¯ + Warning ·Î±×
-        /// </summary>
+        //------------------------------------------------------------------------------------
         public string GetSkinName(int index)
         {
             if (_indexToSkin.TryGetValue(index, out var info))
@@ -106,6 +77,17 @@ namespace GameBerry.Chart
             UnityEngine.Debug.LogWarning($"Skin index {index} not found!");
             return string.Empty;
         }
+        //------------------------------------------------------------------------------------
+        public List<SkinInfo> GetSkinSlotInfoList(SkinSlotType type)
+        {
+            if (_skinTypeToSkins.TryGetValue(type, out var list))
+            {
+                return list;
+            }
+
+            return new List<SkinInfo>();
+        }
+        //------------------------------------------------------------------------------------
     }
 
 }

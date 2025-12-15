@@ -59,7 +59,7 @@ public static class ChartAutoWriter
 
     private const string ScriptFormat = @"namespace GameBerry.Chart
 {{
-    public struct {0}Info
+    public class {0}Info
     {{
 {2}
     }}

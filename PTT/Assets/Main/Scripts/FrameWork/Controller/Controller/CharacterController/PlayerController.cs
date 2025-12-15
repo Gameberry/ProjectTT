@@ -36,6 +36,17 @@ namespace GameBerry
         [SerializeField]
         private List<AttackData> _skillDatas = new List<AttackData>();
 
+        [SerializeField]
+        private List<AttackData> _meleeSkillDatas = new List<AttackData>();
+
+        // 평타
+        private AttackData _readyAttackData = null;
+
+        // 스킬
+        private AttackData _readyMeleeSkillData = null;
+
+        private AttackData _currentAttackData = null;
+
         public bool _refreshAggro = false;
 
         // 조이스틱 넣기 전에 임시 변수
@@ -84,6 +95,12 @@ namespace GameBerry
             {
                 _skillDatas[i].Hitter = this;
                 _skillDatas[i].NextPlayTime = Time.time + _skillDatas[i].Cooltime;
+            }
+
+            for (int i = 0; i < _meleeSkillDatas.Count; ++i)
+            {
+                _meleeSkillDatas[i].Hitter = this;
+                _meleeSkillDatas[i].NextPlayTime = Time.time + _meleeSkillDatas[i].Cooltime;
             }
 
             _dataSelectIndex = 0;
@@ -180,23 +197,24 @@ namespace GameBerry
                     return;
                 }
 
+                if (_readyAttackData == null)
+                    SetAttackData();
+
+                if (_readyMeleeSkillData == null)
+                    SetMeleeSkillData();
+
+                if (_readyMeleeSkillData != null)
+                    _currentAttackData = _readyMeleeSkillData;
+                else
+                    _currentAttackData = _readyAttackData;
+
+                if (_currentAttackData == null)
+                    return;
+
                 float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                if (distance <= _attackRange && _blockAttack == false)
+                if (distance <= _currentAttackData.AttackRange && _blockAttack == false)
                 {
-                    List<AttackData> attackDatas = Random.Range(0.0f, 1.0f) <= _tempCritical ? _criticalAttackData : _attackData;
-
-                    AttackData selectAttackData = attackDatas.GetRandom();
-
-                    if (_setRandom == false)
-                    {
-                        if (attackDatas.Count <= _dataSelectIndex)
-                            _dataSelectIndex = 0;
-                        
-                        selectAttackData = attackDatas[_dataSelectIndex];
-
-                        _dataSelectIndex++;
-                    }
-                    
+                    AttackData selectAttackData = _currentAttackData;
 
                     float attackduration = selectAttackData.AttackDuration / FinalAttackSpeed;
                     float attackdelay = attackduration * selectAttackData.AttackDamageNormalTime;
@@ -221,6 +239,15 @@ namespace GameBerry
             {
                 if (_attackTimming <= Time.time)
                 {
+                    if (_readyAttackData == _currentAttackData)
+                        _readyAttackData = null;
+
+                    if (_readyMeleeSkillData == _currentAttackData)
+                    {
+                        _readyMeleeSkillData.NextPlayTime = Time.time + _readyMeleeSkillData.Cooltime;
+                        _readyMeleeSkillData = null;
+                    }
+
                     ChangeState(CharacterState.Idle);
                     if (_refreshAggro == true)
                         SetNewTarget();
@@ -232,6 +259,35 @@ namespace GameBerry
                     //        _attackTimming = Time.time + _attackData.Cooltime;
                     //}
                 }
+            }
+        }
+        //------------------------------------------------------------------------------------
+        public void SetAttackData()
+        {
+            List<AttackData> attackDatas = Random.Range(0.0f, 1.0f) <= _tempCritical ? _criticalAttackData : _attackData;
+
+            AttackData selectAttackData = attackDatas.GetRandom();
+
+            if (_setRandom == false)
+            {
+                if (attackDatas.Count <= _dataSelectIndex)
+                    _dataSelectIndex = 0;
+
+                selectAttackData = attackDatas[_dataSelectIndex];
+
+                _dataSelectIndex++;
+            }
+
+            _readyAttackData = selectAttackData;
+        }
+        //------------------------------------------------------------------------------------
+        public void SetMeleeSkillData()
+        {
+            for (int i = 0; i < _meleeSkillDatas.Count; ++i)
+            {
+                AttackData attackData = _meleeSkillDatas[i];
+                if (attackData.NextPlayTime <= Time.time)
+                    _readyMeleeSkillData = attackData;
             }
         }
         //------------------------------------------------------------------------------------

@@ -75,6 +75,14 @@ namespace GameBerry.Table
             return param;
         }
         //------------------------------------------------------------------------------------
+        public void CapyEquipSkinDict(ref Dictionary<SkinSlotType, int> data)
+        {
+            foreach (var pair in equipSkinDict)
+            {
+                data.Add(pair.Key, pair.Value);
+            }
+        }
+        //------------------------------------------------------------------------------------
         public SkinData GetSkinData(int index)
         {
             return hasSkinList.Find(x => x.index == index);
@@ -107,6 +115,19 @@ namespace GameBerry.Table
                 return;
 
             equipSkinDict[slot] = skinData.index;
+        }
+        //------------------------------------------------------------------------------------
+        public SkinData CreateNewSkinData(Chart.SkinInfo skinInfo)
+        {
+            if (skinInfo == null)
+                return null;
+
+            SkinData skinData = new SkinData();
+            skinData.index = skinInfo.Index;
+
+            hasSkinList.Add(skinData);
+
+            return skinData;
         }
         //------------------------------------------------------------------------------------
     }

@@ -1,166 +1,236 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Spine;
 
 namespace GameBerry.UI
 {
     public class SkinSelectDialog : IDialog
     {
         [Header("Target")]
-        [SerializeField] private SkeletonAnimationHandler _uiHandler;
+        [SerializeField] private UIPlayerSpineObject _uIPlayerSpineObject;
 
-        [Header("UI Prefab")]
-        [SerializeField] private UISpineSkinButtonElement _skinButtonPrefab;
+        [Header("SkinBtnGroup")]
+        [SerializeField] private UISkinElement _skinButtonPrefab;
 
-        [Header("슬롯별 버튼이 생성될 패널(부모 트랜스폼)")]
-        public Transform BodyParent;
-        public Transform HairParent;
-        public Transform WeaponParent;
-        public Transform FaceParent;
-        public Transform BackParent;
+        [SerializeField]
+        private Transform _skinBtnRoot;
+
+        private UISkinElement _resetBtn;
+
+        private List<UISkinElement> _createdSkinElement = new List<UISkinElement>();
+
+        [SerializeField]
+        private CButton _equipBtn;
+
+        [SerializeField]
+        private CButton _getBtn;
 
         [Header("탭 버튼들 (선택 상태 표시용)")]
-        public UISpineSkinTabButtonElement BodyTab;
-        public UISpineSkinTabButtonElement HairTab;
-        public UISpineSkinTabButtonElement WeaponTab;
-        public UISpineSkinTabButtonElement FaceTab;
-        public UISpineSkinTabButtonElement BackTab;
-
-        [Serializable]
-        public class SlotSkinOption
-        {
-            public SkinSlotType Slot;
-            public string SkinName;
-            public string DisplayName;
-        }
-
-        [Header("슬롯별로 제공할 스킨 목록")]
-        public List<SlotSkinOption> SkinOptions = new List<SlotSkinOption>();
-
-        private SpineModelData _modelData;
-
-        // 슬롯별 패널 캐시
-        private readonly Dictionary<SkinSlotType, Transform> _slotParents =
-            new Dictionary<SkinSlotType, Transform>();
+        public List<UINumberBtn> uINumberBtns = new List<UINumberBtn>();
 
         // 현재 선택된 탭
-        private SkinSlotType _currentSlot = SkinSlotType.Body;
+        private SkinSlotType _currentSlot = SkinSlotType.Max;
+        private Chart.SkinInfo _currentSkinInfo = null;
 
+        private Dictionary<SkinSlotType, int> _uiTempSkin = new Dictionary<SkinSlotType, int>();
+        private Skin _uiSkin = new Skin("uiskin");
+
+        //------------------------------------------------------------------------------------
         protected override void OnLoad()
         {
-            // 슬롯 패널 맵핑
-            _slotParents[SkinSlotType.Body] = BodyParent;
-            _slotParents[SkinSlotType.Hair] = HairParent;
-            _slotParents[SkinSlotType.Weapon] = WeaponParent;
-            _slotParents[SkinSlotType.Face] = FaceParent;
-            _slotParents[SkinSlotType.Back] = BackParent;
-
-            _modelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
-            _uiHandler.SetSpineModel(_modelData);
-            _uiHandler.PlayAnimation_Once(CharacterState.Idle, true);
-
-            for (int i = 0; i < _modelData.SkinList.Count; ++i)
+            for (int i = 0; i < uINumberBtns.Count; ++i)
             {
-                string skinName = _modelData.SkinList[i];
-                SlotSkinOption slotSkinOption = new SlotSkinOption();
-
-                if (skinName.Contains("Weapon"))
-                    slotSkinOption.Slot = SkinSlotType.Weapon;
-                else if (skinName.Contains("Back"))
-                    slotSkinOption.Slot = SkinSlotType.Back;
-                else if (skinName.Contains("Glass"))
-                    slotSkinOption.Slot = SkinSlotType.Face;
-                else if (skinName.Contains("Hair"))
-                    slotSkinOption.Slot = SkinSlotType.Hair;
-                else
-                    slotSkinOption.Slot = SkinSlotType.Body;
-
-                slotSkinOption.SkinName = skinName;
-                slotSkinOption.DisplayName = skinName;
-
-                SkinOptions.Add(slotSkinOption);
+                uINumberBtns[i].AddListener = OnClick_SkinTab;
             }
 
-            BuildUI();
+            if (_equipBtn != null)
+                _equipBtn.onClick.AddListener(OnClick_SkinEquip);
+
+            if (_getBtn != null)
+                _getBtn.onClick.AddListener(OnClick_SkinGet);
+
+            _resetBtn = CreateSkinElement();
+            _resetBtn.SetSkinInfo(null);
 
             // ▶ 기본으로 Body 탭 보이게
             ShowSlot(SkinSlotType.Body);
         }
-
-        private void BuildUI()
+        //------------------------------------------------------------------------------------
+        protected override void OnEnter()
         {
-            if (_skinButtonPrefab == null || _uiHandler == null)
-                return;
+            _uiTempSkin.Clear();
+            
+            Table.UserTable.Get<Table.SkinTable>()?.CapyEquipSkinDict(ref _uiTempSkin);
 
-            // 슬롯별 "없음(기본)" 버튼
-            //CreateNoneButton(SpineEquipSlot.Body, BodyParent);
-            //CreateNoneButton(SpineEquipSlot.Hair, HairParent);
-            //CreateNoneButton(SpineEquipSlot.Weapon, WeaponParent);
-            CreateNoneButton(SkinSlotType.Face, FaceParent);
-            CreateNoneButton(SkinSlotType.Back, BackParent);
+            Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkin, ref _uiSkin);
 
-            // 실제 옵션 버튼
-            foreach (var opt in SkinOptions)
-            {
-                var parent = GetParentForSlot(opt.Slot);
-                if (parent == null)
-                    continue;
-
-                var btn = Instantiate(_skinButtonPrefab, parent);
-                var displayName = string.IsNullOrEmpty(opt.DisplayName)
-                    ? opt.SkinName
-                    : opt.DisplayName;
-
-                btn.Init(_uiHandler, opt.Slot, opt.SkinName, displayName);
-            }
+            _uIPlayerSpineObject?.SetSkin(_uiSkin);
         }
-
-        private void CreateNoneButton(SkinSlotType slot, Transform parent)
+        //------------------------------------------------------------------------------------
+        protected override void OnExit()
         {
-            if (parent == null)
-                return;
-
-            var btn = Instantiate(_skinButtonPrefab, parent);
-            btn.Init(_uiHandler, slot, null, "없음");
+            //_currentSlot = SkinSlotType.Max;
         }
-
-        private Transform GetParentForSlot(SkinSlotType slot)
+        //------------------------------------------------------------------------------------
+        #region SkinTab Func
+        //------------------------------------------------------------------------------------
+        private void OnClick_SkinTab(int tab)
         {
-            Transform t;
-            return _slotParents.TryGetValue(slot, out t) ? t : null;
+            ShowSlot(tab.IntToEnum32<SkinSlotType>());
         }
-
-        // ─────────────────────────────────────
-        // 탭 클릭 콜백
-        // ─────────────────────────────────────
-        public void OnClickSlotTab(SkinSlotType slot)
-        {
-            ShowSlot(slot);
-        }
-
+        //------------------------------------------------------------------------------------
         private void ShowSlot(SkinSlotType slot)
         {
+            if (_currentSlot == slot)
+                return;
+
             _currentSlot = slot;
 
-            // 패널 On/Off
-            foreach (var pair in _slotParents)
+            int slottype = slot.Enum32ToInt();
+
+            for (int i = 0; i < uINumberBtns.Count; ++i)
             {
-                if (pair.Value == null) continue;
-                pair.Value.gameObject.SetActive(pair.Key == slot);
+                uINumberBtns[i].SetSelected(slottype == uINumberBtns[i].Num);
             }
 
-            // 탭 선택 상태 표시
-            SetTabSelected(BodyTab, SkinSlotType.Body == slot);
-            SetTabSelected(HairTab, SkinSlotType.Hair == slot);
-            SetTabSelected(WeaponTab, SkinSlotType.Weapon == slot);
-            SetTabSelected(FaceTab, SkinSlotType.Face == slot);
-            SetTabSelected(BackTab, SkinSlotType.Back == slot);
+            SetSkinElement(slot);
         }
-
-        private void SetTabSelected(UISpineSkinTabButtonElement tab, bool selected)
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
+        #region SkinElement Func
+        //------------------------------------------------------------------------------------
+        private void SetSkinElement(SkinSlotType skinSlotType)
         {
-            if (tab != null)
-                tab.SetSelected(selected);
+            List<Chart.SkinInfo> skinInfos = Managers.SkinManager.Instance.GetSkinSlotInfoList(skinSlotType);
+
+            for (int i = 0; i < skinInfos.Count; ++i)
+            {
+                UISkinElement uISkinElement = null;
+
+                if (i < _createdSkinElement.Count)
+                    uISkinElement = _createdSkinElement[i];
+                else
+                { 
+                    uISkinElement = CreateSkinElement();
+                    _createdSkinElement.Add(uISkinElement);
+                }
+
+                uISkinElement.SetSkinInfo(skinInfos[i]); ;
+                uISkinElement.gameObject.SetActive(true);
+            }
+
+            for (int i = skinInfos.Count; i < _createdSkinElement.Count; ++i)
+            {
+                _createdSkinElement[i].gameObject.SetActive(false);
+            }
+
+            if (_uiTempSkin.ContainsKey(skinSlotType) == true)
+                _currentSkinInfo = Managers.SkinManager.Instance.GetSkinInfo(_uiTempSkin[skinSlotType]);
+            else
+                _currentSkinInfo = null;
+
+            SetSkinBtn(_currentSkinInfo);
         }
+        //------------------------------------------------------------------------------------
+        private UISkinElement CreateSkinElement()
+        {
+            var btn = Instantiate(_skinButtonPrefab, _skinBtnRoot);
+            btn.Init(OnClick_SkinElement);
+
+            return btn;
+        }
+        //------------------------------------------------------------------------------------
+        private void OnClick_SkinElement(Chart.SkinInfo skinInfo)
+        {
+            if (skinInfo == null)
+            { // Reset버튼을 눌렀을 때
+                if (_uiTempSkin.ContainsKey(_currentSlot) == true)
+                {
+                    _uiTempSkin.Remove(_currentSlot);
+                }
+                else
+                    return;
+            }
+            else
+            {
+                if (_uiTempSkin.ContainsKey(_currentSlot) == true)
+                {
+                    if (_uiTempSkin[_currentSlot] == skinInfo.Index)
+                        return;
+
+                    _uiTempSkin[_currentSlot] = skinInfo.Index;
+                }
+                else
+                    _uiTempSkin.Add(_currentSlot, skinInfo.Index);
+            }
+
+            Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkin, ref _uiSkin);
+            _uIPlayerSpineObject?.SetSkin(_uiSkin);
+
+            SetSkinBtn(skinInfo);
+        }
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
+        #region SkinBtn Func
+        //------------------------------------------------------------------------------------
+        private void SetSkinBtn(Chart.SkinInfo skinInfo)
+        {
+            bool enableEquip = false;
+
+            if (skinInfo != null)
+            { // Reset이 아님
+                Table.SkinData skinData = Managers.SkinManager.Instance.GetSkinData(skinInfo.Index);
+
+                if (skinData != null)
+                { // 가지고 있는 스킨임
+                    _getBtn?.gameObject.SetActive(false);
+
+                    if (Managers.SkinManager.Instance.GetSkinEquipData(skinInfo.SkinType) != skinData)
+                        enableEquip = true;
+                }
+                else
+                {
+                    _getBtn?.gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                enableEquip = true;
+                _getBtn?.gameObject.SetActive(false);
+            }
+
+            _currentSkinInfo = skinInfo;
+
+            _equipBtn?.SetInteractable(enableEquip);
+        }
+        //------------------------------------------------------------------------------------
+        private void OnClick_SkinEquip()
+        {
+            if (_currentSkinInfo == null)
+                Managers.SkinManager.Instance.UnequipSlotSkin(_currentSlot);
+            else
+            {
+                if (_uiTempSkin.ContainsKey(_currentSlot) == true)
+                {
+                    Managers.SkinManager.Instance.EquipSlotSkin(_currentSlot, _uiTempSkin[_currentSlot]);
+                }
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private void OnClick_SkinGet()
+        {
+            Table.SkinData skinData = Managers.SkinManager.Instance.GetSkin(_currentSkinInfo);
+            if (skinData != null)
+            { 
+                _createdSkinElement.Find(x => x._skinInfo == _currentSkinInfo)?.SetSkinInfo(_currentSkinInfo);
+                SetSkinBtn(_currentSkinInfo);
+            }
+        }
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
     }
 }

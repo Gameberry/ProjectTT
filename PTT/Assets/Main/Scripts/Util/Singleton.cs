@@ -12,6 +12,32 @@ using UnityEngine;
 
 namespace GameBerry
 {
+	public abstract class Singleton<T> where T : Singleton<T>, new ()
+	{
+		static T _instance = null;
+		public static T Instance
+		{
+			get
+			{
+				if (_instance == null)
+				{
+					_instance = new T();
+					_instance.Init();
+				}
+				return _instance;
+			}
+		}
+
+		public static bool isAlive { get { return (_instance != null); } }
+
+		// This function is called when the instance is used the first time
+		// Put all the initializations you need here, as you would do in Awake
+		protected virtual void Init()
+		{
+			/* BLANK */
+		}
+	}
+
 	public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 	{
 		static T _instance = null;

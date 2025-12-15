@@ -129,14 +129,20 @@ namespace GameBerry.Table
 
             for (int i = 0; i < tableListJson.Count; i++)
             {
-                string TableName = tableListJson[i]["tableName"].ToString();
-                string tableClass = $"GameBerry.Table.{TableName}Table, Assembly-CSharp";
+                string tableName = tableListJson[i]["tableName"].ToString();
+                string typeName = $"GameBerry.Table.{tableName}Table, Assembly-CSharp";
 
-                System.Type type = System.Type.GetType(tableClass, throwOnError: false);
+                System.Type type = System.Type.GetType(typeName, throwOnError: false);
                 if (type != null && typeof(TableBase).IsAssignableFrom(type))
                 {
+                    if (TableData.ContainsKey(type))
+                    {
+                        Debug.LogWarning($"Duplicate table type detected: {tableName}");
+                        continue;
+                    }
+
                     var table = (TableBase)Activator.CreateInstance(type);
-                    table.TableName = TableName;
+                    table.TableName = tableName;
 
                     TableData.Add(type, table);
 
@@ -148,7 +154,7 @@ namespace GameBerry.Table
                 }
                 else
                 {
-                    Debug.LogError($"{tableClass} is invalid Table class");
+                    Debug.LogError($"{typeName} is invalid Table class");
                 }
             }
         }
