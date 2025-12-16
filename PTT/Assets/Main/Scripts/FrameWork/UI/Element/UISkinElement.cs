@@ -7,7 +7,7 @@ namespace GameBerry.UI
     public class UISkinElement : MonoBehaviour
     {
         [SerializeField] private TMP_Text _label;
-        [SerializeField] private CButton _button;
+        [SerializeField] private Button _button;
 
         private System.Action<Chart.SkinInfo> _action;
         public Chart.SkinInfo _skinInfo = null;
@@ -28,12 +28,14 @@ namespace GameBerry.UI
             if (skinInfo == null)
             {
                 if (_label != null)
+                {
                     _label.text = "Reset";
+                    _label.color = Color.white;
+                }
             }
             else
             {
                 Table.SkinData skinData = Managers.SkinManager.Instance.GetSkinData(skinInfo.Index);
-
 
                 if (_label != null)
                 { 

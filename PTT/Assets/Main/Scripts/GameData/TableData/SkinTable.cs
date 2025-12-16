@@ -69,7 +69,7 @@ namespace GameBerry.Table
         public override Param GetParam()
         {
             Param param = new Param();
-            param.Add(hasSkinList, PackUtil.PackList(hasSkinList));
+            param.Add(hasSkinListKey, PackUtil.PackList(hasSkinList));
             param.Add(equipSkinKey, PackUtil.PackPrimitiveDict(equipSkinDict));
 
             return param;
@@ -107,7 +107,7 @@ namespace GameBerry.Table
         public void EquipSlotSkin(SkinSlotType slot, int index)
         {
             if (equipSkinDict.ContainsKey(slot) == false)
-                return;
+                equipSkinDict.Add(slot, index);
 
             SkinData skinData = GetSkinData(index);
 

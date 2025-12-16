@@ -33,8 +33,8 @@ namespace GameBerry.UI
         private SkinSlotType _currentSlot = SkinSlotType.Max;
         private Chart.SkinInfo _currentSkinInfo = null;
 
-        private Dictionary<SkinSlotType, int> _uiTempSkin = new Dictionary<SkinSlotType, int>();
-        private Skin _uiSkin = new Skin("uiskin");
+        private Dictionary<SkinSlotType, int> _uiTempSkinDic = new Dictionary<SkinSlotType, int>();
+        private Skin _uiTempSkin = new Skin("uiskin");
 
         //------------------------------------------------------------------------------------
         protected override void OnLoad()
@@ -59,13 +59,13 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
-            _uiTempSkin.Clear();
+            _uiTempSkinDic.Clear();
             
-            Table.UserTable.Get<Table.SkinTable>()?.CapyEquipSkinDict(ref _uiTempSkin);
+            Table.UserTable.Get<Table.SkinTable>()?.CapyEquipSkinDict(ref _uiTempSkinDic);
 
-            Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkin, ref _uiSkin);
+            Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkinDic, ref _uiTempSkin);
 
-            _uIPlayerSpineObject?.SetSkin(_uiSkin);
+            _uIPlayerSpineObject?.SetSkin(_uiTempSkin);
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()
@@ -117,7 +117,7 @@ namespace GameBerry.UI
                     _createdSkinElement.Add(uISkinElement);
                 }
 
-                uISkinElement.SetSkinInfo(skinInfos[i]); ;
+                uISkinElement.SetSkinInfo(skinInfos[i]);
                 uISkinElement.gameObject.SetActive(true);
             }
 
@@ -126,8 +126,8 @@ namespace GameBerry.UI
                 _createdSkinElement[i].gameObject.SetActive(false);
             }
 
-            if (_uiTempSkin.ContainsKey(skinSlotType) == true)
-                _currentSkinInfo = Managers.SkinManager.Instance.GetSkinInfo(_uiTempSkin[skinSlotType]);
+            if (_uiTempSkinDic.ContainsKey(skinSlotType) == true)
+                _currentSkinInfo = Managers.SkinManager.Instance.GetSkinInfo(_uiTempSkinDic[skinSlotType]);
             else
                 _currentSkinInfo = null;
 
@@ -146,28 +146,12 @@ namespace GameBerry.UI
         {
             if (skinInfo == null)
             { // Reset버튼을 눌렀을 때
-                if (_uiTempSkin.ContainsKey(_currentSlot) == true)
-                {
-                    _uiTempSkin.Remove(_currentSlot);
-                }
-                else
-                    return;
+                UnequipTempSkin(_currentSlot);
             }
             else
             {
-                if (_uiTempSkin.ContainsKey(_currentSlot) == true)
-                {
-                    if (_uiTempSkin[_currentSlot] == skinInfo.Index)
-                        return;
-
-                    _uiTempSkin[_currentSlot] = skinInfo.Index;
-                }
-                else
-                    _uiTempSkin.Add(_currentSlot, skinInfo.Index);
+                EquipTempSkin(_currentSlot, skinInfo.Index);
             }
-
-            Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkin, ref _uiSkin);
-            _uIPlayerSpineObject?.SetSkin(_uiSkin);
 
             SetSkinBtn(skinInfo);
         }
@@ -207,16 +191,46 @@ namespace GameBerry.UI
             _equipBtn?.SetInteractable(enableEquip);
         }
         //------------------------------------------------------------------------------------
+        private void EquipTempSkin(SkinSlotType slot, int index)
+        {
+            if (_uiTempSkinDic.ContainsKey(slot) == true)
+            {
+                if (_uiTempSkinDic[slot] == index)
+                    return;
+
+                _uiTempSkinDic[slot] = index;
+            }
+            else
+                _uiTempSkinDic.Add(slot, index);
+
+            Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkinDic, ref _uiTempSkin);
+            _uIPlayerSpineObject?.SetSkin(_uiTempSkin);
+        }
+        //------------------------------------------------------------------------------------
+        private void UnequipTempSkin(SkinSlotType slot)
+        {
+            if (_uiTempSkinDic.ContainsKey(slot) == true)
+            {
+                _uiTempSkinDic.Remove(slot);
+            }
+            else
+                return;
+
+            Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkinDic, ref _uiTempSkin);
+            _uIPlayerSpineObject?.SetSkin(_uiTempSkin);
+        }
+        //------------------------------------------------------------------------------------
         private void OnClick_SkinEquip()
         {
             if (_currentSkinInfo == null)
+            { 
                 Managers.SkinManager.Instance.UnequipSlotSkin(_currentSlot);
+                UnequipTempSkin(_currentSlot);
+            }
             else
             {
-                if (_uiTempSkin.ContainsKey(_currentSlot) == true)
-                {
-                    Managers.SkinManager.Instance.EquipSlotSkin(_currentSlot, _uiTempSkin[_currentSlot]);
-                }
+                Managers.SkinManager.Instance.EquipSlotSkin(_currentSlot, _uiTempSkinDic[_currentSlot]);
+                EquipTempSkin(_currentSlot, _uiTempSkinDic[_currentSlot]);
             }
         }
         //------------------------------------------------------------------------------------
