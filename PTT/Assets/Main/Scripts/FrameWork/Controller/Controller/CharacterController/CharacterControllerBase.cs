@@ -85,15 +85,10 @@ namespace GameBerry
         protected bool _blockAttack { get; private set; }
         protected bool _blockSkill { get; private set; }
 
-        private float _condAtkMul = 1f;
-        private float _condDefMul = 1f;
-        private float _condMoveMul = 1f;
-        private float _condAttackSpdMul = 1f;
-
-        public double FinalAttack => _characterAttack * _condAtkMul;
-        public double FinalDefense => _characterDefense * _condDefMul;
-        public float FinalMoveSpeed => _characterMoveSpeed * _condMoveMul;
-        public float FinalAttackSpeed => _characterAttackSpeed * _condAttackSpdMul;
+        public double FinalAttack => _characterAttack;
+        public double FinalDefense => _characterDefense;
+        public float FinalMoveSpeed => _characterMoveSpeed;
+        public float FinalAttackSpeed => _characterAttackSpeed;
 
         //------------------------------------------------------------------------------------
         private void Awake()
@@ -121,14 +116,6 @@ namespace GameBerry
             _blockSkill = skill;
         }
         //------------------------------------------------------------------------------------
-        public void SetConditionStatMultipliers(float atkMul, float defMul, float moveMul, float aspdMul)
-        {
-            _condAtkMul = atkMul;
-            _condDefMul = defMul;
-            _condMoveMul = moveMul;
-            _condAttackSpdMul = aspdMul;
-        }
-        //------------------------------------------------------------------------------------
         public void SetSpineModelData(SpineModelData spineModelData)
         {
             if (spineModelData == null)
@@ -149,7 +136,6 @@ namespace GameBerry
             _mySkeletonAnimationHandler?.SetColor(color);
         }
         //------------------------------------------------------------------------------------
-        [ContextMenu("RefreshCheatStat()")]
         public void RefreshCheatStat()
         {// 데이터가 없어서...
             List<StatViewer> TempPlayerStat = _iFFType == IFFType.IFF_Friend ? StaticResource.Instance.GetBattleModeStaticData().TempPlayerStat : StaticResource.Instance.GetBattleModeStaticData().TempMonsterStat;
@@ -157,7 +143,7 @@ namespace GameBerry
             {
                 _characterStatOperator.SetDefaultStat(TempPlayerStat[i].v2Enum_Stat, TempPlayerStat[i].value);
             }
-            _characterStatOperator.RefreshDefaultStat();
+
             _characterStatOperator.RefreshOutputStatValue();
             RefreshStat(true);
         }
@@ -443,8 +429,19 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void RefreshStat(bool setFullHp = false)
         {
+            _characterStatOperator.RefreshOutputStatValue();
+
+            _characterAttack = GetOutPutMyStat(V2Enum_Stat.Attack);
+            _characterAttack += _characterAttack * GetOutPutMyStat(V2Enum_Stat.Attack_Inc);
+
+            _characterDefense = GetOutPutMyStat(V2Enum_Stat.Defence);
+            _characterDefense += _characterDefense * GetOutPutMyStat(V2Enum_Stat.Defence_Inc);
+
             _characterMoveSpeed = (float)(GetOutPutMyStat(V2Enum_Stat.MoveSpeed));
+            _characterMoveSpeed += _characterMoveSpeed * (float)(GetOutPutMyStat(V2Enum_Stat.MoveSpeed_Inc));
+
             _characterAttackSpeed = (float)(GetOutPutMyStat(V2Enum_Stat.AttackSpeed));
+            _characterAttackSpeed += _characterAttackSpeed * (float)(GetOutPutMyStat(V2Enum_Stat.AttackSpeed_Inc));
 
             double currHpRatio = 0;
 
@@ -453,16 +450,16 @@ namespace GameBerry
             else
                 currHpRatio = _currentHP / _maxHP;
 
+            double hp = GetOutPutMyStat(V2Enum_Stat.HP);
 
-            _maxHP = GetOutPutMyStat(V2Enum_Stat.HP);
+            _maxHP = hp + (hp * GetOutPutMyStat(V2Enum_Stat.Hp_Inc));
 
             if (setFullHp == true)
                 _currentHP = _maxHP;
             else
                 _currentHP = _maxHP * currHpRatio;
 
-            _characterAttack = GetOutPutMyStat(V2Enum_Stat.Attack);
-            _characterDefense = GetOutPutMyStat(V2Enum_Stat.Defence);
+            
         }
         //------------------------------------------------------------------------------------
     }

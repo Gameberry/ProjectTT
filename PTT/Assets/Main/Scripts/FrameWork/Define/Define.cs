@@ -135,6 +135,12 @@ namespace GameBerry
         MoveSpeed = 14,
         AttackSpeed = 15,
 
+        Attack_Inc,
+        Hp_Inc,
+        Defence_Inc,
+        MoveSpeed_Inc,
+        AttackSpeed_Inc,
+
         CritChance,
 
         VampiricRate,
@@ -352,9 +358,10 @@ namespace GameBerry
 
         // --- Buffs ---
         AttackUp = 101,      // 공격력 증가
-        DefenseUp = 102,     // 방어력 증가
-        MoveSpeedUp = 103,   // 이속 증가
-        AttackSpeedUp = 104, // 공속 증가
+        HpUp = 102,          // 체력 증가
+        DefenseUp = 103,     // 방어력 증가
+        MoveSpeedUp = 104,   // 이속 증가
+        AttackSpeedUp = 105, // 공속 증가
 
         Max,
     }

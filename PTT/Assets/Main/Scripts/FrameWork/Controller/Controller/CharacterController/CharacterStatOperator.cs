@@ -19,12 +19,13 @@ namespace GameBerry
     public class CharacterStatOperator
     {
         protected Dictionary<V2Enum_Stat, ObscuredDouble> _defauleStatValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
-        protected Dictionary<V2Enum_Stat, ObscuredDouble> _outputStatValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
-
         protected Dictionary<V2Enum_Stat, ObscuredDouble> _buffValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
+
+        protected Dictionary<V2Enum_Stat, ObscuredDouble> _outputStatValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
 
 #if UNITY_EDITOR
         public List<StatViewer> DefaultViewers = new List<StatViewer>();
+        public List<StatViewer> BuffViewers = new List<StatViewer>();
         public List<StatViewer> OutputViewers = new List<StatViewer>();
 #endif
 
@@ -48,11 +49,6 @@ namespace GameBerry
             statViewer.value = statValue;
 #endif
         }
-    //------------------------------------------------------------------------------------
-    public virtual void RefreshDefaultStat()
-        {
-            
-        }
         //------------------------------------------------------------------------------------
         public double GetDefaultValue(V2Enum_Stat v2Enum_Stat)
         {
@@ -61,6 +57,35 @@ namespace GameBerry
 
             return _defauleStatValue[v2Enum_Stat];
         }
+        //------------------------------------------------------------------------------------
+        public void SetBuffValue(V2Enum_Stat v2Enum_Stat, ObscuredDouble statValue)
+        {
+            if (_buffValue.ContainsKey(v2Enum_Stat) == false)
+                _buffValue.Add(v2Enum_Stat, 0);
+
+            _buffValue[v2Enum_Stat] = statValue;
+
+#if UNITY_EDITOR
+            StatViewer statViewer = BuffViewers.Find(x => x.v2Enum_Stat == v2Enum_Stat);
+            if (statViewer == null)
+            {
+                statViewer = new StatViewer();
+                statViewer.v2Enum_Stat = v2Enum_Stat;
+                BuffViewers.Add(statViewer);
+            }
+
+            statViewer.value = statValue;
+#endif
+        }
+        //------------------------------------------------------------------------------------
+        public double GetBuffValue(V2Enum_Stat v2Enum_Stat)
+        {
+            if (_buffValue.ContainsKey(v2Enum_Stat) == false)
+                return 0;
+
+            return _buffValue[v2Enum_Stat];
+        }
+
         //------------------------------------------------------------------------------------
         public void RefreshOutputStatValue(V2Enum_Stat v2Enum_Stat = V2Enum_Stat.Max)
         {
@@ -135,12 +160,6 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
-        public void RefreshAllStatValue()
-        {
-            RefreshDefaultStat();
-            RefreshOutputStatValue();
-        }
-        //------------------------------------------------------------------------------------
         public double GetOutPutMyStat(V2Enum_Stat v2Enum_Stat)
         {
             if (_outputStatValue.ContainsKey(v2Enum_Stat) == false)
@@ -148,14 +167,7 @@ namespace GameBerry
 
             return _outputStatValue[v2Enum_Stat];
         }
-        //------------------------------------------------------------------------------------
-        public double GetBuffValue(V2Enum_Stat v2Enum_Stat)
-        {
-            if (_buffValue.ContainsKey(v2Enum_Stat) == false)
-                return 0;
 
-            return _buffValue[v2Enum_Stat];
-        }
         //------------------------------------------------------------------------------------
         public void ForceReleaseStat()
         {

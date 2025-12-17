@@ -38,6 +38,7 @@ namespace GameBerry
                 Enum_ConditionType.Invincible => new InvincibleCondition(),
 
                 Enum_ConditionType.AttackUp => new AttackUpCondition(),
+                Enum_ConditionType.HpUp => new HpUpCondition(),
                 Enum_ConditionType.DefenseUp => new DefenseUpCondition(),
                 Enum_ConditionType.MoveSpeedUp => new MoveSpeedUpCondition(),
                 Enum_ConditionType.AttackSpeedUp => new AttackSpeedUpCondition(),
@@ -60,26 +61,33 @@ namespace GameBerry
         public bool IsAttackBlocked = false;// { get; private set; }
         public bool IsSkillBlocked = false;// { get; private set; }
 
-        public float AttackMultiplier { get; private set; } = 1f;
-        public float DefenseMultiplier { get; private set; } = 1f;
-        public float MoveSpeedMultiplier { get; private set; } = 1f;
-        public float AttackSpeedMultiplier { get; private set; } = 1f;
+        public float AttackInc { get; private set; } = 0f;
+        public float HpInc { get; private set; } = 0f;
+        public float DefenseInc { get; private set; } = 0f;
+        public float MoveSpeedInc { get; private set; } = 0f;
+        public float AttackSpeedInc { get; private set; } = 0f;
 
+        //------------------------------------------------------------------------------------
         private void Awake()
         {
             _owner = GetComponent<CharacterControllerBase>();
         }
-
+        //------------------------------------------------------------------------------------
         private void Update()
         {
             float dt = Time.deltaTime;
             _removeList.Clear();
 
+            bool needRefresh = false;
+
             foreach (var cond in _conditions)
             {
                 cond.OnUpdate(dt);
                 if (cond.IsFinished)
+                { 
                     _removeList.Add(cond);
+                    needRefresh = true;
+                }
             }
 
             foreach (var cond in _removeList)
@@ -89,11 +97,10 @@ namespace GameBerry
                 _conditions.Remove(cond);
             }
 
-            RecalcAll();
+            if (needRefresh == true)
+                RecalcAll();
         }
-
-        // ------------ Public API ------------
-
+        //------------------------------------------------------------------------------------
         public void AddCondition(ConditionData conditionData)
         {
             //newCond.Initialize(_owner, duration);
@@ -151,7 +158,7 @@ namespace GameBerry
 
             RecalcAll();
         }
-
+        //------------------------------------------------------------------------------------
         private void AddNewCondition(ConditionData conditionData)
         {
             BaseCondition newCond = CharacterConditionPool.GetCondition(conditionData.Type);
@@ -160,7 +167,7 @@ namespace GameBerry
             _conditions.Add(newCond);
             newCond.OnApply();
         }
-
+        //------------------------------------------------------------------------------------
         public void RemoveConditionsByType(Enum_ConditionType type)
         {
             _removeList.Clear();
@@ -180,7 +187,7 @@ namespace GameBerry
 
             RecalcAll();
         }
-
+        //------------------------------------------------------------------------------------
         public bool HasCondition(Enum_ConditionType type)
         {
             for (int i = 0; i < _conditions.Count; i++)
@@ -190,9 +197,7 @@ namespace GameBerry
             }
             return false;
         }
-
-        // ------------ 내부 헬퍼 ------------
-
+        //------------------------------------------------------------------------------------
         private BaseCondition FindFirst(Enum_ConditionType type)
         {
             for (int i = 0; i < _conditions.Count; i++)
@@ -202,22 +207,24 @@ namespace GameBerry
             }
             return null;
         }
-
+        //------------------------------------------------------------------------------------
         private void RecalcAll()
         {
             RecalcControlLocks();
-            RecalcStatMultipliers();
+            RecalcStatInc();
 
             // Character 쪽으로 결과 전달 (Character 쪽에 구현해둔다고 가정)
             _owner.SetControlLocks(IsMoveBlocked, IsAttackBlocked, IsSkillBlocked);
-            _owner.SetConditionStatMultipliers(
-                AttackMultiplier,
-                DefenseMultiplier,
-                MoveSpeedMultiplier,
-                AttackSpeedMultiplier
-            );
-        }
 
+            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.Attack_Inc, AttackInc);
+            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.Hp_Inc, HpInc);
+            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.Defence_Inc, DefenseInc);
+            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.MoveSpeed_Inc, MoveSpeedInc);
+            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.AttackSpeed_Inc, AttackSpeedInc);
+
+            _owner.RefreshStat();
+        }
+        //------------------------------------------------------------------------------------
         private void RecalcControlLocks()
         {
             bool blockMove = false;
@@ -235,26 +242,30 @@ namespace GameBerry
             IsAttackBlocked = blockAttack;
             IsSkillBlocked = blockSkill;
         }
-
-        private void RecalcStatMultipliers()
+        //------------------------------------------------------------------------------------
+        private void RecalcStatInc()
         {
             float atkMul = 1f;
+            float hpMul = 1f;
             float defMul = 1f;
             float moveMul = 1f;
             float aspdMul = 1f;
 
             foreach (var cond in _conditions)
             {
-                atkMul *= cond.AttackMultiplier;
-                defMul *= cond.DefenseMultiplier;
-                moveMul *= cond.MoveSpeedMultiplier;
-                aspdMul *= cond.AttackSpeedMultiplier;
+                atkMul += cond.AttackInc;
+                hpMul += cond.HpInc;
+                defMul += cond.DefenseInc;
+                moveMul += cond.MoveSpeedInc;
+                aspdMul += cond.AttackSpeedInc;
             }
 
-            AttackMultiplier = atkMul;
-            DefenseMultiplier = defMul;
-            MoveSpeedMultiplier = moveMul;
-            AttackSpeedMultiplier = aspdMul;
+            AttackInc = atkMul;
+            HpInc = hpMul;
+            DefenseInc = defMul;
+            MoveSpeedInc = moveMul;
+            AttackSpeedInc = aspdMul;
         }
+        //------------------------------------------------------------------------------------
     }
 }

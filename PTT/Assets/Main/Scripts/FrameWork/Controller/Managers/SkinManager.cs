@@ -145,25 +145,6 @@ namespace GameBerry.Managers
             return skinData;
         }
         //------------------------------------------------------------------------------------
-        private void Update()
-        {
-            if (Input.GetKeyUp(KeyCode.H))
-            {
-                Table.UserTable.UpdateTable<Table.SkinTable>();
-            }
-
-            if (Input.GetKeyUp(KeyCode.J))
-            {
-                Table.UserTable.DynamicUpdateData(TransTest);
-            }
-
-            if (Input.GetKeyUp(KeyCode.K))
-            {
-                Table.SkinTable skinTable = Table.UserTable.Get<Table.SkinTable>();
-                Table.UserTable.DynamicUpdateData(TransTest);
-            }
-        }
-        //------------------------------------------------------------------------------------
     }
 }
 

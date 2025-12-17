@@ -44,11 +44,12 @@ namespace GameBerry
         public virtual bool BlocksAttack => false;
         public virtual bool BlocksSkill => false;
 
-        // 스탯 배율 (기본 1.0)
-        public virtual float AttackMultiplier => 1f;
-        public virtual float DefenseMultiplier => 1f;
-        public virtual float MoveSpeedMultiplier => 1f;
-        public virtual float AttackSpeedMultiplier => 1f;
+        // 스탯 추가 배율
+        public virtual float AttackInc => 0f;
+        public virtual float HpInc => 0f;
+        public virtual float DefenseInc => 0f;
+        public virtual float MoveSpeedInc => 0f;
+        public virtual float AttackSpeedInc => 0f;
 
         /// <summary>RefreshDuration 용 (스턴 등)</summary>
         public virtual void Refresh(float duration)
@@ -99,8 +100,8 @@ namespace GameBerry
             _attackRate = Mathf.Clamp(conditionData.Param2, 0f, 1f);
         }
 
-        public override float MoveSpeedMultiplier => _moveRate;
-        public override float AttackSpeedMultiplier => _attackRate;
+        public override float MoveSpeedInc => _moveRate;
+        public override float AttackSpeedInc => _attackRate;
     }
 
     public class KnockbackCondition : BaseCondition
@@ -239,7 +240,23 @@ namespace GameBerry
             _rate = conditionData.Param1;
         }
 
-        public override float AttackMultiplier => _rate;
+        public override float AttackInc => _rate;
+    }
+
+    public class HpUpCondition : BaseCondition
+    {
+        private float _rate;
+
+        public HpUpCondition() : base(Enum_ConditionType.HpUp) { }
+
+        public override void Initialize(ConditionData conditionData)
+        {
+            base.Initialize(conditionData);
+
+            _rate = conditionData.Param1;
+        }
+
+        public override float HpInc => _rate;
     }
 
     public class DefenseUpCondition : BaseCondition
@@ -255,7 +272,7 @@ namespace GameBerry
             _rate = conditionData.Param1;
         }
 
-        public override float DefenseMultiplier => _rate;
+        public override float DefenseInc => _rate;
     }
 
     public class MoveSpeedUpCondition : BaseCondition
@@ -271,7 +288,7 @@ namespace GameBerry
             _rate = conditionData.Param1;
         }
 
-        public override float MoveSpeedMultiplier => _rate;
+        public override float MoveSpeedInc => _rate;
     }
 
     public class AttackSpeedUpCondition : BaseCondition
@@ -287,6 +304,6 @@ namespace GameBerry
             _rate = conditionData.Param1;
         }
 
-        public override float AttackSpeedMultiplier => _rate;
+        public override float AttackSpeedInc => _rate;
     }
 }
