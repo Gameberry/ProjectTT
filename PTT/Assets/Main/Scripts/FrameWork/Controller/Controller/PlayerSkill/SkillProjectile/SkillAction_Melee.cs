@@ -6,6 +6,16 @@ namespace GameBerry
 {
     public class SkillAction_Melee : SkillAction
     {
+        [System.Serializable]
+        public class MeleeParticle
+        { 
+            public string CustomParam;
+            public ParticleSystem ParticleSystem;
+        }
+
+        [SerializeField]
+        private List<MeleeParticle> _attackParticles = new List<MeleeParticle>();
+
 
         [SerializeField]
         private ParticleSystem _attakParticle;
@@ -42,11 +52,16 @@ namespace GameBerry
 
             _onHit = false;
 
-            _playHit = Time.time + _attackData.MeleeAttackDelay;
+            //_playHit = Time.time + _attackData.MeleeAttackDelay;
+            _playHit = Time.time;
             //transform.rotation = Quaternion.FromToRotation(Vector3.left, dirvec);
 
             Enum_LookDirection stageGenerateDirections = MyPos.x < TargetPos.x ? Enum_LookDirection.Right : Enum_LookDirection.Left;
 
+            MeleeParticle meleeParticle = _attackParticles.Find(x => x.CustomParam == _attackData.CustomParam);
+
+            if (meleeParticle != null)
+                _attakParticle = meleeParticle.ParticleSystem;
 
             if (stageGenerateDirections == Enum_LookDirection.Left)
             {
@@ -60,7 +75,8 @@ namespace GameBerry
                 rotate.y = 180.0f;
                 transform.eulerAngles = rotate;
             }
-            _endTime = Time.time + _attackData.MeleeAttackDelay + _hitDuraion;
+            //_endTime = Time.time + _attackData.MeleeAttackDelay + _hitDuraion;
+            _endTime = Time.time + _hitDuraion;
         }
         //------------------------------------------------------------------------------------
         private void Update()
@@ -73,6 +89,7 @@ namespace GameBerry
             if (_onHit == false && _playHit < Time.time)
             {
                 _onHit = true;
+                _attakParticle?.gameObject.SetActive(true);
                 _attakParticle?.Play();
                 _characterControllerBase.PlaySkill(_attackData, transform.position, _target);
             }
@@ -80,6 +97,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void ReleaseObj()
         {
+            _attakParticle?.gameObject.SetActive(false);
             Release();
         }
         //------------------------------------------------------------------------------------

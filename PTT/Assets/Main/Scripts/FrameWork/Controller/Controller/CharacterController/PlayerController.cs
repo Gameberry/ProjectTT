@@ -22,7 +22,7 @@ namespace GameBerry
         private List<AttackData> _attackData = new List<AttackData>();
 
         [SerializeField]
-        private List<AttackData> _criticalAttackData = new List<AttackData>();
+        private AttackData _criticalFakeData = new AttackData();
 
         [SerializeField]
         private int _dataSelectIndex = -1;
@@ -36,15 +36,7 @@ namespace GameBerry
         [SerializeField]
         private List<AttackData> _skillDatas = new List<AttackData>();
 
-        [SerializeField]
-        private List<AttackData> _meleeSkillDatas = new List<AttackData>();
-
         // 평타
-        private AttackData _readyAttackData = null;
-
-        // 스킬
-        private AttackData _readyMeleeSkillData = null;
-
         private AttackData _currentAttackData = null;
 
         public bool _refreshAggro = false;
@@ -86,21 +78,12 @@ namespace GameBerry
                 _attackData[i].Hitter = this;
             }
 
-            for (int i = 0; i < _criticalAttackData.Count; ++i)
-            {
-                _criticalAttackData[i].Hitter = this;
-            }
+            _criticalFakeData.Hitter = this;
 
             for (int i = 0; i < _skillDatas.Count; ++i)
             {
                 _skillDatas[i].Hitter = this;
                 _skillDatas[i].NextPlayTime = Time.time + _skillDatas[i].Cooltime;
-            }
-
-            for (int i = 0; i < _meleeSkillDatas.Count; ++i)
-            {
-                _meleeSkillDatas[i].Hitter = this;
-                _meleeSkillDatas[i].NextPlayTime = Time.time + _meleeSkillDatas[i].Cooltime;
             }
 
             _dataSelectIndex = 0;
@@ -197,19 +180,8 @@ namespace GameBerry
                     return;
                 }
 
-                if (_readyAttackData == null)
-                    SetAttackData();
-
-                if (_readyMeleeSkillData == null)
-                    SetMeleeSkillData();
-
-                if (_readyMeleeSkillData != null)
-                    _currentAttackData = _readyMeleeSkillData;
-                else
-                    _currentAttackData = _readyAttackData;
-
                 if (_currentAttackData == null)
-                    return;
+                    SetAttackData();
 
                 float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                 if (distance <= _currentAttackData.AttackRange && _blockAttack == false)
@@ -217,7 +189,6 @@ namespace GameBerry
                     AttackData selectAttackData = _currentAttackData;
 
                     float attackduration = selectAttackData.AttackDuration / FinalAttackSpeed;
-                    float attackdelay = attackduration * selectAttackData.AttackDamageNormalTime;
                     _attackTimming = Time.time + attackduration;
 
                     if (string.IsNullOrEmpty(selectAttackData.CustomAni) == false)
@@ -230,23 +201,13 @@ namespace GameBerry
 
                     
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-
-                    selectAttackData.MeleeAttackDelay = attackdelay;
-                    _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
                 }
             }
             else if (CharacterState == CharacterState.Attack)
             {
                 if (_attackTimming <= Time.time)
                 {
-                    if (_readyAttackData == _currentAttackData)
-                        _readyAttackData = null;
-
-                    if (_readyMeleeSkillData == _currentAttackData)
-                    {
-                        _readyMeleeSkillData.NextPlayTime = Time.time + _readyMeleeSkillData.Cooltime;
-                        _readyMeleeSkillData = null;
-                    }
+                    _currentAttackData = null;
 
                     ChangeState(CharacterState.Idle);
                     if (_refreshAggro == true)
@@ -258,37 +219,45 @@ namespace GameBerry
                     //    else
                     //        _attackTimming = Time.time + _attackData.Cooltime;
                     //}
+
+                }
+            }
+        }
+        //------------------------------------------------------------------------------------
+        protected override void SpineAnimationEvent(string aniName, string eventName)
+        {
+            if (CharacterState == CharacterState.Attack)
+            {
+                if (eventName.Contains("AniAction"))
+                {
+                    AttackData selectAttackData = Random.Range(0.0f, 1.0f) <= _tempCritical ? _criticalFakeData : _currentAttackData;
+
+                    selectAttackData.CustomParam = eventName;
+
+                    if (_refreshAggro == true)
+                        SetNewTarget();
+                    ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+
+                    _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
                 }
             }
         }
         //------------------------------------------------------------------------------------
         public void SetAttackData()
         {
-            List<AttackData> attackDatas = Random.Range(0.0f, 1.0f) <= _tempCritical ? _criticalAttackData : _attackData;
-
-            AttackData selectAttackData = attackDatas.GetRandom();
+            AttackData selectAttackData = _attackData.GetRandom();
 
             if (_setRandom == false)
             {
-                if (attackDatas.Count <= _dataSelectIndex)
+                if (_attackData.Count <= _dataSelectIndex)
                     _dataSelectIndex = 0;
 
-                selectAttackData = attackDatas[_dataSelectIndex];
+                selectAttackData = _attackData[_dataSelectIndex];
 
                 _dataSelectIndex++;
             }
 
-            _readyAttackData = selectAttackData;
-        }
-        //------------------------------------------------------------------------------------
-        public void SetMeleeSkillData()
-        {
-            for (int i = 0; i < _meleeSkillDatas.Count; ++i)
-            {
-                AttackData attackData = _meleeSkillDatas[i];
-                if (attackData.NextPlayTime <= Time.time)
-                    _readyMeleeSkillData = attackData;
-            }
+            _currentAttackData = selectAttackData;
         }
         //------------------------------------------------------------------------------------
     }

@@ -124,6 +124,10 @@ namespace GameBerry
             var skeletonData = _skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
             _statesAndAnimation = spineModelData.AnimationList;
 
+            _skeletonAnimation.state.Event += HandleEvent;
+            _skeletonAnimation.state.Start += StartEvent;
+            _skeletonAnimation.state.Complete += EndEvent;
+
             AnimationList_Dic.Clear();
             _myAnimation.Clear();
 

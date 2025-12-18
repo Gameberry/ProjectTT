@@ -11,6 +11,9 @@ namespace GameBerry
     public class MonsterController : CharacterControllerBase
     {
         [SerializeField]
+        private float attackRangeDefault = 1.5f;
+
+        [SerializeField]
         private float attackRange = 1.0f;
 
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
@@ -32,7 +35,7 @@ namespace GameBerry
             _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(modelIndex);
             SetSpineModelData(_currentSpineModelData);
 
-            attackRange = Random.Range(0.9f, 1.1f);
+            attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
         }
         //------------------------------------------------------------------------------------
         protected override void OnDamage()

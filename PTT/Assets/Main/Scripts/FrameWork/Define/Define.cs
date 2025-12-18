@@ -105,11 +105,9 @@ namespace GameBerry
         public float NextPlayTime = 0.0f;
 
         [HideInInspector]
-        public float MeleeAttackDelay = 0.1f;
+        public string CustomParam = string.Empty;
         public string CustomAni = string.Empty;
         public float AttackDuration = 0.5f;
-        [Range(0.0f, 1.0f)]
-        public float AttackDamageNormalTime = 0.5f;
 
         public List<int> EnemyConditionDatas = new List<int>();
         public List<int> MyConditionDatas = new List<int>();
