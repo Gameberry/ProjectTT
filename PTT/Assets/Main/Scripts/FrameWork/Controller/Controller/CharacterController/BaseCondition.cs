@@ -50,8 +50,9 @@ namespace GameBerry
         public virtual float DefenseInc => 0f;
         public virtual float MoveSpeedInc => 0f;
         public virtual float AttackSpeedInc => 0f;
+        public virtual float CritChanceAdd => 0f;
 
-        /// <summary>RefreshDuration 용 (스턴 등)</summary>
+        /// <summary>Refresh 용 (스턴 등)</summary>
         public virtual void Refresh(float duration)
         {
             Duration = duration;
@@ -336,5 +337,53 @@ namespace GameBerry
         }
 
         public override float AttackSpeedInc => _rate;
+    }
+
+    public class ComboBuff_AttackSpeedUpCondition : BaseCondition
+    {
+        private float _rate;
+
+        public ComboBuff_AttackSpeedUpCondition() : base(Enum_ConditionType.ComboBuff_AttackSpeedUp) { }
+
+        public override void Initialize(ConditionData conditionData)
+        {
+            base.Initialize(conditionData);
+
+            _rate = conditionData.Param1;
+        }
+
+        public override float AttackSpeedInc => _rate;
+    }
+
+    public class ComboBuff_AttackUpCondition : BaseCondition
+    {
+        private float _rate;
+
+        public ComboBuff_AttackUpCondition() : base(Enum_ConditionType.ComboBuff_AttackUp) { }
+
+        public override void Initialize(ConditionData conditionData)
+        {
+            base.Initialize(conditionData);
+
+            _rate = conditionData.Param1;
+        }
+
+        public override float AttackInc => _rate;
+    }
+
+    public class ComboBuff_CriticalChangeUpCondition : BaseCondition
+    {
+        private float _rate;
+
+        public ComboBuff_CriticalChangeUpCondition() : base(Enum_ConditionType.ComboBuff_CriticalChangeUp) { }
+
+        public override void Initialize(ConditionData conditionData)
+        {
+            base.Initialize(conditionData);
+
+            _rate = conditionData.Param1;
+        }
+
+        public override float CritChanceAdd => _rate;
     }
 }

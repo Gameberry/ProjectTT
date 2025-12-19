@@ -38,4 +38,9 @@ namespace GameBerry.Event
     { 
 
     }
+
+    public class RefreshComboUIMsg : Message
+    {
+        public int Combo = 0;
+    }
 }

@@ -29,6 +29,8 @@ namespace GameBerry
         public float MonsterHitDuration = 0.2f;
         public Color MonsterHitColor = Color.white;
 
+        public float ComboReleaseTime = 2.0f;
+
         [Header("-----------Pet-----------")]
         public float PetMoveSpeed = 4.0f;
 

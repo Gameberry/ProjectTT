@@ -11,6 +11,8 @@ namespace GameBerry
         [SerializeField]
         private SkillPlayer _skillPlayer;
 
+        [SerializeField]
+        private ComboController _comboController;
 
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
         private float _attackTimming = 0.2f;
@@ -56,6 +58,8 @@ namespace GameBerry
         [SerializeField] private float CriticalAttackShake_strengthOverride = 0.5f;
         [SerializeField] private float CriticalAttackShake_durationOverride = 0.25f;
 
+
+
         //------------------------------------------------------------------------------------
         public override void Init()
         {
@@ -65,6 +69,10 @@ namespace GameBerry
             creatureBaseMove.SetCharacterController(this);
             RefreshCheatStat();
 
+            _comboController = new ComboController();
+            _comboController.Init(this);
+            _comboController.SetVisibleComboUI();
+
             _currentSpineModelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
             SetSpineModelData(_currentSpineModelData);
             RefreshPlayerSkin(null);
@@ -73,11 +81,24 @@ namespace GameBerry
         public override void Release()
         {
             Message.RemoveListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
+
+            _comboController?.Release();
         }
         //------------------------------------------------------------------------------------
         private void RefreshPlayerSkin(Event.RefreshPlayerSkinMsg msg)
         {
             SetSpineSkin(Managers.SkinManager.Instance.GetRuntimeSkin());
+        }
+        //------------------------------------------------------------------------------------
+        public override void OnKillCharacter(CharacterControllerBase characterControllerBase)
+        {
+            //_comboController?.AddCombo();
+        }
+        //------------------------------------------------------------------------------------
+        public override void HitResult(AttackData attackData)
+        {
+            if (attackData != null && attackData.HitEnemy.Count > 0)
+                _comboController?.AddCombo();
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()
@@ -247,7 +268,20 @@ namespace GameBerry
 
                     if (_refreshAggro == true)
                         SetNewTarget();
+
+                    if(AttackTarget == null || AttackTarget.IsDead)
+                        SetNewTarget();
+
+                    if (AttackTarget == null || AttackTarget.IsDead)
+                    { 
+                        _attackTimming = 0f;
+                        return;
+                    }
+
+                    selectAttackData.HitEnemy.Clear();
+
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+                    _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
 
                     if (critical == true)
                     {
@@ -268,7 +302,6 @@ namespace GameBerry
                         }
                     }
 
-                    _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
 
                     if (_currentAttackData != null && AttackTarget != null)
                     {

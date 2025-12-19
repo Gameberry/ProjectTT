@@ -43,6 +43,10 @@ namespace GameBerry
                 Enum_ConditionType.MoveSpeedUp => new MoveSpeedUpCondition(),
                 Enum_ConditionType.AttackSpeedUp => new AttackSpeedUpCondition(),
 
+                Enum_ConditionType.ComboBuff_AttackSpeedUp => new ComboBuff_AttackSpeedUpCondition(),
+                Enum_ConditionType.ComboBuff_AttackUp => new ComboBuff_AttackUpCondition(),
+                Enum_ConditionType.ComboBuff_CriticalChangeUp => new ComboBuff_CriticalChangeUpCondition(),
+
                 _ => null
             };
         }
@@ -66,6 +70,7 @@ namespace GameBerry
         public float DefenseInc { get; private set; } = 0f;
         public float MoveSpeedInc { get; private set; } = 0f;
         public float AttackSpeedInc { get; private set; } = 0f;
+        public float CritChanceAdd { get; private set; } = 0f;
 
         //------------------------------------------------------------------------------------
         private void Awake()
@@ -82,6 +87,9 @@ namespace GameBerry
 
             foreach (var cond in _conditions)
             {
+                if (cond.Duration < 0)
+                    continue;
+
                 cond.OnUpdate(dt);
                 if (cond.IsFinished)
                 { 
@@ -123,13 +131,13 @@ namespace GameBerry
                         break;
                     }
                     
-                case ConditionStackPolicy.RefreshDuration:
+                case ConditionStackPolicy.Refresh:
                     {
                         var existing = FindFirst(conditionData.Type);
 
                         if (existing != null)
                         {
-                            // 기존 것 듀레이션만 교체 (최신/최대 등 규칙은 여기서 바꾸면 됨)
+                            // 기존 것 갱신
                             existing.Refresh(conditionData.Duration);
                         }
                         else
@@ -221,6 +229,7 @@ namespace GameBerry
             _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.Defence_Inc, DefenseInc);
             _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.MoveSpeed_Inc, MoveSpeedInc);
             _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.AttackSpeed_Inc, AttackSpeedInc);
+            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.CritChance, CritChanceAdd);
 
             _owner.RefreshStat();
         }
@@ -245,26 +254,29 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void RecalcStatInc()
         {
-            float atkMul = 1f;
-            float hpMul = 1f;
-            float defMul = 1f;
-            float moveMul = 1f;
-            float aspdMul = 1f;
+            float atkInc = 0f;
+            float hpInc = 0f;
+            float defInc = 0f;
+            float moveInc = 0f;
+            float aspdInc = 0f;
+            float crichanceAdd = 0f;
 
             foreach (var cond in _conditions)
             {
-                atkMul += cond.AttackInc;
-                hpMul += cond.HpInc;
-                defMul += cond.DefenseInc;
-                moveMul += cond.MoveSpeedInc;
-                aspdMul += cond.AttackSpeedInc;
+                atkInc += cond.AttackInc;
+                hpInc += cond.HpInc;
+                defInc += cond.DefenseInc;
+                moveInc += cond.MoveSpeedInc;
+                aspdInc += cond.AttackSpeedInc;
+                crichanceAdd += cond.CritChanceAdd;
             }
 
-            AttackInc = atkMul;
-            HpInc = hpMul;
-            DefenseInc = defMul;
-            MoveSpeedInc = moveMul;
-            AttackSpeedInc = aspdMul;
+            AttackInc = atkInc;
+            HpInc = hpInc;
+            DefenseInc = defInc;
+            MoveSpeedInc = moveInc;
+            AttackSpeedInc = aspdInc;
+            CritChanceAdd = crichanceAdd;
         }
         //------------------------------------------------------------------------------------
     }

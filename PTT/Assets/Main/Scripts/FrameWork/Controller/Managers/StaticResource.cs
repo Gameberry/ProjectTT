@@ -29,6 +29,9 @@ namespace GameBerry
         private ConditionDataAsset _conditionDataAsset;
 
         [SerializeField]
+        private ComboDataAsset _comboDataAsset;
+
+        [SerializeField]
         private StageDataAsset _stageDataAsset;
 
         [SerializeField]
@@ -198,6 +201,11 @@ namespace GameBerry
         public ConditionDataAsset GetConditionData()
         {
             return _conditionDataAsset;
+        }
+        //------------------------------------------------------------------------------------
+        public ComboDataAsset GetComboData()
+        {
+            return _comboDataAsset;
         }
         //------------------------------------------------------------------------------------
         public StageDataAsset GetStageData()

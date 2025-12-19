@@ -81,6 +81,8 @@ namespace GameBerry
         protected float _characterAttackSpeed = 1.0f;
         protected float _characterMoveSpeed = 1.0f;
 
+        public float Temp_Accuracy = 1f;
+
         public bool _blockMove { get; private set; }
         protected bool _blockAttack { get; private set; }
         protected bool _blockSkill { get; private set; }
@@ -170,8 +172,15 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void Damage(AttackData damage)
         {
+            if (IsDead == true)
+                return;
+
             if (damage.Hitter != null && damage.Hitter.IsDead == false)
-            { 
+            {
+                bool ishit = Random.Range(0.0f, 1.0f) <= damage.Hitter.Temp_Accuracy;
+                if (ishit == false)
+                    return;
+
                 Damage(damage.DamageRate * damage.Hitter.FinalAttack);
                 if (IsDead == false)
                 {
@@ -179,10 +188,21 @@ namespace GameBerry
                         _attackTarget = damage.Hitter;
                     PlayCharacterCondition(damage.EnemyConditionDatas, damage.Hitter.transform.position);
                 }
+                else
+                {
+                    damage.Hitter.OnKillCharacter(this);
+                }
+
+                damage.HitEnemy.Add(this);
             }
         }
         //------------------------------------------------------------------------------------
         protected virtual void OnDamage()
+        { 
+
+        }
+        //------------------------------------------------------------------------------------
+        public virtual void OnKillCharacter(CharacterControllerBase characterControllerBase)
         { 
 
         }
@@ -195,6 +215,7 @@ namespace GameBerry
             //}
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, null);
+            HitResult(attackData);
         }
         //------------------------------------------------------------------------------------
         public void PlaySkill(AttackData attackData, Vector3 pos, CharacterControllerBase fixSkillHitReceiver)
@@ -205,6 +226,12 @@ namespace GameBerry
             //}
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, fixSkillHitReceiver);
+            HitResult(attackData);
+        }
+        //------------------------------------------------------------------------------------
+        public virtual void HitResult(AttackData attackData)
+        { 
+
         }
         //------------------------------------------------------------------------------------
         private void PlayCharacterCondition(List<int> index, Vector2 attackpos)
@@ -223,12 +250,17 @@ namespace GameBerry
             PlayCharacterCondition(conditionData);
         }
         //------------------------------------------------------------------------------------
-        private void PlayCharacterCondition(ConditionData conditionData)
+        public void PlayCharacterCondition(ConditionData conditionData)
         {
             if (conditionData == null)
                 return;
 
             _conditionController?.AddCondition(conditionData);
+        }
+        //------------------------------------------------------------------------------------
+        public void RemoveConditionsByType(Enum_ConditionType enum_ConditionType)
+        {
+            _conditionController?.RemoveConditionsByType(enum_ConditionType);
         }
         //------------------------------------------------------------------------------------
         public void Play()
@@ -446,6 +478,12 @@ namespace GameBerry
 
             _characterAttackSpeed = (float)(GetOutPutMyStat(V2Enum_Stat.AttackSpeed));
             _characterAttackSpeed += _characterAttackSpeed * (float)(GetOutPutMyStat(V2Enum_Stat.AttackSpeed_Inc));
+
+            if(CharacterState == CharacterState.Attack
+                || CharacterState == CharacterState.Skill)
+                _mySkeletonAnimationHandler?.SetAnimationSpeed(FinalAttackSpeed);
+            else if (CharacterState == CharacterState.Run)
+                _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterMoveSpeed);
 
             double currHpRatio = 0;
 

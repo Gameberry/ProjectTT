@@ -103,48 +103,9 @@ namespace GameBerry
         public void SetOutputStatValue(V2Enum_Stat v2Enum_Stat)
         { // 여기서 각 컨텐츠에서 계산되어야 할 값들을 가져와서 다시 셋팅
             double originValue = GetDefaultValue(v2Enum_Stat);
+            double buffvalue = GetBuffValue(v2Enum_Stat);
 
-            //double buffvalue = _characterControllerBase.GetMyBuffValue(v2Enum_Stat);
-            //buffvalue += Managers.BattleSceneManager.Instance.CurrentBattleScene.GetPassiveBuffValue(v2Enum_Stat, _characterControllerBase.IFFType);
-
-            
-
-            //double applyBuffValue = buffvalue;
-
-            //if (v2Enum_Stat == V2Enum_Stat.Attack)
-            //{
-            //    if (Define.MaximumDecreaseAtt * Define.PercentageRecoverValue > applyBuffValue)
-            //    {
-            //        applyBuffValue = Define.MaximumDecreaseAtt * Define.PercentageRecoverValue;
-            //    }
-            //}
-            //else if (v2Enum_Stat == V2Enum_Stat.Defence)
-            //{
-            //    if (Define.MaximumDecreaseArmor * Define.PercentageRecoverValue > applyBuffValue)
-            //    {
-            //        applyBuffValue = Define.MaximumDecreaseArmor * Define.PercentageRecoverValue;
-            //    }
-            //}
-            //else
-            //{
-            //    if (applyBuffValue < -0.99)
-            //        applyBuffValue = -0.99;
-            //}
-
-            //if (_buffValue.ContainsKey(v2Enum_Stat) == false)
-            //    _buffValue.Add(v2Enum_Stat, applyBuffValue);
-            //else
-            //    _buffValue[v2Enum_Stat] = applyBuffValue;
-
-            //if (v2Enum_Stat == V2Enum_Stat.CritChance)
-            //    originValue += originValue + (applyBuffValue * 10000);
-            //else
-            //    originValue += originValue * applyBuffValue;
-
-            //if (_outputStatValue.ContainsKey(v2Enum_Stat) == false)
-            //    _outputStatValue.Add(v2Enum_Stat, 0);
-
-            _outputStatValue[v2Enum_Stat] = originValue;
+            _outputStatValue[v2Enum_Stat] = originValue + buffvalue;
 
 #if UNITY_EDITOR
             StatViewer statViewer = OutputViewers.Find(x => x.v2Enum_Stat == v2Enum_Stat);

@@ -215456,6 +215456,7 @@ MonoBehaviour:
   _maxHP: 0
   _currentHP: 0
   _aniControllerSpeed: 1
+  Temp_Accuracy: 0.5
   _skillPlayer: {fileID: 8712562784642121654}
   _attackRange: 1.5
   _attackData:
@@ -215474,6 +215475,7 @@ MonoBehaviour:
     AttackDuration: 3.3333
     EnemyConditionDatas: 00000000
     MyConditionDatas: 
+    HitEnemy: []
   - ResourceIndex: 3
     Hitter: {fileID: 0}
     DamageRate: 1
@@ -215489,6 +215491,7 @@ MonoBehaviour:
     AttackDuration: 3.3333
     EnemyConditionDatas: 00000000
     MyConditionDatas: 
+    HitEnemy: []
   _criticalFakeData:
     ResourceIndex: 4
     Hitter: {fileID: 0}
@@ -215505,6 +215508,7 @@ MonoBehaviour:
     AttackDuration: 3.3333
     EnemyConditionDatas: 04000000
     MyConditionDatas: 
+    HitEnemy: []
   _dataSelectIndex: -1
   _setRandom: 0
   _tempCritical: 0.5
@@ -215524,6 +215528,7 @@ MonoBehaviour:
     AttackDuration: 0.5
     EnemyConditionDatas: 
     MyConditionDatas: 
+    HitEnemy: []
   - ResourceIndex: 2
     Hitter: {fileID: 0}
     DamageRate: 5
@@ -215539,7 +215544,8 @@ MonoBehaviour:
     AttackDuration: 0.5
     EnemyConditionDatas: 
     MyConditionDatas: 
-  _refreshAggro: 0
+    HitEnemy: []
+  _refreshAggro: 1
   NormalAttackShake: 0
   NormalAttackShake_strengthOverride: 0.1
   NormalAttackShake_durationOverride: 0.08

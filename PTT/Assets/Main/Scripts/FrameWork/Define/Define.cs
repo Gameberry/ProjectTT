@@ -111,6 +111,8 @@ namespace GameBerry
 
         public List<int> EnemyConditionDatas = new List<int>();
         public List<int> MyConditionDatas = new List<int>();
+
+        public List<CharacterControllerBase> HitEnemy = new List<CharacterControllerBase>();
     }
 
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);
@@ -148,8 +150,8 @@ namespace GameBerry
         CritDmgIncrease,
         DmgBoost,
 
-        Evasion,
-        Accuracy,
+        Evasion, // 회피
+        Accuracy, // 명중
 
         HpRecovery,
 
@@ -361,6 +363,11 @@ namespace GameBerry
         MoveSpeedUp = 104,   // 이속 증가
         AttackSpeedUp = 105, // 공속 증가
 
+        // --- ContentBuffs ---
+        ComboBuff_AttackSpeedUp = 201, // 공속 버프
+        ComboBuff_AttackUp = 202, // 공격력 버프
+        ComboBuff_CriticalChangeUp = 203, // 크리티컬찬스 버프
+
         Max,
     }
 
@@ -376,7 +383,7 @@ namespace GameBerry
     public enum ConditionStackPolicy
     {
         MultipleInstances,   // 공속/이속/공격력 버프처럼 여러 개 각각 타이머
-        RefreshDuration,     // 스턴처럼 하나만 존재, 듀레이션만 최신으로 갱신
+        Refresh,     // 스턴처럼 하나만 존재, 듀레이션만 최신으로 갱신
         MergyValue,     // 넉백처럼 값이 누적
     }
 
