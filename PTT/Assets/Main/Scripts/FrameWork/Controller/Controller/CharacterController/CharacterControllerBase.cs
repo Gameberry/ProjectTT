@@ -174,7 +174,11 @@ namespace GameBerry
             { 
                 Damage(damage.DamageRate * damage.Hitter.FinalAttack);
                 if (IsDead == false)
+                {
+                    if (_attackTarget == null)
+                        _attackTarget = damage.Hitter;
                     PlayCharacterCondition(damage.EnemyConditionDatas, damage.Hitter.transform.position);
+                }
             }
         }
         //------------------------------------------------------------------------------------
@@ -246,12 +250,12 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
-        public virtual Vector3 GetMoveDirection()
+        public virtual Vector2 GetMoveDirection()
         { // MoveController_Base���� �ַ� ȣ��
             // ������ ���̽�ƽ���� ������ ���� ���� �־ �����Լ��� ����
 
             if (AttackTarget == null)
-                return Vector3.zero;
+                return Vector2.zero;
 
             return (AttackTarget.transform.position - transform.position).normalized;
         }

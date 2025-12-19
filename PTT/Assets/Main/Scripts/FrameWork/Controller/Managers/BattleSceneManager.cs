@@ -157,9 +157,21 @@ namespace GameBerry.Managers
             return _battleSceneCamera;
         }
         //------------------------------------------------------------------------------------
+        public void PlayCameraShake(
+            float strengthOverride = -1f,
+            float durationOverride = -1f)
+        {
+            _battleSceneCamera?.PlayShake(strengthOverride, durationOverride);
+        }
+        //------------------------------------------------------------------------------------
         public void SetBattleMap(int index)
         {
             _battleSceneMap?.SetMap(index);
+        }
+        //------------------------------------------------------------------------------------
+        public void SpawnMonster(int count)
+        {
+            _battleSceneMap?.SpawnMonster(count);
         }
         //------------------------------------------------------------------------------------
         public void DeadPlayer(PlayerController playerController)

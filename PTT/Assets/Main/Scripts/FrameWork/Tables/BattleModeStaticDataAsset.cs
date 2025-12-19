@@ -15,6 +15,10 @@ namespace GameBerry
         public float MonsterAttackTurm = 1.0f;
         public int SpawnCount = 30;
         public float SpawnTurm = 5f;
+        public float SpawnrouteRadius = 5f;
+        public float MonsterMinSeparation = 0.5f;
+        public float MonsterReturnRadius = 0.01f;
+        public bool PlayerOutReturnMonster = true;
 
         public Vector3 MapRange_Min;
         public Vector3 MapRange_Max;

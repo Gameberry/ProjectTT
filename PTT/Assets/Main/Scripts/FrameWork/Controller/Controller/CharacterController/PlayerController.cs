@@ -44,8 +44,17 @@ namespace GameBerry
         // 조이스틱 넣기 전에 임시 변수
         private bool _useCustomDirVec = false;
 
-        private Vector3 _customDieVec = Vector3.zero;
+        private Vector2 _customDieVec = Vector3.zero;
         // 조이스틱 넣기 전에 임시 변수
+
+        [Header("카메라 흔들기")]
+        [SerializeField] private bool NormalAttackShake = false;
+        [SerializeField] private float NormalAttackShake_strengthOverride = 0.1f;
+        [SerializeField] private float NormalAttackShake_durationOverride = 0.08f;
+
+        [SerializeField] private bool CriticalAttackShake = true;
+        [SerializeField] private float CriticalAttackShake_strengthOverride = 0.5f;
+        [SerializeField] private float CriticalAttackShake_durationOverride = 0.25f;
 
         //------------------------------------------------------------------------------------
         public override void Init()
@@ -91,7 +100,7 @@ namespace GameBerry
             ChangeState(CharacterState.Idle);
         }
         //------------------------------------------------------------------------------------
-        public override Vector3 GetMoveDirection()
+        public override Vector2 GetMoveDirection()
         { // MoveController_Base에서 주로 호출
             // 유저는 조이스틱으로 방향을 정할 때가 있어서 가상함수로 만듬
 
@@ -230,7 +239,9 @@ namespace GameBerry
             {
                 if (eventName.Contains("AniAction"))
                 {
-                    AttackData selectAttackData = Random.Range(0.0f, 1.0f) <= _tempCritical ? _criticalFakeData : _currentAttackData;
+                    bool critical = Random.Range(0.0f, 1.0f) <= _tempCritical;
+
+                    AttackData selectAttackData = critical ? _criticalFakeData : _currentAttackData;
 
                     selectAttackData.CustomParam = eventName;
 
@@ -238,7 +249,36 @@ namespace GameBerry
                         SetNewTarget();
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
 
+                    if (critical == true)
+                    {
+                        if (CriticalAttackShake == true)
+                        {
+                            Managers.BattleSceneManager.Instance.PlayCameraShake(
+                                CriticalAttackShake_strengthOverride,
+                                CriticalAttackShake_durationOverride);
+                        }
+                    }
+                    else
+                    {
+                        if (NormalAttackShake == true)
+                        {
+                            Managers.BattleSceneManager.Instance.PlayCameraShake(
+                                NormalAttackShake_strengthOverride,
+                                NormalAttackShake_durationOverride);
+                        }
+                    }
+
                     _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
+
+                    if (_currentAttackData != null && AttackTarget != null)
+                    {
+                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                        if (distance > _currentAttackData.AttackRange + 1.0f && _blockAttack == false)
+                        {
+                            _attackTimming = 0f;
+                        }
+                    }
+                    
                 }
             }
         }

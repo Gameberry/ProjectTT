@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class MathDatas {
-	const float PI = 3.1415927f;
+	public const float PI = 3.1415927f;
 	
 	static float[] sinLookUpTable = new float[360]
 	{

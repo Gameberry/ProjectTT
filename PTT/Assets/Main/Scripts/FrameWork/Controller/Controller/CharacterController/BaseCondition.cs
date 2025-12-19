@@ -183,11 +183,42 @@ namespace GameBerry
 
             if (_rb != null)
             {
-                _rb.MovePosition(_rb.position + delta);
+                Vector2 newpos = _rb.position + delta;
+
+                Vector2 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
+                Vector2 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
+
+                if (newpos.x < minpos.x)
+                    newpos.x = minpos.x;
+                else if (newpos.x > maxpos.x)
+                    newpos.x = maxpos.x;
+
+                if (newpos.y < minpos.y)
+                    newpos.y = minpos.y;
+                else if (newpos.y > maxpos.y)
+                    newpos.y = maxpos.y;
+
+                _rb.MovePosition(newpos);
             }
             else
             {
-                Owner.transform.position += (Vector3)delta;
+                Vector2 charpos = Owner.transform.position;
+                Vector2 newpos = charpos + delta;
+
+                Vector2 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
+                Vector2 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
+
+                if (newpos.x < minpos.x)
+                    newpos.x = minpos.x;
+                else if (newpos.x > maxpos.x)
+                    newpos.x = maxpos.x;
+
+                if (newpos.y < minpos.y)
+                    newpos.y = minpos.y;
+                else if (newpos.y > maxpos.y)
+                    newpos.y = maxpos.y;
+
+                Owner.transform.position = newpos;
             }
         }
 

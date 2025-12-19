@@ -33,6 +33,8 @@ namespace GameBerry
         [SerializeField]
         private float _cameraSmoothTime = 0.1f;
 
+        [SerializeField]
+        private CameraShake _cameraShake;
 
 
         Vector2 velocity = Vector2.zero;
@@ -59,6 +61,13 @@ namespace GameBerry
             transform.position = Vector2.SmoothDamp(transform.position, pos, ref velocity, _cameraSmoothTime);
 
 
+        }
+
+        public void PlayShake(
+            float strengthOverride = -1f,
+            float durationOverride = -1f)
+        {
+            _cameraShake?.Shake(strengthOverride, durationOverride);
         }
     }
 }

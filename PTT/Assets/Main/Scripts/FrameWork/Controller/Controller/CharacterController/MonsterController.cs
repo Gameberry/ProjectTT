@@ -22,13 +22,17 @@ namespace GameBerry
 
         private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //비활성화시 취소처리
 
+        private BattleSceneMap_Aggro _battleSceneMap_Aggro;
+
+        private Vector2 _spawnPos;
+
         public override void Init()
         {
             MoveController_Base creatureBaseMove = gameObject.AddComponent<MoveController_Base>();
             creatureBaseMove.SetCharacterController(this);
         }
         //------------------------------------------------------------------------------------
-        public void SetMonster(int modelIndex)
+        public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector2 spawnPos, int modelIndex)
         { // 현재는 모델 인덱스만 받고 있다. 나중에 구조화 해야함
             RefreshCheatStat();
 
@@ -36,6 +40,19 @@ namespace GameBerry
             SetSpineModelData(_currentSpineModelData);
 
             attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
+
+            _battleSceneMap_Aggro = battleSceneMap_Aggro;
+            _spawnPos = spawnPos;
+        }
+        //------------------------------------------------------------------------------------
+        public void SetAggro(PlayerController playerController)
+        {
+            if (playerController == null)
+            {
+                if (_attackTarget != null && _maxHP > CurrentHP)
+                    return;
+            }
+            _attackTarget = playerController;
         }
         //------------------------------------------------------------------------------------
         protected override void OnDamage()
@@ -55,8 +72,17 @@ namespace GameBerry
             ChangeState(CharacterState.Idle);
         }
         //------------------------------------------------------------------------------------
+        public override Vector2 GetMoveDirection()
+        {
+            if (_attackTarget == null)
+                return (_spawnPos - new Vector2(transform.position.x, transform.position.y)).normalized;
+            else
+                return base.GetMoveDirection();
+        }
+        //------------------------------------------------------------------------------------
         protected override void OnDead()
         {
+            _battleSceneMap_Aggro.OnDeadMonster(this);
             Managers.BattleSceneManager.Instance.DeadMonster(this);
         }
         //------------------------------------------------------------------------------------
@@ -64,28 +90,39 @@ namespace GameBerry
         {
             if (CharacterState != CharacterState.Dead)
             {
-                if (CharacterState == CharacterState.Idle || CharacterState == CharacterState.Run)
+                if (CharacterState == CharacterState.Idle)
                 {
-                    if (_attackTarget == null || _attackTarget.IsDead == true)
-                    {
-                        SetNewTarget();
-                    }
-
                     if (_attackTarget != null)
                     {
                         ChangeState(CharacterState.Run);
                     }
                     else
                     {
-                        ChangeState(CharacterState.Idle);
-                        return;
+                        float distance = MathDatas.GetDistance(transform.position, _spawnPos);
+                        if (distance > StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
+                        {
+                            ChangeState(CharacterState.Run);
+                        }
                     }
-
-                    float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                    if (distance <= attackRange && _blockAttack == false)
+                }
+                else if (CharacterState == CharacterState.Run)
+                {
+                    if (_attackTarget != null)
                     {
-                        ChangeState(CharacterState.Attack);
-                        _attackTimming = Time.time + FinalAttackSpeed;
+                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                        if (distance <= attackRange && _blockAttack == false)
+                        {
+                            ChangeState(CharacterState.Attack);
+                            _attackTimming = Time.time + FinalAttackSpeed;
+                        }
+                    }
+                    else
+                    {
+                        float distance = MathDatas.GetDistance(transform.position, _spawnPos);
+                        if (distance < StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
+                        {
+                            ChangeState(CharacterState.Idle);
+                        }
                     }
                 }
                 else if (CharacterState == CharacterState.Attack)
@@ -97,7 +134,7 @@ namespace GameBerry
                             ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                             AttackTarget.Damage(FinalAttack);
                             ChangeState(CharacterState.Idle);
-                        }   
+                        }
                     }
                 }
             }

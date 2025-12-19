@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2723959569387965587}
   - component: {fileID: 2637075152999898853}
   - component: {fileID: 433946285494180800}
+  - component: {fileID: 6439999778303640027}
   m_Layer: 15
   m_Name: BattleSceneCamera (1)
   m_TagString: MainCamera
@@ -73,7 +74,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 63488
+    m_Bits: 129024
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -99,6 +100,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clearDepth: 0
   clearColor: 1
+--- !u!114 &6439999778303640027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5045757367927789193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48a369fe3ba20ef4ba6d05c449e42cb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultDuration: 0.15
+  defaultStrength: 0.2
+  defaultFrequency: 25
+  dampingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0004891646
+      value: -0.000030517578
+      inSlope: 5.1695457
+      outSlope: 5.1695457
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.0148234395
+    - serializedVersion: 3
+      time: 0.58180785
+      value: 0.99835885
+      inSlope: 0.5773635
+      outSlope: 0.5773635
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.105159715
+      outWeight: 0.032314878
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.7890055
+      outSlope: -0.7890055
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.045282364
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  shakeX: 1
+  shakeY: 1
+  shakeZ: 0
 --- !u!1 &8251765044308374401
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,3 +291,4 @@ MonoBehaviour:
   _creatureMaxPosGap: 10
   _focusMove_X: 0
   _cameraSmoothTime: 0.5
+  _cameraShake: {fileID: 6439999778303640027}
