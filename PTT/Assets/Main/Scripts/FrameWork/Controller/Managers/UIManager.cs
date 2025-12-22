@@ -8,9 +8,6 @@ namespace GameBerry.UI
 {
 	public class UIManager : MonoSingleton<UIManager>
 	{
-		public Canvas damageCanvas;
-		public Transform DamageCanvasContent;
-
 		public Canvas screenCanvas;
         public CanvasScaler screenCanvasScaler;
         public Camera screenCanvasCamera;

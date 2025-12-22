@@ -49,10 +49,12 @@ namespace GameBerry
 
             _comboCount++;
 
-            SendRefreshUI();
+            //SendRefreshUI();
 
             if (_owner == null)
                 return;
+
+            CombatTextSpawner.Instance.ShowCombo(_owner.transform, _comboCount);
 
             ComboData comboData = _comboDataAsset.GetData(_comboCount);
             if (comboData != null)
@@ -70,7 +72,7 @@ namespace GameBerry
         {
             _comboCount = 0;
 
-            SendRefreshUI();
+            //SendRefreshUI();
 
 
             if (_owner == null)

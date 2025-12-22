@@ -1,9 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using TMPro;
-using Spine;
-using Spine.Unity;
 
 namespace GameBerry
 {

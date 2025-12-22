@@ -841,7 +841,7 @@ GameObject:
   - component: {fileID: 514167112}
   - component: {fileID: 514167111}
   m_Layer: 5
-  m_Name: DamageCanvas
+  m_Name: CombatTextCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1707,8 +1707,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1173909761}
+  - component: {fileID: 1173909763}
+  - component: {fileID: 1173909762}
   m_Layer: 5
-  m_Name: DamageTextContent
+  m_Name: CombatTextContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1733,6 +1735,38 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1173909762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173909760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd04ec17eb703d49aae6598fd2e3650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 2693196346570143586, guid: 779c3ee5f06ff014596b1e66e7acc914, type: 3}
+  parent: {fileID: 1173909761}
+  prewarm: 40
+--- !u!114 &1173909763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173909760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd33980910c35814a903046974c4dc94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pool: {fileID: 1173909762}
+  presets: {fileID: 11400000, guid: 872293e24f8f4004b8f434fb1401ae6d, type: 2}
+  OFFSET_COMBO: {x: 0, y: 0.8, z: 0}
+  OFFSET_MISS: {x: 0, y: 1, z: 0}
+  OFFSET_CRIT: {x: 0, y: 0.8, z: 0}
 --- !u!4 &1275242348 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6425929453810843285, guid: 907b278a7d3eede48ac3da3286160283, type: 3}
@@ -2114,8 +2148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6881ab1c673157c4a940941a559ccd0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageCanvas: {fileID: 514167113}
-  DamageCanvasContent: {fileID: 1173909761}
   screenCanvas: {fileID: 834275702}
   screenCanvasScaler: {fileID: 834275701}
   screenCanvasCamera: {fileID: 502797839}

@@ -162,6 +162,9 @@ namespace GameBerry
             }
 
             DeCreaseHP(damage);
+
+            CombatTextSpawner.Instance.ShowDamage(transform, (int)damage, true);
+
             if (CurrentHP <= 0)
                 ChangeState(CharacterState.Dead);
             else
@@ -179,7 +182,10 @@ namespace GameBerry
             {
                 bool ishit = Random.Range(0.0f, 1.0f) <= damage.Hitter.Temp_Accuracy;
                 if (ishit == false)
+                {
+                    CombatTextSpawner.Instance.ShowMiss(transform);
                     return;
+                }
 
                 Damage(damage.DamageRate * damage.Hitter.FinalAttack);
                 if (IsDead == false)
