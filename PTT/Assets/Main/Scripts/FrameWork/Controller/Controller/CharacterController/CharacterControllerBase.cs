@@ -163,7 +163,6 @@ namespace GameBerry
 
             DeCreaseHP(damage);
 
-            CombatTextSpawner.Instance.ShowDamage(transform, (int)damage, true);
 
             if (CurrentHP <= 0)
                 ChangeState(CharacterState.Dead);
@@ -187,7 +186,27 @@ namespace GameBerry
                     return;
                 }
 
-                Damage(damage.DamageRate * damage.Hitter.FinalAttack);
+                double setdamage = damage.DamageRate * damage.Hitter.FinalAttack;
+
+                bool critical = damage.Hitter.ApplyCritical();
+                if (critical == true)
+                    setdamage = setdamage * damage.Hitter.GetOutPutMyStat(V2Enum_Stat.CritDmgIncrease);
+
+                setdamage = System.Math.Truncate(setdamage);
+
+                if (_iFFType == IFFType.IFF_Foe)
+                { 
+                    CombatTextSpawner.Instance.ShowDamage(transform, setdamage, critical);
+
+                    if (StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake == true)
+                    {
+                        Managers.BattleSceneManager.Instance.PlayCameraShake(
+                            StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake_strengthOverride,
+                            StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake_durationOverride);
+                    }
+                }
+
+                Damage(setdamage);
                 if (IsDead == false)
                 {
                     if (_attackTarget == null)
@@ -508,6 +527,11 @@ namespace GameBerry
                 _currentHP = _maxHP * currHpRatio;
 
             
+        }
+        //------------------------------------------------------------------------------------
+        public bool ApplyCritical()
+        {
+            return Random.Range(0.0f, 1.0f) <= (float)GetOutPutMyStat(V2Enum_Stat.CritChance);
         }
         //------------------------------------------------------------------------------------
     }

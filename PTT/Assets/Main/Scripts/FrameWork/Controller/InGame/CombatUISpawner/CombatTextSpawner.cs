@@ -28,6 +28,9 @@ namespace GameBerry
         private readonly Dictionary<Transform, TargetStackState> _stackByTarget = new(256);
         private readonly Dictionary<Transform, UIFloatingCombatText> _comboByTarget = new(64);
 
+        [SerializeField]
+        private bool _showDamageNumber = false;
+
         Vector2 GetStackedPixelOffset(Transform target)
         {
             float now = Time.unscaledTime;
@@ -112,16 +115,24 @@ namespace GameBerry
                 motionPresets.critical);
         }
 
-        public void ShowDamage(Transform target, int damage, bool isCritical)
+        public void ShowDamage(Transform target, double damage, bool isCritical)
         {
             if (target == null) return;
+
+            if (_showDamageNumber == false)
+            {
+                if (isCritical == true)
+                    ShowCritical(target);
+
+                return;
+            }
 
             var t = pool.Rent();
             Vector2 px = GetStackedPixelOffset(target);
 
             if (isCritical)
             {
-                t.PlayInt(
+                t.PlayDouble(
                     target,
                     BASE_WORLD_CRIT,
                     px,
@@ -132,7 +143,7 @@ namespace GameBerry
             }
             else
             {
-                t.PlayInt(
+                t.PlayDouble(
                     target,
                     BASE_WORLD_MISS,
                     px,

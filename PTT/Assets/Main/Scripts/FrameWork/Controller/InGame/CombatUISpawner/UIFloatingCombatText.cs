@@ -101,12 +101,12 @@ namespace GameBerry.UI
             gameObject.SetActive(true);
         }
 
-        public void PlayInt(
+        public void PlayDouble(
             Transform target,
             Vector3 baseWorldOffset,
             Vector2 pixelOffset,
             CombatTextStyle style,
-            int value,
+            double value,
             CombatTextPresetAsset textPreset,
             CombatTextMotionPresetAsset motionPreset)
         {
@@ -114,7 +114,7 @@ namespace GameBerry.UI
 
             SetComboVisible(false);
             textPreset.ApplyTo(mainTmp);
-            mainTmp.SetText("{0}", value);
+            mainTmp.SetText(string.Format("{0:#,###}", (value)));
 
             gameObject.SetActive(true);
         }

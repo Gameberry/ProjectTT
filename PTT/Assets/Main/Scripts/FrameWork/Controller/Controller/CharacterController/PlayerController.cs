@@ -33,9 +33,6 @@ namespace GameBerry
         private bool _setRandom = false;
 
         [SerializeField]
-        private float _tempCritical = 0.5f;
-
-        [SerializeField]
         private List<AttackData> _skillDatas = new List<AttackData>();
 
         // 평타
@@ -48,17 +45,6 @@ namespace GameBerry
 
         private Vector2 _customDieVec = Vector3.zero;
         // 조이스틱 넣기 전에 임시 변수
-
-        [Header("카메라 흔들기")]
-        [SerializeField] private bool NormalAttackShake = false;
-        [SerializeField] private float NormalAttackShake_strengthOverride = 0.1f;
-        [SerializeField] private float NormalAttackShake_durationOverride = 0.08f;
-
-        [SerializeField] private bool CriticalAttackShake = true;
-        [SerializeField] private float CriticalAttackShake_strengthOverride = 0.5f;
-        [SerializeField] private float CriticalAttackShake_durationOverride = 0.25f;
-
-
 
         //------------------------------------------------------------------------------------
         public override void Init()
@@ -260,9 +246,7 @@ namespace GameBerry
             {
                 if (eventName.Contains("AniAction"))
                 {
-                    bool critical = Random.Range(0.0f, 1.0f) <= _tempCritical;
-
-                    AttackData selectAttackData = critical ? _criticalFakeData : _currentAttackData;
+                    AttackData selectAttackData = _currentAttackData;
 
                     selectAttackData.CustomParam = eventName;
 
@@ -282,26 +266,6 @@ namespace GameBerry
 
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                     _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
-
-                    if (critical == true)
-                    {
-                        if (CriticalAttackShake == true)
-                        {
-                            Managers.BattleSceneManager.Instance.PlayCameraShake(
-                                CriticalAttackShake_strengthOverride,
-                                CriticalAttackShake_durationOverride);
-                        }
-                    }
-                    else
-                    {
-                        if (NormalAttackShake == true)
-                        {
-                            Managers.BattleSceneManager.Instance.PlayCameraShake(
-                                NormalAttackShake_strengthOverride,
-                                NormalAttackShake_durationOverride);
-                        }
-                    }
-
 
                     if (_currentAttackData != null && AttackTarget != null)
                     {

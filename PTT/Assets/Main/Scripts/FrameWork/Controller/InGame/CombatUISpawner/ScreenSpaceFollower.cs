@@ -15,8 +15,13 @@ namespace GameBerry
         public Vector3 WorldOffset { get; set; }
         public Vector2 ScreenPixelOffset { get; set; }
 
+        [Header("Refs")]
+        [SerializeField] private Canvas rootCanvas;
+
+        [Header("Visibility")]
         [SerializeField] private bool hideWhenBehindCamera = true;
 
+        [Header("Performance (Adaptive)")]
         [Min(1)]
         [SerializeField] private int updateEveryNFrames = 2;
 
@@ -26,13 +31,14 @@ namespace GameBerry
         [SerializeField] private float camRotDotThreshold = 0.99995f;
 
         private RectTransform _rect;
+        private RectTransform _canvasRect;
 
         private Camera _battlecam;
         private Camera _uicam;
 
         private int _frameCounter;
 
-        private Vector3 _cachedScreenPos;
+        private Vector2 _cachedAnchoredPos;
         private bool _cachedVisible;
 
         private Vector3 _lastTargetPos;
@@ -44,6 +50,11 @@ namespace GameBerry
         void Awake()
         {
             _rect = (RectTransform)transform;
+
+            if (rootCanvas == null)
+                rootCanvas = GetComponentInParent<Canvas>();
+
+            _canvasRect = rootCanvas != null ? (RectTransform)rootCanvas.transform : null;
 
             _battlecam = Managers.BattleSceneManager.Instance.GetBattleSceneCamera().BattleCamera;
             _uicam = UI.UIManager.Instance.screenCanvasCamera;
@@ -58,7 +69,7 @@ namespace GameBerry
             ScreenPixelOffset = Vector2.zero;
 
             _frameCounter = 0;
-            _cachedScreenPos = Vector3.zero;
+            _cachedAnchoredPos = Vector2.zero;
             _cachedVisible = true;
 
             if (Target != null)
@@ -149,15 +160,28 @@ namespace GameBerry
 
         void ForceUpdate()
         {
+            if (_battlecam == null || _uicam == null || _canvasRect == null || Target == null)
+            {
+                _cachedVisible = false;
+                return;
+            }
+
             Vector3 sp = _battlecam.WorldToScreenPoint(Target.position + WorldOffset);
-            Vector3 TextPos = _uicam.ScreenToWorldPoint(sp);
             bool visible = !(hideWhenBehindCamera && sp.z < 0f);
 
-            TextPos.x += ScreenPixelOffset.x;
-            TextPos.y += ScreenPixelOffset.y;
+            sp.x += ScreenPixelOffset.x;
+            sp.y += ScreenPixelOffset.y;
 
-            _cachedScreenPos = TextPos;
-            _cachedVisible = visible;
+            Vector2 localPoint;
+            bool ok = RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                _canvasRect,
+                new Vector2(sp.x, sp.y),
+                _uicam,
+                out localPoint
+            );
+
+            _cachedVisible = visible && ok;
+            _cachedAnchoredPos = localPoint;
         }
 
         void ApplyCachedToUI()
@@ -169,7 +193,7 @@ namespace GameBerry
             }
 
             if (!_rect.gameObject.activeSelf) _rect.gameObject.SetActive(true);
-            _rect.position = _cachedScreenPos;
+            _rect.anchoredPosition = _cachedAnchoredPos;
         }
     }
 }

@@ -31,6 +31,15 @@ namespace GameBerry
 
         public float ComboReleaseTime = 2.0f;
 
+        [Header("카메라 흔들기")]
+        public bool NormalAttackShake = false;
+        public float NormalAttackShake_strengthOverride = 0.01f;
+        public float NormalAttackShake_durationOverride = 0.08f;
+
+        public bool CriticalAttackShake = true;
+        public float CriticalAttackShake_strengthOverride = 0.05f;
+        public float CriticalAttackShake_durationOverride = 0.1f;
+
         [Header("-----------Pet-----------")]
         public float PetMoveSpeed = 4.0f;
 
