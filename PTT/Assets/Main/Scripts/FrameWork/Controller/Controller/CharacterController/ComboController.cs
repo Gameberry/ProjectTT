@@ -18,7 +18,7 @@ namespace GameBerry
 
         List<Enum_ConditionType> _applyBuffs = new List<Enum_ConditionType>();
 
-        public int _comboCount = 0;
+        public long _comboCount = 0;
         private float _releaseComboTime = 0.0f;
 
         //------------------------------------------------------------------------------------
@@ -91,11 +91,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void SendRefreshUI()
         {
-            if (_showComboUIMsg == null)
-                return;
+            //if (_showComboUIMsg == null)
+            //    return;
 
-            _showComboUIMsg.Combo = _comboCount;
-            Message.Send(_showComboUIMsg);
+            //_showComboUIMsg.Combo = _comboCount;
+            //Message.Send(_showComboUIMsg);
         }
         //------------------------------------------------------------------------------------
         private void LateUpdated()

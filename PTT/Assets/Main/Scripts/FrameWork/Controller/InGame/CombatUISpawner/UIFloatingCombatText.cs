@@ -101,12 +101,12 @@ namespace GameBerry.UI
             gameObject.SetActive(true);
         }
 
-        public void PlayDouble(
+        public void PlayInt(
             Transform target,
             Vector3 baseWorldOffset,
             Vector2 pixelOffset,
             CombatTextStyle style,
-            double value,
+            int value,
             CombatTextPresetAsset textPreset,
             CombatTextMotionPresetAsset motionPreset)
         {
@@ -114,7 +114,25 @@ namespace GameBerry.UI
 
             SetComboVisible(false);
             textPreset.ApplyTo(mainTmp);
-            mainTmp.SetText(string.Format("{0:#,###}", (value)));
+            mainTmp.SetText("{0}", value);
+
+            gameObject.SetActive(true);
+        }
+
+        public void PlayDoubleFloorComma(
+        Transform target,
+        Vector3 baseWorldOffset,
+        Vector2 pixelOffset,
+        CombatTextStyle style,
+        double value,
+        CombatTextPresetAsset textPreset,
+        CombatTextMotionPresetAsset motionPreset)
+        {
+            SetupCommon(target, baseWorldOffset, pixelOffset, style, motionPreset, null);
+
+            SetComboVisible(false);
+            textPreset.ApplyTo(mainTmp);
+            Util.SetCommaFromDoubleFloor(mainTmp, value);
 
             gameObject.SetActive(true);
         }
@@ -123,7 +141,7 @@ namespace GameBerry.UI
             Transform target,
             Vector3 baseWorldOffset,
             Vector2 pixelOffset,
-            int comboValue,
+            long comboValue,
             CombatTextPresetAsset comboNumberPreset,
             CombatTextPresetAsset comboLabelPreset,
             CombatTextMotionPresetAsset motionPreset,
@@ -135,14 +153,16 @@ namespace GameBerry.UI
             comboNumberPreset.ApplyTo(comboNumberTmp);
             comboLabelPreset.ApplyTo(comboLabelTmp);
 
-            comboNumberTmp.SetText("{0:#,###}", comboValue);
+            Util.SetCommaInteger(comboNumberTmp, comboValue);
+
 
             gameObject.SetActive(true);
         }
 
-        public void RefreshCombo(int comboValue)
+        public void RefreshCombo(long comboValue)
         {
-            comboNumberTmp.SetText("{0:#,###}", comboValue);
+            Util.SetCommaInteger(comboNumberTmp, comboValue);
+
             _comboHideTimer = 0f;
             _t = 0f;
         }

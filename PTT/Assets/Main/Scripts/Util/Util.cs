@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using TMPro;
 
 namespace GameBerry
 {
@@ -846,6 +847,63 @@ namespace GameBerry
             }
 
             return str;
+        }
+
+
+        [System.ThreadStatic] private static char[] s_buffer;
+
+        public static void SetCommaInteger(TMP_Text tmp, long value)
+        {
+            if (tmp == null) return;
+            EnsureBuffer();
+
+            bool negative = value < 0;
+            ulong v = negative ? (ulong)(~value + 1) : (ulong)value;
+
+            int end = s_buffer.Length;
+            int i = end;
+
+            int groupCount = 0;
+            do
+            {
+                if (groupCount == 3)
+                {
+                    s_buffer[--i] = ',';
+                    groupCount = 0;
+                }
+
+                ulong digit = v % 10;
+                s_buffer[--i] = (char)('0' + (int)digit);
+                v /= 10;
+                groupCount++;
+            }
+            while (v != 0);
+
+            if (negative)
+                s_buffer[--i] = '-';
+
+            tmp.SetCharArray(s_buffer, i, end - i);
+        }
+
+        public static void SetCommaFromDoubleFloor(TMP_Text tmp, double value)
+        {
+            if (tmp == null) return;
+
+            // long 범위를 넘으면 안전하게 클램프
+            if (value >= long.MaxValue) { SetCommaInteger(tmp, long.MaxValue); return; }
+            if (value <= long.MinValue) { SetCommaInteger(tmp, long.MinValue); return; }
+
+            // 무조건 버림
+            // 음수도 "더 작은 쪽"으로 버림(Floor)됨: -1.2 -> -2
+            // 만약 음수는 0쪽으로 자르고 싶으면 (long)value 로 바꾸면 됨.
+            long v = (long)System.Math.Floor(value);
+            SetCommaInteger(tmp, v);
+        }
+
+        static void EnsureBuffer()
+        {
+            if (s_buffer == null || s_buffer.Length < 64)
+                s_buffer = new char[64];
         }
     }
 }

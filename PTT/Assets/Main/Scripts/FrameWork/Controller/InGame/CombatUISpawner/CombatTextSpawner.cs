@@ -48,7 +48,7 @@ namespace GameBerry
             return new Vector2(0f, s.index * stackStepPixels);
         }
 
-        public void ShowCombo(Transform target, int comboCount)
+        public void ShowCombo(Transform target, long comboCount)
         {
             if (target == null) return;
 
@@ -132,7 +132,7 @@ namespace GameBerry
 
             if (isCritical)
             {
-                t.PlayDouble(
+                t.PlayDoubleFloorComma(
                     target,
                     BASE_WORLD_CRIT,
                     px,
@@ -143,7 +143,7 @@ namespace GameBerry
             }
             else
             {
-                t.PlayDouble(
+                t.PlayDoubleFloorComma(
                     target,
                     BASE_WORLD_MISS,
                     px,

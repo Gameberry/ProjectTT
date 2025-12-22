@@ -6,7 +6,7 @@ namespace GameBerry
     [System.Serializable]
     public class ComboData
     {
-        public int ComboCount;
+        public long ComboCount;
         public int ConditionIndex;
     }
 
@@ -16,7 +16,7 @@ namespace GameBerry
         public List<ComboData> comboDatas = new List<ComboData>();
 
         //------------------------------------------------------------------------------------
-        public ComboData GetData(int count)
+        public ComboData GetData(long count)
             => comboDatas.Find(x => x.ComboCount == count);
         //------------------------------------------------------------------------------------
     }
