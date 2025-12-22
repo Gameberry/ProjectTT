@@ -6,7 +6,6 @@ namespace GameBerry
     [CreateAssetMenu(menuName = "CombatTextPreset", fileName = "Table/CombatTextPreset")]
     public class CombatTextPresetAsset : ScriptableObject
     {
-        public TMP_FontAsset fontAsset;
         public Material fontMaterial;
 
         public float fontSize = 36f;
@@ -21,7 +20,6 @@ namespace GameBerry
 
         public void ApplyTo(TMP_Text t)
         {
-            t.font = fontAsset;
             if (fontMaterial != null) t.fontMaterial = fontMaterial;
 
             t.fontSize = fontSize;
