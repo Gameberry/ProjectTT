@@ -13,111 +13,155 @@ namespace GameBerry.UI
 {
     public sealed class UIFloatingCombatText : MonoBehaviour
     {
-        public const string MSG_MISS = "Miss";
-        public const string MSG_CRITICAL = "Critical";
+        public const string MSG_MISS = "MISS";
+        public const string MSG_CRITICAL = "CRITICAL!";
 
-        [Header("Refs")]
         [SerializeField] private ScreenSpaceFollower follower;
-        [SerializeField] private TMP_Text tmp;
         [SerializeField] private RectTransform rect;
 
+        [SerializeField] private TMP_Text mainTmp;
+
+        [SerializeField] private TMP_Text comboNumberTmp;
+        [SerializeField] private TMP_Text comboLabelTmp;
+
         private UIFloatingCombatTextPool _pool;
-        
-        private CombatTextPresetAsset _preset;
+
         private CombatTextStyle _style;
 
+        private CombatTextMotionPresetAsset _motion;
         private float _t;
         private float _life;
-
         private Vector3 _startOffset;
         private Vector3 _endOffset;
-
         private Vector2 _baseAnchored;
+
+        private float _comboHideTimer;
+        private float _comboHideDelay;
+
+        public Transform CurrentTarget { get; private set; }
+        private CombatTextSpawner _ownerSpawner;
 
         public void BindPool(UIFloatingCombatTextPool pool) => _pool = pool;
 
-        public void PlayText(Transform target, Vector3 baseOffset, CombatTextStyle style, string message, CombatTextPresetAsset preset)
+        void SetupCommon(
+            Transform target,
+            Vector3 baseWorldOffset,
+            Vector2 pixelOffset,
+            CombatTextStyle style,
+            CombatTextMotionPresetAsset motionPreset,
+            CombatTextSpawner ownerSpawner)
         {
             _style = style;
-            _preset = preset;
+            _motion = motionPreset;
+            _ownerSpawner = ownerSpawner;
 
             _t = 0f;
-            _life = preset.lifeTime;
+            if (style == CombatTextStyle.Combo)
+                _life = StaticResource.Instance.GetBattleModeStaticData().ComboReleaseTime;
+            else
+                _life = motionPreset.lifeTime;
 
-            follower.SetTarget(target, baseOffset);
-            _startOffset = baseOffset;
-            _endOffset = baseOffset + Vector3.up * preset.rise;
+            CurrentTarget = target;
 
-            ApplyPresetToTMP(preset);
-            tmp.SetText(message);
+            follower.SetTarget(target, baseWorldOffset);
+            follower.ScreenPixelOffset = pixelOffset;
 
-            rect.localScale = Vector3.one * preset.baseScale;
+            _startOffset = baseWorldOffset;
+            _endOffset = baseWorldOffset + Vector3.up * motionPreset.rise;
+
+            rect.localScale = Vector3.one * motionPreset.baseScale;
             _baseAnchored = rect.anchoredPosition;
+
+            _comboHideDelay = motionPreset.comboHideDelay;
+            _comboHideTimer = 0f;
+        }
+
+        void SetComboVisible(bool comboOn)
+        {
+            if (mainTmp != null) mainTmp.gameObject.SetActive(!comboOn);
+            if (comboNumberTmp != null) comboNumberTmp.gameObject.SetActive(comboOn);
+            if (comboLabelTmp != null) comboLabelTmp.gameObject.SetActive(comboOn);
+        }
+
+        public void PlayText(
+            Transform target,
+            Vector3 baseWorldOffset,
+            Vector2 pixelOffset,
+            CombatTextStyle style,
+            string message,
+            CombatTextPresetAsset textPreset,
+            CombatTextMotionPresetAsset motionPreset)
+        {
+            SetupCommon(target, baseWorldOffset, pixelOffset, style, motionPreset, null);
+
+            SetComboVisible(false);
+            textPreset.ApplyTo(mainTmp);
+            mainTmp.SetText(message);
 
             gameObject.SetActive(true);
         }
 
-        public void PlayInt_Combo(Transform target, Vector3 baseOffset, CombatTextStyle style, int value, CombatTextPresetAsset preset)
+        public void PlayInt(
+            Transform target,
+            Vector3 baseWorldOffset,
+            Vector2 pixelOffset,
+            CombatTextStyle style,
+            int value,
+            CombatTextPresetAsset textPreset,
+            CombatTextMotionPresetAsset motionPreset)
         {
-            _style = style;
-            _preset = preset;
+            SetupCommon(target, baseWorldOffset, pixelOffset, style, motionPreset, null);
 
-            _t = 0f;
-            //_life = preset.lifeTime;
-            _life = StaticResource.Instance.GetBattleModeStaticData().ComboReleaseTime;
-
-            follower.SetTarget(target, baseOffset);
-            _startOffset = baseOffset;
-            _endOffset = baseOffset + Vector3.up * preset.rise;
-
-            ApplyPresetToTMP(preset);
-            tmp.SetText("<size=32>{0:#,###}</size> Combo", value);
-
-            rect.localScale = Vector3.one * preset.baseScale;
-            _baseAnchored = rect.anchoredPosition;
+            SetComboVisible(false);
+            textPreset.ApplyTo(mainTmp);
+            mainTmp.SetText("{0}", value);
 
             gameObject.SetActive(true);
         }
 
-        public void PlayInt(Transform target, Vector3 baseOffset, CombatTextStyle style, int value, CombatTextPresetAsset preset)
+        public void PlayCombo(
+            Transform target,
+            Vector3 baseWorldOffset,
+            Vector2 pixelOffset,
+            int comboValue,
+            CombatTextPresetAsset comboNumberPreset,
+            CombatTextPresetAsset comboLabelPreset,
+            CombatTextMotionPresetAsset motionPreset,
+            CombatTextSpawner ownerSpawner)
         {
-            _style = style;
-            _preset = preset;
+            SetupCommon(target, baseWorldOffset, pixelOffset, CombatTextStyle.Combo, motionPreset, ownerSpawner);
 
-            _t = 0f;
-            _life = preset.lifeTime;
+            SetComboVisible(true);
+            comboNumberPreset.ApplyTo(comboNumberTmp);
+            comboLabelPreset.ApplyTo(comboLabelTmp);
 
-            follower.SetTarget(target, baseOffset);
-            _startOffset = baseOffset;
-            _endOffset = baseOffset + Vector3.up * preset.rise;
-
-            ApplyPresetToTMP(preset);
-            tmp.SetText("{0:#,###}", value);
-
-            rect.localScale = Vector3.one * preset.baseScale;
-            _baseAnchored = rect.anchoredPosition;
+            comboNumberTmp.SetText("{0:#,###}", comboValue);
 
             gameObject.SetActive(true);
         }
 
-        void ApplyPresetToTMP(CombatTextPresetAsset p)
+        public void RefreshCombo(int comboValue)
         {
-            if (p.fontMaterial != null) tmp.fontMaterial = p.fontMaterial;
-
-            tmp.fontSize = p.fontSize;
-            tmp.fontStyle = p.fontStyle;
-            tmp.alignment = p.alignment;
-            tmp.color = p.color;
-
-            tmp.enableAutoSizing = p.autoSize;
-            tmp.enableWordWrapping = p.wordWrap;
-            tmp.richText = p.richText;
-            tmp.raycastTarget = p.raycastTarget;
+            comboNumberTmp.SetText("{0:#,###}", comboValue);
+            _comboHideTimer = 0f;
+            _t = 0f;
         }
 
         void Update()
         {
-            _t += Time.deltaTime;
+            float dt = Time.unscaledDeltaTime;
+
+            if (_style == CombatTextStyle.Combo && _comboHideDelay > 0f)
+            {
+                _comboHideTimer += dt;
+                if (_comboHideTimer >= _comboHideDelay)
+                {
+                    Despawn();
+                    return;
+                }
+            }
+
+            _t += dt;
             float n = _t / _life;
 
             if (n >= 1f)
@@ -127,15 +171,16 @@ namespace GameBerry.UI
             }
 
             follower.WorldOffset = Vector3.Lerp(_startOffset, _endOffset, n);
+            follower.MarkDirty();
 
             if (_style == CombatTextStyle.Critical)
             {
-                float pop = PopCurve(n, _preset.popInNormalized);
-                rect.localScale = Vector3.one * (_preset.baseScale + _preset.popAmount * pop);
+                float pop = PopCurve(n, _motion.popInNormalized);
+                rect.localScale = Vector3.one * (_motion.baseScale + _motion.popAmount * pop);
 
                 float damp = 1f - n;
-                float sx = Mathf.Sin(_t * _preset.shakeFrequency) * _preset.shakeAmplitudePx * damp;
-                float sy = Mathf.Cos(_t * (_preset.shakeFrequency * 0.9f)) * (_preset.shakeAmplitudePx * 0.6f) * damp;
+                float sx = Mathf.Sin(_t * _motion.shakeFrequency) * _motion.shakeAmplitudePx * damp;
+                float sy = Mathf.Cos(_t * (_motion.shakeFrequency * 0.9f)) * (_motion.shakeAmplitudePx * 0.6f) * damp;
 
                 rect.anchoredPosition = _baseAnchored + new Vector2(sx, sy);
             }
@@ -148,7 +193,6 @@ namespace GameBerry.UI
         static float PopCurve(float n, float inN)
         {
             inN = Mathf.Clamp(inN, 0.01f, 0.5f);
-
             if (n <= inN)
             {
                 float t = n / inN;
@@ -167,10 +211,15 @@ namespace GameBerry.UI
         {
             follower.ClearTarget();
             rect.anchoredPosition = _baseAnchored;
+            CurrentTarget = null;
+            _ownerSpawner = null;
         }
 
         void Despawn()
         {
+            if (_style == CombatTextStyle.Combo && _ownerSpawner != null)
+                _ownerSpawner.NotifyComboReturned(this);
+
             if (_pool != null) _pool.Return(this);
             else gameObject.SetActive(false);
         }

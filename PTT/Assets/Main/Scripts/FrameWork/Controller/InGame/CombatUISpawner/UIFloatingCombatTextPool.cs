@@ -11,7 +11,7 @@ namespace GameBerry.UI
 
         private readonly Queue<UIFloatingCombatText> _pool = new();
 
-        public void Init()
+        void Awake()
         {
             if (parent == null) parent = (RectTransform)transform;
 
@@ -29,7 +29,10 @@ namespace GameBerry.UI
 
         public UIFloatingCombatText Rent()
         {
-            return _pool.Count > 0 ? _pool.Dequeue() : CreateNew();
+            var item = _pool.Count > 0 ? _pool.Dequeue() : CreateNew();
+            item.transform.SetParent(parent, false);
+            item.transform.SetAsLastSibling();
+            return item;
         }
 
         public void Return(UIFloatingCombatText item)
