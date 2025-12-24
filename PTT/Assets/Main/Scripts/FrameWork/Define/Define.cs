@@ -87,6 +87,71 @@ namespace GameBerry
         Max,
     }
 
+
+    public enum Enum_ItemRoute
+    {
+        None = 0,
+        Inventory = 1,  // InventoryTable (스택/인스턴스)
+        Point = 2,      // PointTable (재화 지갑)
+        Skin = 3,       // SkinTable (해금)
+    }
+
+    public enum Enum_InventoryType
+    {
+        ItemInventory = 0,
+        PointInventory = 1,
+        SkinInventory = 2,
+    }
+
+    public enum Enum_ItemRarity
+    {
+        Common = 0,
+        Uncommon = 1,
+        Rare = 2,
+        Epic = 3,
+        Legendary = 4,
+    }
+
+    // 장비 슬롯 예시(기존 프로젝트 Enum_EquipType이 이미 있으면 이 파일은 삭제/병합)
+    public enum Enum_EquipType
+    {
+        None = 0,
+        Sword = 1,
+        Helmet = 2,
+        Armor = 3,
+        Glove = 4,
+        Shoes = 5,
+        Cape = 6,
+        Max = 7,
+    }
+
+    public enum Enum_PointType
+    {
+        None = 0,
+        Gold = 1,
+        Dia = 2,
+    }
+
+    // 아이템의 출처/도메인 타입
+    public enum Enum_ItemType
+    {
+        None = 0,
+        Equip,
+        Potion,
+        Material,
+        Skin,
+        Point
+    }
+
+    // Item이 어디에 저장되고 어떻게 취급되는지에 대한 단일 분류
+    public enum Enum_ItemStorageType
+    {
+        Inventory,   // 일반 아이템/장비 인벤토리
+        Point,       // 재화(지갑)
+        Skin         // 스킨 컬렉션
+    }
+
+
     [System.Serializable]
     public class AttackData
     {
@@ -163,7 +228,7 @@ namespace GameBerry
     /// <summary>
     /// 장비/코디용 슬롯 타입
     /// </summary>
-    public enum SkinSlotType
+    public enum Enum_SkinSlotType
     {
         Body = 0,
         Hair,

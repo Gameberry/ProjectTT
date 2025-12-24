@@ -5,8 +5,8 @@ namespace GameBerry.Chart
 {
     public class SkinInfo
     {
-        public int Index;
-        public SkinSlotType SkinType;
+        public int ItemId;
+        public Enum_SkinSlotType SkinType;
         public string SkinName;
     }
 
@@ -17,7 +17,7 @@ namespace GameBerry.Chart
 
         // Lookup용 Dictionary들
         private Dictionary<int, SkinInfo> _indexToSkin;
-        private Dictionary<SkinSlotType, List<SkinInfo>> _skinTypeToSkins;
+        private Dictionary<Enum_SkinSlotType, List<SkinInfo>> _skinTypeToSkins;
 
         //------------------------------------------------------------------------------------
         public override bool IsLoaded()
@@ -34,7 +34,7 @@ namespace GameBerry.Chart
             }
 
             _indexToSkin = new Dictionary<int, SkinInfo>(rows.Length);
-            _skinTypeToSkins = new Dictionary<SkinSlotType, List<SkinInfo>>();
+            _skinTypeToSkins = new Dictionary<Enum_SkinSlotType, List<SkinInfo>>();
 
             foreach (var row in rows)
             {
@@ -42,7 +42,7 @@ namespace GameBerry.Chart
                     continue;
 
                 // Index → SkinInfo
-                _indexToSkin[row.Index] = row;
+                _indexToSkin[row.ItemId] = row;
 
                 // SkinType → List<SkinInfo>
                 if (!_skinTypeToSkins.TryGetValue(row.SkinType, out var list))
@@ -55,30 +55,30 @@ namespace GameBerry.Chart
             }
         }
         //------------------------------------------------------------------------------------
-        public SkinInfo GetSkinInfo(int index)
+        public SkinInfo Get(int ItemId)
         {
-            return _indexToSkin.TryGetValue(index, out var info)
+            return _indexToSkin.TryGetValue(ItemId, out var info)
                 ? info
                 : null;
         }
         //------------------------------------------------------------------------------------
-        public bool TryGetSkinInfo(int index, out SkinInfo info)
+        public bool TryGetSkinInfo(int ItemId, out SkinInfo info)
         {
-            return _indexToSkin.TryGetValue(index, out info);
+            return _indexToSkin.TryGetValue(ItemId, out info);
         }
         //------------------------------------------------------------------------------------
-        public string GetSkinName(int index)
+        public string GetSkinName(int ItemId)
         {
-            if (_indexToSkin.TryGetValue(index, out var info))
+            if (_indexToSkin.TryGetValue(ItemId, out var info))
             {
                 return info.SkinName ?? string.Empty;
             }
 
-            UnityEngine.Debug.LogWarning($"Skin index {index} not found!");
+            UnityEngine.Debug.LogWarning($"Skin index {ItemId} not found!");
             return string.Empty;
         }
         //------------------------------------------------------------------------------------
-        public List<SkinInfo> GetSkinSlotInfoList(SkinSlotType type)
+        public List<SkinInfo> GetSkinSlotInfoList(Enum_SkinSlotType type)
         {
             if (_skinTypeToSkins.TryGetValue(type, out var list))
             {

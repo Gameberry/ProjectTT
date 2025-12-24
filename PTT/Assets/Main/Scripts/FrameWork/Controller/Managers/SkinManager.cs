@@ -31,19 +31,19 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         #region Chart Func
         //------------------------------------------------------------------------------------
-        public Chart.SkinInfo GetSkinInfo(int index) => Chart.GameChart.Get<Chart.SkinChart>()?.GetSkinInfo(index);
+        public Chart.SkinInfo GetSkinInfo(int index) => Chart.GameChart.Get<Chart.SkinChart>()?.Get(index);
         //------------------------------------------------------------------------------------
-        public List<Chart.SkinInfo> GetSkinSlotInfoList(SkinSlotType skinSlotType) => Chart.GameChart.Get<Chart.SkinChart>()?.GetSkinSlotInfoList(skinSlotType);
+        public List<Chart.SkinInfo> GetSkinSlotInfoList(Enum_SkinSlotType skinSlotType) => Chart.GameChart.Get<Chart.SkinChart>()?.GetSkinSlotInfoList(skinSlotType);
         //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
         #region Table Func
         //------------------------------------------------------------------------------------
-        public void CapyEquipSkinDict(ref Dictionary<SkinSlotType, int> data) => Table.UserTable.Get<Table.SkinTable>()?.CapyEquipSkinDict(ref data);
+        public void CapyEquipSkinDict(ref Dictionary<Enum_SkinSlotType, int> data) => Table.UserTable.Get<Table.SkinTable>()?.CapyEquipSkinDict(ref data);
         //------------------------------------------------------------------------------------
         public Table.SkinData GetSkinData(int index) => Table.UserTable.Get<Table.SkinTable>()?.GetSkinData(index);
         //------------------------------------------------------------------------------------
-        public Table.SkinData GetSkinEquipData(SkinSlotType skinSlotType) => Table.UserTable.Get<Table.SkinTable>()?.GetSkinEquipData(skinSlotType);
+        public Table.SkinData GetSkinEquipData(Enum_SkinSlotType skinSlotType) => Table.UserTable.Get<Table.SkinTable>()?.GetSkinEquipData(skinSlotType);
         //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
@@ -64,9 +64,9 @@ namespace GameBerry.Managers
 
             SkeletonData skeletonData = _characterSpineModel.SkeletonData.GetSkeletonData(true);
 
-            for (int i = 0; i < (int)SkinSlotType.Max; ++i)
+            for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
             {
-                SkinSlotType skinSlotType = (SkinSlotType)i;
+                Enum_SkinSlotType skinSlotType = (Enum_SkinSlotType)i;
 
                 Table.SkinData skinData = skinTable.GetSkinEquipData(skinSlotType);
 
@@ -75,7 +75,7 @@ namespace GameBerry.Managers
                 if (skinData == null)
                     skinname = _characterSpineModel.DefaultSkin(skinSlotType);
                 else
-                    skinname = skinChart.GetSkinName(skinData.index);
+                    skinname = skinChart.GetSkinName(skinData.itemId);
 
                 if (string.IsNullOrEmpty(skinname))
                     continue;
@@ -84,7 +84,7 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-        public void SetDynamicSkin(Dictionary<SkinSlotType, int> skindata, ref Skin skin)
+        public void SetDynamicSkin(Dictionary<Enum_SkinSlotType, int> skindata, ref Skin skin)
         {
             if (_characterSpineModel == null)
                 return;
@@ -96,9 +96,9 @@ namespace GameBerry.Managers
 
             SkeletonData skeletonData = _characterSpineModel.SkeletonData.GetSkeletonData(true);
 
-            for (int i = 0; i < (int)SkinSlotType.Max; ++i)
+            for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
             {
-                SkinSlotType skinSlotType = (SkinSlotType)i;
+                Enum_SkinSlotType skinSlotType = (Enum_SkinSlotType)i;
 
                 string skinname = string.Empty;
 
@@ -116,7 +116,7 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public Skin GetRuntimeSkin() => _runtimeSkin;
         //------------------------------------------------------------------------------------
-        public void UnequipSlotSkin(SkinSlotType slot)
+        public void UnequipSlotSkin(Enum_SkinSlotType slot)
         {
             Table.UserTable.Get<Table.SkinTable>()?.UnequipSlotSkin(slot);
             Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
@@ -126,7 +126,7 @@ namespace GameBerry.Managers
             Message.Send(refreshPlayerSkinMsg);
         }
         //------------------------------------------------------------------------------------
-        public void EquipSlotSkin(SkinSlotType slot, int index)
+        public void EquipSlotSkin(Enum_SkinSlotType slot, int index)
         {
             Table.UserTable.Get<Table.SkinTable>()?.EquipSlotSkin(slot, index);
             Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
@@ -136,13 +136,19 @@ namespace GameBerry.Managers
             Message.Send(refreshPlayerSkinMsg);
         }
         //------------------------------------------------------------------------------------
-        public Table.SkinData GetSkin(Chart.SkinInfo skinInfo)
-        {
-            Table.SkinData skinData = Table.UserTable.Get<Table.SkinTable>()?.CreateNewSkinData(skinInfo);
-            if(skinData != null)
-                Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
+        //public Table.SkinData GetSkin(Chart.SkinInfo skinInfo)
+        //{
+        //    Table.SkinData skinData = Table.UserTable.Get<Table.SkinTable>()?.CreateNewSkinData(skinInfo);
+        //    if(skinData != null)
+        //        Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
 
-            return skinData;
+        //    return skinData;
+        //}
+        //------------------------------------------------------------------------------------
+        public bool TryGetSkinByItem(int skinItemId, bool immediateServerUpdate = true)
+        {
+            var res = ItemManager.Instance.AddItem(skinItemId, 1, immediateServerUpdate);
+            return res.Success && res.Added > 0;
         }
         //------------------------------------------------------------------------------------
     }

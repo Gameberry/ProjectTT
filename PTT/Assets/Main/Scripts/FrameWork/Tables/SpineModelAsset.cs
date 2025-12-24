@@ -28,7 +28,7 @@ namespace GameBerry
     [System.Serializable]
     public class SpineDefaultSlotSkin
     {
-        public SkinSlotType Slot;
+        public Enum_SkinSlotType Slot;
         [SpineSkin(dataField = "SkeletonData")]
         public string SkinName;
     }
@@ -64,7 +64,7 @@ namespace GameBerry
         public List<SpineDefaultSlotSkin> DefaultSlotSkins =
             new List<SpineDefaultSlotSkin>();
 
-        public string DefaultSkin(SkinSlotType skinSlotType)
+        public string DefaultSkin(Enum_SkinSlotType skinSlotType)
         {
             SpineDefaultSlotSkin spineDefaultSlotSkin = DefaultSlotSkins.Find(x => x.Slot == skinSlotType);
             if (spineDefaultSlotSkin == null)

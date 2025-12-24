@@ -2,19 +2,17 @@ using LitJson;
 using BackEnd;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Globalization;
 
 namespace GameBerry.Table
 {
     public class SkinData : IPackable
     {
-        public int index;
-        public bool visible = false;
+        public int itemId;
+        public bool unlocked = true; // visible == unlocked
 
         public string Pack()
         {
-            return $"{index},{(visible ? 1 : 0)}";
+            return $"{itemId},{(unlocked ? 1 : 0)}";
         }
 
         public void Unpack(string str)
@@ -24,9 +22,9 @@ namespace GameBerry.Table
 
             var split = str.Split(',');
             if (split.Length > 0)
-                int.TryParse(split[0], out index);
+                int.TryParse(split[0], out itemId);
             if (split.Length > 1)
-                visible = split[1] == "1";
+                unlocked = split[1] == "1";
         }
     }
 
@@ -36,100 +34,102 @@ namespace GameBerry.Table
         private List<SkinData> hasSkinList = new List<SkinData>();
 
         private const string equipSkinKey = "Equip";
-        private Dictionary<SkinSlotType, int> equipSkinDict = new Dictionary<SkinSlotType, int>();
+        private Dictionary<Enum_SkinSlotType, int> equipSkinDict = new Dictionary<Enum_SkinSlotType, int>();
 
-        //------------------------------------------------------------------------------------
-        public override void SetData(JsonData data)
+        public override void SetData(LitJson.JsonData data)
         {
-            if (data.Count == 0)
+            if (data == null || data.Count == 0)
                 return;
-            else
+
+            for (int i = 0; i < data.Count; ++i)
             {
-                for (int i = 0; i < data.Count; ++i)
+                foreach (var key in data[i].Keys)
                 {
-                    foreach (var key in data[i].Keys)
+                    if (key == "inDate")
                     {
-                        if (key == "inDate")
-                        {
-                            SetInData(data[i][key].ToString());
-                        }
-                        else if (key == hasSkinListKey)
-                        {
-                            hasSkinList = PackUtil.UnpackList<SkinData>(data[i][key].ToString());
-                        }
-                        else if (key == equipSkinKey)
-                        {
-                            equipSkinDict = PackUtil.UnpackPrimitiveDict<SkinSlotType, int>(data[i][key].ToString());
-                        }
+                        SetInData(data[i][key].ToString());
+                    }
+                    else if (key == hasSkinListKey)
+                    {
+                        hasSkinList = PackUtil.UnpackList<SkinData>(data[i][key].ToString());
+                    }
+                    else if (key == equipSkinKey)
+                    {
+                        equipSkinDict = PackUtil.UnpackPrimitiveDict<Enum_SkinSlotType, int>(data[i][key].ToString());
                     }
                 }
             }
         }
-        //------------------------------------------------------------------------------------
-        public override Param GetParam()
+
+        public override BackEnd.Param GetParam()
         {
-            Param param = new Param();
+            BackEnd.Param param = new BackEnd.Param();
             param.Add(hasSkinListKey, PackUtil.PackList(hasSkinList));
             param.Add(equipSkinKey, PackUtil.PackPrimitiveDict(equipSkinDict));
-
             return param;
         }
-        //------------------------------------------------------------------------------------
-        public void CapyEquipSkinDict(ref Dictionary<SkinSlotType, int> data)
+
+        public void CapyEquipSkinDict(ref Dictionary<Enum_SkinSlotType, int> data)
         {
+            data.Clear();
             foreach (var pair in equipSkinDict)
-            {
-                data.Add(pair.Key, pair.Value);
-            }
+                data[pair.Key] = pair.Value;
         }
-        //------------------------------------------------------------------------------------
-        public SkinData GetSkinData(int index)
+
+        public SkinData GetSkinData(int itemId)
         {
-            return hasSkinList.Find(x => x.index == index);
+            return hasSkinList.Find(x => x.itemId == itemId);
         }
-        //------------------------------------------------------------------------------------
-        public SkinData GetSkinEquipData(SkinSlotType skinSlotType)
+
+        public bool IsUnlocked(int itemId)
+        {
+            var d = GetSkinData(itemId);
+            return d != null && d.unlocked;
+        }
+
+        public SkinData GetSkinEquipData(Enum_SkinSlotType skinSlotType)
         {
             if (equipSkinDict.TryGetValue(skinSlotType, out int index))
                 return GetSkinData(index);
 
             return null;
         }
-        //------------------------------------------------------------------------------------
-        public void UnequipSlotSkin(SkinSlotType slot)
+
+        public void UnequipSlotSkin(Enum_SkinSlotType slot)
         {
             if (equipSkinDict.ContainsKey(slot) == false)
                 return;
 
             equipSkinDict.Remove(slot);
         }
-        //------------------------------------------------------------------------------------
-        public void EquipSlotSkin(SkinSlotType slot, int index)
+
+        public bool EquipSlotSkin(Enum_SkinSlotType slot, int itemId)
         {
-            if (equipSkinDict.ContainsKey(slot) == false)
-                equipSkinDict.Add(slot, index);
+            // 가드: 해금되지 않은 스킨은 장착 불가
+            if (!IsUnlocked(itemId))
+                return false;
 
-            SkinData skinData = GetSkinData(index);
-
-            if (skinData == null)
-                return;
-
-            equipSkinDict[slot] = skinData.index;
+            equipSkinDict[slot] = itemId;
+            return true;
         }
-        //------------------------------------------------------------------------------------
-        public SkinData CreateNewSkinData(Chart.SkinInfo skinInfo)
+
+        public bool TryUnlock(int itemId)
         {
-            if (skinInfo == null)
-                return null;
+            var d = GetSkinData(itemId);
+            if (d != null)
+            {
+                if (d.unlocked) return false;
+                d.unlocked = true;
+                return true;
+            }
 
-            SkinData skinData = new SkinData();
-            skinData.index = skinInfo.Index;
-
-            hasSkinList.Add(skinData);
-
-            return skinData;
+            hasSkinList.Add(new SkinData { itemId = itemId, unlocked = true });
+            return true;
         }
-        //------------------------------------------------------------------------------------
+
+        public void EnsureDefaultUnlocked(int itemId)
+        {
+            TryUnlock(itemId);
+        }
     }
-
 }

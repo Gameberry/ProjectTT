@@ -437,11 +437,11 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
-        public void PlayAnimation_AniName(string aniName)
+        public void PlayAnimation_AniName(string aniName, bool loop = true)
         {
             if (_mySkeletonAnimationHandler != null)
             {
-                _mySkeletonAnimationHandler.PlayAnimation_Once(aniName, true);
+                _mySkeletonAnimationHandler.PlayAnimation_Once(aniName, loop);
             }
         }
         //------------------------------------------------------------------------------------

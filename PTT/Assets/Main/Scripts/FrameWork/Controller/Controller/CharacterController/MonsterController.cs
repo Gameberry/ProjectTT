@@ -11,6 +11,34 @@ namespace GameBerry
     public class MonsterController : CharacterControllerBase
     {
         [SerializeField]
+        private List<string> idleAniNameList = new();
+
+        [SerializeField]
+        private List<string> AttackAniNameList = new();
+
+        [SerializeField]
+        private List<string> run1AniNameList = new();
+
+        [SerializeField]
+        private List<string> run2AniNameList = new();
+
+        [SerializeField]
+        private List<string> hitAniNameList = new();
+
+        [SerializeField]
+        private string idleAniName;
+
+        [SerializeField]
+        private string AttackAniName;
+
+        [SerializeField]
+        private string runAniName;
+
+        [SerializeField]
+        private string hitAniName;
+
+
+        [SerializeField]
         private float attackRangeDefault = 1.5f;
 
         [SerializeField]
@@ -36,13 +64,25 @@ namespace GameBerry
         { // 현재는 모델 인덱스만 받고 있다. 나중에 구조화 해야함
             RefreshCheatStat();
 
-            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(modelIndex);
+            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(97);
             SetSpineModelData(_currentSpineModelData);
 
             attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
 
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
             _spawnPos = spawnPos;
+
+            int idleattackidx = Random.Range(0, 2);
+
+            idleAniName = idleAniNameList[idleattackidx];
+            AttackAniName = AttackAniNameList[idleattackidx];
+
+            if (idleattackidx == 0)
+                runAniName = run1AniNameList[Random.Range(0, run1AniNameList.Count)];
+            else if (idleattackidx == 1)
+                runAniName = run2AniNameList[Random.Range(0, run2AniNameList.Count)];
+
+            hitAniName = hitAniNameList[idleattackidx];
         }
         //------------------------------------------------------------------------------------
         public void SetAggro(PlayerController playerController)
@@ -60,16 +100,28 @@ namespace GameBerry
             OnDamageDirection().Forget();
         }
         //------------------------------------------------------------------------------------
+        private void TestAniPlay(string aniname, bool isloop = true)
+        {
+            return;
+            PlayAnimation_AniName(hitAniName, false);
+        }
+        //------------------------------------------------------------------------------------
         private async UniTask OnDamageDirection()
         {
+            ChangeState(CharacterState.Hit);
+            TestAniPlay(hitAniName, false);
             ChangeSpineColor(StaticResource.Instance.GetBattleModeStaticData().MonsterHitColor);
             await UniTask.WaitForSeconds(StaticResource.Instance.GetBattleModeStaticData().MonsterHitDuration, false, PlayerLoopTiming.Update, disableCancellation.Token);
             ChangeSpineColor(Color.white);
+
+            ChangeState(CharacterState.Idle);
+            TestAniPlay(idleAniName);
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()
         {
             ChangeState(CharacterState.Idle);
+            TestAniPlay(idleAniName);
         }
         //------------------------------------------------------------------------------------
         public override Vector2 GetMoveDirection()
@@ -88,13 +140,14 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void Updated()
         {
-            if (CharacterState != CharacterState.Dead)
+            if (CharacterState != CharacterState.Dead && CharacterState != CharacterState.Hit)
             {
                 if (CharacterState == CharacterState.Idle)
                 {
                     if (_attackTarget != null)
                     {
                         ChangeState(CharacterState.Run);
+                        TestAniPlay(runAniName);
                     }
                     else
                     {
@@ -102,6 +155,7 @@ namespace GameBerry
                         if (distance > StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
                         {
                             ChangeState(CharacterState.Run);
+                            TestAniPlay(runAniName);
                         }
                     }
                 }
@@ -113,6 +167,7 @@ namespace GameBerry
                         if (distance <= attackRange && _blockAttack == false)
                         {
                             ChangeState(CharacterState.Attack);
+                            TestAniPlay(AttackAniName);
                             _attackTimming = Time.time + FinalAttackSpeed;
                         }
                     }
@@ -122,6 +177,7 @@ namespace GameBerry
                         if (distance < StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
                         {
                             ChangeState(CharacterState.Idle);
+                            TestAniPlay(idleAniName);
                         }
                     }
                 }
@@ -134,6 +190,7 @@ namespace GameBerry
                             ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                             AttackTarget.Damage(FinalAttack);
                             ChangeState(CharacterState.Idle);
+                            TestAniPlay(idleAniName);
                         }
                     }
                 }

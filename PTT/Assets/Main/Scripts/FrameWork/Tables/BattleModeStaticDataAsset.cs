@@ -26,7 +26,7 @@ namespace GameBerry
         public List<StatViewer> TempPlayerStat = new List<StatViewer>();
         public List<StatViewer> TempMonsterStat = new List<StatViewer>();
 
-        public float MonsterHitDuration = 0.2f;
+        public float MonsterHitDuration = 0.167f;
         public Color MonsterHitColor = Color.white;
 
         public float ComboReleaseTime = 2.0f;

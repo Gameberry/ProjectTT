@@ -35,12 +35,12 @@ namespace GameBerry.UI
             }
             else
             {
-                Table.SkinData skinData = Managers.SkinManager.Instance.GetSkinData(skinInfo.Index);
+                Table.SkinData skinData = Managers.SkinManager.Instance.GetSkinData(skinInfo.ItemId);
 
                 if (_label != null)
                 { 
                     _label.text = _skinInfo.SkinName;
-                    _label.color = skinData == null ? Color.red : Color.white;
+                    _label.color = (skinData == null || skinData.unlocked == false) ? Color.red : Color.white;
                 }
             }
         }

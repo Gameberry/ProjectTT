@@ -418,13 +418,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7249871940033990586}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2620842696592920704}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &6333643172400507441
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -721,6 +721,26 @@ MonoBehaviour:
   _maxHP: 0
   _currentHP: 0
   _aniControllerSpeed: 1
+  Temp_Accuracy: 1
+  idleAniNameList:
+  - Idle_01
+  - Idle_02
+  AttackAniNameList:
+  - Attack_01
+  - Attack_02
+  run1AniNameList:
+  - Run_01
+  - Run_02
+  run2AniNameList:
+  - Run_03
+  - Run_04
+  hitAniNameList:
+  - Hit_01
+  - Hit_02
+  idleAniName: 
+  AttackAniName: 
+  runAniName: 
+  hitAniName: 
   attackRangeDefault: 1.5
   attackRange: 1
   _attackTimming: 1

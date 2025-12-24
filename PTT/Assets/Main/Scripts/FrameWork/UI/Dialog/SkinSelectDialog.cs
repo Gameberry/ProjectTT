@@ -26,14 +26,14 @@ namespace GameBerry.UI
         [SerializeField]
         private CButton _getBtn;
 
-        [Header("≈« πˆ∆∞µÈ (º±≈√ ªÛ≈¬ «•Ω√øÎ)")]
+        [Header("ÌÉ≠ Î≤ÑÌäºÎì§ (ÏÑ†ÌÉù ÏÉÅÌÉú ÌëúÏãúÏö©)")]
         public List<UINumberBtn> uINumberBtns = new List<UINumberBtn>();
 
-        // «ˆ¿Á º±≈√µ» ≈«
-        private SkinSlotType _currentSlot = SkinSlotType.Max;
+        // ÌòÑÏû¨ ÏÑ†ÌÉùÎêú ÌÉ≠
+        private Enum_SkinSlotType _currentSlot = Enum_SkinSlotType.Max;
         private Chart.SkinInfo _currentSkinInfo = null;
 
-        private Dictionary<SkinSlotType, int> _uiTempSkinDic = new Dictionary<SkinSlotType, int>();
+        private Dictionary<Enum_SkinSlotType, int> _uiTempSkinDic = new Dictionary<Enum_SkinSlotType, int>();
         private Skin _uiTempSkin = new Skin("uiskin");
 
         //------------------------------------------------------------------------------------
@@ -53,8 +53,8 @@ namespace GameBerry.UI
             _resetBtn = CreateSkinElement();
             _resetBtn.SetSkinInfo(null);
 
-            // ¢∫ ±‚∫ª¿∏∑Œ Body ≈« ∫∏¿Ã∞‘
-            ShowSlot(SkinSlotType.Body);
+            // ‚ñ∂ Í∏∞Î≥∏ÏúºÎ°ú Body ÌÉ≠ Î≥¥Ïù¥Í≤å
+            ShowSlot(Enum_SkinSlotType.Body);
         }
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
@@ -77,10 +77,10 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_SkinTab(int tab)
         {
-            ShowSlot(tab.IntToEnum32<SkinSlotType>());
+            ShowSlot(tab.IntToEnum32<Enum_SkinSlotType>());
         }
         //------------------------------------------------------------------------------------
-        private void ShowSlot(SkinSlotType slot)
+        private void ShowSlot(Enum_SkinSlotType slot)
         {
             if (_currentSlot == slot)
                 return;
@@ -101,7 +101,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         #region SkinElement Func
         //------------------------------------------------------------------------------------
-        private void SetSkinElement(SkinSlotType skinSlotType)
+        private void SetSkinElement(Enum_SkinSlotType skinSlotType)
         {
             List<Chart.SkinInfo> skinInfos = Managers.SkinManager.Instance.GetSkinSlotInfoList(skinSlotType);
 
@@ -145,12 +145,12 @@ namespace GameBerry.UI
         private void OnClick_SkinElement(Chart.SkinInfo skinInfo)
         {
             if (skinInfo == null)
-            { // Resetπˆ∆∞¿ª ¥≠∑∂¿ª ∂ß
+            { // ResetÎ≤ÑÌäºÏùÑ ÎàåÎ†ÄÏùÑ Îïå
                 UnequipTempSkin(_currentSlot);
             }
             else
             {
-                EquipTempSkin(_currentSlot, skinInfo.Index);
+                EquipTempSkin(_currentSlot, skinInfo.ItemId);
             }
 
             SetSkinBtn(skinInfo);
@@ -165,11 +165,11 @@ namespace GameBerry.UI
             bool enableEquip = false;
 
             if (skinInfo != null)
-            { // Reset¿Ã æ∆¥‘
-                Table.SkinData skinData = Managers.SkinManager.Instance.GetSkinData(skinInfo.Index);
+            { // ResetÏù¥ ÏïÑÎãò
+                Table.SkinData skinData = Managers.SkinManager.Instance.GetSkinData(skinInfo.ItemId);
 
                 if (skinData != null)
-                { // ∞°¡ˆ∞Ì ¿÷¥¬ Ω∫≈≤¿”
+                { // Í∞ÄÏßÄÍ≥† ÏûàÎäî Ïä§ÌÇ®ÏûÑ
                     _getBtn?.gameObject.SetActive(false);
 
                     if (Managers.SkinManager.Instance.GetSkinEquipData(skinInfo.SkinType) != skinData)
@@ -191,7 +191,7 @@ namespace GameBerry.UI
             _equipBtn?.SetInteractable(enableEquip);
         }
         //------------------------------------------------------------------------------------
-        private void EquipTempSkin(SkinSlotType slot, int index)
+        private void EquipTempSkin(Enum_SkinSlotType slot, int index)
         {
             if (_uiTempSkinDic.ContainsKey(slot) == true)
             {
@@ -207,7 +207,7 @@ namespace GameBerry.UI
             _uIPlayerSpineObject?.SetSkin(_uiTempSkin);
         }
         //------------------------------------------------------------------------------------
-        private void UnequipTempSkin(SkinSlotType slot)
+        private void UnequipTempSkin(Enum_SkinSlotType slot)
         {
             if (_uiTempSkinDic.ContainsKey(slot) == true)
             {
@@ -236,8 +236,8 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClick_SkinGet()
         {
-            Table.SkinData skinData = Managers.SkinManager.Instance.GetSkin(_currentSkinInfo);
-            if (skinData != null)
+            bool unlocked = Managers.SkinManager.Instance.TryGetSkinByItem(_currentSkinInfo.ItemId);
+            if (unlocked == true)
             { 
                 _createdSkinElement.Find(x => x._skinInfo == _currentSkinInfo)?.SetSkinInfo(_currentSkinInfo);
                 SetSkinBtn(_currentSkinInfo);
