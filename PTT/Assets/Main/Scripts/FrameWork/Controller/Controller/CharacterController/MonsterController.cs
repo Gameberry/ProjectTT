@@ -61,7 +61,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector2 spawnPos, int modelIndex)
-        { // 현재는 모델 인덱스만 받고 있다. 나중에 구조화 해야함
+        { 
             RefreshCheatStat();
 
             _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(97);
