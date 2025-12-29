@@ -122,7 +122,7 @@ namespace GameBerry
         Glove = 4,
         Shoes = 5,
         Cape = 6,
-        Max = 7,
+        Max,
     }
 
     public enum Enum_PointType
@@ -140,7 +140,9 @@ namespace GameBerry
         Potion,
         Material,
         Skin,
-        Point
+        Point,
+
+        Max
     }
 
     // Item이 어디에 저장되고 어떻게 취급되는지에 대한 단일 분류

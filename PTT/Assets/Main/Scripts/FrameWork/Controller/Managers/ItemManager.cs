@@ -99,6 +99,11 @@ namespace GameBerry.Managers
             else if (t == GameBerry.Enum_ItemStorageType.Skin) OnSkinChanged?.Invoke();
         }
 
+        public Sprite GetIcon(int itemId)
+        {
+            return null;
+        }
+
         // --- Handlers ---
 
         private class InventoryStorageHandler : IItemStorageHandler
@@ -112,13 +117,13 @@ namespace GameBerry.Managers
 
                 if (meta.IsStack)
                 {
-                    inv.AddStack(meta.ItemId, (int)amount, inv.AllocateAcquireSeq());
+                    inv.AddStack(meta.ItemId, (int)amount);
                     added = amount;
                 }
                 else
                 {
                     for (int i = 0; i < amount; i++)
-                        inv.AddInstance(meta.ItemId, Guid.NewGuid().ToString("N"), inv.AllocateAcquireSeq());
+                        inv.AddInstance(meta.ItemId, Guid.NewGuid().ToString("N"));
                     added = amount;
                 }
 

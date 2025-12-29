@@ -13,7 +13,7 @@
         HUDDialog,
         MenuDialog,
         SkinSelectDialog,
-
+        InventoryItemDialog,
 
 
 
@@ -116,7 +116,7 @@
         GlobalNoticeDialog,
         GlobalEmergencyNoticeDialog,
 
-        GlobalCheatDialog,
+        CheatDialog,
 
         // PowerSaving UI 801 ~ 999
         PowerSavingUI = 800,

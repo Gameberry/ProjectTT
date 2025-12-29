@@ -22,9 +22,6 @@ namespace GameBerry.Chart
 
         // 해금/사용 조건
         public int UnlockConditionId;
-
-        // UI 정렬용 그룹
-        public int SortGroup;
     }
 
     public class ItemChart : ChartBase

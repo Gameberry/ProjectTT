@@ -9,17 +9,17 @@ namespace GameBerry.UI
     /// <summary>
     /// ItemManager 이벤트 구독 + InventoryTable 정렬 뷰 갱신 예시
     /// </summary>
-    public class InventoryUIController : MonoBehaviour
+    public class InventoryItemDialog : IDialog
     {
         [SerializeField] private Button acquireTab;
         [SerializeField] private Button typeTab;
         [SerializeField] private Button rarityTab;
 
         [SerializeField] private Transform contentRoot;
-        [SerializeField] private InventoryItemCell itemCellPrefab;
+        [SerializeField] private UIInventoryItemElement itemCellPrefab;
 
         private Enum_InventorySort sort = Enum_InventorySort.AcquireAsc;
-        private readonly List<InventoryItemCell> _spawned = new();
+        private readonly List<UIInventoryItemElement> _spawned = new();
 
         private void Awake()
         {
@@ -69,23 +69,6 @@ namespace GameBerry.UI
                 cell.Bind(view[i]);
                 _spawned.Add(cell);
             }
-        }
-    }
-
-    public class InventoryItemCell : MonoBehaviour
-    {
-        [SerializeField] private Text title;
-        [SerializeField] private Text sub;
-
-        public void Bind(InventoryEntry e)
-        {
-            if (e == null) return;
-
-            if (title != null)
-                title.text = e.IsInstance ? $"{e.itemId}  (+{e.enhanceLevel})" : $"{e.itemId} x{e.count}";
-
-            if (sub != null)
-                sub.text = $"seq={e.acquiredSeq} inst={(e.instanceId ?? string.Empty)}";
         }
     }
 }
