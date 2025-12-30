@@ -17,8 +17,8 @@ namespace GameBerry.UI
             if (title != null)
                 title.text = e.IsInstance ? $"{e.itemId}  (+{e.enhanceLevel})" : $"{e.itemId} x{e.count}";
 
-            //if (sub != null)
-            //    sub.text = $"seq={e.acquiredSeq} inst={(e.instanceId ?? string.Empty)}";
+            if (sub != null)
+                sub.text = Managers.ItemManager.Instance.GetItemType(e.itemId).ToString();
         }
     }
 }

@@ -8,7 +8,6 @@ namespace GameBerry.Chart
         public int ItemId; // ItemId == Equip key
         public GameBerry.Enum_EquipType EquipType;
         public string Name;
-        public GameBerry.Enum_ItemRarity Rarity;
 
         public int BaseAtk;
         public int BaseDef;

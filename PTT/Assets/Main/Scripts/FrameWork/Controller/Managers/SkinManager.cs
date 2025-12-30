@@ -14,11 +14,6 @@ namespace GameBerry.Managers
 
         public Event.RefreshPlayerSkinMsg refreshPlayerSkinMsg = new Event.RefreshPlayerSkinMsg();
 
-        private List<Table.TableBase> TransTest = new List<Table.TableBase>()
-        {
-            Table.UserTable.Get<Table.SkinTable>()
-        };
-
         private readonly Skin _runtimeSkin = new Skin("runtime-equips");
 
         //------------------------------------------------------------------------------------
@@ -135,15 +130,6 @@ namespace GameBerry.Managers
 
             Message.Send(refreshPlayerSkinMsg);
         }
-        //------------------------------------------------------------------------------------
-        //public Table.SkinData GetSkin(Chart.SkinInfo skinInfo)
-        //{
-        //    Table.SkinData skinData = Table.UserTable.Get<Table.SkinTable>()?.CreateNewSkinData(skinInfo);
-        //    if(skinData != null)
-        //        Table.UserTable.Get<Table.SkinTable>()?.UpdateTable();
-
-        //    return skinData;
-        //}
         //------------------------------------------------------------------------------------
         public bool TryGetSkinByItem(int skinItemId, bool immediateServerUpdate = true)
         {

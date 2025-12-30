@@ -72,6 +72,12 @@ namespace GameBerry
 
             return spineDefaultSlotSkin.SkinName;
         }
+
+        public string GetAnimationName(CharacterState characterState)
+        {
+            SpineModelStateAnimationNameData spineModelStateAnimationNameData = AnimationState.Find(x => x.characterState == characterState);
+            return spineModelStateAnimationNameData == null ? string.Empty : spineModelStateAnimationNameData.animationName;
+        }
     }
 
     [CreateAssetMenu(fileName = "SpineModel", menuName = "Table/SpineModel", order = 1)]

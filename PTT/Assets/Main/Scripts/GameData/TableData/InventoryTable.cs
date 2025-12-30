@@ -53,24 +53,42 @@ namespace GameBerry.Table
     public class InventoryTable : TableBase
     {
         private const string inventoryKey = "Inventory";
-        private const string acquireSeqKey = "AcquireSeq";
 
         private List<InventoryEntry> inventory = new List<InventoryEntry>();
 
-        public int nextInstanceId = 1;
+        private int nextInstanceId = 1;
 
-        private int AllocateInstanceId()
+        private void SetInstanceId()
         {
-            //EnsureFreeSet();
+            if (nextInstanceId > inventory.Count)
+                nextInstanceId = 1;
 
-            //if (_freeSet.Count > 0)
-            //{
-            //    int id = _freeSet.Min;
-            //    _freeSet.Remove(id);
-            //    return id;
-            //}
+            List<InventoryEntry> tempinven = inventory.FindAll(x => x.IsInstance == true && x.instanceId > nextInstanceId);
+            if (tempinven.Count == 0)
+                return;
 
-            return nextInstanceId++;
+            tempinven.Sort((a, b) =>
+            {
+                return a.instanceId.CompareTo(b.instanceId);
+            });
+
+            foreach (var pair in inventory)
+            {
+                InventoryEntry inventoryEntry = pair;
+
+                if (inventoryEntry.IsInstance == false)
+                    continue;
+
+                if (nextInstanceId < inventoryEntry.instanceId)
+                    break;
+                else if (nextInstanceId == inventoryEntry.instanceId)
+                { 
+                    nextInstanceId++;
+                    continue;
+                }
+
+                break;
+            }
         }
 
         public override void SetData(JsonData data)
@@ -82,7 +100,11 @@ namespace GameBerry.Table
                 foreach (var key in data[i].Keys)
                 {
                     if (key == "inDate") SetInData(data[i][key].ToString());
-                    else if (key == inventoryKey) inventory = PackUtil.UnpackList<InventoryEntry>(data[i][key].ToString());
+                    else if (key == inventoryKey)
+                    {
+                        inventory = PackUtil.UnpackList<InventoryEntry>(data[i][key].ToString());
+                        SetInstanceId();
+                    } 
                 }
             }
         }
@@ -144,18 +166,24 @@ namespace GameBerry.Table
             }
         }
 
-        public void AddInstance(int itemId)
+        public int AddInstance(int itemId)
         {
+            int instanceId = nextInstanceId;
             inventory.Add(new InventoryEntry
             {
                 itemId = itemId,
                 count = 1,
-                instanceId = AllocateInstanceId(),
+                instanceId = instanceId,
                 enhanceLevel = 0
             });
+
+            // nextInstanceId를 사용하고 꼭 다시 셋 해야함
+            SetInstanceId();
+
+            return instanceId;
         }
 
-        public bool CanRemoveInstance(string instanceId)
+        public bool CanRemoveInstance(int instanceId)
         {
             var eq = UserTable.Get<EquipmentTable>();
             if (eq == null) return true;
@@ -189,11 +217,15 @@ namespace GameBerry.Table
                 if (e == null) continue;
                 if (e.itemId != itemId) continue;
                 if (!e.IsInstance) continue;
+                if (CanRemoveInstance(e.instanceId) == false) continue;
 
                 int releasedId = e.instanceId;
                 inventory.RemoveAt(i);
                 i--;
                 removed++;
+
+                if (nextInstanceId > releasedId)
+                    nextInstanceId = releasedId;
             }
 
             return removed;

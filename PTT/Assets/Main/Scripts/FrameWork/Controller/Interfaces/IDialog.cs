@@ -22,14 +22,17 @@ namespace GameBerry.UI
 
 		private IDialogAnimation _iDialogAnimation;
 
-		void Awake()
+		void InitDialog()
 		{
 			if (dialogView == null)
 				throw new System.NullReferenceException(string.Format("{0} dialogView Null", this.name));
 
 			_name = GetType().Name;
 			_rt = GetComponent<RectTransform>();
-			InitAnimation();
+
+			_iDialogAnimation = GetComponent<IDialogAnimation>();
+			_iDialogAnimation?.OnInAnimationsFinish.AddListener(EnterFinish);
+			_iDialogAnimation?.OnOutAnimationsFinish.AddListener(ExitFinish);
 
 			if (_exitBtn != null)
 			{
@@ -43,6 +46,7 @@ namespace GameBerry.UI
 
 		public void Load()
 		{
+			InitDialog();
 			int sibling = EnumExtensions.ParseToInt<UISibling>(_name);
 			UIManager.Instance.SetSibling(_rt, sibling);
 
@@ -53,17 +57,11 @@ namespace GameBerry.UI
 
         public void Load_Element()
         {
+			InitDialog();
 			dialogView.SetActive(false);
 
 			OnLoad();
         }
-
-		private void InitAnimation()
-		{
-			_iDialogAnimation = GetComponent<IDialogAnimation>();
-			_iDialogAnimation?.OnInAnimationsFinish.AddListener(EnterFinish);
-			_iDialogAnimation?.OnOutAnimationsFinish.AddListener(ExitFinish);
-		}
 
 		protected virtual void OnLoad()
 		{

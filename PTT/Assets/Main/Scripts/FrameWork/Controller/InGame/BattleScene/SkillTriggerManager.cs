@@ -62,7 +62,7 @@ namespace GameBerry.Managers
             ContactFilter2D filter = new ContactFilter2D();
             filter.useLayerMask = true;
             filter.layerMask = layerMask;
-            filter.useTriggers = true; // 트리거도 포함할지 여부
+            filter.useTriggers = true;
 
             Collider2D[] colliders;
             int colliderCount;

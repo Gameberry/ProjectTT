@@ -24,6 +24,7 @@ namespace GameBerry
             _currentModelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
 
             _skeletonGraphic.skeletonDataAsset = _currentModelData.SkeletonData;
+            _skeletonGraphic.initialSkinName = _currentModelData.SkinList[0];
             _skeletonGraphic.Initialize(true);
 
             RefreshPlayerSkin(null);
@@ -50,7 +51,7 @@ namespace GameBerry
             skeleton.SetSkin(skin);
             skeleton.SetSlotsToSetupPose();
 
-            _skeletonGraphic.AnimationState.SetAnimation(0, "Idle", true);
+            _skeletonGraphic.AnimationState.SetAnimation(0, _currentModelData.GetAnimationName(CharacterState.Idle), true);
         }
         //------------------------------------------------------------------------------------
     }

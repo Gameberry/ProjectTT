@@ -38,8 +38,15 @@ namespace GameBerry.Managers
 
         private readonly Dictionary<GameBerry.Enum_ItemStorageType, IItemStorageHandler> _handlers = new();
 
+        public const string _iconPath = "Icon/item/{0}";
+        private Dictionary<int, Sprite> _itemIcons = new Dictionary<int, Sprite>();
+
+        ItemChart _itemChart;
+
         protected override void Init()
         {
+            _itemChart = GameChart.Get<ItemChart>();
+
             Register(new InventoryStorageHandler());
             Register(new PointStorageHandler());
             Register(new SkinStorageHandler());
@@ -50,10 +57,23 @@ namespace GameBerry.Managers
             _handlers[h.StorageType] = h;
         }
 
-        public AddItemResult AddItem(int itemId, long amount, bool immediateServerUpdate = true)
+        public ItemInfo GetItemMeta(int itemId)
         {
             var chart = GameChart.Get<ItemChart>();
-            var meta = chart?.Get(itemId);
+            return chart?.Get(itemId);
+        }
+
+        public Enum_ItemType GetItemType(int itemId)
+        {
+            var meta = GetItemMeta(itemId);
+            if (meta == null) return Enum_ItemType.Max;
+
+            return meta.ItemType;
+        }
+
+        public AddItemResult AddItem(int itemId, long amount, bool immediateServerUpdate = true)
+        {
+            var meta = GetItemMeta(itemId);
             if (meta == null)
                 return new AddItemResult { Success = false, Reason = "InvalidItemId" };
 
@@ -67,8 +87,7 @@ namespace GameBerry.Managers
 
         public ConsumeItemResult ConsumeItem(int itemId, long amount, bool immediateServerUpdate = true)
         {
-            var chart = GameChart.Get<ItemChart>();
-            var meta = chart?.Get(itemId);
+            var meta = GetItemMeta(itemId);
             if (meta == null)
                 return new ConsumeItemResult { Success = false, Reason = "InvalidItemId" };
 
@@ -82,8 +101,7 @@ namespace GameBerry.Managers
 
         public long GetCount(int itemId)
         {
-            var chart = GameChart.Get<ItemChart>();
-            var meta = chart?.Get(itemId);
+            var meta = GetItemMeta(itemId);
             if (meta == null) return 0;
 
             if (!_handlers.TryGetValue(meta.StorageType, out var handler))
@@ -101,14 +119,34 @@ namespace GameBerry.Managers
 
         public Sprite GetIcon(int itemId)
         {
-            return null;
+            Sprite sp = null;
+
+            if (_itemIcons.ContainsKey(itemId) == false)
+            {
+                ResourceLoader.Instance.Load<Sprite>(string.Format(_iconPath, itemId), o =>
+                {
+                    sp = o as Sprite;
+                    _itemIcons.Add(itemId, sp);
+                });
+            }
+            else
+                sp = _itemIcons[itemId];
+
+            return sp;
         }
+
 
         // --- Handlers ---
 
         private class InventoryStorageHandler : IItemStorageHandler
         {
             public GameBerry.Enum_ItemStorageType StorageType => GameBerry.Enum_ItemStorageType.Inventory;
+
+            private List<Table.TableBase> EquipInvenTables = new List<Table.TableBase>()
+            {
+                Table.UserTable.Get<Table.InventoryTable>(),
+                Table.UserTable.Get<Table.EquipmentTable>()
+            };
 
             public AddItemResult Add(ItemInfo meta, long amount, bool immediate)
             {
@@ -123,11 +161,19 @@ namespace GameBerry.Managers
                 else
                 {
                     for (int i = 0; i < amount; i++)
-                        inv.AddInstance(meta.ItemId, Guid.NewGuid().ToString("N"));
+                    {
+                        int instanceId = inv.AddInstance(meta.ItemId);
+                        if (meta.ItemType == Enum_ItemType.Equip)
+                            UserTable.Get<EquipmentTable>()?.AddEquipment(instanceId);
+                    }
+
+                    if (meta.ItemType == Enum_ItemType.Equip)
+                        Table.UserTable.DynamicUpdateData(EquipInvenTables);
+
                     added = amount;
                 }
 
-                if (immediate) inv.UpdateTable();
+                if (meta.ItemType != Enum_ItemType.Equip && immediate) inv.UpdateTable();
                 return new AddItemResult { Success = true, Requested = amount, Added = added };
             }
 
