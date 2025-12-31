@@ -8,11 +8,11 @@ namespace GameBerry.Table
     public class SkinData : IPackable
     {
         public int itemId;
-        public bool unlocked = true; // visible == unlocked
+        public bool awake = false;
 
         public string Pack()
         {
-            return $"{itemId},{(unlocked ? 1 : 0)}";
+            return $"{itemId},{(awake ? 1 : 0)}";
         }
 
         public void Unpack(string str)
@@ -24,7 +24,7 @@ namespace GameBerry.Table
             if (split.Length > 0)
                 int.TryParse(split[0], out itemId);
             if (split.Length > 1)
-                unlocked = split[1] == "1";
+                awake = split[1] == "1";
         }
     }
 
@@ -84,7 +84,7 @@ namespace GameBerry.Table
         public bool IsUnlocked(int itemId)
         {
             var d = GetSkinData(itemId);
-            return d != null && d.unlocked;
+            return d != null;
         }
 
         public SkinData GetSkinEquipData(Enum_SkinSlotType skinSlotType)
@@ -113,23 +113,32 @@ namespace GameBerry.Table
             return true;
         }
 
-        public bool TryUnlock(int itemId)
+        public bool AddSkin(int itemId)
+        {
+            var d = GetSkinData(itemId);
+            if (d != null)
+                return false;
+
+            hasSkinList.Add(new SkinData { itemId = itemId, awake = false });
+            return true;
+        }
+
+        public bool SetAwakeSkin(int itemId)
         {
             var d = GetSkinData(itemId);
             if (d != null)
             {
-                if (d.unlocked) return false;
-                d.unlocked = true;
+                if (d.awake) return false;
+                d.awake = true;
                 return true;
             }
 
-            hasSkinList.Add(new SkinData { itemId = itemId, unlocked = true });
-            return true;
+            return false;
         }
 
         public void EnsureDefaultUnlocked(int itemId)
         {
-            TryUnlock(itemId);
+            AddSkin(itemId);
         }
     }
 }

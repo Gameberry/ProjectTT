@@ -95,6 +95,16 @@ namespace GameBerry.Table
             return true;
         }
 
+        public bool RemoveEquipment(int instanceId)
+        {
+            if (equipmentDataDict.ContainsKey(instanceId) == false)
+                return true;
+
+            equipmentDataDict.Remove(instanceId);
+
+            return true;
+        }
+
         public int GetEquippedInstanceId(GameBerry.Enum_EquipType slot)
         {
             var d = equipped.Find(x => x.slot == slot);

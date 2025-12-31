@@ -221,6 +221,19 @@ namespace GameBerry.Table
 
             return removed;
         }
+
+        public int RemoveInstance(int instanceId)
+        {
+            InventoryEntry inventoryEntry = inventory.Find(x => x.instanceId == instanceId);
+
+            if (inventoryEntry == null) return -1;
+            if (CanRemoveInstance(instanceId) == false) return -1;
+
+            inventory.Remove(inventoryEntry);
+
+            return inventoryEntry.itemId;
+        }
+
         public List<InventoryEntry> BuildView(Enum_InventorySort sort)
         {
             var view = new List<InventoryEntry>(inventory);
@@ -231,10 +244,6 @@ namespace GameBerry.Table
 
             switch (sort)
             {
-                case Enum_InventorySort.AcquireSort:
-                    //view.Sort((a, b) => a.acquiredSeq.CompareTo(b.acquiredSeq));
-                    break;
-
                 case Enum_InventorySort.TypeSort:
                     view.Sort((a, b) =>
                     {

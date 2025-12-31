@@ -37,6 +37,7 @@ namespace GameBerry.Managers
         GameBerry.Enum_ItemStorageType StorageType { get; }
         AddItemResult Add(ItemInfo meta, long amount, bool immediateServerUpdate);
         ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediateServerUpdate);
+        ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediateServerUpdate);
         long GetCount(ItemInfo meta);
     }
 
@@ -117,6 +118,24 @@ namespace GameBerry.Managers
                 return new ConsumeItemResult { Success = false, Reason = "NoHandler" };
 
             var res = handler.Consume(meta, amount, immediateServerUpdate);
+#if DEV_DEFINE
+            if (res.Success == false)
+                Debug.LogError(res.ToString());
+#endif
+            if (res.Success) RaiseChanged(meta.StorageType);
+            return res;
+        }
+
+        public ConsumeItemResult ConsumeItem_Instance(int itemId, int instanceId, bool immediateServerUpdate = true)
+        {
+            var meta = GetItemMeta(itemId);
+            if (meta == null)
+                return new ConsumeItemResult { Success = false, Reason = "InvalidItemId" };
+
+            if (!_handlers.TryGetValue(meta.StorageType, out var handler))
+                return new ConsumeItemResult { Success = false, Reason = "NoHandler" };
+
+            var res = handler.Consume_Instance(meta, instanceId, immediateServerUpdate);
 #if DEV_DEFINE
             if (res.Success == false)
                 Debug.LogError(res.ToString());
@@ -223,13 +242,10 @@ namespace GameBerry.Managers
             {
                 var inv = UserTable.Get<InventoryTable>();
 
-                if(meta.ItemType == Enum_ItemType.Equip)
-                    return new ConsumeItemResult { Success = false, Reason = "ItemType == Enum_ItemType.Equip" };
+                if (meta.IsStack == true)
+                    return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
 
-                bool ok = meta.IsStack
-                    ? inv.RemoveStack(meta.ItemId, (int)amount)
-                    : inv.RemoveInstances(meta.ItemId, (int)amount) == amount;
-
+                bool ok = inv.RemoveStack(meta.ItemId, (int)amount);
                 if (!ok)
                     return new ConsumeItemResult { Success = false, Reason = "NotEnough" };
 
@@ -238,6 +254,41 @@ namespace GameBerry.Managers
                 else
                     inv.UpdateTable();
                 return new ConsumeItemResult { Success = true, Requested = amount, Consumed = amount };
+            }
+
+            public ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediate)
+            {
+                var inv = UserTable.Get<InventoryTable>();
+
+                int itemid = inv.RemoveInstance(instanceId);
+                if(itemid == -1)
+                    return new ConsumeItemResult { Success = false, Reason = "ItemId == -1" };
+
+                Enum_ItemType enum_ItemType = Instance.GetItemType(itemid);
+                if (enum_ItemType == Enum_ItemType.Equip)
+                    UserTable.Get<EquipmentTable>().RemoveEquipment(instanceId);
+
+                if (enum_ItemType == Enum_ItemType.Equip)
+                {
+                    if (immediate == false)
+                    {
+                        for (int i = 0; i < EquipInvenTables.Count; ++i)
+                        {
+                            EquipInvenTables[i].UpdateWaitTable();
+                        }
+                    }
+                    else
+                        UserTable.TransactionUpdate(EquipInvenTables);
+                }
+                else
+                {
+                    if (immediate == false)
+                        inv.UpdateWaitTable();
+                    else
+                        inv.UpdateTable();
+                }
+
+                return new ConsumeItemResult { Success = true };
             }
 
             public long GetCount(ItemInfo meta)
@@ -278,6 +329,11 @@ namespace GameBerry.Managers
                 return new ConsumeItemResult { Success = true, Requested = amount, Consumed = amount };
             }
 
+            public ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediate)
+            {
+                return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
+            }
+
             public long GetCount(ItemInfo meta)
             {
                 var pt = UserTable.Get<PointTable>();
@@ -292,7 +348,7 @@ namespace GameBerry.Managers
             public AddItemResult Add(ItemInfo meta, long amount, bool immediate)
             {
                 var st = UserTable.Get<SkinTable>();
-                bool unlocked = st.TryUnlock(meta.ItemId);
+                bool unlocked = st.AddSkin(meta.ItemId);
                 if (immediate == false)
                     st.UpdateWaitTable();
                 else
@@ -310,6 +366,11 @@ namespace GameBerry.Managers
             public ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediate)
             {
                 return new ConsumeItemResult { Success = false, Reason = "NotConsumable" };
+            }
+
+            public ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediate)
+            {
+                return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
             }
 
             public long GetCount(ItemInfo meta)
