@@ -16,14 +16,14 @@ namespace GameBerry.UI
 
         private void OnEnable()
         {
-            Managers.ItemManager.Instance.OnPointChanged += Refresh;
+            ItemManager.Instance.OnPointChanged += Refresh;
             Refresh();
         }
 
         private void OnDisable()
         {
-            if (Managers.ItemManager.Instance != null)
-                Managers.ItemManager.Instance.OnPointChanged -= Refresh;
+            if (ItemManager.Instance != null)
+                ItemManager.Instance.OnPointChanged -= Refresh;
         }
 
         public void Refresh()

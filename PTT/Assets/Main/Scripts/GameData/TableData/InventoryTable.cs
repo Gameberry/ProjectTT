@@ -7,17 +7,8 @@ using UnityEngine;
 namespace GameBerry.Table
 {
     [Serializable]
-    public class InventoryEntry : IPackable
+    public class InventoryEntry : ItemData, IPackable
     {
-        public int itemId;
-        public int count;
-
-        // 인스턴스(장비 등)
-        public int instanceId;
-
-        public bool IsInstance => instanceId > 0;
-        public bool IsStack => instanceId <= 0;
-
         public string Pack() => $"{itemId},{count},{instanceId}";
 
         public void Unpack(string str)
@@ -31,7 +22,7 @@ namespace GameBerry.Table
 
             var sp = str.Split(',');
             if (sp.Length > 0) int.TryParse(sp[0], out itemId);
-            if (sp.Length > 1) int.TryParse(sp[1], out count);
+            if (sp.Length > 1) long.TryParse(sp[1], out count);
             if (sp.Length > 2) int.TryParse(sp[2], out instanceId);
 
             if (count <= 0) count = 1;

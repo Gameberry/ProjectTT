@@ -4,7 +4,7 @@ using UnityEngine;
 using GameBerry.Chart;
 using GameBerry.Table;
 
-namespace GameBerry.Managers
+namespace GameBerry
 {
     public struct AddItemResult
     {
@@ -39,6 +39,19 @@ namespace GameBerry.Managers
         ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediateServerUpdate);
         ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediateServerUpdate);
         long GetCount(ItemInfo meta);
+    }
+
+    public class ItemData
+    {
+        public int itemId;
+
+        // 인스턴스(장비 등)
+        public int instanceId;
+
+        public long count;
+
+        public bool IsInstance => instanceId > 0;
+        public bool IsStack => instanceId <= 0;
     }
 
     public class ItemManager : Singleton<ItemManager>

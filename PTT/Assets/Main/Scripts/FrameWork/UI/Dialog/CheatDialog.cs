@@ -263,7 +263,7 @@ namespace GameBerry.UI
             {
                 TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
                 optionData.text = pair.ItemId.ToString();
-                optionData.image = Managers.ItemManager.Instance.GetIcon(pair.ItemId);
+                optionData.image = ItemManager.Instance.GetIcon(pair.ItemId);
                 optiondatalabel.Add(optionData);
             }
 
@@ -292,7 +292,7 @@ namespace GameBerry.UI
 
             long itemamount = m_cheatGoodsAmountInputField.text.ToLong();
 
-            Managers.ItemManager.Instance.AddItem(itemInfo.ItemId, itemamount);
+            ItemManager.Instance.AddItem(itemInfo.ItemId, itemamount);
         }
         //------------------------------------------------------------------------------------
         private void OnValueChanged_AdFreeMode(bool value)

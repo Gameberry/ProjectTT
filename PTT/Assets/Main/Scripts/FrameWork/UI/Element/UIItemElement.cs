@@ -5,30 +5,45 @@ using GameBerry.Table;
 
 namespace GameBerry.UI
 {
-    public class UIInventoryItemElement : MonoBehaviour
+    public class UIItemElement : MonoBehaviour
     {
         [SerializeField] private Image icon;
         [SerializeField] private TMP_Text title;
         [SerializeField] private TMP_Text itemType;
         [SerializeField] private TMP_Text detail;
 
-        public void Bind(InventoryEntry e)
+        public void SetMeta(int itemId)
         {
-            if (e == null) return;
+            Chart.ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);
 
             if (icon != null)
-                icon.sprite = Managers.ItemManager.Instance.GetIcon(e.itemId);
+                icon.sprite = ItemManager.Instance.GetIcon(itemId);
 
             if (title != null)
-                title.text = Managers.ItemManager.Instance.GetItemRarity(e.itemId).ToString();
-
-            Enum_ItemType enumtype = Managers.ItemManager.Instance.GetItemType(e.itemId);
+                title.text = itemInfo.Rarity.ToString();
 
             if (itemType != null)
-                itemType.text = enumtype.ToString();
+                itemType.text = itemInfo.ItemType.ToString();
 
             if (detail != null)
             {
+                if (itemInfo.IsStack == false)
+                    detail.SetText(string.Empty);
+                else
+                    detail.SetText("{0}", ItemManager.Instance.GetCount(itemId));
+            }
+        }
+
+        public void Bind(ItemData e)
+        {
+            if (e == null) return;
+
+            SetMeta(e.itemId);
+
+            if (detail != null)
+            {
+                Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);
+
                 if (enumtype == Enum_ItemType.Equip)
                 {
                     detail.SetText("+{0}", Table.UserTable.Get<EquipmentTable>().GetLevel(e.instanceId));
@@ -40,7 +55,6 @@ namespace GameBerry.UI
                     else
                         detail.SetText("{0}", e.count);
                 }
-                
             }
         }
     }

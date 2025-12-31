@@ -5,9 +5,8 @@ using System.Collections.Generic;
 
 namespace GameBerry.Table
 {
-    public class SkinData : IPackable
+    public class SkinData : ItemData, IPackable
     {
-        public int itemId;
         public bool awake = false;
 
         public string Pack()
@@ -119,7 +118,7 @@ namespace GameBerry.Table
             if (d != null)
                 return false;
 
-            hasSkinList.Add(new SkinData { itemId = itemId, awake = false });
+            hasSkinList.Add(new SkinData { itemId = itemId, count = 1, awake = false });
             return true;
         }
 

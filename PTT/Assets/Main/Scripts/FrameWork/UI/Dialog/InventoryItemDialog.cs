@@ -16,10 +16,10 @@ namespace GameBerry.UI
         [SerializeField] private Button rarityTab;
 
         [SerializeField] private Transform contentRoot;
-        [SerializeField] private UIInventoryItemElement itemCellPrefab;
+        [SerializeField] private UIItemElement itemCellPrefab;
 
         private Enum_InventorySort sort = Enum_InventorySort.AcquireSort;
-        private readonly List<UIInventoryItemElement> _spawned = new();
+        private readonly List<UIItemElement> _spawned = new();
 
         //------------------------------------------------------------------------------------
         protected override void OnLoad()
