@@ -8,10 +8,8 @@ namespace GameBerry.Chart
     {
         public int ItemId;
 
-        // Route + InventoryType 통합
         public GameBerry.Enum_ItemStorageType StorageType;
 
-        // 아이템 도메인 타입 (Equip / Potion / Skin / Point ...)
         public GameBerry.Enum_ItemType ItemType;
 
         // 스택 가능 여부 (Inventory 타입에서만 의미 있음)
@@ -20,7 +18,7 @@ namespace GameBerry.Chart
         // 희귀도
         public GameBerry.Enum_ItemRarity Rarity;
 
-        // 해금/사용 조건
+        // 해금/사용 조건 (아직 사용 안함)
         public int UnlockConditionId;
     }
 

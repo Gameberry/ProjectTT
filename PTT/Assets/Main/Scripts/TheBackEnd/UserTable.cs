@@ -36,20 +36,21 @@ namespace GameBerry.Table
 
         public bool UpdateWaitData = false;
 
+        //------------------------------------------------------------------------------------
         public abstract void SetData(JsonData jsonData);
-
+        //------------------------------------------------------------------------------------
         public abstract Param GetParam();
-
+        //------------------------------------------------------------------------------------
         public virtual void LoadComplete()
         {
 
         }
-
+        //------------------------------------------------------------------------------------
         public void SetInData(string inData)
         {
             InData = inData;
         }
-
+        //------------------------------------------------------------------------------------
         public void InsertTable()
         {
             UserTable.InsertTable(TableName, GetParam(), o =>
@@ -60,16 +61,14 @@ namespace GameBerry.Table
                 SetInData(o.GetInDate());
             });
         }
-
-        public void UpdateWaitTable()
-        {
-            UpdateWaitData = true;
-        }
-
-        public void UpdateTable(System.Action<BackendReturnObject> action = null)
+        //------------------------------------------------------------------------------------
+        public void UpdateTable(bool immediate = true, System.Action<BackendReturnObject> action = null)
         {
             if (string.IsNullOrEmpty(TableName) == true)
                 return;
+
+            if(immediate == false)
+                UpdateWaitData = true;
 
             if (string.IsNullOrEmpty(InData) == true)
             {
@@ -89,6 +88,7 @@ namespace GameBerry.Table
                 }
             });
         }
+        //------------------------------------------------------------------------------------
     }
 
     public static class UserTable

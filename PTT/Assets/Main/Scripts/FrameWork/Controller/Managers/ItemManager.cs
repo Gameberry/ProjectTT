@@ -221,19 +221,14 @@ namespace GameBerry.Managers
                     {
                         for (int i = 0; i < EquipInvenTables.Count; ++i)
                         { 
-                            EquipInvenTables[i].UpdateWaitTable();
+                            EquipInvenTables[i].UpdateTable(immediate);
                         }
                     }
                     else
                         UserTable.TransactionUpdate(EquipInvenTables);
                 }
                 else
-                {
-                    if (immediate == false)
-                        inv.UpdateWaitTable();
-                    else
-                        inv.UpdateTable();
-                }
+                    inv.UpdateTable(immediate);
 
                 return new AddItemResult { Success = true, Requested = amount, Added = added };
             }
@@ -249,10 +244,8 @@ namespace GameBerry.Managers
                 if (!ok)
                     return new ConsumeItemResult { Success = false, Reason = "NotEnough" };
 
-                if (immediate == false)
-                    inv.UpdateWaitTable();
-                else
-                    inv.UpdateTable();
+                inv.UpdateTable(immediate);
+
                 return new ConsumeItemResult { Success = true, Requested = amount, Consumed = amount };
             }
 
@@ -274,19 +267,14 @@ namespace GameBerry.Managers
                     {
                         for (int i = 0; i < EquipInvenTables.Count; ++i)
                         {
-                            EquipInvenTables[i].UpdateWaitTable();
+                            EquipInvenTables[i].UpdateTable(immediate);
                         }
                     }
                     else
                         UserTable.TransactionUpdate(EquipInvenTables);
                 }
                 else
-                {
-                    if (immediate == false)
-                        inv.UpdateWaitTable();
-                    else
-                        inv.UpdateTable();
-                }
+                    inv.UpdateTable(immediate);
 
                 return new ConsumeItemResult { Success = true };
             }
@@ -308,10 +296,8 @@ namespace GameBerry.Managers
             {
                 var pt = UserTable.Get<PointTable>();
                 pt.Add(meta.ItemId, amount);
-                if (immediate == false)
-                    pt.UpdateWaitTable();
-                else
-                    pt.UpdateTable();
+                pt.UpdateTable(immediate);
+
                 return new AddItemResult { Success = true, Requested = amount, Added = amount };
             }
 
@@ -322,10 +308,8 @@ namespace GameBerry.Managers
                     return new ConsumeItemResult { Success = false, Reason = "NotEnough" };
 
                 pt.Add(meta.ItemId, -amount);
-                if (immediate == false)
-                    pt.UpdateWaitTable();
-                else
-                    pt.UpdateTable();
+                pt.UpdateTable(immediate);
+
                 return new ConsumeItemResult { Success = true, Requested = amount, Consumed = amount };
             }
 
@@ -349,10 +333,7 @@ namespace GameBerry.Managers
             {
                 var st = UserTable.Get<SkinTable>();
                 bool unlocked = st.AddSkin(meta.ItemId);
-                if (immediate == false)
-                    st.UpdateWaitTable();
-                else
-                    st.UpdateTable();
+                st.UpdateTable(immediate);
 
                 return new AddItemResult
                 {
