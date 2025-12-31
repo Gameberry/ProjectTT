@@ -21,31 +21,32 @@ namespace GameBerry.UI
         private Enum_InventorySort sort = Enum_InventorySort.AcquireSort;
         private readonly List<UIInventoryItemElement> _spawned = new();
 
+        //------------------------------------------------------------------------------------
         protected override void OnLoad()
         {
             if (acquireTab != null) acquireTab.onClick.AddListener(() => SetSort(Enum_InventorySort.AcquireSort));
             if (typeTab != null) typeTab.onClick.AddListener(() => SetSort(Enum_InventorySort.TypeSort));
             if (rarityTab != null) rarityTab.onClick.AddListener(() => SetSort(Enum_InventorySort.RaritySort));
         }
-
+        //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
             ItemManager.Instance.OnInventoryChanged += Refresh;
             Refresh();
         }
-
+        //------------------------------------------------------------------------------------
         protected override void OnExit()
         {
             if (ItemManager.Instance != null)
                 ItemManager.Instance.OnInventoryChanged -= Refresh;
         }
-
+        //------------------------------------------------------------------------------------
         private void SetSort(Enum_InventorySort s)
         {
             sort = s;
             Refresh();
         }
-
+        //------------------------------------------------------------------------------------
         private void Refresh()
         {
             var inv = UserTable.Get<InventoryTable>();
@@ -54,7 +55,7 @@ namespace GameBerry.UI
             var view = inv.BuildView(sort);
             Rebuild(view);
         }
-
+        //------------------------------------------------------------------------------------
         private void Rebuild(List<InventoryEntry> view)
         {
             for (int i = 0; i < _spawned.Count; i++)
@@ -70,5 +71,6 @@ namespace GameBerry.UI
                 _spawned.Add(cell);
             }
         }
+        //------------------------------------------------------------------------------------
     }
 }

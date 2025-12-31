@@ -35,7 +35,6 @@ namespace GameBerry.Table
             if (sp.Length > 2) int.TryParse(sp[2], out instanceId);
 
             if (count <= 0) count = 1;
-            if (IsInstance) count = 1;
         }
     }
 
@@ -54,21 +53,21 @@ namespace GameBerry.Table
 
         private int nextInstanceId = 1;
 
-        private void SetInstanceId()
+        private int GetNewInstanceId()
         {
             if (nextInstanceId > inventory.Count)
                 nextInstanceId = 1;
 
-            List<InventoryEntry> tempinven = inventory.FindAll(x => x.IsInstance == true && x.instanceId > nextInstanceId);
+            List<InventoryEntry> tempinven = inventory.FindAll(x => x.IsInstance == true && x.instanceId >= nextInstanceId);
             if (tempinven.Count == 0)
-                return;
+                return nextInstanceId;
 
             tempinven.Sort((a, b) =>
             {
                 return a.instanceId.CompareTo(b.instanceId);
             });
 
-            foreach (var pair in inventory)
+            foreach (var pair in tempinven)
             {
                 InventoryEntry inventoryEntry = pair;
 
@@ -85,6 +84,8 @@ namespace GameBerry.Table
 
                 break;
             }
+
+            return nextInstanceId;
         }
 
         public override void SetData(JsonData data)
@@ -99,7 +100,6 @@ namespace GameBerry.Table
                     else if (key == inventoryKey)
                     {
                         inventory = PackUtil.UnpackList<InventoryEntry>(data[i][key].ToString());
-                        SetInstanceId();
                     } 
                 }
             }
@@ -163,16 +163,13 @@ namespace GameBerry.Table
 
         public int AddInstance(int itemId)
         {
-            int instanceId = nextInstanceId;
+            int instanceId = GetNewInstanceId();
             inventory.Add(new InventoryEntry
             {
                 itemId = itemId,
                 count = 1,
                 instanceId = instanceId,
             });
-
-            // nextInstanceId를 사용하고 꼭 다시 셋 해야함
-            SetInstanceId();
 
             return instanceId;
         }

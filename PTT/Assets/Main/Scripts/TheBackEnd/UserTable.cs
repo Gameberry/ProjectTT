@@ -23,7 +23,7 @@ namespace GameBerry.Table
             while (Time.time < SendTime)
                 await UniTask.NextFrame(PlayerLoopTiming.Update);
 
-            UserTable.DynamicUpdateData(tableBases, CallBack);
+            UserTable.TransactionUpdate(tableBases, CallBack);
             UserTable.dynamicUpdateData_Wait1Second.Remove(tableBases);
             UserTable.updateDataWaitStruct_Pool.PoolObject(this);
         }
@@ -59,6 +59,11 @@ namespace GameBerry.Table
 
                 SetInData(o.GetInDate());
             });
+        }
+
+        public void UpdateWaitTable()
+        {
+            UpdateWaitData = true;
         }
 
         public void UpdateTable(System.Action<BackendReturnObject> action = null)
@@ -254,11 +259,11 @@ namespace GameBerry.Table
 
             if (waitcount >= 10)
             {
-                SendUpdateWaitData();
+                SendUpdateWaitTable();
             }
         }
         //------------------------------------------------------------------------------------
-        public static void SendUpdateWaitData(bool allSend = false)
+        public static void SendUpdateWaitTable(bool allSend = false)
         {
             if (CheckNetworkState() == false)
                 return;
@@ -288,18 +293,18 @@ namespace GameBerry.Table
             if (allSend == true)
             {
                 if (waitcount > 0)
-                    SendUpdateWaitData(true);
+                    SendUpdateWaitTable(true);
             }
         }
         //------------------------------------------------------------------------------------
-        public static void DynamicUpdateData(List<TableBase> tableBases, Action<BackendReturnObject> action = null)
+        public static void TransactionUpdate(List<TableBase> tableBases, Action<BackendReturnObject> action = null)
         {
             if (tableBases == null)
                 return;
 
             if (CheckNetworkState() == false)
             {
-                AddReconnectUpdateData(tableBases, action);
+                AddReconnectUpdate(tableBases, action);
                 return;
             }
 
@@ -308,7 +313,7 @@ namespace GameBerry.Table
             SendTransaction(transactionList, action);
         }
         //------------------------------------------------------------------------------------
-        public static void DynamicUpdateData_WaitSecond(List<TableBase> tableBases, Action<BackendReturnObject> action = null)
+        public static void TransactionUpdate_WaitSecond(List<TableBase> tableBases, Action<BackendReturnObject> action = null)
         { // 주의 action 저장은 테이블 첫 콜백에 대한것만 사용하므로, 같은 테이블이름에 다른 함수포인터를 사용하면 런타임에러를 만들 수 있음
             if (tableBases == null)
                 return;
@@ -329,7 +334,7 @@ namespace GameBerry.Table
             }
         }
         //------------------------------------------------------------------------------------
-        private static void AddReconnectUpdateData(List<TableBase> tableBases, Action<BackendReturnObject> action)
+        private static void AddReconnectUpdate(List<TableBase> tableBases, Action<BackendReturnObject> action)
         {
             if (reconnectUpdateData.ContainsKey(tableBases) == true)
                 return;
@@ -342,7 +347,7 @@ namespace GameBerry.Table
             reconnectUpdateData.Add(tableBases, updateDataWaitStruct);
         }
         //------------------------------------------------------------------------------------
-        public static void SendReconnectUpdateData()
+        public static void SendReconnectUpdate()
         {
             if (reconnectUpdateData.Count > 0)
             {
@@ -350,7 +355,7 @@ namespace GameBerry.Table
                 {
                     UpdateDataWaitStruct updateDataWaitStruct = pair.Value;
 
-                    DynamicUpdateData(updateDataWaitStruct.tableBases, updateDataWaitStruct.CallBack);
+                    TransactionUpdate(updateDataWaitStruct.tableBases, updateDataWaitStruct.CallBack);
                     updateDataWaitStruct_Pool.PoolObject(updateDataWaitStruct);
                 }
 
@@ -459,7 +464,7 @@ namespace GameBerry.Table
         //------------------------------------------------------------------------------------
         public static void AllUpdata()
         {
-            SendUpdateWaitData(true);
+            SendUpdateWaitTable(true);
 
             if (dynamicUpdateData_Wait1Second.Count > 0)
             {
@@ -467,7 +472,7 @@ namespace GameBerry.Table
                 {
                     UpdateDataWaitStruct updateDataWaitStruct = pair.Value;
 
-                    DynamicUpdateData(updateDataWaitStruct.tableBases, updateDataWaitStruct.CallBack);
+                    TransactionUpdate(updateDataWaitStruct.tableBases, updateDataWaitStruct.CallBack);
                     updateDataWaitStruct_Pool.PoolObject(updateDataWaitStruct);
                 }
             }
@@ -489,7 +494,7 @@ namespace GameBerry.Table
         {
             if (updateWaitDataTimer < Time.time)
             {
-                SendUpdateWaitData(true);
+                SendUpdateWaitTable(true);
 
                 updateWaitDataTimer = Time.time + updateWaitDataTimerTurm;
             }
