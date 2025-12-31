@@ -18,23 +18,23 @@ namespace GameBerry.UI
         [SerializeField] private Transform contentRoot;
         [SerializeField] private UIInventoryItemElement itemCellPrefab;
 
-        private Enum_InventorySort sort = Enum_InventorySort.AcquireAsc;
+        private Enum_InventorySort sort = Enum_InventorySort.AcquireSort;
         private readonly List<UIInventoryItemElement> _spawned = new();
 
-        private void Awake()
+        protected override void OnLoad()
         {
-            if (acquireTab != null) acquireTab.onClick.AddListener(() => SetSort(Enum_InventorySort.AcquireAsc));
-            if (typeTab != null) typeTab.onClick.AddListener(() => SetSort(Enum_InventorySort.TypeAsc));
-            if (rarityTab != null) rarityTab.onClick.AddListener(() => SetSort(Enum_InventorySort.RarityDesc));
+            if (acquireTab != null) acquireTab.onClick.AddListener(() => SetSort(Enum_InventorySort.AcquireSort));
+            if (typeTab != null) typeTab.onClick.AddListener(() => SetSort(Enum_InventorySort.TypeSort));
+            if (rarityTab != null) rarityTab.onClick.AddListener(() => SetSort(Enum_InventorySort.RaritySort));
         }
 
-        private void OnEnable()
+        protected override void OnEnter()
         {
             ItemManager.Instance.OnInventoryChanged += Refresh;
             Refresh();
         }
 
-        private void OnDisable()
+        protected override void OnExit()
         {
             if (ItemManager.Instance != null)
                 ItemManager.Instance.OnInventoryChanged -= Refresh;

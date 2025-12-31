@@ -71,6 +71,14 @@ namespace GameBerry.Managers
             return meta.ItemType;
         }
 
+        public Enum_ItemRarity GetItemRarity(int itemId)
+        {
+            var meta = GetItemMeta(itemId);
+            if (meta == null) return Enum_ItemRarity.Max;
+
+            return meta.Rarity;
+        }
+
         public AddItemResult AddItem(int itemId, long amount, bool immediateServerUpdate = true)
         {
             var meta = GetItemMeta(itemId);
@@ -168,7 +176,7 @@ namespace GameBerry.Managers
                     }
 
                     if (meta.ItemType == Enum_ItemType.Equip)
-                        Table.UserTable.DynamicUpdateData(EquipInvenTables);
+                        UserTable.DynamicUpdateData(EquipInvenTables);
 
                     added = amount;
                 }

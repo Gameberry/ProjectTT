@@ -93,6 +93,8 @@ namespace GameBerry
         Rare = 2,
         Epic = 3,
         Legendary = 4,
+
+        Max,
     }
 
     // 장비 슬롯 예시(기존 프로젝트 Enum_EquipType이 이미 있으면 이 파일은 삭제/병합)
@@ -104,6 +106,7 @@ namespace GameBerry
         Glove = 4,
         Shoes = 5,
         Cape = 6,
+
         Max,
     }
 
@@ -111,15 +114,16 @@ namespace GameBerry
     {
         Gold = 1,
         Dia = 2,
+
         Max,
     }
 
     // 아이템의 출처/도메인 타입
     public enum Enum_ItemType
     {
-        Equip,
         Potion,
         Material,
+        Equip,
         Skin,
         Point,
 

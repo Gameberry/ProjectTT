@@ -53,7 +53,6 @@ namespace GameBerry.UI
             _resetBtn = CreateSkinElement();
             _resetBtn.SetSkinInfo(null);
 
-            // ▶ 기본으로 Body 탭 보이게
             ShowSlot(Enum_SkinSlotType.Body);
         }
         //------------------------------------------------------------------------------------
@@ -66,6 +65,9 @@ namespace GameBerry.UI
             Managers.SkinManager.Instance.SetDynamicSkin(_uiTempSkinDic, ref _uiTempSkin);
 
             _uIPlayerSpineObject?.SetSkin(_uiTempSkin);
+            Enum_SkinSlotType tempslottype = _currentSlot;
+            _currentSlot = Enum_SkinSlotType.Max;
+            ShowSlot(tempslottype);
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()

@@ -14,19 +14,17 @@ namespace GameBerry.Table
 
         // 인스턴스(장비 등)
         public int instanceId;
-        public int enhanceLevel;
 
         public bool IsInstance => instanceId > 0;
         public bool IsStack => instanceId <= 0;
 
-        public string Pack() => $"{itemId},{count},{instanceId},{enhanceLevel}";
+        public string Pack() => $"{itemId},{count},{instanceId}";
 
         public void Unpack(string str)
         {
             itemId = 0;
             instanceId = 0;
             count = 1;
-            enhanceLevel = 0;
 
             if (string.IsNullOrEmpty(str)) 
                 return;
@@ -35,19 +33,17 @@ namespace GameBerry.Table
             if (sp.Length > 0) int.TryParse(sp[0], out itemId);
             if (sp.Length > 1) int.TryParse(sp[1], out count);
             if (sp.Length > 2) int.TryParse(sp[2], out instanceId);
-            if (sp.Length > 3) int.TryParse(sp[3], out enhanceLevel);
 
             if (count <= 0) count = 1;
-            if (enhanceLevel < 0) enhanceLevel = 0;
             if (IsInstance) count = 1;
         }
     }
 
     public enum Enum_InventorySort
     {
-        AcquireAsc = 0,
-        TypeAsc = 1,
-        RarityDesc = 2,
+        AcquireSort = 0,
+        TypeSort = 1,
+        RaritySort = 2,
     }
 
     public class InventoryTable : TableBase
@@ -157,7 +153,6 @@ namespace GameBerry.Table
                     itemId = itemId,
                     count = Mathf.Max(1, amount),
                     instanceId = 0,
-                    enhanceLevel = 0
                 });
             }
             else
@@ -174,7 +169,6 @@ namespace GameBerry.Table
                 itemId = itemId,
                 count = 1,
                 instanceId = instanceId,
-                enhanceLevel = 0
             });
 
             // nextInstanceId를 사용하고 꼭 다시 셋 해야함
@@ -240,11 +234,11 @@ namespace GameBerry.Table
 
             switch (sort)
             {
-                case Enum_InventorySort.AcquireAsc:
+                case Enum_InventorySort.AcquireSort:
                     //view.Sort((a, b) => a.acquiredSeq.CompareTo(b.acquiredSeq));
                     break;
 
-                case Enum_InventorySort.TypeAsc:
+                case Enum_InventorySort.TypeSort:
                     view.Sort((a, b) =>
                     {
                         int c = TypeKey(a).CompareTo(TypeKey(b));
@@ -255,7 +249,7 @@ namespace GameBerry.Table
                     });
                     break;
 
-                case Enum_InventorySort.RarityDesc:
+                case Enum_InventorySort.RaritySort:
                     view.Sort((a, b) =>
                     {
                         int c = Rarity(b).CompareTo(Rarity(a));

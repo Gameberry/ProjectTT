@@ -6,17 +6,21 @@ namespace GameBerry.Table
 {
     public class EquipSlotData : IPackable
     {
-        public int slot; // (int)Enum_EquipType
+        public Enum_EquipType slot; // (int)Enum_EquipType
         public int instanceId;
 
-        public string Pack() => $"{slot},{instanceId}";
+        public string Pack() => $"{slot.Enum32ToInt()},{instanceId}";
         public void Unpack(string str)
         {
             instanceId = 0;
 
             if (string.IsNullOrEmpty(str)) return;
             var sp = str.Split(',');
-            if (sp.Length > 0) int.TryParse(sp[0], out slot);
+            if (sp.Length > 0)
+            {
+                if (int.TryParse(sp[0], out int slotid))
+                    slot = slotid.IntToEnum32<Enum_EquipType>();
+            } 
             if (sp.Length > 1) int.TryParse(sp[1], out instanceId);
         }
     }
@@ -93,18 +97,16 @@ namespace GameBerry.Table
 
         public int GetEquippedInstanceId(GameBerry.Enum_EquipType slot)
         {
-            int s = (int)slot;
-            var d = equipped.Find(x => x.slot == s);
+            var d = equipped.Find(x => x.slot == slot);
             return d != null ? d.instanceId : 0;
         }
 
         public void SetEquipped(GameBerry.Enum_EquipType slot, int instanceId)
         {
-            int s = (int)slot;
-            var d = equipped.Find(x => x.slot == s);
+            var d = equipped.Find(x => x.slot == slot);
             if (d == null)
             {
-                equipped.Add(new EquipSlotData { slot = s, instanceId = instanceId });
+                equipped.Add(new EquipSlotData { slot = slot, instanceId = instanceId });
                 return;
             }
             d.instanceId = instanceId;
@@ -119,6 +121,14 @@ namespace GameBerry.Table
             }
 
             return false;
+        }
+
+        public int GetLevel(int instanceId)
+        {
+            if (equipmentDataDict.TryGetValue(instanceId, out var data))
+                return data.enhanceLevel;
+
+            return 0;
         }
 
         public void Enhance(List<int> instanceIds, int addLevel = 1)

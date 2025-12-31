@@ -116,7 +116,7 @@ namespace GameBerry.UI
                     m_cheatGoodsIDDropdown.ClearOptions();
                     List<string> optiondatalabel = new List<string>();
 
-                    for (int i = (int)Enum_ItemType.Equip; i < (int)Enum_ItemType.Max; ++i)
+                    for (int i = (int)Enum_ItemType.Potion; i < (int)Enum_ItemType.Max; ++i)
                     {
                         optiondatalabel.Add(((Enum_ItemType)i).ToString());
                     }
@@ -246,7 +246,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnValueChange_CheatGoodsID(int value)
         {
-            int goodsvalue = m_cheatGoodsIDDropdown.value + (int)Enum_ItemType.Equip;
+            int goodsvalue = m_cheatGoodsIDDropdown.value + (int)Enum_ItemType.Potion;
             m_cheatGoodsIndexDropdown.ClearOptions();
             m_cheat_V2Enum_Goods = (Enum_ItemType)goodsvalue;
 
@@ -277,7 +277,7 @@ namespace GameBerry.UI
                 || m_cheatGoodsAmountInputField == null)
                 return;
 
-            int goodsvalue = m_cheatGoodsIDDropdown.value + (int)Enum_ItemType.Equip;
+            int goodsvalue = m_cheatGoodsIDDropdown.value + (int)Enum_ItemType.Potion;
 
             int itemid = m_cheatGoodsIndexDropdown.value;
 
