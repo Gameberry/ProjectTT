@@ -6,9 +6,6 @@ using GameBerry.Table;
 
 namespace GameBerry.UI
 {
-    /// <summary>
-    /// ItemManager 이벤트 구독 + InventoryTable 정렬 뷰 갱신 예시
-    /// </summary>
     public class InventoryItemDialog : IDialog
     {
         [SerializeField] private Button acquireTab;

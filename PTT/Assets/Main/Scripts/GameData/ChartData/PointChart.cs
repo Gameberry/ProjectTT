@@ -7,7 +7,6 @@ namespace GameBerry.Chart
     {
         public int ItemId; // ItemId == Point key
         public GameBerry.Enum_PointType Type;
-        public string Name;
         public bool ShowInWallet = true;
         public int SortOrder = 0;
     }

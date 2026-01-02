@@ -29,6 +29,8 @@ namespace GameBerry.Table
         private const string pointKey = "Point";
         private List<PointData> points = new ();
 
+        
+
         //------------------------------------------------------------------------------------
         public override void SetData(JsonData data)
         {

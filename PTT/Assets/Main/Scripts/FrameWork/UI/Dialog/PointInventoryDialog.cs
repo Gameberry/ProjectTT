@@ -3,34 +3,30 @@ using UnityEngine;
 
 namespace GameBerry.UI
 {
-    /// <summary>
-    /// PointInventory(지갑) 화면용 스크립트.
-    /// - PointTable + PointChart 기반으로 목록 생성/갱신
-    /// </summary>
-    public class PointInventory : MonoBehaviour
+    public class PointInventoryDialog : IDialog
     {
-        [SerializeField] private UIPointElement _prefab;
+        [SerializeField] private UIItemElement _prefab;
         [SerializeField] private Transform _root;
 
-        private readonly List<UIPointElement> _created = new List<UIPointElement>();
+        private readonly List<UIItemElement> _created = new List<UIItemElement>();
 
-        private void OnEnable()
+        //------------------------------------------------------------------------------------
+        protected override void OnEnter()
         {
             ItemManager.Instance.OnPointChanged += Refresh;
             Refresh();
         }
-
-        private void OnDisable()
+        //------------------------------------------------------------------------------------
+        protected override void OnExit()
         {
             if (ItemManager.Instance != null)
                 ItemManager.Instance.OnPointChanged -= Refresh;
         }
-
+        //------------------------------------------------------------------------------------
         public void Refresh()
         {
-            var table = Table.UserTable.Get<Table.PointTable>();
             var chart = Chart.GameChart.Get<Chart.PointChart>();
-            if (table == null || chart == null || chart.rows == null) return;
+            if (chart == null || chart.rows == null) return;
 
             int idx = 0;
             for (int i = 0; i < chart.rows.Length; i++)
@@ -45,7 +41,7 @@ namespace GameBerry.UI
                 }
 
                 var el = _created[idx];
-                el.Set(info.Name, table.GetAmount(info.ItemId));
+                el.SetMeta(info.ItemId);
                 el.gameObject.SetActive(true);
                 idx++;
             }
@@ -53,5 +49,6 @@ namespace GameBerry.UI
             for (int i = idx; i < _created.Count; i++)
                 _created[i].gameObject.SetActive(false);
         }
+        //------------------------------------------------------------------------------------
     }
 }

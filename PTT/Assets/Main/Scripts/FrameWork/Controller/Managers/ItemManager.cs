@@ -38,7 +38,7 @@ namespace GameBerry
         AddItemResult Add(ItemInfo meta, long amount, bool immediateServerUpdate);
         ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediateServerUpdate);
         ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediateServerUpdate);
-        long GetCount(ItemInfo meta);
+        long GetAmount(ItemInfo meta);
     }
 
     public class ItemData
@@ -61,9 +61,13 @@ namespace GameBerry
         public event Action OnSkinChanged;
 
         private readonly Dictionary<GameBerry.Enum_ItemStorageType, IItemStorageHandler> _handlers = new();
+        private Dictionary<int, Action<long>> _itemRefreshEvent = new Dictionary<int, Action<long>>();
 
-        public const string _iconPath = "Icon/item/{0}";
+        private const string _iconPath = "Icon/item/{0}";
         private Dictionary<int, Sprite> _itemIcons = new Dictionary<int, Sprite>();
+
+        private const string _itemNameLocalKey = "item/{0}/name";
+        private const string _itemDescLocalKey = "item/{0}/desc";
 
         ItemChart _itemChart;
 
@@ -102,6 +106,16 @@ namespace GameBerry
 
             return meta.Rarity;
         }
+        
+        public string GetItemNameLocalKey(int itemId)
+        {
+            return string.Format(_itemNameLocalKey, itemId);
+        }
+
+        public string GetItemDescLocalKey(int itemId)
+        {
+            return string.Format(_itemDescLocalKey, itemId);
+        }
 
         public AddItemResult AddItem(int itemId, long amount, bool immediateServerUpdate = true)
         {
@@ -117,7 +131,10 @@ namespace GameBerry
             if (res.Success == false)
                 Debug.LogError(res.ToString());
 #endif
+
             RaiseChanged(meta.StorageType);
+            InvokeItemRefresh(itemId);
+
             return res;
         }
 
@@ -135,7 +152,13 @@ namespace GameBerry
             if (res.Success == false)
                 Debug.LogError(res.ToString());
 #endif
-            if (res.Success) RaiseChanged(meta.StorageType);
+
+            if (res.Success)
+            {
+                RaiseChanged(meta.StorageType);
+                InvokeItemRefresh(itemId);
+            } 
+
             return res;
         }
 
@@ -153,11 +176,17 @@ namespace GameBerry
             if (res.Success == false)
                 Debug.LogError(res.ToString());
 #endif
-            if (res.Success) RaiseChanged(meta.StorageType);
+
+            if (res.Success)
+            {
+                RaiseChanged(meta.StorageType);
+                InvokeItemRefresh(itemId);
+            } 
+
             return res;
         }
 
-        public long GetCount(int itemId)
+        public long GetItemAmount(int itemId)
         {
             var meta = GetItemMeta(itemId);
             if (meta == null) return 0;
@@ -165,7 +194,7 @@ namespace GameBerry
             if (!_handlers.TryGetValue(meta.StorageType, out var handler))
                 return 0;
 
-            return handler.GetCount(meta);
+            return handler.GetAmount(meta);
         }
 
         private void RaiseChanged(GameBerry.Enum_ItemStorageType t)
@@ -193,6 +222,37 @@ namespace GameBerry
             return sp;
         }
 
+        public void AddItemRefreshEvent(int itemId, Action<long> action)
+        {
+            if (!_itemRefreshEvent.ContainsKey(itemId))
+                _itemRefreshEvent[itemId] = null;
+
+            _itemRefreshEvent[itemId] += action;
+        }
+
+        public void RemoveItemRefreshEvent(int itemId, Action<long> action)
+        {
+            if (!_itemRefreshEvent.TryGetValue(itemId, out var exist))
+                return;
+
+            exist -= action;
+
+            if (exist == null)
+                _itemRefreshEvent.Remove(itemId);
+            else
+                _itemRefreshEvent[itemId] = exist;
+        }
+
+        public void InvokeItemRefresh(int itemId)
+        {
+            if (_itemRefreshEvent.TryGetValue(itemId, out var action))
+                action?.Invoke(GetItemAmount(itemId));
+        }
+
+        public void ShowItemDesc(int itemId)
+        { 
+
+        }
 
         // --- Handlers ---
 
@@ -292,7 +352,7 @@ namespace GameBerry
                 return new ConsumeItemResult { Success = true };
             }
 
-            public long GetCount(ItemInfo meta)
+            public long GetAmount(ItemInfo meta)
             {
                 var inv = UserTable.Get<InventoryTable>();
                 return meta.IsStack
@@ -331,7 +391,7 @@ namespace GameBerry
                 return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
             }
 
-            public long GetCount(ItemInfo meta)
+            public long GetAmount(ItemInfo meta)
             {
                 var pt = UserTable.Get<PointTable>();
                 return pt.GetAmount(meta.ItemId);
@@ -367,7 +427,7 @@ namespace GameBerry
                 return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
             }
 
-            public long GetCount(ItemInfo meta)
+            public long GetAmount(ItemInfo meta)
             {
                 var st = UserTable.Get<SkinTable>();
                 return st.IsUnlocked(meta.ItemId) ? 1 : 0;
