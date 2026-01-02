@@ -8,7 +8,7 @@ namespace GameBerry.UI
     public class UIItemElement : MonoBehaviour
     {
         [SerializeField] private Image icon;
-        [SerializeField] private TMP_Text title;
+        [SerializeField] private TMP_Text rarity;
         [SerializeField] private TMP_Text itemType;
         [SerializeField] private TMP_Text detail;
 
@@ -19,8 +19,8 @@ namespace GameBerry.UI
             if (icon != null)
                 icon.sprite = ItemManager.Instance.GetIcon(itemId);
 
-            if (title != null)
-                title.text = itemInfo.Rarity.ToString();
+            if (rarity != null)
+                rarity.text = itemInfo.Rarity.ToString();
 
             if (itemType != null)
                 itemType.text = itemInfo.ItemType.ToString();
