@@ -24,10 +24,17 @@ namespace GameBerry.UI
 
             if (_isStatic == true)
             {
-                ItemManager.Instance.AddItemRefreshEvent(_itemId, SetStaticAmount);
-
                 SetMeta(_itemId);
+                AddEvent();
             }
+        }
+
+        public void AddEvent()
+        {
+            if (_isStatic == true)
+                return;
+
+            ItemManager.Instance.AddItemRefreshEvent(_itemId, SetStaticAmount);
         }
 
         public void SetStaticAmount(long amount)
@@ -37,6 +44,9 @@ namespace GameBerry.UI
 
         public void SetMeta(int itemId)
         {
+            if (itemId <= 0)
+                return;
+
             Chart.ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);
 
             if (_icon != null)
@@ -53,7 +63,7 @@ namespace GameBerry.UI
                 if (itemInfo.IsStack == false)
                     _amount.SetText(string.Empty);
                 else
-                    _amount.SetText("{0}", ItemManager.Instance.GetItemAmount(itemId));
+                    Util.SetCommaInteger(_amount, ItemManager.Instance.GetItemAmount(itemId));
             }
 
             _itemId = itemId;
@@ -83,7 +93,7 @@ namespace GameBerry.UI
                     if (e.IsInstance == true)
                         _amount.SetText(string.Empty);
                     else
-                        _amount.SetText("{0}", e.count);
+                        Util.SetCommaInteger(_amount, ItemManager.Instance.GetItemAmount(e.itemId));
                 }
             }
         }

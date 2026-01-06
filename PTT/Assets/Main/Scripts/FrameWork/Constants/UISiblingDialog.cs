@@ -12,6 +12,7 @@
         // InGame
         HUDDialog,
         MenuDialog,
+        PointInventoryDialog,
         SkinSelectDialog,
         InventoryItemDialog,
 

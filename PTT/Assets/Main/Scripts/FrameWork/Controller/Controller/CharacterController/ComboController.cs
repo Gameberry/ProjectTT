@@ -105,8 +105,6 @@ namespace GameBerry
 
             if (_releaseComboTime < Time.time)
                 ReleaseCombo();
-            else
-                Debug.Log($"comboTimer : {_releaseComboTime - Time.time}");
         }
         //------------------------------------------------------------------------------------
     }

@@ -224,6 +224,9 @@ namespace GameBerry
 
         public void AddItemRefreshEvent(int itemId, Action<long> action)
         {
+            if (itemId <= 0)
+                return;
+
             if (!_itemRefreshEvent.ContainsKey(itemId))
                 _itemRefreshEvent[itemId] = null;
 
@@ -232,6 +235,9 @@ namespace GameBerry
 
         public void RemoveItemRefreshEvent(int itemId, Action<long> action)
         {
+            if (itemId <= 0)
+                return;
+
             if (!_itemRefreshEvent.TryGetValue(itemId, out var exist))
                 return;
 
@@ -250,8 +256,8 @@ namespace GameBerry
         }
 
         public void ShowItemDesc(int itemId)
-        { 
-
+        {
+            Debug.Log($"ShowItemDesc {itemId}");
         }
 
         // --- Handlers ---

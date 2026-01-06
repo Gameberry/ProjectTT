@@ -1302,6 +1302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 394167304414547513}
+  - component: {fileID: 2875618583179920607}
   m_Layer: 5
   m_Name: Point
   m_TagString: Untagged
@@ -1332,6 +1333,14 @@ RectTransform:
   m_AnchoredPosition: {x: 303, y: 331}
   m_SizeDelta: {x: 583.1, y: 60.3}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2875618583179920607
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3816587971721645075}
+  m_CullTransparentMesh: 1
 --- !u!1 &3902824424309963764
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,6 +1831,7 @@ GameObject:
   - component: {fileID: 3552946777014685274}
   - component: {fileID: 6279970656868043612}
   - component: {fileID: 8009133988798467533}
+  - component: {fileID: 2706041408031652417}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1930,6 +1940,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2706041408031652417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5186631230300308523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0f75ec32aec77b46a3efc3f818f1c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogName: PointInventoryDialog
 --- !u!1 &5344859811280209041
 GameObject:
   m_ObjectHideFlags: 0
