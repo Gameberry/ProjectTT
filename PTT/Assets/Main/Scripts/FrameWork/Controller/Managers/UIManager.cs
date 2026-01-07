@@ -25,7 +25,7 @@ namespace GameBerry.UI
 
         private Dictionary<string, System.Delegate> _onCompleteEvents;
 
-        private const string ASSET_PATH = "ContentResources";
+        private const string ASSET_PATH = "ContentResources/UI";
 
         protected override void Init()
 		{
