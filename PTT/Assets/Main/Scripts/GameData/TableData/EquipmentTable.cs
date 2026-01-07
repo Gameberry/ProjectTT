@@ -20,7 +20,7 @@ namespace GameBerry.Table
             {
                 if (int.TryParse(sp[0], out int slotid))
                     slot = slotid.IntToEnum32<Enum_EquipType>();
-            } 
+            }
             if (sp.Length > 1) int.TryParse(sp[1], out instanceId);
         }
     }
@@ -67,11 +67,11 @@ namespace GameBerry.Table
             {
                 foreach (var key in data[i].Keys)
                 {
-                    if (key == "inDate") 
+                    if (key == "inDate")
                         SetInData(data[i][key].ToString());
-                    else if (key == equippedKey) 
+                    else if (key == equippedKey)
                         equipped = PackUtil.UnpackList<EquipSlotData>(data[i][key].ToString());
-                    else if (key == equipmentDataKey) 
+                    else if (key == equipmentDataKey)
                         equipmentDataDict = PackUtil.UnpackDict<int, EquipmentData>(data[i][key].ToString());
                 }
             }
@@ -125,12 +125,23 @@ namespace GameBerry.Table
         public bool IsEquipped(int instanceId)
         {
             for (int i = 0; i < equipped.Count; i++)
-            { 
-                if (equipped[i] != null && equipped[i].instanceId == instanceId) 
+            {
+                if (equipped[i] != null && equipped[i].instanceId == instanceId)
                     return true;
             }
 
             return false;
+        }
+
+
+        public bool TryGetData(int instanceId, out EquipmentData data)
+        {
+            return equipmentDataDict.TryGetValue(instanceId, out data);
+        }
+
+        public bool HasEquipment(int instanceId)
+        {
+            return equipmentDataDict.ContainsKey(instanceId);
         }
 
         public int GetLevel(int instanceId)
@@ -157,12 +168,12 @@ namespace GameBerry.Table
             {
                 data.enhanceLevel += addLevel;
 
-                if(immediate == true) 
+                if (immediate == true)
                     UpdateTable();
 
                 return true;
             }
-            
+
             return false;
         }
     }

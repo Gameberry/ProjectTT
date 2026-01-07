@@ -20,6 +20,7 @@ namespace GameBerry.UI
                 if (info == null || info.ShowInWallet == false) continue;
 
                 var el = Instantiate(_prefab, _root);
+                el.IsDisplay = true;
                 el.SetMeta(info.ItemId);
                 el.AddEvent();
             }

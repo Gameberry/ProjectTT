@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using GameBerry.Chart;
@@ -14,7 +14,7 @@ namespace GameBerry
         public string Reason;
 
         public override string ToString()
-        { 
+        {
             return $"AddItemResult Success : {Success}\nRequested : {Requested}\nAdded : {Added}\neason : {Reason}";
         }
     }
@@ -41,11 +41,34 @@ namespace GameBerry
         long GetAmount(ItemInfo meta);
     }
 
+    [Serializable]
+    public struct ItemHandle : IEquatable<ItemHandle>
+    {
+        public int itemId;
+        public int instanceId;
+
+        public bool IsInstance => instanceId > 0;
+        public bool IsStack => instanceId <= 0;
+
+        public static ItemHandle Get(ItemData e)
+            => new ItemHandle { itemId = e.itemId, instanceId = e.instanceId };
+
+        public static ItemHandle Stack(int itemId)
+            => new ItemHandle { itemId = itemId, instanceId = 0 };
+
+        public static ItemHandle Instance(int itemId, int instanceId)
+            => new ItemHandle { itemId = itemId, instanceId = instanceId };
+
+        public bool Equals(ItemHandle other) => itemId == other.itemId && instanceId == other.instanceId;
+        public override bool Equals(object obj) => obj is ItemHandle other && Equals(other);
+        public override int GetHashCode() => HashCode.Combine(itemId, instanceId);
+        public override string ToString() => $"ItemHandle(itemId:{itemId}, instanceId:{instanceId})";
+    }
+
     public class ItemData
     {
         public int itemId;
 
-        // �ν��Ͻ�(��� ��)
         public int instanceId;
 
         public long count;
@@ -106,7 +129,7 @@ namespace GameBerry
 
             return meta.Rarity;
         }
-        
+
         public string GetItemNameLocalKey(int itemId)
         {
             return string.Format(_itemNameLocalKey, itemId);
@@ -157,7 +180,7 @@ namespace GameBerry
             {
                 RaiseChanged(meta.StorageType);
                 InvokeItemRefresh(itemId);
-            } 
+            }
 
             return res;
         }
@@ -181,9 +204,49 @@ namespace GameBerry
             {
                 RaiseChanged(meta.StorageType);
                 InvokeItemRefresh(itemId);
-            } 
+            }
 
             return res;
+        }
+
+
+        // ----------------------------------------------------------------------
+        // Handle 기반 API (선택형 행동: 판매/강화/장착/분해 등)
+
+        public ConsumeItemResult Consume(GameBerry.ItemHandle handle, long amount = 1, bool immediateServerUpdate = true)
+        {
+            if (handle.itemId <= 0)
+                return new ConsumeItemResult { Success = false, Reason = "InvalidHandle" };
+
+            if (handle.IsInstance)
+            {
+                // instance는 '정확히 그 instance'만 처리한다.
+                return ConsumeItem_Instance(handle.itemId, handle.instanceId, immediateServerUpdate);
+            }
+
+            return ConsumeItem(handle.itemId, amount, immediateServerUpdate);
+        }
+
+        public long GetCount(GameBerry.ItemHandle handle)
+        {
+            if (handle.itemId <= 0) return 0;
+
+            if (handle.IsInstance)
+            {
+                var inv = UserTable.Get<InventoryTable>();
+                return inv != null && inv.FindInstance(handle.instanceId) != null ? 1 : 0;
+            }
+
+            return GetItemAmount(handle.itemId);
+        }
+
+        public bool TryGetHandleByInstanceId(int instanceId, out GameBerry.ItemHandle handle)
+        {
+            handle = default;
+            var inv = UserTable.Get<InventoryTable>();
+            if (inv == null) return false;
+
+            return inv.TryGetHandleByInstanceId(instanceId, out handle);
         }
 
         public long GetItemAmount(int itemId)
@@ -255,9 +318,15 @@ namespace GameBerry
                 action?.Invoke(GetItemAmount(itemId));
         }
 
-        public void ShowItemDesc(int itemId)
+        public void ShowItemDesc(ItemHandle _handle, bool justDisplay)
         {
-            Debug.Log($"ShowItemDesc {itemId}");
+            Debug.Log($"ShowItemDesc {_handle}");
+
+            UI.UIManager.Instance.DialogEnter<UI.ItemDescDialog>();
+
+            UI.ItemDescDialog itemDescDialog = UI.UIManager.Get<UI.ItemDescDialog>() as UI.ItemDescDialog;
+
+            itemDescDialog.Bind(_handle, justDisplay);
         }
 
         // --- Handlers ---
@@ -299,7 +368,7 @@ namespace GameBerry
                     if (immediate == false)
                     {
                         for (int i = 0; i < EquipInvenTables.Count; ++i)
-                        { 
+                        {
                             EquipInvenTables[i].UpdateTable(immediate);
                         }
                     }
@@ -311,20 +380,19 @@ namespace GameBerry
 
                 return new AddItemResult { Success = true, Requested = amount, Added = added };
             }
-
             public ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediate)
             {
                 var inv = UserTable.Get<InventoryTable>();
 
-                if (meta.IsStack == true)
-                    return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
+                // stack만 itemId+amount 소모를 지원한다.
+                if (meta.IsStack == false)
+                    return new ConsumeItemResult { Success = false, Reason = "UseHandleForInstance" };
 
                 bool ok = inv.RemoveStack(meta.ItemId, (int)amount);
                 if (!ok)
                     return new ConsumeItemResult { Success = false, Reason = "NotEnough" };
 
                 inv.UpdateTable(immediate);
-
                 return new ConsumeItemResult { Success = true, Requested = amount, Consumed = amount };
             }
 
@@ -333,8 +401,11 @@ namespace GameBerry
                 var inv = UserTable.Get<InventoryTable>();
 
                 int itemid = inv.RemoveInstance(instanceId);
-                if(itemid == -1)
-                    return new ConsumeItemResult { Success = false, Reason = "ItemId == -1" };
+                if (itemid == -1)
+                    return new ConsumeItemResult { Success = false, Reason = "NotFound" };
+
+                if (itemid != meta.ItemId)
+                    return new ConsumeItemResult { Success = false, Reason = "ItemIdMismatch" };
 
                 Enum_ItemType enum_ItemType = Instance.GetItemType(itemid);
                 if (enum_ItemType == Enum_ItemType.Equip)

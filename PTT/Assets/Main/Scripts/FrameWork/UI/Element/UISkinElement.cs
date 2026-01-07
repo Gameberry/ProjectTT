@@ -38,7 +38,7 @@ namespace GameBerry.UI
                 Table.SkinData skinData = Managers.SkinManager.Instance.GetSkinData(skinInfo.ItemId);
 
                 if (_label != null)
-                { 
+                {
                     _label.text = _skinInfo.SkinName;
                     _label.color = skinData == null ? Color.red : Color.white;
                 }

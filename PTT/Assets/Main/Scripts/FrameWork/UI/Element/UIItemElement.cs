@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using GameBerry.Table;
+using GameBerry;
+using GameBerry.UI;
 
 namespace GameBerry.UI
 {
@@ -15,18 +17,28 @@ namespace GameBerry.UI
 
         [SerializeField] private int _itemId = -1;
 
+        private ItemHandle _handle;
+
         [SerializeField] private bool _isStatic = false;
+
+        public bool IsDisplay = false;
 
         private void Awake()
         {
             if (btn != null)
-                btn.onClick.AddListener(() => ItemManager.Instance.ShowItemDesc(_itemId));
+                btn.onClick.AddListener(OnClick);
 
             if (_isStatic == true)
             {
+                IsDisplay = true;
                 SetMeta(_itemId);
                 AddEvent();
             }
+        }
+
+        private void OnClick()
+        {
+            ItemManager.Instance.ShowItemDesc(_handle, IsDisplay);
         }
 
         public void AddEvent()
@@ -44,6 +56,8 @@ namespace GameBerry.UI
 
         public void SetMeta(int itemId)
         {
+            _itemId = itemId;
+            _handle = ItemHandle.Stack(itemId);
             if (itemId <= 0)
                 return;
 
@@ -76,7 +90,6 @@ namespace GameBerry.UI
                 _itemId = -1;
                 return;
             }
-            
 
             SetMeta(e.itemId);
 

@@ -3,6 +3,8 @@ using BackEnd;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
 
 namespace GameBerry.Table
 {
@@ -17,7 +19,7 @@ namespace GameBerry.Table
             instanceId = 0;
             count = 1;
 
-            if (string.IsNullOrEmpty(str)) 
+            if (string.IsNullOrEmpty(str))
                 return;
 
             var sp = str.Split(',');
@@ -68,7 +70,7 @@ namespace GameBerry.Table
                 if (nextInstanceId < inventoryEntry.instanceId)
                     break;
                 else if (nextInstanceId == inventoryEntry.instanceId)
-                { 
+                {
                     nextInstanceId++;
                     continue;
                 }
@@ -91,7 +93,7 @@ namespace GameBerry.Table
                     else if (key == inventoryKey)
                     {
                         inventory = PackUtil.UnpackList<InventoryEntry>(data[i][key].ToString());
-                    } 
+                    }
                 }
             }
         }
@@ -104,6 +106,32 @@ namespace GameBerry.Table
         }
 
         public IReadOnlyList<InventoryEntry> Raw => inventory;
+
+
+        public InventoryEntry FindInstance(int instanceId)
+        {
+            if (instanceId <= 0) return null;
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                var e = inventory[i];
+                if (e == null) continue;
+                if (e.instanceId != instanceId) continue;
+                if (!e.IsInstance) continue;
+                return e;
+            }
+            return null;
+        }
+
+        public bool TryGetHandleByInstanceId(int instanceId, out GameBerry.ItemHandle handle)
+        {
+            handle = default;
+            var e = FindInstance(instanceId);
+            if (e == null) return false;
+
+            handle = GameBerry.ItemHandle.Instance(e.itemId, e.instanceId);
+            return true;
+        }
 
         public InventoryEntry FindStack(int itemId)
         {
@@ -212,7 +240,7 @@ namespace GameBerry.Table
 
             return removed;
         }
-
+        
         public int RemoveInstance(int instanceId)
         {
             InventoryEntry inventoryEntry = inventory.Find(x => x.instanceId == instanceId);
@@ -227,38 +255,44 @@ namespace GameBerry.Table
 
         public List<InventoryEntry> BuildView(Enum_InventorySort sort)
         {
-            var view = new List<InventoryEntry>(inventory);
+            // 원본 inventory 리스트 순서가 곧 획득순(저장 순서)이다.
+            // 정렬 탭은 "뷰"만 정렬하고, 동률은 원본 index로 안정(stable)하게 유지한다.
             var itemChart = GameBerry.Chart.GameChart.Get<GameBerry.Chart.ItemChart>();
 
             int TypeKey(InventoryEntry e) => (int)(itemChart?.Get(e.itemId)?.ItemType ?? 0);
-            int Rarity(InventoryEntry e) => (int)(itemChart?.Get(e.itemId)?.Rarity ?? 0);
+            int RarityKey(InventoryEntry e) => (int)(itemChart?.Get(e.itemId)?.Rarity ?? 0);
+
+            var indexed = inventory
+                .Select((e, idx) => (e, idx))
+                .Where(x => x.e != null)
+                .ToList();
 
             switch (sort)
             {
                 case Enum_InventorySort.TypeSort:
-                    view.Sort((a, b) =>
-                    {
-                        int c = TypeKey(a).CompareTo(TypeKey(b));
-                        if (c != 0) return c;
-                        c = Rarity(b).CompareTo(Rarity(a));
-                        if (c != 0) return c;
-                        return a.itemId.CompareTo(b.itemId);
-                    });
+                    indexed = indexed
+                        .OrderBy(x => TypeKey(x.e))
+                        .ThenByDescending(x => RarityKey(x.e))
+                        .ThenBy(x => x.idx)
+                        .ToList();
                     break;
 
                 case Enum_InventorySort.RaritySort:
-                    view.Sort((a, b) =>
-                    {
-                        int c = Rarity(b).CompareTo(Rarity(a));
-                        if (c != 0) return c;
-                        c = TypeKey(a).CompareTo(TypeKey(b));
-                        if (c != 0) return c;
-                        return a.itemId.CompareTo(b.itemId);
-                    });
+                    indexed = indexed
+                        .OrderByDescending(x => RarityKey(x.e))
+                        .ThenBy(x => TypeKey(x.e))
+                        .ThenBy(x => x.idx)
+                        .ToList();
+                    break;
+
+                case Enum_InventorySort.AcquireSort:
+                default:
+                    // 그대로
                     break;
             }
 
-            return view;
+            return indexed.Select(x => x.e).ToList();
         }
+
     }
 }
