@@ -13,11 +13,13 @@ namespace GameBerry.UI
     public class ItemDescDialog : IDialog
     {
         [Header("UI")]
-        [SerializeField] private TMP_Text titleText;
-        [SerializeField] private TMP_Text descText;
+        [SerializeField] private UIItemElement _uIItemElement;
+        [SerializeField] private TMP_Text _itemName;
+        [SerializeField] private TMP_Text _itemType;
+        [SerializeField] private TMP_Text _itemRarity;
+        [SerializeField] private TMP_Text _itemDesc;
 
         [Header("Buttons")]
-        [SerializeField] private Button closeButton;
         [SerializeField] private Button consumeButton;
         [SerializeField] private Button equipButton;
         [SerializeField] private Button enhanceButton;
@@ -28,7 +30,6 @@ namespace GameBerry.UI
         // --------------------------------------------------------------------
         protected override void OnLoad()
         {
-            if (closeButton != null) closeButton.onClick.AddListener(CloseSelf);
             if (consumeButton != null) consumeButton.onClick.AddListener(OnConsume);
             if (equipButton != null) equipButton.onClick.AddListener(OnEquip);
             if (enhanceButton != null) enhanceButton.onClick.AddListener(OnEnhance);
@@ -39,21 +40,25 @@ namespace GameBerry.UI
         {
             _handle = handle;
 
+            if (_uIItemElement != null)
+                _uIItemElement.Bind(_handle);
+
             // 최소 정보 표시(메타 차트 연동은 프로젝트 확장 포인트)
-            if (titleText != null)
+            if (_itemName != null)
+                Managers.LocalStringManager.Instance.SetLocalizeText(_itemName, ItemManager.Instance.GetItemNameLocalKey(handle.itemId));
+
+            if (_itemType != null)
+                Managers.LocalStringManager.Instance.SetLocalizeText(_itemType, ItemManager.Instance.GetItemType(handle.itemId).ToString());
+
+            if (_itemRarity != null)
             {
-                if (_handle.IsInstance)
-                    titleText.SetText($"ItemId:{_handle.itemId} (Instance:{_handle.instanceId})");
-                else
-                    titleText.SetText($"ItemId:{_handle.itemId}");
+                Enum_Rarity enum_Rarity = ItemManager.Instance.GetItemRarity(handle.itemId);
+                Managers.LocalStringManager.Instance.SetLocalizeText(_itemRarity, enum_Rarity.ToString());
+                _itemRarity.color = StaticResource.Instance.GetRarityTextColor(enum_Rarity);
             }
 
-            if (descText != null)
-            {
-                descText.SetText(_handle.IsInstance
-                    ? "Instance 아이템(장비 등) - 강화/장착/판매 같은 행동은 instanceId 기준으로 안전하게 처리됩니다."
-                    : "Stack 아이템(포션/재료/재화 등) - 수량 기반 행동을 처리합니다.");
-            }
+            if (_itemDesc != null)
+                Managers.LocalStringManager.Instance.SetLocalizeText(_itemDesc, ItemManager.Instance.GetItemDescLocalKey(handle.itemId));
 
             // 버튼 노출 제어(기본)
             if (equipButton != null) equipButton.gameObject.SetActive(_handle.IsInstance);
@@ -63,13 +68,7 @@ namespace GameBerry.UI
             if (consumeButton != null) consumeButton.gameObject.SetActive(true);
             if (sellButton != null) sellButton.gameObject.SetActive(true);
         }
-
-        // --------------------------------------------------------------------
-        private void CloseSelf()
-        {
-            UIManager.Instance.DialogExit<ItemDescDialog>();
-        }
-
+        //------------------------------------------------------------------------------------
         private void OnConsume()
         {
             // 기본: 1개 소모(스택은 1, 인스턴스는 해당 1개)
@@ -77,22 +76,22 @@ namespace GameBerry.UI
             Debug.Log($"[ItemDescDialog] Consume {_handle} => {res.Success} ({res.Reason})");
 
             // 소모 후 닫기 (원하면 유지)
-            CloseSelf();
+            Exit();
         }
-
+        //------------------------------------------------------------------------------------
         private void OnEquip()
         {
             // 장착 시스템은 프로젝트별이므로 연결만 해두고 확장
             Debug.Log($"[ItemDescDialog] Equip requested: {_handle}");
             // 예) EquipmentManager.Instance.Equip(slot, _handle.instanceId);
         }
-
+        //------------------------------------------------------------------------------------
         private void OnEnhance()
         {
             Debug.Log($"[ItemDescDialog] Enhance requested: {_handle}");
             // 예) EquipmentManager.Instance.Enhance(_handle.instanceId);
         }
-
+        //------------------------------------------------------------------------------------
         private void OnSell()
         {
             Debug.Log($"[ItemDescDialog] Sell requested: {_handle}");
@@ -100,7 +99,8 @@ namespace GameBerry.UI
             // 일단 1개 판매=1개 소모로 가정
             var res = ItemManager.Instance.Consume(_handle, 1, true);
             Debug.Log($"[ItemDescDialog] Sell(Consume) {_handle} => {res.Success} ({res.Reason})");
-            CloseSelf();
+            Exit();
         }
+        //------------------------------------------------------------------------------------
     }
 }

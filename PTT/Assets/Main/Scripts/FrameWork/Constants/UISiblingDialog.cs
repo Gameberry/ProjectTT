@@ -17,6 +17,11 @@
         InventoryItemDialog,
 
 
+        ItemDescDialog,
+
+
+
+
 
         GlobalDungeonFadeDialog,
 

@@ -60,6 +60,8 @@ namespace GameBerry.UI
 
         public void Bind(ItemHandle e)
         {
+            _handle = e;
+
             int itemId = e.itemId;
 
             Chart.ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);

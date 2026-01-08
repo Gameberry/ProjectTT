@@ -66,6 +66,15 @@ namespace GameBerry
             return rarityColorData.FrameSprite;
         }
         //------------------------------------------------------------------------------------
+        public Color GetRarityTextColor(Enum_Rarity enum_Rarity)
+        {
+            RarityColorData rarityColorData = GetRarityColorData(enum_Rarity);
+            if (rarityColorData == null)
+                return Color.white;
+
+            return rarityColorData.TextColor;
+        }
+        //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
         #region SpineModel
