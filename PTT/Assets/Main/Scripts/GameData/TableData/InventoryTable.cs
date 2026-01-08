@@ -129,7 +129,7 @@ namespace GameBerry.Table
             var e = FindInstance(instanceId);
             if (e == null) return false;
 
-            handle = GameBerry.ItemHandle.Instance(e.itemId, e.instanceId);
+            handle = GameBerry.ItemHandle.FromInventory(e);
             return true;
         }
 

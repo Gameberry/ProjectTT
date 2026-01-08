@@ -13,53 +13,54 @@ namespace GameBerry.UI
         [SerializeField] private TMP_Text rarity;
         [SerializeField] private TMP_Text itemName;
         [SerializeField] private TMP_Text _amount;
+        [SerializeField] private TMP_Text _level;
         [SerializeField] private Button btn;
 
-        [SerializeField] private int _itemId = -1;
+        [SerializeField] private int _stackItemId = -1;
+        [SerializeField] private bool enableAutoRefresh = false;
 
         private ItemHandle _handle;
-
-        [SerializeField] private bool _isStatic = false;
-
-        public bool IsDisplay = false;
 
         private void Awake()
         {
             if (btn != null)
                 btn.onClick.AddListener(OnClick);
 
-            if (_isStatic == true)
+            if (enableAutoRefresh == true)
             {
-                IsDisplay = true;
-                SetMeta(_itemId);
+                _handle = ItemHandle.ForStack(_stackItemId);
+                Bind(_handle);
                 AddEvent();
             }
         }
 
+        private void OnDestroy()
+        {
+            if (_handle.itemId > 0)
+                ItemManager.Instance.RemoveItemRefreshEvent(_handle.itemId, SetStaticAmount);
+        }
+
         private void OnClick()
         {
-            ItemManager.Instance.ShowItemDesc(_handle, IsDisplay);
+            ItemManager.Instance.ShowItemDesc(_handle);
         }
 
         public void AddEvent()
         {
-            if (_isStatic == true)
+            if (enableAutoRefresh == true)
                 return;
 
-            ItemManager.Instance.AddItemRefreshEvent(_itemId, SetStaticAmount);
+            ItemManager.Instance.AddItemRefreshEvent(_handle.itemId, SetStaticAmount);
         }
 
-        public void SetStaticAmount(long amount)
+        private void SetStaticAmount(long amount)
         {
             Util.SetCommaInteger(_amount, amount);
         }
 
-        public void SetMeta(int itemId)
+        public void Bind(ItemHandle e)
         {
-            _itemId = itemId;
-            _handle = ItemHandle.Stack(itemId);
-            if (itemId <= 0)
-                return;
+            int itemId = e.itemId;
 
             Chart.ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);
 
@@ -74,40 +75,53 @@ namespace GameBerry.UI
 
             if (_amount != null)
             {
-                if (itemInfo.IsStack == false)
-                    _amount.SetText(string.Empty);
-                else
-                    Util.SetCommaInteger(_amount, ItemManager.Instance.GetItemAmount(itemId));
-            }
+                long amount = 0;
 
-            _itemId = itemId;
-        }
-
-        public void Bind(ItemData e)
-        {
-            if (e == null)
-            {
-                _itemId = -1;
-                return;
-            }
-
-            SetMeta(e.itemId);
-
-            if (_amount != null)
-            {
-                Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);
-
-                if (enumtype == Enum_ItemType.Equip)
+                if (e.isMeta == true)
                 {
-                    _amount.SetText("+{0}", Table.UserTable.Get<EquipmentTable>().GetLevel(e.instanceId));
+                    if (e.metaAmount > 0)
+                        amount = e.metaAmount;
                 }
                 else
                 {
-                    if (e.IsInstance == true)
-                        _amount.SetText(string.Empty);
-                    else
-                        Util.SetCommaInteger(_amount, ItemManager.Instance.GetItemAmount(e.itemId));
+                    if (itemInfo.IsStack == true)
+                        amount = ItemManager.Instance.GetItemAmount(itemId);
                 }
+
+                if (amount > 0)
+                {
+                    Util.SetCommaInteger(_amount, amount);
+                    _amount.gameObject.SetActive(true);
+                }
+                else
+                    _amount.gameObject.SetActive(false);
+            }
+
+
+            if (_level != null)
+            {
+                int level = 0;
+
+                if (e.isMeta == true)
+                {
+                    if (e.metaLevel > 0)
+                        level = e.metaLevel;
+                }
+                else
+                {
+                    Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);
+
+                    if (enumtype == Enum_ItemType.Equip)
+                        level = Table.UserTable.Get<EquipmentTable>().GetLevel(e.instanceId);
+                }
+
+                if (level > 0)
+                {
+                    _level.SetText("+{0}", level);
+                    _level.gameObject.SetActive(true);
+                }
+                else
+                    _level.gameObject.SetActive(false);
             }
         }
     }

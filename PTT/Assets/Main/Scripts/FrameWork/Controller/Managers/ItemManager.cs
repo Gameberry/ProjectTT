@@ -47,22 +47,76 @@ namespace GameBerry
         public int itemId;
         public int instanceId;
 
+        // 오직 디스플레이용인지 유저 데이터와는 별개로 사용되어야 할 때 쓴다.
+        public bool isMeta; // 오직 디스플레이용
+        public long metaAmount; // 오직 디스플레이용
+        public int metaLevel; // 오직 디스플레이용
+
         public bool IsInstance => instanceId > 0;
         public bool IsStack => instanceId <= 0;
 
-        public static ItemHandle Get(ItemData e)
-            => new ItemHandle { itemId = e.itemId, instanceId = e.instanceId };
+        public static ItemHandle ForMeta(int itemId, long metaAmount = 0, int metaLevel = 0)
+            => new ItemHandle
+            {
+                itemId = itemId,
+                instanceId = 0,
+                isMeta = true,
+                metaAmount = metaAmount,
+                metaLevel = metaLevel
+            };
 
-        public static ItemHandle Stack(int itemId)
-            => new ItemHandle { itemId = itemId, instanceId = 0 };
+        public static ItemHandle FromData(ItemData data)
+            => data == null
+                ? default
+                : new ItemHandle
+                {
+                    itemId = data.itemId,
+                    instanceId = data.instanceId,
+                    isMeta = false
+                };
 
-        public static ItemHandle Instance(int itemId, int instanceId)
-            => new ItemHandle { itemId = itemId, instanceId = instanceId };
+        public static ItemHandle FromInventory(InventoryEntry e) => FromData(e);
+        public static ItemHandle FromPoint(PointData e) => FromData(e);
+        public static ItemHandle FromSkin(SkinData e) => FromData(e);
 
-        public bool Equals(ItemHandle other) => itemId == other.itemId && instanceId == other.instanceId;
+
+        public static ItemHandle ForStack(int itemId)
+            => new ItemHandle { itemId = itemId, instanceId = 0, isMeta = false };
+
+        public static ItemHandle ForInstance(int itemId, int instanceId)
+            => new ItemHandle { itemId = itemId, instanceId = instanceId, isMeta = false };
+
+        // ----------------------------------------------------------------------
+        // Equality
+        public bool Equals(ItemHandle other)
+        {
+            // Meta and non-meta can never be equal.
+            if (isMeta != other.isMeta) return false;
+
+            if (isMeta)
+            {
+                // Meta handles compare by display fields too.
+                return itemId == other.itemId
+                    && metaAmount == other.metaAmount
+                    && metaLevel == other.metaLevel;
+            }
+
+            return itemId == other.itemId && instanceId == other.instanceId;
+        }
+
         public override bool Equals(object obj) => obj is ItemHandle other && Equals(other);
-        public override int GetHashCode() => HashCode.Combine(itemId, instanceId);
-        public override string ToString() => $"ItemHandle(itemId:{itemId}, instanceId:{instanceId})";
+
+        public override int GetHashCode()
+        {
+            return isMeta
+                ? HashCode.Combine(itemId, metaAmount, metaLevel, true)
+                : HashCode.Combine(itemId, instanceId, false);
+        }
+
+        public override string ToString()
+            => isMeta
+                ? $"ItemHandle(META itemId:{itemId}, amount:{metaAmount}, level:{metaLevel})"
+                : $"ItemHandle(itemId:{itemId}, instanceId:{instanceId})";
     }
 
     public class ItemData
@@ -318,7 +372,7 @@ namespace GameBerry
                 action?.Invoke(GetItemAmount(itemId));
         }
 
-        public void ShowItemDesc(ItemHandle _handle, bool justDisplay)
+        public void ShowItemDesc(ItemHandle _handle)
         {
             Debug.Log($"ShowItemDesc {_handle}");
 
@@ -326,7 +380,7 @@ namespace GameBerry
 
             UI.ItemDescDialog itemDescDialog = UI.UIManager.Get<UI.ItemDescDialog>() as UI.ItemDescDialog;
 
-            itemDescDialog.Bind(_handle, justDisplay);
+            itemDescDialog.Bind(_handle);
         }
 
         // --- Handlers ---

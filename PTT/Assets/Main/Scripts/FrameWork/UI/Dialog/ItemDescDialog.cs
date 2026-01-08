@@ -35,7 +35,7 @@ namespace GameBerry.UI
             if (sellButton != null) sellButton.onClick.AddListener(OnSell);
         }
         // --------------------------------------------------------------------
-        public void Bind(ItemHandle handle, bool justDisplay)
+        public void Bind(ItemHandle handle)
         {
             _handle = handle;
 

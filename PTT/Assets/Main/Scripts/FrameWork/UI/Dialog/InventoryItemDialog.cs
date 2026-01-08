@@ -64,7 +64,7 @@ namespace GameBerry.UI
             for (int i = 0; i < view.Count; i++)
             {
                 var cell = Instantiate(itemCellPrefab, contentRoot);
-                cell.Bind(view[i]);
+                cell.Bind(ItemHandle.FromData(view[i]));
                 _spawned.Add(cell);
             }
         }
