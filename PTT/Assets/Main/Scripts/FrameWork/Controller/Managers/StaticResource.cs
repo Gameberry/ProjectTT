@@ -15,8 +15,6 @@ namespace GameBerry
         [SerializeField]
         private StaticResourceAsset _staticResourceAsset;
 
-        private Dictionary<V2Enum_Grade, V2GradeColorData> _v2GradeColorDatas_Dic = new Dictionary<V2Enum_Grade, V2GradeColorData>();
-
         [SerializeField]
         private SpineModelAsset _creatureSpineModelAsset;
 
@@ -44,16 +42,6 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
-            List<V2GradeColorData> v2GradeColorDatas = _staticResourceAsset.GradeColorDatas;
-
-            for (int i = 0; i < v2GradeColorDatas.Count; ++i)
-            {
-                if (_v2GradeColorDatas_Dic.ContainsKey(v2GradeColorDatas[i].v2Enum_Grade) == false)
-                {
-                    _v2GradeColorDatas_Dic.Add(v2GradeColorDatas[i].v2Enum_Grade, v2GradeColorDatas[i]);
-                }
-            }
-
             for (int i = 0; i < _creatureSpineModelAsset.SpineModelDatas.Count; ++i)
             {
                 SpineModelData spineModelData = _creatureSpineModelAsset.SpineModelDatas[i];
@@ -62,111 +50,20 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
-        #region Frame
-        //------------------------------------------------------------------------------------
-        public void SetFrame(V2Enum_Grade v2Enum_Grade, Image frame)
-        {
-            if (frame == null || _staticResourceAsset == null)
-                return;
-
-            _staticResourceAsset.elementFrameResourceData.SetFrame(v2Enum_Grade, frame);
-        }
-        //------------------------------------------------------------------------------------
-        #endregion
-        //------------------------------------------------------------------------------------
         #region Color
         //------------------------------------------------------------------------------------
-        public V2GradeColorData GetV2GradeColorData(V2Enum_Grade v2Enum_Grade)
+        public RarityColorData GetRarityColorData(Enum_Rarity enum_Rarity)
         {
-            if (_v2GradeColorDatas_Dic.ContainsKey(v2Enum_Grade) == true)
-                return _v2GradeColorDatas_Dic[v2Enum_Grade];
+            return _staticResourceAsset.RarityColorDatas.Find(x => x.Rarity == enum_Rarity);
+        }
+        //------------------------------------------------------------------------------------
+        public Sprite GetRarityFrame(Enum_Rarity enum_Rarity)
+        {
+            RarityColorData rarityColorData = GetRarityColorData(enum_Rarity);
+            if (rarityColorData == null)
+                return null;
 
-            return new V2GradeColorData();
-        }
-        //------------------------------------------------------------------------------------
-        public Color GetV2GradeColor(V2Enum_Grade v2Enum_Grade)
-        {
-            V2GradeColorData v2GradeColorData = null;
-
-            if (_v2GradeColorDatas_Dic.TryGetValue(v2Enum_Grade, out v2GradeColorData) == true)
-                return v2GradeColorData.GradeColor;
-
-            return Color.white;
-        }
-        //------------------------------------------------------------------------------------
-        public Color GetV2GradeTextColor(V2Enum_Grade v2Enum_Grade)
-        {
-            V2GradeColorData v2GradeColorData = null;
-
-            if (_v2GradeColorDatas_Dic.TryGetValue(v2Enum_Grade, out v2GradeColorData) == true)
-                return v2GradeColorData.GradeTextColor;
-
-            return Color.white;
-        }
-        //------------------------------------------------------------------------------------
-        public Sprite GetV2GradeTextSprite(V2Enum_Grade v2Enum_Grade)
-        {
-            V2GradeColorData v2GradeColorData = null;
-
-            if (_v2GradeColorDatas_Dic.TryGetValue(v2Enum_Grade, out v2GradeColorData) == true)
-                return v2GradeColorData.GradeTextImage;
-
-            return null;
-        }
-        //------------------------------------------------------------------------------------
-        public Sprite GetV2GradeBGSprite(V2Enum_Grade v2Enum_Grade)
-        {
-            V2GradeColorData v2GradeColorData = null;
-
-            if (_v2GradeColorDatas_Dic.TryGetValue(v2Enum_Grade, out v2GradeColorData) == true)
-                return v2GradeColorData.GradeBGImage;
-
-            return null;
-        }
-        //------------------------------------------------------------------------------------
-        public Sprite GetV2GradeSprite(V2Enum_Grade v2Enum_Grade)
-        {
-            V2GradeColorData v2GradeColorData = null;
-
-            if (_v2GradeColorDatas_Dic.TryGetValue(v2Enum_Grade, out v2GradeColorData) == true)
-                return v2GradeColorData.GradeSprite;
-
-            return null;
-        }
-        //------------------------------------------------------------------------------------
-        public Gradient GetHitColorGradient()
-        {
-            return _staticResourceAsset.HitColorGradient;
-        }
-        //------------------------------------------------------------------------------------
-        public float GetHitRecoveryTime()
-        {
-            return _staticResourceAsset.HitRecoveryTime;
-        }
-        //------------------------------------------------------------------------------------
-        public Gradient GetDeadColorGradient()
-        {
-            return _staticResourceAsset.DeadColorGradient;
-        }
-        //------------------------------------------------------------------------------------
-        public float GetDeadDirectionTime()
-        {
-            return _staticResourceAsset.DeadDirectionTime;
-        }
-        //------------------------------------------------------------------------------------
-        public float GetDeadDirectionSwingForce()
-        {
-            return _staticResourceAsset.DeadDirectionSwingForce;
-        }
-        //------------------------------------------------------------------------------------
-        public float GetDeadDirectionSwingRotationSpeed()
-        {
-            return _staticResourceAsset.DeadDirectionSwingRotationSpeed;
-        }
-        //------------------------------------------------------------------------------------
-        public GearResourceData GetGearResourceData(V2Enum_GearType v2Enum_GearType)
-        {
-            return _staticResourceAsset.GearResourceDatas.Find(x => x.v2Enum_GearType == v2Enum_GearType);
+            return rarityColorData.FrameSprite;
         }
         //------------------------------------------------------------------------------------
         #endregion

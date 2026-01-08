@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1552312354271930950}
   - component: {fileID: 2251743577078481357}
   m_Layer: 5
-  m_Name: ItemType
+  m_Name: ItemName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -530,12 +530,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 2274148037293090392}
-  rarity: {fileID: 0}
-  itemName: {fileID: 2251743577078481357}
+  _frame: {fileID: 0}
+  _itemName: {fileID: 2251743577078481357}
   _amount: {fileID: 1460159093989519617}
+  _level: {fileID: 0}
   btn: {fileID: 8493340624295987873}
-  _itemId: -1
-  _isStatic: 0
+  _stackItemId: -1
+  enableAutoRefresh: 0
 --- !u!1 &5764378713849481007
 GameObject:
   m_ObjectHideFlags: 0

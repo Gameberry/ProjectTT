@@ -87,12 +87,15 @@ namespace GameBerry
         Max,
     }
 
-    public enum Enum_ItemRarity
+    public enum Enum_Rarity
     {
-        Uncommon = 1,
-        Rare = 2,
-        Epic = 3,
-        Legendary = 4,
+        common = 1,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary,
+        Mythic,
+        Special,
 
         Max,
     }

@@ -10,8 +10,8 @@ namespace GameBerry.UI
     public class UIItemElement : MonoBehaviour
     {
         [SerializeField] private Image _icon;
-        [SerializeField] private TMP_Text rarity;
-        [SerializeField] private TMP_Text itemName;
+        [SerializeField] private Image _frame;
+        [SerializeField] private TMP_Text _itemName;
         [SerializeField] private TMP_Text _amount;
         [SerializeField] private TMP_Text _level;
         [SerializeField] private Button btn;
@@ -67,11 +67,11 @@ namespace GameBerry.UI
             if (_icon != null)
                 _icon.sprite = ItemManager.Instance.GetIcon(itemId);
 
-            if (rarity != null)
-                rarity.text = itemInfo.Rarity.ToString();
+            if (_frame != null)
+                _frame.sprite = StaticResource.Instance.GetRarityFrame(itemInfo.Rarity);
 
-            if (itemName != null)
-                Managers.LocalStringManager.Instance.SetLocalizeText(itemName, ItemManager.Instance.GetItemNameLocalKey(itemId));
+            if (_itemName != null)
+                Managers.LocalStringManager.Instance.SetLocalizeText(_itemName, ItemManager.Instance.GetItemNameLocalKey(itemId));
 
             if (_amount != null)
             {
