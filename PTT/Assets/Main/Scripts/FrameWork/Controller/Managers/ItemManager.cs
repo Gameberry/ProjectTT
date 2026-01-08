@@ -15,7 +15,7 @@ namespace GameBerry
 
         public override string ToString()
         {
-            return $"AddItemResult Success : {Success}\nRequested : {Requested}\nAdded : {Added}\neason : {Reason}";
+            return $"AddItemResult Success : {Success}\nRequested : {Requested}\nAdded : {Added}\nReason : {Reason}";
         }
     }
 
@@ -28,7 +28,7 @@ namespace GameBerry
 
         public override string ToString()
         {
-            return $"ConsumeItemResult Success : {Success}\nRequested : {Requested}\nConsumed : {Consumed}\neason : {Reason}";
+            return $"ConsumeItemResult Success : {Success}\nRequested : {Requested}\nConsumed : {Consumed}\nReason : {Reason}";
         }
     }
 
@@ -86,9 +86,11 @@ namespace GameBerry
 
         public ItemInfo GetItemMeta(int itemId)
         {
-            var chart = GameChart.Get<ItemChart>();
-            return chart?.Get(itemId);
+            return _itemChart?.Get(itemId);
         }
+
+        public ItemInfo GetItemInfo(int itemId) => GetItemMeta(itemId);
+
 
         public Enum_ItemType GetItemType(int itemId)
         {
@@ -194,6 +196,24 @@ namespace GameBerry
             if (handle.itemId <= 0)
                 return new ConsumeItemResult { Success = false, Reason = "InvalidHandle" };
 
+            // Display-only handle must never mutate user data.
+            if (handle.isMeta)
+                return new ConsumeItemResult { Success = false, Reason = "MetaHandle" };
+
+            var meta = GetItemMeta(handle.itemId);
+            if (meta == null)
+                return new ConsumeItemResult { Success = false, Reason = "InvalidItemId" };
+
+            // Prevent wrong route usage early.
+            if (handle.IsInstance && meta.IsStack)
+                return new ConsumeItemResult { Success = false, Reason = "StackItemCannotUseInstance" };
+
+            if (!handle.IsInstance && !meta.IsStack && amount != 1)
+            {
+                // Non-stack items should be consumed by instance, not by amount.
+                return new ConsumeItemResult { Success = false, Reason = "UseInstanceForNonStack" };
+            }
+
             if (handle.IsInstance)
             {
                 // instance는 '정확히 그 instance'만 처리한다.
@@ -203,9 +223,12 @@ namespace GameBerry
             return ConsumeItem(handle.itemId, amount, immediateServerUpdate);
         }
 
+
         public long GetCount(GameBerry.ItemHandle handle)
         {
             if (handle.itemId <= 0) return 0;
+
+            if (handle.isMeta) return 0;
 
             if (handle.IsInstance)
             {
@@ -294,16 +317,22 @@ namespace GameBerry
                 action?.Invoke(GetItemAmount(itemId));
         }
 
-        public void ShowItemDesc(ItemHandle _handle)
+        public void ShowItemDesc(ItemHandle handle)
         {
-            Debug.Log($"ShowItemDesc {_handle}");
+            Debug.Log($"ShowItemDesc {handle}");
 
             UI.UIManager.Instance.DialogEnter<UI.ItemDescDialog>();
 
-            UI.ItemDescDialog itemDescDialog = UI.UIManager.Get<UI.ItemDescDialog>() as UI.ItemDescDialog;
+            var itemDescDialog = UI.UIManager.Get<UI.ItemDescDialog>() as UI.ItemDescDialog;
+            if (itemDescDialog == null)
+            {
+                Debug.LogError("[ItemManager] ItemDescDialog not found via UIManager.Get.");
+                return;
+            }
 
-            itemDescDialog.Bind(_handle);
+            itemDescDialog.Bind(handle);
         }
+
 
         // --- Handlers ---
 
