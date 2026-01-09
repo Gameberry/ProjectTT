@@ -105,12 +105,25 @@ public static class ChartAutoWriter
             return;
         }
 
-        var login = Backend.BMember.GuestLogin();
+        var login = Backend.BMember.CustomSignUp("0", "0");
         if (!login.IsSuccess())
         {
-            Debug.LogError("Backend failed to login");
-            EditorUtility.ClearProgressBar();
-            return;
+            if (login.GetStatusCode() == "409")
+            {
+                login = Backend.BMember.CustomLogin("0", "0");
+                if (!login.IsSuccess())
+                {
+                    Debug.LogError($"Backend failed to login {login.Message}");
+                    EditorUtility.ClearProgressBar();
+                    return;
+                }
+            }
+            else
+            {
+                Debug.LogError($"Backend failed to login {login.Message}");
+                EditorUtility.ClearProgressBar();
+                return;
+            }
         }
 
         if (EditorUtility.DisplayCancelableProgressBar("차트 자동 생성", "차트 리스트 불러오는 중", 0.4f))
