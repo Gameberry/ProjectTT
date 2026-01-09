@@ -89,7 +89,7 @@ namespace GameBerry
 
     public enum Enum_Rarity
     {
-        common = 1,
+        Common = 1,
         Uncommon,
         Rare,
         Epic,
@@ -184,11 +184,11 @@ namespace GameBerry
     {
         Attack = 11,
 
-        HP = 12,
-        Defence = 13,
+        HP,
+        Defence,
 
-        MoveSpeed = 14,
-        AttackSpeed = 15,
+        MoveSpeed,
+        AttackSpeed,
 
         Attack_Inc,
         Hp_Inc,
@@ -197,13 +197,7 @@ namespace GameBerry
         AttackSpeed_Inc,
 
         CritChance,
-
-        VampiricRate,
-        ResistanceStat,
-
-        ResistancePenetration,
         CritDmgIncrease,
-        DmgBoost,
 
         Evasion, // 회피
         Accuracy, // 명중
