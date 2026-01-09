@@ -207,7 +207,11 @@ namespace GameBerry
         Max,
     }
 
-
+    public enum Enum_StatMode
+    {
+        Int,
+        Double,
+    }
 
     /// <summary>
     /// 장비/코디용 슬롯 타입

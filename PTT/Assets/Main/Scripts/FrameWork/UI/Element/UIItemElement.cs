@@ -30,7 +30,9 @@ namespace GameBerry.UI
             {
                 _handle = ItemHandle.ForStack(_stackItemId);
                 Bind(_handle);
-                AddEvent();
+                _amount?.gameObject.SetActive(true);
+                ItemManager.Instance.AddItemRefreshEvent(_handle.itemId, SetStaticAmount);
+                SetStaticAmount(ItemManager.Instance.GetCount(_handle));
             }
         }
 

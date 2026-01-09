@@ -11,7 +11,7 @@ namespace GameBerry.Table
 
         public string Pack()
         {
-            return $"{itemId},{(awake ? 1 : 0)}";
+            return $"{PackUtil.PackValue(itemId)},{PackUtil.PackValue(awake ? 1 : 0)}";
         }
 
         public void Unpack(string str)
@@ -21,7 +21,7 @@ namespace GameBerry.Table
 
             var split = str.Split(',');
             if (split.Length > 0)
-                int.TryParse(split[0], out itemId);
+                itemId = PackUtil.UnpackValue<int>(split[0]);
             if (split.Length > 1)
                 awake = split[1] == "1";
         }

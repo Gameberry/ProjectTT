@@ -7,7 +7,7 @@ namespace GameBerry.Table
 {
     public class PointData : ItemData, IPackable
     {
-        public string Pack() => $"{itemId},{count}";
+        public string Pack() => $"{PackUtil.PackValue(itemId)},{PackUtil.PackValue(count)}";
 
         public void Unpack(string str)
         {
@@ -19,8 +19,8 @@ namespace GameBerry.Table
                 return;
 
             var sp = str.Split(',');
-            if (sp.Length > 0) int.TryParse(sp[0], out itemId);
-            if (sp.Length > 1) long.TryParse(sp[1], out count);
+            if (sp.Length > 0) itemId = PackUtil.UnpackValue<int>(sp[0]);
+            if (sp.Length > 1) count = PackUtil.UnpackValue<long>(sp[1]);
         }
     }
 

@@ -1,6 +1,7 @@
 using LitJson;
 using BackEnd;
 using System.Collections.Generic;
+using GameBerry.Chart;
 
 namespace GameBerry.Table
 {
@@ -9,20 +10,50 @@ namespace GameBerry.Table
         public Enum_EquipType slot; // (int)Enum_EquipType
         public int instanceId;
 
-        public string Pack() => $"{slot.Enum32ToInt()},{instanceId}";
+        public string Pack() => $"{PackUtil.PackValue(slot.Enum32ToInt())},{PackUtil.PackValue(instanceId)}";
         public void Unpack(string str)
         {
             instanceId = 0;
 
-            if (string.IsNullOrEmpty(str)) return;
+            if (string.IsNullOrEmpty(str))
+                return;
+
             var sp = str.Split(',');
-            if (sp.Length > 0)
-            {
-                if (int.TryParse(sp[0], out int slotid))
-                    slot = slotid.IntToEnum32<Enum_EquipType>();
-            }
-            if (sp.Length > 1) int.TryParse(sp[1], out instanceId);
+
+            if (sp.Length >= 1)
+                slot = PackUtil.UnpackValue<int>(sp[0]).IntToEnum32<Enum_EquipType>();
+
+            if (sp.Length >= 2)
+                instanceId = PackUtil.UnpackValue<int>(sp[1]);
         }
+    }
+
+    public struct EquipmentAddStat : IPackable
+    {
+        public V2Enum_Stat stat;
+        public double value;
+        public string Pack() => $"{PackUtil.PackValue(stat.Enum32ToInt())},{PackUtil.PackValue(value)}";
+
+        public void Unpack(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return;
+
+            var sp = str.Split(',');
+
+            if (sp.Length >= 1)
+                stat = PackUtil.UnpackValue<int>(sp[0]).IntToEnum32<V2Enum_Stat>();
+
+            if (sp.Length >= 2)
+                value = PackUtil.UnpackValue<double>(sp[1]);
+        }
+
+        public static EquipmentAddStat Set(V2Enum_Stat Stat, double Value)
+            => new EquipmentAddStat
+            {
+                stat = Stat,
+                value = Value
+            };
     }
 
     public class EquipmentData : IPackable
@@ -30,9 +61,9 @@ namespace GameBerry.Table
         public int instanceId;
         public int enhanceLevel;
 
-        public Dictionary<V2Enum_Stat, double> addStat;
+        public List<EquipmentAddStat> addStatList;
 
-        public string Pack() => $"{instanceId},{enhanceLevel}:{PackUtil.PackPrimitiveDict(addStat)}";
+        public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(enhanceLevel)}:{PackUtil.PackList(addStatList)}";
         public void Unpack(string str)
         {
             if (string.IsNullOrEmpty(str)) return;
@@ -42,12 +73,12 @@ namespace GameBerry.Table
             if (tsp.Length > 0)
             {
                 var sp = tsp[0].Split(',');
-                if (sp.Length > 0) int.TryParse(sp[0], out instanceId);
-                if (sp.Length > 1) int.TryParse(sp[1], out enhanceLevel);
+                if (sp.Length > 0) instanceId = PackUtil.UnpackValue<int>(sp[0]);
+                if (sp.Length > 1) enhanceLevel = PackUtil.UnpackValue<int>(sp[1]);
             }
 
             if (tsp.Length > 1 && string.IsNullOrEmpty(tsp[1]) == false)
-                addStat = PackUtil.UnpackPrimitiveDict<V2Enum_Stat, double>(tsp[1]);
+                addStatList = PackUtil.UnpackList<EquipmentAddStat>(tsp[1]);
         }
     }
 
@@ -85,12 +116,12 @@ namespace GameBerry.Table
             return p;
         }
 
-        public bool AddEquipment(int instanceId)
+        public bool AddEquipment(EquipmentData equipmentData)
         {
-            if (equipmentDataDict.ContainsKey(instanceId) == true)
+            if (equipmentDataDict.ContainsKey(equipmentData.instanceId) == true)
                 return false;
 
-            equipmentDataDict.Add(instanceId, new EquipmentData { instanceId = instanceId });
+            equipmentDataDict.Add(equipmentData.instanceId, equipmentData);
 
             return true;
         }

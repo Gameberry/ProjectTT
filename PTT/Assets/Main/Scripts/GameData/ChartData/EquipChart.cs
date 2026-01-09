@@ -7,7 +7,7 @@ namespace GameBerry.Chart
     public class EquipInfo
     {
         public int ItemId; // ItemId == Equip key (3000 + R*100 + T*10 + V)
-        public GameBerry.Enum_EquipType EquipType;
+        public Enum_EquipType EquipType;
         public string Name;
 
         // Packed base stats string. Example: "Attack=10|HP=50|Defence=5"

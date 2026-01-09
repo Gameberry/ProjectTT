@@ -11,7 +11,7 @@ namespace GameBerry.Table
     [Serializable]
     public class InventoryEntry : ItemData, IPackable
     {
-        public string Pack() => $"{itemId},{count},{instanceId}";
+        public string Pack() => $"{PackUtil.PackValue(itemId)},{PackUtil.PackValue(count)},{PackUtil.PackValue(instanceId)}";
 
         public void Unpack(string str)
         {
@@ -23,9 +23,9 @@ namespace GameBerry.Table
                 return;
 
             var sp = str.Split(',');
-            if (sp.Length > 0) int.TryParse(sp[0], out itemId);
-            if (sp.Length > 1) long.TryParse(sp[1], out count);
-            if (sp.Length > 2) int.TryParse(sp[2], out instanceId);
+            if (sp.Length > 0) itemId = PackUtil.UnpackValue<int>(sp[0]);
+            if (sp.Length > 1) count = PackUtil.UnpackValue<long>(sp[1]);
+            if (sp.Length > 2) instanceId = PackUtil.UnpackValue<int>(sp[2]);
 
             if (count <= 0) count = 1;
         }
@@ -180,17 +180,19 @@ namespace GameBerry.Table
             }
         }
 
-        public int AddInstance(int itemId)
+        public ItemHandle AddInstance(int itemId)
         {
             int instanceId = GetNewInstanceId();
-            inventory.Add(new InventoryEntry
+            InventoryEntry inventoryEntry = new InventoryEntry
             {
                 itemId = itemId,
                 count = 1,
                 instanceId = instanceId,
-            });
+            };
 
-            return instanceId;
+            inventory.Add(inventoryEntry);
+
+            return ItemHandle.FromInventory(inventoryEntry);
         }
 
         public bool CanRemoveInstance(int instanceId)

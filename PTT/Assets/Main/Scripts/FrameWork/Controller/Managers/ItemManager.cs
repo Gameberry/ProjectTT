@@ -360,9 +360,9 @@ namespace GameBerry
                 {
                     for (int i = 0; i < amount; i++)
                     {
-                        int instanceId = inv.AddInstance(meta.ItemId);
+                        ItemHandle itemHandle = inv.AddInstance(meta.ItemId);
                         if (meta.ItemType == Enum_ItemType.Equip)
-                            UserTable.Get<EquipmentTable>()?.AddEquipment(instanceId);
+                            EquipmentManager.Instance.AddEquipment(itemHandle);
                     }
 
                     added = amount;
@@ -385,6 +385,7 @@ namespace GameBerry
 
                 return new AddItemResult { Success = true, Requested = amount, Added = added };
             }
+
             public ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediate)
             {
                 var inv = UserTable.Get<InventoryTable>();
