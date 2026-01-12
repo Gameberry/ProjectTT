@@ -64,8 +64,13 @@ namespace GameBerry
         { 
             RefreshCheatStat();
 
-            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(97);
+            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(98);
             SetSpineModelData(_currentSpineModelData);
+            _mySkeletonAnimationHandler._skeletonAnimation.initialSkinName = _currentSpineModelData.SkinList[Random.Range(4, _currentSpineModelData.SkinList.Count)];
+            _mySkeletonAnimationHandler._skeletonAnimation.Initialize(true);
+
+            _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetSlotsToSetupPose();
+            _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetBonesToSetupPose();
 
             attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
 
@@ -74,15 +79,15 @@ namespace GameBerry
 
             int idleattackidx = Random.Range(0, 2);
 
-            idleAniName = idleAniNameList[idleattackidx];
-            AttackAniName = AttackAniNameList[idleattackidx];
+            idleAniName = idleAniNameList[Random.Range(0, idleAniNameList.Count)];
+            AttackAniName = AttackAniNameList[Random.Range(0, AttackAniNameList.Count)];
 
             if (idleattackidx == 0)
                 runAniName = run1AniNameList[Random.Range(0, run1AniNameList.Count)];
             else if (idleattackidx == 1)
                 runAniName = run2AniNameList[Random.Range(0, run2AniNameList.Count)];
 
-            hitAniName = hitAniNameList[idleattackidx];
+            hitAniName = idleAniName;
         }
         //------------------------------------------------------------------------------------
         public void SetAggro(PlayerController playerController)
@@ -102,8 +107,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void TestAniPlay(string aniname, bool isloop = true)
         {
-            return;
-            PlayAnimation_AniName(hitAniName, false);
+            PlayAnimation_AniName(aniname, isloop);
         }
         //------------------------------------------------------------------------------------
         private async UniTask OnDamageDirection()

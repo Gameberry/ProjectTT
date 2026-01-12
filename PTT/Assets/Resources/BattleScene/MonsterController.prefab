@@ -420,7 +420,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2620842696592920704}
@@ -723,20 +723,33 @@ MonoBehaviour:
   _aniControllerSpeed: 1
   Temp_Accuracy: 1
   idleAniNameList:
-  - Idle_01
-  - Idle_02
+  - idle/idle_00
+  - idle/idle_01
+  - idle/idle_02
+  - idle/idle_03
+  - idle/idle_04
   AttackAniNameList:
-  - Attack_01
-  - Attack_02
+  - idle/idle_00
+  - idle/idle_01
+  - idle/idle_02
+  - idle/idle_03
+  - idle/idle_04
   run1AniNameList:
-  - Run_01
-  - Run_02
+  - Run/Run_01
+  - Run/Run_02
+  - Run/Run_03
+  - Run/Run_04
   run2AniNameList:
-  - Run_03
-  - Run_04
+  - Run/Run_01
+  - Run/Run_02
+  - Run/Run_03
+  - Run/Run_04
   hitAniNameList:
-  - Hit_01
-  - Hit_02
+  - idle/idle_00
+  - idle/idle_01
+  - idle/idle_02
+  - idle/idle_03
+  - idle/idle_04
   idleAniName: 
   AttackAniName: 
   runAniName: 

@@ -239,52 +239,39 @@ MonoBehaviour:
     - Slot: 2
       SkinName: Weapon/Weapon_000
   - ResourceIndex: 98
-    SkeletonData: {fileID: 11400000, guid: d807ecd8d9da1fc41b4048fa1249bfa8, type: 2}
-    Name: mon_juseung_skeletondata
+    SkeletonData: {fileID: 11400000, guid: 1b2249151cef5c643b24a09223cc48a4, type: 2}
+    Name: basic_mon_spine_setting_skeletondata
     SkinList:
-    - 00
+    - base/000
+    - base/001
+    - base/002
+    - base/003
+    - fat_man/005
+    - fat_woman/007
+    - normal_man/004
+    - normal_woman/006
     AnimationList:
-    - stateName: Attack
-    - stateName: Hit
-    - stateName: Idle
-    - stateName: Run
-    - stateName: Skill
+    - stateName: idle/idle_00
+    - stateName: idle/idle_01
+    - stateName: idle/idle_02
+    - stateName: idle/idle_03
+    - stateName: idle/idle_04
+    - stateName: Run/Run_01
+    - stateName: Run/Run_02
+    - stateName: Run/Run_03
+    - stateName: Run/Run_04
+    - stateName: setting/pose_idle_standing_01
+    - stateName: setting/pose_idle_standing_02
+    - stateName: setting/Run_setting_01
     AnimationState:
     - characterState: 1
-      animationName: Idle
+      animationName: idle/idle_00
     - characterState: 2
-      animationName: Run
+      animationName: Run/Run_01
     - characterState: 3
-      animationName: Attack
+      animationName: idle/idle_00
     - characterState: 4
-      animationName: Hit
+      animationName: idle/idle_00
     - characterState: 5
-      animationName: Idle
+      animationName: idle/idle_00
     DefaultSlotSkins: []
-  - ResourceIndex: 97
-    SkeletonData: {fileID: 11400000, guid: c616e659c39894c4da3deb9455a9a9f7, type: 2}
-    Name: mon_skull_skeletondata
-    SkinList:
-    - 00
-    - 01
-    - 02
-    - 03
-    AnimationList:
-    - stateName: Attack
-    - stateName: Hit
-    - stateName: Idle
-    - stateName: Run
-    AnimationState:
-    - characterState: 1
-      animationName: Idle
-    - characterState: 2
-      animationName: Run
-    - characterState: 3
-      animationName: Attack
-    - characterState: 4
-      animationName: Hit
-    - characterState: 5
-      animationName: Idle
-    DefaultSlotSkins:
-    - Slot: 1
-      SkinName: 00
