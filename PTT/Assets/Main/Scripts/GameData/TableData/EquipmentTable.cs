@@ -69,7 +69,7 @@ namespace GameBerry.Table
             string insid = PackUtil.PackValue(instanceId);
             string lv = PackUtil.PackValue(enhanceLevel);
 
-            string addstat = PackUtil.PackList(addStatList, PackSep.List);
+            string addstat = PackUtil.PackList(addStatList, PackSep.L1);
 
             string str = $"{insid},{lv}:{addstat}";
             return str;
@@ -89,7 +89,7 @@ namespace GameBerry.Table
             }
 
             if (tsp.Length > 1 && string.IsNullOrEmpty(tsp[1]) == false)
-                addStatList = PackUtil.UnpackList<EquipmentAddStat>(tsp[1], PackSep.List);
+                addStatList = PackUtil.UnpackList<EquipmentAddStat>(tsp[1], PackSep.L1);
         }
     }
 
