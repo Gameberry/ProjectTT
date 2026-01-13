@@ -9,11 +9,13 @@ namespace GameBerry.Table
     {
         public Enum_EquipType slot; // (int)Enum_EquipType
         public int instanceId;
+        public int level;
 
-        public string Pack() => $"{PackUtil.PackValue(slot.Enum32ToInt())},{PackUtil.PackValue(instanceId)}";
+        public string Pack() => $"{PackUtil.PackValue(slot.Enum32ToInt())},{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(level)}";
         public void Unpack(string str)
         {
             instanceId = 0;
+            level = 0;
 
             if (string.IsNullOrEmpty(str))
                 return;
@@ -25,6 +27,9 @@ namespace GameBerry.Table
 
             if (sp.Length >= 2)
                 instanceId = PackUtil.UnpackValue<int>(sp[1]);
+
+            if (sp.Length >= 3)
+                level = PackUtil.UnpackValue<int>(sp[2]);
         }
     }
 
@@ -63,17 +68,7 @@ namespace GameBerry.Table
 
         public List<EquipmentAddStat> addStatList;
 
-        //public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(enhanceLevel)}:{PackUtil.PackList(addStatList)}";
-        public string Pack() 
-        {
-            string insid = PackUtil.PackValue(instanceId);
-            string lv = PackUtil.PackValue(enhanceLevel);
-
-            string addstat = PackUtil.PackList(addStatList, PackSep.L1);
-
-            string str = $"{insid},{lv}:{addstat}";
-            return str;
-        }
+        public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(enhanceLevel)}:{PackUtil.PackList(addStatList, PackSep.L1)}";
 
         public void Unpack(string str)
         {
@@ -137,6 +132,16 @@ namespace GameBerry.Table
             return true;
         }
 
+        public EquipmentData GetEquipmentData(int instandeId)
+        {
+            if (equipmentDataDict.TryGetValue(instandeId, out var data))
+            {
+                return data;
+            }
+
+            return null;
+        }
+
         public bool RemoveEquipment(int instanceId)
         {
             if (equipmentDataDict.ContainsKey(instanceId) == false)
@@ -151,6 +156,12 @@ namespace GameBerry.Table
         {
             var d = equipped.Find(x => x.slot == slot);
             return d != null ? d.instanceId : 0;
+        }
+
+        public int GetSlotLevel(GameBerry.Enum_EquipType slot)
+        {
+            var d = equipped.Find(x => x.slot == slot);
+            return d != null ? d.level : 0;
         }
 
         public void SetEquipped(GameBerry.Enum_EquipType slot, int instanceId)

@@ -13,6 +13,8 @@ namespace GameBerry
         EquipRandomRuleChart _equipRandomRuleChart;
         EquipRandomPoolChart _equipRandomPoolChart;
 
+        InventoryTable _inventoryTable;
+
         WeightedRandomPicker<EquipRandomPoolInfo> _picker = null;
 
         protected override void Init()
@@ -21,6 +23,8 @@ namespace GameBerry
             _equipChart = GameChart.Get<EquipChart>();
             _equipRandomRuleChart = GameChart.Get<EquipRandomRuleChart>();
             _equipRandomPoolChart = GameChart.Get<EquipRandomPoolChart>();
+
+            _inventoryTable = UserTable.Get<InventoryTable>();
         }
 
         public bool AddEquipment(ItemHandle itemHandle)
@@ -95,6 +99,40 @@ namespace GameBerry
                 return data;
 
             return null;
+        }
+
+        public bool TryGetInstanceIdToHandle(int instanceId, out ItemHandle itemHandle)
+        {
+            EquipmentData data = _equipmentTable.GetEquipmentData(instanceId);
+
+            if (data == null)
+            {
+                itemHandle = default;
+                return false;
+            }
+
+            InventoryEntry inventoryEntry = _inventoryTable.FindInstance(instanceId);
+
+            itemHandle = default;
+
+            return false;
+        }
+
+        public bool TryGetEquipSlotToHandle(Enum_EquipType enum_EquipType, out ItemHandle itemHandle)
+        {
+            int instanceId = _equipmentTable.GetEquippedInstanceId(enum_EquipType);
+            if (instanceId <= 0)
+            {
+                itemHandle = default;
+                return false;
+            }
+
+            return TryGetInstanceIdToHandle(instanceId, out itemHandle);
+        }
+
+        public int GetEquipSlotLevel(Enum_EquipType enum_EquipType)
+        {
+            return _equipmentTable.GetSlotLevel(enum_EquipType);
         }
     }
 }
