@@ -39,6 +39,9 @@ namespace GameBerry
 
         Vector3 velocity = Vector3.zero;
 
+        public bool zTest = false;
+        public float zTestValue = 0.0f;
+
         private void LateUpdate()
         {
             if (Managers.BattleSceneManager.Instance.CurrentBattleScene == null)
@@ -57,6 +60,9 @@ namespace GameBerry
             //cameraPos.x = xpos + _focusMove_X;
 
             Vector3 pos = Managers.BattleSceneManager.Instance.CurrentBattleScene.PlayerController.transform.position;
+
+            if (zTest == true)
+                pos.z = zTestValue;
 
             transform.position = Vector3.SmoothDamp(transform.position, pos, ref velocity, _cameraSmoothTime);
 

@@ -6,6 +6,7 @@ namespace GameBerry
 {
     public class BattleSceneMap_Aggro : MonoBehaviour
     {
+        [SerializeField]
         private List<MonsterController> _monsters = new List<MonsterController>();
 
         private PlayerController _playerController = null;
@@ -68,6 +69,8 @@ namespace GameBerry
         public void OnDeadMonster(MonsterController monsterController)
         {
             _monsters.Remove(monsterController);
+            Managers.BattleSceneManager.Instance.DeadMonster(monsterController);
+            Managers.MonsterManager.Instance.PoolMonster(monsterController);
         }
 
         private void OnDrawGizmos()

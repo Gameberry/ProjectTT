@@ -250,9 +250,6 @@ namespace GameBerry
 
                     selectAttackData.CustomParam = eventName;
 
-                    if (_refreshAggro == true)
-                        SetNewTarget();
-
                     if(AttackTarget == null || AttackTarget.IsDead)
                         SetNewTarget();
 
@@ -268,6 +265,8 @@ namespace GameBerry
                         if (distance > _currentAttackData.AttackRange && _blockAttack == false)
                         {
                             _attackTimming = 0f;
+
+                            return;
                         }
                     }
 
@@ -276,6 +275,8 @@ namespace GameBerry
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                     _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
 
+                    if (_refreshAggro == true)
+                        SetNewTarget();
 
                     if (AttackTarget == null || AttackTarget.IsDead)
                         SetNewTarget();

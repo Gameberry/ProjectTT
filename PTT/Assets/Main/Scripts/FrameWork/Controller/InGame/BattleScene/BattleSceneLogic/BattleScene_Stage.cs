@@ -91,7 +91,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public override void DeadMonster(MonsterController monsterController)
         {
-            Managers.MonsterManager.Instance.PoolMonster(monsterController);
+            
         }
         //------------------------------------------------------------------------------------
     }

@@ -11,7 +11,7 @@ namespace GameBerry
         [SerializeField] private CombatTextPresetLibraryAsset textPresets;
         [SerializeField] private CombatTextMotionLibraryAsset motionPresets;
 
-        private static readonly Vector3 BASE_WORLD_COMBO = new(0f, 1.0f, 0f);
+        private static readonly Vector3 BASE_WORLD_COMBO = new(0f, 1.2f, 0f);
         private static readonly Vector3 BASE_WORLD_MISS = new(0f, 1.0f, 0f);
         private static readonly Vector3 BASE_WORLD_CRIT = new(0f, 1.0f, 0f);
 

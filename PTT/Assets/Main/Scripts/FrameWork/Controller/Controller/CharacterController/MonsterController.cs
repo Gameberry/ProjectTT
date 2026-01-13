@@ -74,6 +74,10 @@ namespace GameBerry
 
             attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
 
+            if (_battleSceneMap_Aggro != null)
+            {
+                Debug.Log("sdf");
+            }
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
             _spawnPos = spawnPos;
 
@@ -138,8 +142,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void OnDead()
         {
-            _battleSceneMap_Aggro.OnDeadMonster(this);
-            Managers.BattleSceneManager.Instance.DeadMonster(this);
+            if (_battleSceneMap_Aggro != null)
+            { 
+                _battleSceneMap_Aggro.OnDeadMonster(this);
+                _battleSceneMap_Aggro = null;
+            }
         }
         //------------------------------------------------------------------------------------
         protected override void Updated()
