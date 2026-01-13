@@ -28,7 +28,7 @@ namespace GameBerry
         public float Duration;
         public float Rate = 1.0f;
         [HideInInspector]
-        public Vector2 EffectPos;
+        public Vector3 EffectPos;
     }
 
     [CreateAssetMenu(fileName = "ConditionData", menuName = "Table/ConditionData", order = 1)]

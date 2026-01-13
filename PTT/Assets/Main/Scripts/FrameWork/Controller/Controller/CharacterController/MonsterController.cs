@@ -52,7 +52,7 @@ namespace GameBerry
 
         private BattleSceneMap_Aggro _battleSceneMap_Aggro;
 
-        private Vector2 _spawnPos;
+        private Vector3 _spawnPos;
 
         public override void Init()
         {
@@ -60,7 +60,7 @@ namespace GameBerry
             creatureBaseMove.SetCharacterController(this);
         }
         //------------------------------------------------------------------------------------
-        public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector2 spawnPos, int modelIndex)
+        public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector3 spawnPos, int modelIndex)
         { 
             RefreshCheatStat();
 
@@ -128,10 +128,10 @@ namespace GameBerry
             TestAniPlay(idleAniName);
         }
         //------------------------------------------------------------------------------------
-        public override Vector2 GetMoveDirection()
+        public override Vector3 GetMoveDirection()
         {
             if (_attackTarget == null)
-                return (_spawnPos - new Vector2(transform.position.x, transform.position.y)).normalized;
+                return (_spawnPos - transform.position).normalized;
             else
                 return base.GetMoveDirection();
         }

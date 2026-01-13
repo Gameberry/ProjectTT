@@ -107,16 +107,16 @@ namespace GameBerry
 
     public class KnockbackCondition : BaseCondition
     {
-        private Vector2 _direction;      // 넉백 방향 (정규화)
+        private Vector3 _direction;      // 넉백 방향 (정규화)
         private float _distance;         // 총 넉백 거리
         private float _baseDuration;     // 요청된 기본 지속 시간
 
-        private Rigidbody2D _rb;
-        private Vector2 _startPos;       // 넉백 시작 위치
-        private Vector2 _prevPos;        // 직전 프레임에서의 목표 위치 (delta 계산용)
+        private Rigidbody _rb;
+        private Vector3 _startPos;       // 넉백 시작 위치
+        private Vector3 _prevPos;        // 직전 프레임에서의 목표 위치 (delta 계산용)
 
         /// <summary>넉백 방향 (정규화된 벡터)</summary>
-        public Vector2 Direction => _direction;
+        public Vector3 Direction => _direction;
 
         /// <summary>넉백 총 거리</summary>
         public float Distance => _distance;
@@ -134,16 +134,16 @@ namespace GameBerry
         {
             base.Initialize(conditionData);
 
-            _rb = Owner.MyRigidbody2D;
+            _rb = Owner.MyRigidbody;
 
-            Vector2 ownerPos = Owner.transform.position;
+            Vector3 ownerPos = Owner.transform.position;
 
-            Vector2 direction = ownerPos - conditionData.EffectPos;
+            Vector3 direction = ownerPos - conditionData.EffectPos;
 
             if (direction.sqrMagnitude > 0.0001f)
                 _direction = direction.normalized;
             else
-                _direction = Vector2.zero;
+                _direction = Vector3.zero;
 
             if (_rb != null)
             {
@@ -165,7 +165,7 @@ namespace GameBerry
         {
             base.OnUpdate(deltaTime);
 
-            if (_direction == Vector2.zero || _distance <= 0f)
+            if (_direction == Vector3.zero || _distance <= 0f)
                 return;
 
             if (Duration <= 0f)
@@ -177,47 +177,47 @@ namespace GameBerry
             float easedT = 1f - (1f - t) * (1f - t);
 
             float currentDist = _distance * easedT;
-            Vector2 targetPos = _startPos + _direction * currentDist;
+            Vector3 targetPos = _startPos + _direction * currentDist;
 
-            Vector2 delta = targetPos - _prevPos;
+            Vector3 delta = targetPos - _prevPos;
             _prevPos = targetPos;
 
             if (_rb != null)
             {
-                Vector2 newpos = _rb.position + delta;
+                Vector3 newpos = _rb.position + delta;
 
-                Vector2 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
-                Vector2 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
+                Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
+                Vector3 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
 
                 if (newpos.x < minpos.x)
                     newpos.x = minpos.x;
                 else if (newpos.x > maxpos.x)
                     newpos.x = maxpos.x;
 
-                if (newpos.y < minpos.y)
-                    newpos.y = minpos.y;
-                else if (newpos.y > maxpos.y)
-                    newpos.y = maxpos.y;
+                if (newpos.z < minpos.z)
+                    newpos.z = minpos.z;
+                else if (newpos.z > maxpos.z)
+                    newpos.z = maxpos.z;
 
                 _rb.MovePosition(newpos);
             }
             else
             {
-                Vector2 charpos = Owner.transform.position;
-                Vector2 newpos = charpos + delta;
+                Vector3 charpos = Owner.transform.position;
+                Vector3 newpos = charpos + delta;
 
-                Vector2 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
-                Vector2 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
+                Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
+                Vector3 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
 
                 if (newpos.x < minpos.x)
                     newpos.x = minpos.x;
                 else if (newpos.x > maxpos.x)
                     newpos.x = maxpos.x;
 
-                if (newpos.y < minpos.y)
-                    newpos.y = minpos.y;
-                else if (newpos.y > maxpos.y)
-                    newpos.y = maxpos.y;
+                if (newpos.z < minpos.z)
+                    newpos.z = minpos.z;
+                else if (newpos.z > maxpos.z)
+                    newpos.z = maxpos.z;
 
                 Owner.transform.position = newpos;
             }
@@ -234,17 +234,17 @@ namespace GameBerry
             // --- 방향/거리 누적 방식 (Additive) ---
 
             // 기존 넉백 벡터
-            Vector2 oldVec = _direction * _distance;
+            Vector3 oldVec = _direction * _distance;
 
-            Vector2 ownerPos = Owner.transform.position;
-            Vector2 direction = ownerPos - conditionData.EffectPos;
+            Vector3 ownerPos = Owner.transform.position;
+            Vector3 direction = ownerPos - conditionData.EffectPos;
 
 
             // 새 넉백 벡터
-            Vector2 newVec = direction * conditionData.Param1;
+            Vector3 newVec = direction * conditionData.Param1;
 
             // 합산
-            Vector2 merged = oldVec + newVec;
+            Vector3 merged = oldVec + newVec;
 
             // 거리 갱신
             _distance = merged.magnitude;

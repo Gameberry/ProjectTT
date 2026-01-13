@@ -43,7 +43,7 @@ namespace GameBerry
         // 조이스틱 넣기 전에 임시 변수
         private bool _useCustomDirVec = false;
 
-        private Vector2 _customDieVec = Vector3.zero;
+        private Vector3 _customDieVec = Vector3.zero;
         // 조이스틱 넣기 전에 임시 변수
 
         //------------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ namespace GameBerry
             ChangeState(CharacterState.Idle);
         }
         //------------------------------------------------------------------------------------
-        public override Vector2 GetMoveDirection()
+        public override Vector3 GetMoveDirection()
         { // MoveController_Base에서 주로 호출
             // 유저는 조이스틱으로 방향을 정할 때가 있어서 가상함수로 만듬
 
@@ -150,13 +150,13 @@ namespace GameBerry
             if (Input.GetKey(KeyCode.W))
             {
                 _useCustomDirVec = true;
-                _customDieVec.y = 1;
+                _customDieVec.z = 1;
             }
 
             if (Input.GetKey(KeyCode.S))
             {
                 _useCustomDirVec = true;
-                _customDieVec.y = -1;
+                _customDieVec.z = -1;
             }
 
             if (Input.GetKey(KeyCode.D))
@@ -262,15 +262,28 @@ namespace GameBerry
                         return;
                     }
 
+                    if (_currentAttackData != null && AttackTarget != null)
+                    {
+                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                        if (distance > _currentAttackData.AttackRange && _blockAttack == false)
+                        {
+                            _attackTimming = 0f;
+                        }
+                    }
+
                     selectAttackData.HitEnemy.Clear();
 
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                     _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
 
+
+                    if (AttackTarget == null || AttackTarget.IsDead)
+                        SetNewTarget();
+
                     if (_currentAttackData != null && AttackTarget != null)
                     {
                         float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                        if (distance > _currentAttackData.AttackRange + 1.0f && _blockAttack == false)
+                        if (distance > _currentAttackData.AttackRange && _blockAttack == false)
                         {
                             _attackTimming = 0f;
                         }

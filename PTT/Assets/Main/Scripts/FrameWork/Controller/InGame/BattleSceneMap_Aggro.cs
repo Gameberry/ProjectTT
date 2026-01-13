@@ -10,14 +10,14 @@ namespace GameBerry
 
         private PlayerController _playerController = null;
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerEnter(Collider other)
         {
             _playerController = other.GetComponent<PlayerController>();
 
             SetAggro();
         }
 
-        private void OnTriggerExit2D(Collider2D other)
+        private void OnTriggerExit(Collider other)
         {
             _playerController = other.GetComponent<PlayerController>();
 
@@ -45,15 +45,15 @@ namespace GameBerry
 
             int spawnCount = count - _monsters.Count;
 
-            Vector2 rootpos = transform.position;
+            Vector3 rootpos = transform.position;
 
-            List<Vector2> posList = PointSpawnPlacer2D.GeneratePositionsGuaranteed(rootpos, spawnCount,
+            List<Vector3> posList = PointSpawnPlacer2D.GeneratePositionsGuaranteed(rootpos, spawnCount,
                 StaticResource.Instance.GetBattleModeStaticData().SpawnrouteRadius,
                 StaticResource.Instance.GetBattleModeStaticData().MonsterMinSeparation);
 
             for (int i = 0; i < posList.Count; ++i)
             {
-                Vector2 pos = posList[i];
+                Vector3 pos = posList[i];
                 MonsterController monsterController = Managers.MonsterManager.Instance.GetMonster();
                 monsterController.gameObject.SetActive(true);
                 monsterController.transform.position = pos;
@@ -80,8 +80,8 @@ namespace GameBerry
 
     public static class PointSpawnPlacer2D
     {
-        public static List<Vector2> GeneratePositionsGuaranteed(
-            Vector2 center,
+        public static List<Vector3> GeneratePositionsGuaranteed(
+            Vector3 center,
             int desiredCount,
             float spawnRadius,      // 중심점 기준 반경 (기존 n 개념)
             float minSeparation,    // 몬스터 간 최소거리 (기존 d)
@@ -102,7 +102,7 @@ namespace GameBerry
             float fallbackRingJitterFactor = 0.25f      // 최후 링 배치 시 지터 (minSeparation * 이 값)
         )
         {
-            if (desiredCount <= 0) return new List<Vector2>();
+            if (desiredCount <= 0) return new List<Vector3>();
 
             spawnRadius = Mathf.Max(0f, spawnRadius);
             minSeparation = Mathf.Max(0.001f, minSeparation);
@@ -110,7 +110,7 @@ namespace GameBerry
             relaxFactors ??= new float[] { 1.0f, 0.95f, 0.90f, 0.85f, 0.80f, 0.75f, 0.70f, 0.65f, 0.60f, 0.55f, 0.50f };
 
             var rng = (seed >= 0) ? new System.Random(seed) : new System.Random();
-            var positions = new List<Vector2>(desiredCount);
+            var positions = new List<Vector3>(desiredCount);
 
             // =========================
             // A: 엄격 -> 완화로 채우기
@@ -132,7 +132,7 @@ namespace GameBerry
                     bool placed = false;
                     for (int t = 0; t < triesPerCandidate; t++)
                     {
-                        Vector2 candidate = SampleInsideCircle(rng, center, spawnRadius);
+                        Vector3 candidate = SampleInsideCircle(rng, center, spawnRadius);
 
                         if (grid.IsFarEnough(candidate, currentSeparation))
                         {
@@ -201,7 +201,7 @@ namespace GameBerry
         // =========================
         // Sampling
         // =========================
-        private static Vector2 SampleInsideCircle(System.Random rng, Vector2 center, float radius)
+        private static Vector3 SampleInsideCircle(System.Random rng, Vector3 center, float radius)
         {
             if (radius <= 0f) return center;
 
@@ -211,20 +211,20 @@ namespace GameBerry
             double angle = v * Math.PI * 2.0;
             float r = (float)(Math.Sqrt(u) * radius);
 
-            return center + new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * r;
+            return center + new Vector3((float)Math.Cos(angle), 0, (float)Math.Sin(angle)) * r;
         }
 
-        private static Vector2 RandomUnit2D(System.Random rng)
+        private static Vector3 RandomUnit2D(System.Random rng)
         {
             double angle = rng.NextDouble() * Math.PI * 2.0;
-            return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+            return new Vector3((float)Math.Cos(angle), 0, (float)Math.Sin(angle));
         }
 
-        private static Vector2 ClampToCircle(Vector2 p, Vector2 center, float radius)
+        private static Vector3 ClampToCircle(Vector3 p, Vector3 center, float radius)
         {
             if (radius <= 0f) return center;
 
-            Vector2 d = p - center;
+            Vector3 d = p - center;
             float len = d.magnitude;
             if (len <= radius) return p;
             if (len < 1e-6f) return center;
@@ -236,8 +236,8 @@ namespace GameBerry
         // B: 약한 밀어내기
         // =========================
         private static void ResolveOverlapsWeak(
-            List<Vector2> points,
-            Vector2 center,
+            List<Vector3> points,
+            Vector3 center,
             float spawnRadius,
             float targetSeparation,
             int iterations,
@@ -255,16 +255,16 @@ namespace GameBerry
 
                 for (int i = 0; i < points.Count; i++)
                 {
-                    Vector2 p = points[i];
+                    Vector3 p = points[i];
                     var neighbors = grid.QueryNeighbors(p);
 
-                    Vector2 push = Vector2.zero;
+                    Vector3 push = Vector3.zero;
                     int pushCount = 0;
 
                     for (int k = 0; k < neighbors.Count; k++)
                     {
-                        Vector2 q = neighbors[k];
-                        Vector2 d = p - q;
+                        Vector3 q = neighbors[k];
+                        Vector3 d = p - q;
                         float distSqr = d.sqrMagnitude;
                         if (distSqr < 1e-12f) continue;
 
@@ -272,7 +272,7 @@ namespace GameBerry
                         {
                             float dist = Mathf.Sqrt(distSqr);
                             float overlap = (sep - dist);
-                            Vector2 dir = d / dist;
+                            Vector3 dir = d / dist;
                             push += dir * overlap;
                             pushCount++;
                         }
@@ -296,8 +296,8 @@ namespace GameBerry
         // C: Force Fill
         // =========================
         private static void ForceFillToCount(
-            List<Vector2> points,
-            Vector2 center,
+            List<Vector3> points,
+            Vector3 center,
             float spawnRadius,
             int desiredCount,
             System.Random rng,
@@ -320,7 +320,7 @@ namespace GameBerry
 
                 for (int t = 0; t < attemptsPerPoint; t++)
                 {
-                    Vector2 candidate = SampleInsideCircle(rng, center, spawnRadius);
+                    Vector3 candidate = SampleInsideCircle(rng, center, spawnRadius);
                     if (grid.IsFarEnough(candidate, relaxedSep))
                     {
                         points.Add(candidate);
@@ -336,10 +336,10 @@ namespace GameBerry
                 int idx = points.Count;
                 float angle = ((idx + 0.5f) / desiredCount) * Mathf.PI * 2f;
 
-                Vector2 onRing = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * spawnRadius;
-                Vector2 jitter = RandomUnit2D(rng) * (minSeparation * ringJitterFactor);
+                Vector3 onRing = center + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * spawnRadius;
+                Vector3 jitter = RandomUnit2D(rng) * (minSeparation * ringJitterFactor);
 
-                Vector2 forced = ClampToCircle(onRing + jitter, center, spawnRadius);
+                Vector3 forced = ClampToCircle(onRing + jitter, center, spawnRadius);
                 points.Add(forced);
                 grid.Add(forced);
             }
@@ -351,33 +351,33 @@ namespace GameBerry
         private sealed class SpatialHash
         {
             private readonly float _cellSize;
-            private readonly Dictionary<Vector2Int, List<Vector2>> _cells = new Dictionary<Vector2Int, List<Vector2>>(1024);
+            private readonly Dictionary<Vector3Int, List<Vector3>> _cells = new Dictionary<Vector3Int, List<Vector3>>(1024);
 
             public SpatialHash(float cellSize)
             {
                 _cellSize = Mathf.Max(0.001f, cellSize);
             }
 
-            public void Add(Vector2 p)
+            public void Add(Vector3 p)
             {
-                Vector2Int c = ToCell(p);
+                Vector3Int c = ToCell(p);
                 if (!_cells.TryGetValue(c, out var list))
                 {
-                    list = new List<Vector2>(8);
+                    list = new List<Vector3>(8);
                     _cells[c] = list;
                 }
                 list.Add(p);
             }
 
-            public bool IsFarEnough(Vector2 p, float minDist)
+            public bool IsFarEnough(Vector3 p, float minDist)
             {
                 float minDistSqr = minDist * minDist;
-                Vector2Int c = ToCell(p);
+                Vector3Int c = ToCell(p);
 
                 for (int y = -1; y <= 1; y++)
                     for (int x = -1; x <= 1; x++)
                     {
-                        Vector2Int nc = new Vector2Int(c.x + x, c.y + y);
+                        Vector3Int nc = new Vector3Int(c.x + x, c.y + y);
                         if (!_cells.TryGetValue(nc, out var list)) continue;
 
                         for (int i = 0; i < list.Count; i++)
@@ -390,15 +390,15 @@ namespace GameBerry
                 return true;
             }
 
-            public List<Vector2> QueryNeighbors(Vector2 p)
+            public List<Vector3> QueryNeighbors(Vector3 p)
             {
-                Vector2Int c = ToCell(p);
-                var neighbors = new List<Vector2>(32);
+                Vector3Int c = ToCell(p);
+                var neighbors = new List<Vector3>(32);
 
                 for (int y = -1; y <= 1; y++)
                     for (int x = -1; x <= 1; x++)
                     {
-                        Vector2Int nc = new Vector2Int(c.x + x, c.y + y);
+                        Vector3Int nc = new Vector3Int(c.x + x, c.y + y);
                         if (_cells.TryGetValue(nc, out var list))
                             neighbors.AddRange(list);
                     }
@@ -406,11 +406,11 @@ namespace GameBerry
                 return neighbors;
             }
 
-            private Vector2Int ToCell(Vector2 p)
+            private Vector3Int ToCell(Vector3 p)
             {
                 int cx = Mathf.FloorToInt(p.x / _cellSize);
                 int cy = Mathf.FloorToInt(p.y / _cellSize);
-                return new Vector2Int(cx, cy);
+                return new Vector3Int(cx, 0, cy);
             }
         }
     }

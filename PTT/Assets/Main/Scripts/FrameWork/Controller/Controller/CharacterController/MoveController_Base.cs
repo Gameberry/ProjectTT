@@ -19,10 +19,10 @@ namespace GameBerry
             {
                 float operMoveSpeed = _characterControllerBase.FinalMoveSpeed;
 
-                if (_characterControllerBase.MyRigidbody2D != null)
+                if (_characterControllerBase.MyRigidbody != null)
                 {
 
-                    Vector2 direction = _characterControllerBase.GetMoveDirection();
+                    Vector3 direction = _characterControllerBase.GetMoveDirection();
 
                     if (direction.x != 0)
                         _characterControllerBase.ChangeCharacterLookAtDirection(direction.x < 0
@@ -32,22 +32,22 @@ namespace GameBerry
                     if (operMoveSpeed > Define.MaxEffectiveMoveSpeedValue)
                         operMoveSpeed = Define.MaxEffectiveMoveSpeedValue;
 
-                    Vector2 newpos = _characterControllerBase.MyRigidbody2D.position + direction * operMoveSpeed * Time.deltaTime;
+                    Vector3 newpos = _characterControllerBase.MyRigidbody.position + direction * operMoveSpeed * Time.deltaTime;
 
-                    Vector2 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
-                    Vector2 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
+                    Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
+                    Vector3 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
 
                     if (newpos.x < minpos.x)
                         newpos.x = minpos.x;
                     else if (newpos.x > maxpos.x)
                         newpos.x = maxpos.x;
 
-                    if (newpos.y < minpos.y)
-                        newpos.y = minpos.y;
-                    else if (newpos.y > maxpos.y)
-                        newpos.y = maxpos.y;
+                    if (newpos.z < minpos.z)
+                        newpos.z = minpos.z;
+                    else if (newpos.z > maxpos.z)
+                        newpos.z = maxpos.z;
 
-                    _characterControllerBase.MyRigidbody2D.MovePosition(newpos);
+                    _characterControllerBase.MyRigidbody.MovePosition(newpos);
                 }
             }
         }

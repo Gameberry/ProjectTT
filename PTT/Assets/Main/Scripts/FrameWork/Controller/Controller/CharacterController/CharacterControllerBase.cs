@@ -44,8 +44,8 @@ namespace GameBerry
 
 
         [SerializeField]
-        protected Rigidbody2D _rigidbody2D;
-        public Rigidbody2D MyRigidbody2D { get { return _rigidbody2D; } }
+        protected Rigidbody _rigidbody;
+        public Rigidbody MyRigidbody { get { return _rigidbody; } }
 
         [SerializeField]
         protected CharacterControllerBase _attackTarget;
@@ -259,7 +259,7 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
-        private void PlayCharacterCondition(List<int> index, Vector2 attackpos)
+        private void PlayCharacterCondition(List<int> index, Vector3 attackpos)
         {
             for (int i = 0; i < index.Count; ++i)
             {
@@ -267,7 +267,7 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
-        private void PlayCharacterCondition(int index, Vector2 attackpos)
+        private void PlayCharacterCondition(int index, Vector3 attackpos)
         {
             ConditionData conditionData = StaticResource.Instance.GetConditionData().GetData(index);
             conditionData.EffectPos = attackpos;
@@ -307,12 +307,12 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
-        public virtual Vector2 GetMoveDirection()
+        public virtual Vector3 GetMoveDirection()
         { // MoveController_Base���� �ַ� ȣ��
             // ������ ���̽�ƽ���� ������ ���� ���� �־ �����Լ��� ����
 
             if (AttackTarget == null)
-                return Vector2.zero;
+                return Vector3.zero;
 
             return (AttackTarget.transform.position - transform.position).normalized;
         }
@@ -384,11 +384,6 @@ namespace GameBerry
         public void ChangeCharacterState(CharacterState state)
         { // �ܺο��� ���� ��
             ChangeState(state);
-        }
-        //------------------------------------------------------------------------------------
-        public void AddForce(Vector2 force, ForceMode2D forceMode2D)
-        {
-            _rigidbody2D.AddForce(force, forceMode2D);
         }
         //------------------------------------------------------------------------------------
         protected virtual void ChangeState(CharacterState state, bool playAni = true)
@@ -472,7 +467,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void ChangeCharacterLookAtDirection_Target(Transform targetTrans)
         {
-            Vector2 direction = targetTrans.transform.position - transform.position;
+            Vector3 direction = targetTrans.transform.position - transform.position;
             direction.Normalize();
 
             ChangeCharacterLookAtDirection(direction.x < 0 ? Enum_LookDirection.Left : Enum_LookDirection.Right);

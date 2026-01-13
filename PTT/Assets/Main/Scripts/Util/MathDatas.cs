@@ -449,4 +449,9 @@ public class MathDatas {
 		return Mathf.Sqrt((v2.x - v1.x) * (v2.x - v1.x) + (v2.y - v1.y) * (v2.y - v1.y));
 	}
 
+	public static float GetDistance(Vector3 v1, Vector3 v2)
+	{
+		//벡터로 구하는 것보다 직접 계산이 더 빠름.
+		return Mathf.Sqrt((v2.x - v1.x) * (v2.x - v1.x) + (v2.z - v1.z) * (v2.z - v1.z));
+	}
 }

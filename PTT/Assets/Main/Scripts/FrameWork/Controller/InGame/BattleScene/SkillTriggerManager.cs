@@ -6,7 +6,7 @@ namespace GameBerry.Managers
 {
     public class SkillTriggerManager : MonoSingleton<SkillTriggerManager>
     {
-        private Dictionary<int, Collider2D[]> _recvColliderPools = new Dictionary<int, Collider2D[]>();
+        private Dictionary<int, Collider[]> _recvColliderPools = new Dictionary<int, Collider[]>();
 
         private List<CharacterControllerBase> _skillHitReceivers = new List<CharacterControllerBase>();
 
@@ -22,7 +22,7 @@ namespace GameBerry.Managers
                 return;
 
             float range = attackData.HitRange;
-            Vector2 pos = attackPos; // 2D 좌표 기준
+            Vector3 pos = attackPos; // 3D 좌표 기준 (기본 XZ 평면)
 
             // Line 타입 위치 보정 (X축 기준, 필요 없으면 삭제해도 됨)
             if (attackData.TargetAttackType == Enum_AttackRangeType.Line)
@@ -39,12 +39,12 @@ namespace GameBerry.Managers
             float sectorAngle = attackData.HitAngle;
 
             // 부채꼴 기준점: 발/무기 피벗 우선, 없으면 캐릭터 위치
-            Vector2 sectorOrigin = pos;
-            Vector2 sectorForward = attackPos - actortrans.transform.position;
+            Vector3 sectorOrigin = pos;
+            Vector3 sectorForward = attackPos - actortrans.transform.position;
 
             if (FixDirec == true)
             {
-                sectorForward = actortrans.LookDirection == Enum_LookDirection.Left ? Vector2.left : Vector2.right;
+                sectorForward = actortrans.LookDirection == Enum_LookDirection.Left ? Vector3.left : Vector3.right;
             }
             else
             {
@@ -53,21 +53,18 @@ namespace GameBerry.Managers
                 else
                     sectorForward = attackPos - actortrans.transform.position;
             }
-            
+
+            // Y축은 무시하고(XZ 평면) 판정하도록 평면화
+            sectorForward.y = 0f;
 
             // 레이어 마스크
             int searchLayer = LayerMask.NameToLayer(Util.GetEnemyIFFType(actortrans.IFFType).ToString());
             LayerMask layerMask = 1 << searchLayer;
-
-            ContactFilter2D filter = new ContactFilter2D();
-            filter.useLayerMask = true;
-            filter.layerMask = layerMask;
-            filter.useTriggers = true;
-
-            Collider2D[] colliders;
+            // 3D Physics: use LayerMask directly (triggers are included if Physics.queriesHitTriggers is true)
+            Collider[] colliders;
             int colliderCount;
 
-            Vector2 overlapCenter = useSector ? sectorOrigin : pos;
+            Vector3 overlapCenter = useSector ? sectorOrigin : pos;
 
             if (targetCount < 0)
             {
@@ -75,22 +72,22 @@ namespace GameBerry.Managers
                 int bufferSize = MaxAoeTargets;
                 if (!_recvColliderPools.TryGetValue(bufferSize, out colliders))
                 {
-                    colliders = new Collider2D[bufferSize];
+                    colliders = new Collider[bufferSize];
                     _recvColliderPools.Add(bufferSize, colliders);
                 }
 
-                colliderCount = Physics2D.OverlapCircle(overlapCenter, range, filter, colliders);
+                colliderCount = Physics.OverlapSphereNonAlloc(overlapCenter, range, colliders, layerMask);
             }
             else
             {
                 // 타겟 제한 있음 → 그 크기만큼만 버퍼 할당
                 if (!_recvColliderPools.TryGetValue(targetCount, out colliders))
                 {
-                    colliders = new Collider2D[targetCount];
+                    colliders = new Collider[targetCount];
                     _recvColliderPools.Add(targetCount, colliders);
                 }
 
-                colliderCount = Physics2D.OverlapCircle(overlapCenter, range, filter, colliders);
+                colliderCount = Physics.OverlapSphereNonAlloc(overlapCenter, range, colliders, layerMask);
             }
 
             // 디버그용 값 세팅
@@ -99,7 +96,7 @@ namespace GameBerry.Managers
                 debugPos = overlapCenter;
                 debugRadius = range;
                 debugAngle = useSector ? sectorAngle : 0f;
-                debugForward = new Vector3(sectorForward.x, sectorForward.y, 0f);
+                debugForward = sectorForward;
 
                 if (attackData.TargetAttackType == Enum_AttackRangeType.Line)
                     debugRangeType = DebugRangeType.Line;
@@ -125,8 +122,8 @@ namespace GameBerry.Managers
                 // 부채꼴이면 각도 체크
                 if (useSector)
                 {
-                    Vector2 targetPos = skillHitReceiver.transform.position;
-                    if (!IsInSector2D(sectorOrigin, sectorForward, range, sectorAngle, targetPos))
+                    Vector3 targetPos = skillHitReceiver.transform.position;
+                    if (!IsInSector3D(sectorOrigin, sectorForward, range, sectorAngle, targetPos))
                         continue;
                 }
 
@@ -197,63 +194,65 @@ namespace GameBerry.Managers
 
                 case DebugRangeType.Sector:
                     Gizmos.color = Color.red;
-                    DrawSectorGizmo2D(debugPos, debugForward, debugRadius, debugAngle);
+                    DrawSectorGizmo3D(debugPos, debugForward, debugRadius, debugAngle);
                     break;
             }
 #endif
         }
 
-        private void DrawSectorGizmo2D(Vector3 origin, Vector3 forward, float radius, float angle)
+        private void DrawSectorGizmo3D(Vector3 origin, Vector3 forward, float radius, float angle)
         {
             Vector3 fwd = forward;
+            fwd.y = 0f;
             if (fwd.sqrMagnitude < 0.0001f)
-                fwd = Vector3.right;
+                fwd = Vector3.forward;
             fwd.Normalize();
 
             int segments = 20;
             float halfAngle = angle * 0.5f;
             float step = angle / segments;
 
-            Quaternion baseRot = Quaternion.LookRotation(Vector3.forward, Vector3.up); // 2D에서는 z-forward
-            Vector3 baseDir = new Vector3(fwd.x, fwd.y, 0f);
-
-            Vector3 prevDir = Quaternion.AngleAxis(-halfAngle, Vector3.forward) * baseDir;
+            Vector3 prevDir = Quaternion.Euler(0f, -halfAngle, 0f) * fwd;
             Vector3 prevPoint = origin + prevDir * radius;
 
             for (int i = 1; i <= segments; i++)
             {
                 float currentAngle = -halfAngle + step * i;
-                Vector3 dir = Quaternion.AngleAxis(currentAngle, Vector3.forward) * baseDir;
+                Vector3 dir = Quaternion.Euler(0f, currentAngle, 0f) * fwd;
                 Vector3 point = origin + dir * radius;
 
                 Gizmos.DrawLine(prevPoint, point);
                 prevPoint = point;
             }
 
-            Vector3 leftDir = Quaternion.AngleAxis(-halfAngle, Vector3.forward) * baseDir;
-            Vector3 rightDir = Quaternion.AngleAxis(halfAngle, Vector3.forward) * baseDir;
+            Vector3 leftDir = Quaternion.Euler(0f, -halfAngle, 0f) * fwd;
+            Vector3 rightDir = Quaternion.Euler(0f, halfAngle, 0f) * fwd;
             Gizmos.DrawLine(origin, origin + leftDir * radius);
             Gizmos.DrawLine(origin, origin + rightDir * radius);
         }
         //------------------------------------------------------------------------------------
-        private bool IsInSector2D(Vector2 origin, Vector2 forward, float radius, float angle, Vector2 targetPos)
+        private bool IsInSector3D(Vector3 origin, Vector3 forward, float radius, float angle, Vector3 targetPos)
         {
-            Vector2 toTarget = targetPos - origin;
+            Vector3 toTarget = targetPos - origin;
+
+            // XZ 평면 기준으로 판정 (Y 무시)
+            toTarget.y = 0f;
 
             float distSqr = toTarget.sqrMagnitude;
             if (distSqr > radius * radius || distSqr <= Mathf.Epsilon)
                 return false;
 
             if (forward.sqrMagnitude < 0.0001f)
-                forward = Vector2.right;
+                forward = Vector3.forward;
 
+            forward.y = 0f;
             forward.Normalize();
-            Vector2 dir = toTarget.normalized;
+            Vector3 dir = toTarget.normalized;
 
             float halfRad = angle * 0.5f * Mathf.Deg2Rad;
             float cosHalf = Mathf.Cos(halfRad);
 
-            float dot = Vector2.Dot(forward, dir);
+            float dot = Vector3.Dot(forward, dir);
 
             return dot >= cosHalf;
         }
@@ -277,7 +276,7 @@ namespace GameBerry.Managers
 
                     recvlist.RemoveRange(selectidx, recvlist.Count - selectidx);
                 }
-                
+
             }
         }
         //------------------------------------------------------------------------------------

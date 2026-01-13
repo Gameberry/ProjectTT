@@ -37,7 +37,7 @@ namespace GameBerry
         private CameraShake _cameraShake;
 
 
-        Vector2 velocity = Vector2.zero;
+        Vector3 velocity = Vector3.zero;
 
         private void LateUpdate()
         {
@@ -56,9 +56,9 @@ namespace GameBerry
             //Vector3 cameraPos = Vector3.zero;
             //cameraPos.x = xpos + _focusMove_X;
 
-            Vector2 pos = Managers.BattleSceneManager.Instance.CurrentBattleScene.PlayerController.transform.position;
+            Vector3 pos = Managers.BattleSceneManager.Instance.CurrentBattleScene.PlayerController.transform.position;
 
-            transform.position = Vector2.SmoothDamp(transform.position, pos, ref velocity, _cameraSmoothTime);
+            transform.position = Vector3.SmoothDamp(transform.position, pos, ref velocity, _cameraSmoothTime);
 
 
         }
