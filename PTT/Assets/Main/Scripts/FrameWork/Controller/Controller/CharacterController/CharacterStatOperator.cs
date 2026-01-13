@@ -10,7 +10,7 @@ namespace GameBerry
     [System.Serializable]
     public class StatViewer
     {
-        public V2Enum_Stat v2Enum_Stat;
+        public Enum_Stat v2Enum_Stat;
         public double value;
     }
 
@@ -18,10 +18,10 @@ namespace GameBerry
 #endif
     public class CharacterStatOperator
     {
-        protected Dictionary<V2Enum_Stat, ObscuredDouble> _defauleStatValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
-        protected Dictionary<V2Enum_Stat, ObscuredDouble> _buffValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
+        protected Dictionary<Enum_Stat, ObscuredDouble> _defauleStatValue = new Dictionary<Enum_Stat, ObscuredDouble>();
+        protected Dictionary<Enum_Stat, ObscuredDouble> _buffValue = new Dictionary<Enum_Stat, ObscuredDouble>();
 
-        protected Dictionary<V2Enum_Stat, ObscuredDouble> _outputStatValue = new Dictionary<V2Enum_Stat, ObscuredDouble>();
+        protected Dictionary<Enum_Stat, ObscuredDouble> _outputStatValue = new Dictionary<Enum_Stat, ObscuredDouble>();
 
 #if UNITY_EDITOR
         public List<StatViewer> DefaultViewers = new List<StatViewer>();
@@ -30,7 +30,7 @@ namespace GameBerry
 #endif
 
         //------------------------------------------------------------------------------------
-        public void SetDefaultStat(V2Enum_Stat v2Enum_Stat, ObscuredDouble statValue)
+        public void SetDefaultStat(Enum_Stat v2Enum_Stat, ObscuredDouble statValue)
         {
             if (_defauleStatValue.ContainsKey(v2Enum_Stat) == false)
                 _defauleStatValue.Add(v2Enum_Stat, 0);
@@ -50,7 +50,7 @@ namespace GameBerry
 #endif
         }
         //------------------------------------------------------------------------------------
-        public double GetDefaultValue(V2Enum_Stat v2Enum_Stat)
+        public double GetDefaultValue(Enum_Stat v2Enum_Stat)
         {
             if (_defauleStatValue.ContainsKey(v2Enum_Stat) == false)
                 return 0;
@@ -58,7 +58,7 @@ namespace GameBerry
             return _defauleStatValue[v2Enum_Stat];
         }
         //------------------------------------------------------------------------------------
-        public void SetBuffValue(V2Enum_Stat v2Enum_Stat, ObscuredDouble statValue)
+        public void SetBuffValue(Enum_Stat v2Enum_Stat, ObscuredDouble statValue)
         {
             if (_buffValue.ContainsKey(v2Enum_Stat) == false)
                 _buffValue.Add(v2Enum_Stat, 0);
@@ -78,7 +78,7 @@ namespace GameBerry
 #endif
         }
         //------------------------------------------------------------------------------------
-        public double GetBuffValue(V2Enum_Stat v2Enum_Stat)
+        public double GetBuffValue(Enum_Stat v2Enum_Stat)
         {
             if (_buffValue.ContainsKey(v2Enum_Stat) == false)
                 return 0;
@@ -87,20 +87,20 @@ namespace GameBerry
         }
 
         //------------------------------------------------------------------------------------
-        public void RefreshOutputStatValue(V2Enum_Stat v2Enum_Stat = V2Enum_Stat.Max)
+        public void RefreshOutputStatValue(Enum_Stat v2Enum_Stat = Enum_Stat.Max)
         {
-            if (v2Enum_Stat == V2Enum_Stat.Max)
+            if (v2Enum_Stat == Enum_Stat.Max)
             {
-                for (int i = V2Enum_Stat.Attack.Enum32ToInt(); i < V2Enum_Stat.Max.Enum32ToInt(); ++i)
+                for (int i = Enum_Stat.Attack.Enum32ToInt(); i < Enum_Stat.Max.Enum32ToInt(); ++i)
                 {
-                    SetOutputStatValue(i.IntToEnum32<V2Enum_Stat>());
+                    SetOutputStatValue(i.IntToEnum32<Enum_Stat>());
                 }
             }
             else
                 SetOutputStatValue(v2Enum_Stat);
         }
         //------------------------------------------------------------------------------------
-        public void SetOutputStatValue(V2Enum_Stat v2Enum_Stat)
+        public void SetOutputStatValue(Enum_Stat v2Enum_Stat)
         { // 여기서 각 컨텐츠에서 계산되어야 할 값들을 가져와서 다시 셋팅
             double originValue = GetDefaultValue(v2Enum_Stat);
             double buffvalue = GetBuffValue(v2Enum_Stat);
@@ -121,7 +121,7 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
-        public double GetOutPutMyStat(V2Enum_Stat v2Enum_Stat)
+        public double GetOutPutMyStat(Enum_Stat v2Enum_Stat)
         {
             if (_outputStatValue.ContainsKey(v2Enum_Stat) == false)
                 return 0;

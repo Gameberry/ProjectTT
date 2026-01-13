@@ -190,7 +190,7 @@ namespace GameBerry
 
                 bool critical = damage.Hitter.ApplyCritical();
                 if (critical == true)
-                    setdamage = setdamage * damage.Hitter.GetOutPutMyStat(V2Enum_Stat.CritDmgIncrease);
+                    setdamage = setdamage * damage.Hitter.GetOutPutMyStat(Enum_Stat.CritDmg_Inc);
 
                 setdamage = System.Math.Truncate(setdamage);
 
@@ -329,7 +329,7 @@ namespace GameBerry
             if (_characterState != CharacterState.Dead
                 && _characterState != CharacterState.None)
             {
-                double recoveryvalue = GetOutPutMyStat(V2Enum_Stat.HpRecovery);
+                double recoveryvalue = GetOutPutMyStat(Enum_Stat.HpRecovery);
 
                 double ratio = recoveryvalue * Define.PerSkillEffectRecoverValue;
 
@@ -483,7 +483,7 @@ namespace GameBerry
             _attackTarget = Managers.AggroManager.Instance.GetIFFTargetCharacter(this);
         }
         //------------------------------------------------------------------------------------
-        public virtual double GetOutPutMyStat(V2Enum_Stat v2Enum_Stat)
+        public virtual double GetOutPutMyStat(Enum_Stat v2Enum_Stat)
         {
             return _characterStatOperator.GetOutPutMyStat(v2Enum_Stat);
         }
@@ -492,17 +492,17 @@ namespace GameBerry
         {
             _characterStatOperator.RefreshOutputStatValue();
 
-            _characterAttack = GetOutPutMyStat(V2Enum_Stat.Attack);
-            _characterAttack += _characterAttack * GetOutPutMyStat(V2Enum_Stat.Attack_Inc);
+            _characterAttack = GetOutPutMyStat(Enum_Stat.Attack);
+            _characterAttack += _characterAttack * GetOutPutMyStat(Enum_Stat.Attack_Inc);
 
-            _characterDefense = GetOutPutMyStat(V2Enum_Stat.Defence);
-            _characterDefense += _characterDefense * GetOutPutMyStat(V2Enum_Stat.Defence_Inc);
+            _characterDefense = GetOutPutMyStat(Enum_Stat.Defence);
+            _characterDefense += _characterDefense * GetOutPutMyStat(Enum_Stat.Defence_Inc);
 
-            _characterMoveSpeed = (float)(GetOutPutMyStat(V2Enum_Stat.MoveSpeed));
-            _characterMoveSpeed += _characterMoveSpeed * (float)(GetOutPutMyStat(V2Enum_Stat.MoveSpeed_Inc));
+            _characterMoveSpeed = (float)(GetOutPutMyStat(Enum_Stat.MoveSpeed));
+            _characterMoveSpeed += _characterMoveSpeed * (float)(GetOutPutMyStat(Enum_Stat.MoveSpeed_Inc));
 
-            _characterAttackSpeed = (float)(GetOutPutMyStat(V2Enum_Stat.AttackSpeed));
-            _characterAttackSpeed += _characterAttackSpeed * (float)(GetOutPutMyStat(V2Enum_Stat.AttackSpeed_Inc));
+            _characterAttackSpeed = (float)(GetOutPutMyStat(Enum_Stat.AttackSpeed));
+            _characterAttackSpeed += _characterAttackSpeed * (float)(GetOutPutMyStat(Enum_Stat.AttackSpeed_Inc));
 
             if(CharacterState == CharacterState.Attack
                 || CharacterState == CharacterState.Skill)
@@ -517,9 +517,9 @@ namespace GameBerry
             else
                 currHpRatio = _currentHP / _maxHP;
 
-            double hp = GetOutPutMyStat(V2Enum_Stat.HP);
+            double hp = GetOutPutMyStat(Enum_Stat.HP);
 
-            _maxHP = hp + (hp * GetOutPutMyStat(V2Enum_Stat.Hp_Inc));
+            _maxHP = hp + (hp * GetOutPutMyStat(Enum_Stat.Hp_Inc));
 
             if (setFullHp == true)
                 _currentHP = _maxHP;
@@ -531,7 +531,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public bool ApplyCritical()
         {
-            return Random.Range(0.0f, 1.0f) <= (float)GetOutPutMyStat(V2Enum_Stat.CritChance);
+            return Random.Range(0.0f, 1.0f) <= (float)GetOutPutMyStat(Enum_Stat.CritChance);
         }
         //------------------------------------------------------------------------------------
     }

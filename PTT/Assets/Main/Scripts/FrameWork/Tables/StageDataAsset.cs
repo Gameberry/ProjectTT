@@ -51,10 +51,10 @@ namespace GameBerry
                         double movespeed = 0.75;
                         double attackspeed = 2;
 
-                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = V2Enum_Stat.Attack, value = attackvalue });
-                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = V2Enum_Stat.HP, value = hpvalue });
-                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = V2Enum_Stat.MoveSpeed, value = movespeed });
-                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = V2Enum_Stat.AttackSpeed, value = attackspeed });
+                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = Enum_Stat.Attack, value = attackvalue });
+                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = Enum_Stat.HP, value = hpvalue });
+                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = Enum_Stat.MoveSpeed, value = movespeed });
+                        stageData.MonsterStat.Add(new StatViewer { v2Enum_Stat = Enum_Stat.AttackSpeed, value = attackspeed });
 
                         StageDatas.Add(stageData);
                     }

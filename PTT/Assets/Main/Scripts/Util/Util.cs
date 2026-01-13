@@ -852,16 +852,28 @@ namespace GameBerry
 
         [System.ThreadStatic] private static char[] s_buffer;
 
-        public static void SetCommaInteger(TMP_Text tmp, long value)
+        static void EnsureBuffer(int minSize)
+        {
+            if (s_buffer == null || s_buffer.Length < minSize)
+                s_buffer = new char[minSize];
+        }
+
+        public static void SetCommaInteger(TMP_Text tmp, long value, bool appendPercent = false)
         {
             if (tmp == null) return;
-            EnsureBuffer();
+
+            // %까지 고려해서 여유 확보
+            // long 최대 표현 길이(부호+콤마 포함)도 64면 충분, % 포함하면 +1
+            EnsureBuffer(appendPercent ? 65 : 64);
 
             bool negative = value < 0;
             ulong v = negative ? (ulong)(~value + 1) : (ulong)value;
 
-            int end = s_buffer.Length;
-            int i = end;
+            int bufferLen = s_buffer.Length;
+
+            // appendPercent면 마지막 칸은 %로 예약
+            int endExclusive = appendPercent ? (bufferLen - 1) : bufferLen;
+            int i = endExclusive;
 
             int groupCount = 0;
             do
@@ -872,8 +884,7 @@ namespace GameBerry
                     groupCount = 0;
                 }
 
-                ulong digit = v % 10;
-                s_buffer[--i] = (char)('0' + (int)digit);
+                s_buffer[--i] = (char)('0' + (v % 10));
                 v /= 10;
                 groupCount++;
             }
@@ -882,28 +893,29 @@ namespace GameBerry
             if (negative)
                 s_buffer[--i] = '-';
 
-            tmp.SetCharArray(s_buffer, i, end - i);
+            if (appendPercent)
+            {
+                s_buffer[bufferLen - 1] = '%';
+                int length = (bufferLen - i); // 숫자 시작 i부터 %까지 포함
+                tmp.SetCharArray(s_buffer, i, length);
+            }
+            else
+            {
+                int length = endExclusive - i;
+                tmp.SetCharArray(s_buffer, i, length);
+            }
         }
 
-        public static void SetCommaFromDoubleFloor(TMP_Text tmp, double value)
+        public static void SetCommaFromDoubleFloor(TMP_Text tmp, double value, bool appendPercent = false)
         {
             if (tmp == null) return;
 
-            // long 범위를 넘으면 안전하게 클램프
-            if (value >= long.MaxValue) { SetCommaInteger(tmp, long.MaxValue); return; }
-            if (value <= long.MinValue) { SetCommaInteger(tmp, long.MinValue); return; }
+            if (value >= long.MaxValue) { SetCommaInteger(tmp, long.MaxValue, appendPercent); return; }
+            if (value <= long.MinValue) { SetCommaInteger(tmp, long.MinValue, appendPercent); return; }
 
-            // 무조건 버림
-            // 음수도 "더 작은 쪽"으로 버림(Floor)됨: -1.2 -> -2
-            // 만약 음수는 0쪽으로 자르고 싶으면 (long)value 로 바꾸면 됨.
             long v = (long)System.Math.Floor(value);
-            SetCommaInteger(tmp, v);
+            SetCommaInteger(tmp, v, appendPercent);
         }
 
-        static void EnsureBuffer()
-        {
-            if (s_buffer == null || s_buffer.Length < 64)
-                s_buffer = new char[64];
-        }
     }
 }

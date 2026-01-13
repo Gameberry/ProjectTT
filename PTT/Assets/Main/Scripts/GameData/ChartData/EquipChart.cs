@@ -13,9 +13,9 @@ namespace GameBerry.Chart
         // Packed base stats string. Example: "Attack=10|HP=50|Defence=5"
         public string BaseStats;
 
-        [NonSerialized] private Dictionary<V2Enum_Stat, double> _baseStatDict;
+        [NonSerialized] private Dictionary<Enum_Stat, double> _baseStatDict;
 
-        public IReadOnlyDictionary<V2Enum_Stat, double> GetBaseStats()
+        public IReadOnlyDictionary<Enum_Stat, double> GetBaseStats()
         {
             if (_baseStatDict == null)
                 _baseStatDict = EquipChart.ParseStatsPacked(BaseStats);
@@ -44,9 +44,9 @@ namespace GameBerry.Chart
             => _itemIdToInfo != null && _itemIdToInfo.TryGetValue(itemId, out var v) ? v : null;
 
         // ---- helpers ----
-        public static Dictionary<V2Enum_Stat, double> ParseStatsPacked(string packed)
+        public static Dictionary<Enum_Stat, double> ParseStatsPacked(string packed)
         {
-            var dict = new Dictionary<V2Enum_Stat, double>();
+            var dict = new Dictionary<Enum_Stat, double>();
             if (string.IsNullOrEmpty(packed)) return dict;
 
             var parts = packed.Split('|');
@@ -55,7 +55,7 @@ namespace GameBerry.Chart
                 var kv = parts[i].Split('=');
                 if (kv.Length != 2) continue;
 
-                if (Enum.TryParse(kv[0], out V2Enum_Stat stat) == false) continue;
+                if (Enum.TryParse(kv[0], out Enum_Stat stat) == false) continue;
                 if (double.TryParse(kv[1], out var val) == false) continue;
 
                 dict[stat] = val;

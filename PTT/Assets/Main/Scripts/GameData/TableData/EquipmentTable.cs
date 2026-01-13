@@ -30,7 +30,7 @@ namespace GameBerry.Table
 
     public struct EquipmentAddStat : IPackable
     {
-        public V2Enum_Stat stat;
+        public Enum_Stat stat;
         public double value;
         public string Pack() => $"{PackUtil.PackValue(stat.Enum32ToInt())},{PackUtil.PackValue(value)}";
 
@@ -42,13 +42,13 @@ namespace GameBerry.Table
             var sp = str.Split(',');
 
             if (sp.Length >= 1)
-                stat = PackUtil.UnpackValue<int>(sp[0]).IntToEnum32<V2Enum_Stat>();
+                stat = PackUtil.UnpackValue<int>(sp[0]).IntToEnum32<Enum_Stat>();
 
             if (sp.Length >= 2)
                 value = PackUtil.UnpackValue<double>(sp[1]);
         }
 
-        public static EquipmentAddStat Set(V2Enum_Stat Stat, double Value)
+        public static EquipmentAddStat Set(Enum_Stat Stat, double Value)
             => new EquipmentAddStat
             {
                 stat = Stat,
@@ -63,7 +63,18 @@ namespace GameBerry.Table
 
         public List<EquipmentAddStat> addStatList;
 
-        public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(enhanceLevel)}:{PackUtil.PackList(addStatList)}";
+        //public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(enhanceLevel)}:{PackUtil.PackList(addStatList)}";
+        public string Pack() 
+        {
+            string insid = PackUtil.PackValue(instanceId);
+            string lv = PackUtil.PackValue(enhanceLevel);
+
+            string addstat = PackUtil.PackList(addStatList, PackSep.List);
+
+            string str = $"{insid},{lv}:{addstat}";
+            return str;
+        }
+
         public void Unpack(string str)
         {
             if (string.IsNullOrEmpty(str)) return;
@@ -78,7 +89,7 @@ namespace GameBerry.Table
             }
 
             if (tsp.Length > 1 && string.IsNullOrEmpty(tsp[1]) == false)
-                addStatList = PackUtil.UnpackList<EquipmentAddStat>(tsp[1]);
+                addStatList = PackUtil.UnpackList<EquipmentAddStat>(tsp[1], PackSep.List);
         }
     }
 

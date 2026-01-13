@@ -5,24 +5,40 @@ using System.Text;
 
 namespace GameBerry
 {
+    public static class PackSep
+    { // 중첩Pack일 때만 사용
+        public const char Dict = ';';
+        public const char List = '_';
+        public const char Sub = '~';
+    }
+
     public static class PackUtil
     {
         private const char EntrySep = ';';
         private const char KeyValueSep = '|';
 
         [ThreadStatic]
-        private static StringBuilder _cachedBuilder;
+        private static Stack<StringBuilder> _sbPool;
 
-        private static StringBuilder GetBuilder(int initialCapacity = 256)
+        private static StringBuilder RentBuilder(int initialCapacity = 256)
         {
-            var sb = _cachedBuilder;
-            if (sb == null)
+            var pool = _sbPool ??= new Stack<StringBuilder>(4);
+            if (pool.Count > 0)
             {
-                sb = new StringBuilder(initialCapacity);
-                _cachedBuilder = sb;
+                var sb = pool.Pop();
+                sb.Clear();
+                return sb;
             }
-            sb.Clear();
-            return sb;
+            return new StringBuilder(initialCapacity);
+        }
+
+        private static void ReturnBuilder(StringBuilder sb)
+        {
+            if (sb == null) return;
+            if (sb.Capacity > 4096) // 과도하게 커진 sb는 버림(메모리 관리)
+                return;
+
+            (_sbPool ??= new Stack<StringBuilder>(4)).Push(sb);
         }
 
         // ========================
@@ -132,28 +148,31 @@ namespace GameBerry
         // LIST<IPackable>
         // ========================
 
-        public static string PackList<TPack>(List<TPack> list)
+        public static string PackList<TPack>(List<TPack> list, char customEntry = EntrySep)
             where TPack : IPackable
         {
             if (list == null || list.Count == 0)
                 return string.Empty;
 
-            var sb = GetBuilder();
-            bool first = true;
-
-            foreach (var item in list)
+            var sb = RentBuilder();
+            try
             {
-                if (!first) sb.Append(EntrySep);
-                first = false;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (i > 0) sb.Append(customEntry);
 
-                string raw = item?.Pack() ?? string.Empty;
-                sb.Append(EscapeSeg(raw));
+                    string raw = list[i].Pack();          // struct도 OK
+                    sb.Append(EscapeSeg(raw ?? string.Empty));
+                }
+                return sb.ToString();
             }
-
-            return sb.ToString();
+            finally
+            {
+                ReturnBuilder(sb);
+            }
         }
 
-        public static List<TPack> UnpackList<TPack>(string str)
+        public static List<TPack> UnpackList<TPack>(string str, char customEntry = EntrySep)
             where TPack : IPackable, new()
         {
             var result = new List<TPack>();
@@ -165,7 +184,7 @@ namespace GameBerry
 
             for (int i = 0; i <= len; i++)
             {
-                if (i == len || str[i] == EntrySep)
+                if (i == len || str[i] == customEntry)
                 {
                     int segLen = i - start;
                     if (segLen > 0)
@@ -193,7 +212,7 @@ namespace GameBerry
             if (list == null || list.Count == 0)
                 return string.Empty;
 
-            var sb = GetBuilder();
+            var sb = RentBuilder();
             bool first = true;
 
             foreach (var v in list)
@@ -203,6 +222,8 @@ namespace GameBerry
 
                 sb.Append(PackValue(v));
             }
+
+            ReturnBuilder(sb);
 
             return sb.ToString();
         }
@@ -238,32 +259,37 @@ namespace GameBerry
         // DICT<KEY, IPackable>
         // ========================
 
-        public static string PackDict<TKey, TPack>(Dictionary<TKey, TPack> dict)
+        public static string PackDict<TKey, TPack>(Dictionary<TKey, TPack> dict, char customEntry = EntrySep)
             where TPack : IPackable
         {
             if (dict == null || dict.Count == 0)
                 return string.Empty;
 
-            var sb = GetBuilder();
-            bool first = true;
-
-            foreach (var kv in dict)
+            var sb = RentBuilder();
+            try
             {
-                if (!first) sb.Append(EntrySep);
-                first = false;
+                bool first = true;
+                foreach (var kv in dict)
+                {
+                    if (!first) sb.Append(customEntry);
+                    first = false;
 
-                string keyStr = PackKey(kv.Key);
-                string valueStr = EscapeSeg(kv.Value?.Pack() ?? string.Empty);
+                    sb.Append(PackKey(kv.Key));
+                    sb.Append(KeyValueSep);
 
-                sb.Append(keyStr);
-                sb.Append(KeyValueSep);
-                sb.Append(valueStr);
+                    string raw = kv.Value.Pack();         // struct/class 모두 OK
+                    sb.Append(EscapeSeg(raw ?? string.Empty));
+                }
+
+                return sb.ToString();
             }
-
-            return sb.ToString();
+            finally
+            {
+                ReturnBuilder(sb);
+            }
         }
 
-        public static Dictionary<TKey, TPack> UnpackDict<TKey, TPack>(string str)
+        public static Dictionary<TKey, TPack> UnpackDict<TKey, TPack>(string str, char customEntry = EntrySep)
             where TPack : IPackable, new()
         {
             var result = new Dictionary<TKey, TPack>();
@@ -275,7 +301,7 @@ namespace GameBerry
 
             for (int i = 0; i <= len; i++)
             {
-                if (i == len || str[i] == EntrySep)
+                if (i == len || str[i] == customEntry)
                 {
                     int segLen = i - start;
                     if (segLen > 0)
@@ -325,7 +351,7 @@ namespace GameBerry
             if (dict == null || dict.Count == 0)
                 return string.Empty;
 
-            var sb = GetBuilder();
+            var sb = RentBuilder();
             bool first = true;
 
             foreach (var kv in dict)
@@ -337,6 +363,8 @@ namespace GameBerry
                 sb.Append(KeyValueSep);
                 sb.Append(PackValue(kv.Value));
             }
+
+            ReturnBuilder(sb);
 
             return sb.ToString();
         }

@@ -88,5 +88,13 @@ namespace GameBerry
 
             return result;
         }
+
+        public EquipmentData GetEquipmentData(ItemHandle itemHandle)
+        {
+            if (_equipmentTable.TryGetData(itemHandle.instanceId, out var data))
+                return data;
+
+            return null;
+        }
     }
 }

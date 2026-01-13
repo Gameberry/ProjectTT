@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -18,6 +19,20 @@ namespace GameBerry.UI
         [SerializeField] private TMP_Text _itemType;
         [SerializeField] private TMP_Text _itemRarity;
         [SerializeField] private TMP_Text _itemDesc;
+
+        [Header("EquipView")]
+        [SerializeField] private Transform _equipStatViewGroup;
+        [SerializeField] private TMP_Text _equipType;
+
+        [SerializeField] private ScrollRect _equipStatScroll;  // optional
+        [SerializeField] private Transform _equipStatContent;  // ScrollRect Content
+        [SerializeField] private UIStatElement _equipStatViewPrefab; // (TMP_Text name, TMP_Text value) 프리팹
+
+        [SerializeField] private Transform _equipStatLine;
+
+        [SerializeField] private TMP_Text _equipMetaAddStatCount;
+
+        private List<UIStatElement> _spawnStatElement = new List<UIStatElement>();
 
         [Header("Buttons")]
         [SerializeField] private Button consumeButton;
@@ -57,16 +72,132 @@ namespace GameBerry.UI
                 _itemRarity.color = StaticResource.Instance.GetRarityTextColor(enum_Rarity);
             }
 
-            if (_itemDesc != null)
-                Managers.LocalStringManager.Instance.SetLocalizeText(_itemDesc, ItemManager.Instance.GetItemDescLocalKey(handle.itemId));
+            
 
-            // 버튼 노출 제어(기본)
-            if (equipButton != null) equipButton.gameObject.SetActive(_handle.IsInstance);
-            if (enhanceButton != null) enhanceButton.gameObject.SetActive(_handle.IsInstance);
+            Enum_ItemType enum_ItemType = ItemManager.Instance.GetItemType(handle.itemId);
+            if (enum_ItemType == Enum_ItemType.Equip)
+            {
+                if (_itemDesc != null)
+                    _itemDesc.gameObject.SetActive(false);
 
-            // consume/sell은 프로젝트 룰에 따라 조절 가능
-            if (consumeButton != null) consumeButton.gameObject.SetActive(true);
-            if (sellButton != null) sellButton.gameObject.SetActive(true);
+                ShowEquipStat(handle);
+            }
+            else
+            {
+                if (_equipStatViewGroup != null)
+                    _equipStatViewGroup.gameObject.SetActive(false);
+
+                if (_itemDesc != null)
+                {
+                    _itemDesc.gameObject.SetActive(true);
+                    Managers.LocalStringManager.Instance.SetLocalizeText(_itemDesc, ItemManager.Instance.GetItemDescLocalKey(handle.itemId));
+                }
+                // 버튼 노출 제어(기본)
+                if (equipButton != null) equipButton.gameObject.SetActive(false);
+                if (enhanceButton != null) enhanceButton.gameObject.SetActive(false);
+            }
+
+
+            //// consume/sell은 프로젝트 룰에 따라 조절 가능
+            //if (consumeButton != null) consumeButton.gameObject.SetActive(true);
+            //if (sellButton != null) sellButton.gameObject.SetActive(true);
+        }
+        //------------------------------------------------------------------------------------
+        private void ShowEquipStat(ItemHandle handle)
+        {
+            Chart.EquipInfo equipInfo = Chart.GameChart.Get<Chart.EquipChart>()?.Get(handle.itemId);
+
+            if (_equipStatViewGroup != null)
+                _equipStatViewGroup.gameObject.SetActive(true);
+
+            if (equipInfo == null)
+            {
+                if (equipButton != null) equipButton.gameObject.SetActive(false);
+                if (enhanceButton != null) enhanceButton.gameObject.SetActive(false);
+                return;
+            }
+
+            int idx = 0;
+
+            if (equipInfo != null)
+            {
+                foreach (var pair in equipInfo.GetBaseStats())
+                { // baseStat UI에 표시
+                    AddStatLine(pair.Key, pair.Value, idx);
+                    idx++;
+                }
+            }
+
+            if (_equipStatLine != null)
+                _equipStatLine.SetAsLastSibling();
+
+            if (handle.isMeta == true)
+            {
+                Enum_Rarity enum_Rarity = ItemManager.Instance.GetItemRarity(handle.itemId);
+                if (Chart.GameChart.Get<Chart.EquipRandomRuleChart>().TryGetRandomRule(enum_Rarity, out var rule))
+                {
+                    if (_equipMetaAddStatCount != null)
+                    {
+                        _equipMetaAddStatCount.SetText("AddStat{0}~{1}", rule.OptionCountMin, rule.OptionCountMax);
+                        _equipMetaAddStatCount.gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    if (_equipMetaAddStatCount != null)
+                        _equipMetaAddStatCount.gameObject.SetActive(false);
+                }
+
+                if (equipButton != null) equipButton.gameObject.SetActive(false);
+                if (enhanceButton != null) enhanceButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                if (_equipMetaAddStatCount != null)
+                    _equipMetaAddStatCount.gameObject.SetActive(false);
+
+                Table.EquipmentData data = EquipmentManager.Instance.GetEquipmentData(handle);
+
+                if (data != null)
+                {
+                    foreach (var pair in data.addStatList)
+                    { // addStat UI에 표시
+                        AddStatLine(pair.stat, pair.value, idx);
+                        idx++;
+                    }
+                }
+
+                if (equipButton != null) equipButton.gameObject.SetActive(true);
+                if (enhanceButton != null) enhanceButton.gameObject.SetActive(true);
+            }
+
+            for (int i = idx; i < _spawnStatElement.Count; ++i)
+            {
+                _spawnStatElement[i].gameObject.SetActive(false);
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private void AddStatLine(Enum_Stat stat, double value, int lineIdx)
+        {
+            UIStatElement uIStatElement = null;
+
+            if (lineIdx < _spawnStatElement.Count)
+            {
+                uIStatElement = _spawnStatElement[lineIdx];
+            }
+            else
+            {
+                var go = Instantiate(_equipStatViewPrefab, _equipStatContent);
+                uIStatElement = go.GetComponent<UIStatElement>();
+                if (uIStatElement == null)
+                    return;
+
+                _spawnStatElement.Add(uIStatElement);
+            }
+
+            uIStatElement.SetStatView(stat, value);
+            uIStatElement.transform.SetAsLastSibling();
+            uIStatElement.gameObject.SetActive(true);
         }
         //------------------------------------------------------------------------------------
         private void OnConsume()

@@ -180,7 +180,7 @@ namespace GameBerry
     public delegate void OnCallBack_Double(double doublecallback);
 
     // 스탯
-    public enum V2Enum_Stat
+    public enum Enum_Stat
     {
         Attack = 11,
 
@@ -197,7 +197,7 @@ namespace GameBerry
         AttackSpeed_Inc,
 
         CritChance,
-        CritDmgIncrease,
+        CritDmg_Inc,
 
         Evasion, // 회피
         Accuracy, // 명중

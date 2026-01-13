@@ -224,12 +224,12 @@ namespace GameBerry
             // Character 쪽으로 결과 전달 (Character 쪽에 구현해둔다고 가정)
             _owner.SetControlLocks(IsMoveBlocked, IsAttackBlocked, IsSkillBlocked);
 
-            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.Attack_Inc, AttackInc);
-            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.Hp_Inc, HpInc);
-            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.Defence_Inc, DefenseInc);
-            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.MoveSpeed_Inc, MoveSpeedInc);
-            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.AttackSpeed_Inc, AttackSpeedInc);
-            _owner.CharacterStatOperator.SetBuffValue(V2Enum_Stat.CritChance, CritChanceAdd);
+            _owner.CharacterStatOperator.SetBuffValue(Enum_Stat.Attack_Inc, AttackInc);
+            _owner.CharacterStatOperator.SetBuffValue(Enum_Stat.Hp_Inc, HpInc);
+            _owner.CharacterStatOperator.SetBuffValue(Enum_Stat.Defence_Inc, DefenseInc);
+            _owner.CharacterStatOperator.SetBuffValue(Enum_Stat.MoveSpeed_Inc, MoveSpeedInc);
+            _owner.CharacterStatOperator.SetBuffValue(Enum_Stat.AttackSpeed_Inc, AttackSpeedInc);
+            _owner.CharacterStatOperator.SetBuffValue(Enum_Stat.CritChance, CritChanceAdd);
 
             _owner.RefreshStat();
         }

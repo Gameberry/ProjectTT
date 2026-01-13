@@ -5,7 +5,7 @@ namespace GameBerry.Chart
     public struct EquipRandomPoolInfo
     {
         public Enum_EquipType EquipType;
-        public V2Enum_Stat Stat;
+        public Enum_Stat Stat;
         public double Weight;
         public float MinValue;
         public float MaxValue;
