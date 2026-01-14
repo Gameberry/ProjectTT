@@ -8,6 +8,13 @@ namespace GameBerry
 {
     public class EquipmentManager : Singleton<EquipmentManager>
     {
+        private List<Table.TableBase> EquipTables = new List<Table.TableBase>()
+            {
+                Table.UserTable.Get<Table.EquipmentTable>()
+            };
+
+        public event Action OnEquipSlotChanged;
+
         EquipmentTable _equipmentTable;
         EquipChart _equipChart;
         EquipRandomRuleChart _equipRandomRuleChart;
@@ -17,6 +24,7 @@ namespace GameBerry
 
         WeightedRandomPicker<EquipRandomPoolInfo> _picker = null;
 
+        //------------------------------------------------------------------------------------
         protected override void Init()
         {
             _equipmentTable = UserTable.Get<EquipmentTable>();
@@ -26,14 +34,16 @@ namespace GameBerry
 
             _inventoryTable = UserTable.Get<InventoryTable>();
         }
-
+        //------------------------------------------------------------------------------------
+        #region Data
+        //------------------------------------------------------------------------------------
         public bool AddEquipment(ItemHandle itemHandle)
         {
             EquipmentData equipmentData = new EquipmentData { instanceId = itemHandle.instanceId, addStatList = CreateRandomOptionStats(itemHandle) };
             
             return _equipmentTable.AddEquipment(equipmentData);
         }
-
+        //------------------------------------------------------------------------------------
         private List<EquipmentAddStat> CreateRandomOptionStats(ItemHandle itemHandle)
         {
             ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemHandle.itemId);
@@ -92,7 +102,7 @@ namespace GameBerry
 
             return result;
         }
-
+        //------------------------------------------------------------------------------------
         public EquipmentData GetEquipmentData(ItemHandle itemHandle)
         {
             if (_equipmentTable.TryGetData(itemHandle.instanceId, out var data))
@@ -100,7 +110,7 @@ namespace GameBerry
 
             return null;
         }
-
+        //------------------------------------------------------------------------------------
         public bool TryGetInstanceIdToHandle(int instanceId, out ItemHandle itemHandle)
         {
             EquipmentData data = _equipmentTable.GetEquipmentData(instanceId);
@@ -113,12 +123,12 @@ namespace GameBerry
 
             InventoryEntry inventoryEntry = _inventoryTable.FindInstance(instanceId);
 
-            itemHandle = default;
+            itemHandle = ItemHandle.FromInventory(inventoryEntry);
 
-            return false;
+            return true;
         }
-
-        public bool TryGetEquipSlotToHandle(Enum_EquipType enum_EquipType, out ItemHandle itemHandle)
+        //------------------------------------------------------------------------------------
+        public bool TryGetEquippedHandle(Enum_EquipType enum_EquipType, out ItemHandle itemHandle)
         {
             int instanceId = _equipmentTable.GetEquippedInstanceId(enum_EquipType);
             if (instanceId <= 0)
@@ -129,10 +139,37 @@ namespace GameBerry
 
             return TryGetInstanceIdToHandle(instanceId, out itemHandle);
         }
-
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
+        #region Slot/Equip
+        //------------------------------------------------------------------------------------
         public int GetEquipSlotLevel(Enum_EquipType enum_EquipType)
         {
             return _equipmentTable.GetSlotLevel(enum_EquipType);
         }
+        //------------------------------------------------------------------------------------
+        public bool IsEquip(ItemHandle itemHandle)
+        {
+            return _equipmentTable.IsEquipped(itemHandle.instanceId);
+        }
+        //------------------------------------------------------------------------------------
+        public bool SetEquip(ItemHandle itemHandle)
+        {
+            EquipInfo equipInfo = _equipChart.Get(itemHandle.itemId);
+
+            if (equipInfo == null)
+                return false;
+
+            _equipmentTable.SetEquipped(equipInfo.EquipType, itemHandle.instanceId);
+            OnEquipSlotChanged.Invoke();
+
+            UserTable.TransactionUpdate_WaitSecond(EquipTables);
+
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
     }
 }

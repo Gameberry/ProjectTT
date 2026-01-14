@@ -14,6 +14,9 @@ namespace GameBerry.UI
         [SerializeField] private TMP_Text _itemName;
         [SerializeField] private TMP_Text _amount;
         [SerializeField] private TMP_Text _level;
+
+        [SerializeField] private Transform _equipMark; // 장비나 포션 혹은 나중에 무언가
+
         [SerializeField] private Button btn;
 
         [SerializeField] private int _stackItemId = -1;
@@ -60,6 +63,11 @@ namespace GameBerry.UI
             Util.SetCommaInteger(_amount, amount);
         }
 
+        public void Refresh()
+        {
+            Bind(_handle);
+        }
+
         public void Bind(ItemHandle e)
         {
             _handle = e;
@@ -101,6 +109,7 @@ namespace GameBerry.UI
                     _amount.gameObject.SetActive(false);
             }
 
+            Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);
 
             if (_level != null)
             {
@@ -113,8 +122,6 @@ namespace GameBerry.UI
                 }
                 else
                 {
-                    Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);
-
                     if (enumtype == Enum_ItemType.Equip)
                         level = Table.UserTable.Get<EquipmentTable>().GetLevel(e.instanceId);
                 }
@@ -126,6 +133,21 @@ namespace GameBerry.UI
                 }
                 else
                     _level.gameObject.SetActive(false);
+            }
+
+            if (_equipMark != null)
+            {
+                if (e.isMeta == true)
+                    _equipMark.gameObject.SetActive(false);
+                else
+                {
+                    if (enumtype == Enum_ItemType.Equip)
+                    {
+                        _equipMark.gameObject.SetActive(EquipmentManager.Instance.IsEquip(e));
+                    }
+                    else
+                        _equipMark.gameObject.SetActive(false);
+                }
             }
         }
     }

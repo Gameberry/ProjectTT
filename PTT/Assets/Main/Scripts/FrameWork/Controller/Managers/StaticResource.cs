@@ -75,6 +75,20 @@ namespace GameBerry
             return rarityColorData.TextColor;
         }
         //------------------------------------------------------------------------------------
+        public EquipTypeData GetEquipTypeData(Enum_EquipType enum_EquipType)
+        {
+            return _staticResourceAsset.EquipTypeDatas.Find(x => x.EquipType == enum_EquipType);
+        }
+        //------------------------------------------------------------------------------------
+        public Sprite GetEquipSlotSprite(Enum_EquipType enum_EquipType)
+        {
+            EquipTypeData equipTypeData = GetEquipTypeData(enum_EquipType);
+            if (equipTypeData == null)
+                return null;
+
+            return equipTypeData.SlotSprite;
+        }
+        //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
         #region SpineModel

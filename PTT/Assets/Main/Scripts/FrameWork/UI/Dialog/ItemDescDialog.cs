@@ -37,7 +37,6 @@ namespace GameBerry.UI
         [Header("Buttons")]
         [SerializeField] private Button consumeButton;
         [SerializeField] private Button equipButton;
-        [SerializeField] private Button enhanceButton;
         [SerializeField] private Button sellButton;
 
         private ItemHandle _handle;
@@ -45,10 +44,14 @@ namespace GameBerry.UI
         // --------------------------------------------------------------------
         protected override void OnLoad()
         {
-            if (consumeButton != null) consumeButton.onClick.AddListener(OnConsume);
-            if (equipButton != null) equipButton.onClick.AddListener(OnEquip);
-            if (enhanceButton != null) enhanceButton.onClick.AddListener(OnEnhance);
-            if (sellButton != null) sellButton.onClick.AddListener(OnSell);
+            if (consumeButton != null) 
+                consumeButton.onClick.AddListener(OnConsume);
+
+            if (equipButton != null) 
+                equipButton.onClick.AddListener(OnEquip);
+
+            if (sellButton != null) 
+                sellButton.onClick.AddListener(OnSell);
         }
         // --------------------------------------------------------------------
         public void Bind(ItemHandle handle)
@@ -72,8 +75,6 @@ namespace GameBerry.UI
                 _itemRarity.color = StaticResource.Instance.GetRarityTextColor(enum_Rarity);
             }
 
-            
-
             Enum_ItemType enum_ItemType = ItemManager.Instance.GetItemType(handle.itemId);
             if (enum_ItemType == Enum_ItemType.Equip)
             {
@@ -94,7 +95,6 @@ namespace GameBerry.UI
                 }
                 // 버튼 노출 제어(기본)
                 if (equipButton != null) equipButton.gameObject.SetActive(false);
-                if (enhanceButton != null) enhanceButton.gameObject.SetActive(false);
             }
 
 
@@ -112,10 +112,15 @@ namespace GameBerry.UI
 
             if (equipInfo == null)
             {
-                if (equipButton != null) equipButton.gameObject.SetActive(false);
-                if (enhanceButton != null) enhanceButton.gameObject.SetActive(false);
+                if (equipButton != null)
+                    equipButton.gameObject.SetActive(false);
+                if (_equipType != null) 
+                    _equipType.gameObject.SetActive(false);
                 return;
             }
+
+            if (_equipType != null)
+                _equipType.SetText(equipInfo.EquipType.ToString());
 
             int idx = 0;
 
@@ -148,8 +153,8 @@ namespace GameBerry.UI
                         _equipMetaAddStatCount.gameObject.SetActive(false);
                 }
 
-                if (equipButton != null) equipButton.gameObject.SetActive(false);
-                if (enhanceButton != null) enhanceButton.gameObject.SetActive(false);
+                if (equipButton != null) 
+                    equipButton.gameObject.SetActive(false);
             }
             else
             {
@@ -167,8 +172,8 @@ namespace GameBerry.UI
                     }
                 }
 
-                if (equipButton != null) equipButton.gameObject.SetActive(true);
-                if (enhanceButton != null) enhanceButton.gameObject.SetActive(true);
+                if (equipButton != null) 
+                    equipButton.gameObject.SetActive(!EquipmentManager.Instance.IsEquip(handle));
             }
 
             for (int i = idx; i < _spawnStatElement.Count; ++i)
@@ -213,14 +218,8 @@ namespace GameBerry.UI
         private void OnEquip()
         {
             // 장착 시스템은 프로젝트별이므로 연결만 해두고 확장
-            Debug.Log($"[ItemDescDialog] Equip requested: {_handle}");
-            // 예) EquipmentManager.Instance.Equip(slot, _handle.instanceId);
-        }
-        //------------------------------------------------------------------------------------
-        private void OnEnhance()
-        {
-            Debug.Log($"[ItemDescDialog] Enhance requested: {_handle}");
-            // 예) EquipmentManager.Instance.Enhance(_handle.instanceId);
+            if (EquipmentManager.Instance.SetEquip(_handle))
+                ShowEquipStat(_handle);
         }
         //------------------------------------------------------------------------------------
         private void OnSell()

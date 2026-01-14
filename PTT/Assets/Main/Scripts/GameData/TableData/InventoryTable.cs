@@ -260,40 +260,91 @@ namespace GameBerry.Table
             // 원본 inventory 리스트 순서가 곧 획득순(저장 순서)이다.
             // 정렬 탭은 "뷰"만 정렬하고, 동률은 원본 index로 안정(stable)하게 유지한다.
             var itemChart = GameBerry.Chart.GameChart.Get<GameBerry.Chart.ItemChart>();
+            var equipChart = GameBerry.Chart.GameChart.Get<GameBerry.Chart.EquipChart>();
 
-            int TypeKey(InventoryEntry e) => (int)(itemChart?.Get(e.itemId)?.ItemType ?? 0);
+            Enum_ItemType TypeEnum(InventoryEntry e) => itemChart?.Get(e.itemId)?.ItemType ?? Enum_ItemType.Max;
+            int TypeKey(InventoryEntry e) => (int)(TypeEnum(e));
             int RarityKey(InventoryEntry e) => (int)(itemChart?.Get(e.itemId)?.Rarity ?? 0);
 
-            var indexed = inventory
-                .Select((e, idx) => (e, idx))
-                .Where(x => x.e != null)
-                .ToList();
+            Enum_EquipType EquipEnum(InventoryEntry e) => equipChart?.Get(e.itemId)?.EquipType ?? Enum_EquipType.Max;
+            int EquipKey(InventoryEntry e) => (int)(EquipEnum(e));
+
+            List<InventoryEntry> capyList = new List<InventoryEntry>(inventory);
 
             switch (sort)
             {
                 case Enum_InventorySort.TypeSort:
-                    indexed = indexed
-                        .OrderBy(x => TypeKey(x.e))
-                        .ThenByDescending(x => RarityKey(x.e))
-                        .ThenBy(x => x.idx)
-                        .ToList();
+                    capyList.Sort((x, y) =>
+                    {
+                        if (TypeKey(x) < TypeKey(y))
+                            return -1;
+                        else if (TypeKey(x) > TypeKey(y))
+                            return 1;
+                        else
+                        {
+                            Enum_ItemType enum_ItemType = TypeEnum(x);
+                            if (enum_ItemType == Enum_ItemType.Equip)
+                            {
+                                if (EquipKey(x) < EquipKey(y))
+                                    return -1;
+                                else if (EquipKey(x) > EquipKey(y))
+                                    return 1;
+                            }
+
+                            if (RarityKey(x) < RarityKey(y))
+                                return 1;
+                            else if (RarityKey(x) > RarityKey(y))
+                                return -1;
+
+                            if (x.itemId < y.itemId)
+                                return -1;
+                            else if (x.itemId > y.itemId)
+                                return 1;
+                        }
+
+                        return 0;
+                    });
                     break;
 
                 case Enum_InventorySort.RaritySort:
-                    indexed = indexed
-                        .OrderByDescending(x => RarityKey(x.e))
-                        .ThenBy(x => TypeKey(x.e))
-                        .ThenBy(x => x.idx)
-                        .ToList();
-                    break;
+                    capyList.Sort((x, y) =>
+                    {
 
-                case Enum_InventorySort.AcquireSort:
+                        if (RarityKey(x) < RarityKey(y))
+                            return 1;
+                        else if (RarityKey(x) > RarityKey(y))
+                            return -1;
+                        else
+                        {
+                            if (TypeKey(x) < TypeKey(y))
+                                return -1;
+                            else if (TypeKey(x) > TypeKey(y))
+                                return 1;
+
+                            Enum_ItemType enum_ItemType = TypeEnum(x);
+                            if (enum_ItemType == Enum_ItemType.Equip)
+                            {
+                                if (EquipKey(x) < EquipKey(y))
+                                    return -1;
+                                else if (EquipKey(x) > EquipKey(y))
+                                    return 1;
+                            }
+
+                            if (x.itemId < y.itemId)
+                                return -1;
+                            else if (x.itemId > y.itemId)
+                                return 1;
+                        }
+
+                        return 0;
+                    });
+                    break;
                 default:
                     // 그대로
                     break;
             }
 
-            return indexed.Select(x => x.e).ToList();
+            return capyList;
         }
 
     }
