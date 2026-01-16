@@ -29,9 +29,6 @@ namespace GameBerry
                             ? Enum_LookDirection.Left
                             : Enum_LookDirection.Right);
 
-                    if (operMoveSpeed > Define.MaxEffectiveMoveSpeedValue)
-                        operMoveSpeed = Define.MaxEffectiveMoveSpeedValue;
-
                     Vector3 newpos = _characterControllerBase.MyRigidbody.position + direction * operMoveSpeed * Time.deltaTime;
 
                     Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;

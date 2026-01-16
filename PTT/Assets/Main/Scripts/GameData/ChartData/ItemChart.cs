@@ -20,6 +20,9 @@ namespace GameBerry.Chart
 
         // 해금/사용 조건 (아직 사용 안함)
         public int UnlockConditionId;
+
+        public string NameLocalKey = string.Empty;
+        public string DescLocalKey = string.Empty;
     }
 
     public class ItemChart : ChartBase

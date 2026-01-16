@@ -246,27 +246,27 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-        public double GetInitTime(V2Enum_IntervalType v2Enum_IntervalType)
+        public double GetInitTime(Enum_IntervalType v2Enum_IntervalType)
         {
             switch (v2Enum_IntervalType)
             {
-                case V2Enum_IntervalType.Quarter:
+                case Enum_IntervalType.Quarter:
                     {
                         return Current_TimeStamp + (60.0 * 15.0);
                     }
-                case V2Enum_IntervalType.Hour:
+                case Enum_IntervalType.Hour:
                     {
                         return Current_TimeStamp + (60.0 * 60.0);
                     }
-                case V2Enum_IntervalType.Day:
+                case Enum_IntervalType.Day:
                     {
                         return DailyInit_TimeStamp;
                     }
-                case V2Enum_IntervalType.Week:
+                case Enum_IntervalType.Week:
                     {
                         return WeekInit_TimeStamp;
                     }
-                case V2Enum_IntervalType.Month:
+                case Enum_IntervalType.Month:
                     {
                         return MonthInit_TimeStamp;
                     }
@@ -279,27 +279,27 @@ namespace GameBerry.Managers
             return 0.0;
         }
         //------------------------------------------------------------------------------------
-        public double GetInitAddTime(V2Enum_IntervalType v2Enum_IntervalType, int cycle = 1)
+        public double GetInitAddTime(Enum_IntervalType v2Enum_IntervalType, int cycle = 1)
         {
             switch (v2Enum_IntervalType)
             {
-                case V2Enum_IntervalType.Quarter:
+                case Enum_IntervalType.Quarter:
                     {
                         return 60.0 * (15.0 * cycle);
                     }
-                case V2Enum_IntervalType.Hour:
+                case Enum_IntervalType.Hour:
                     {
                         return 60.0 * (60.0 * cycle);
                     }
-                case V2Enum_IntervalType.Day:
+                case Enum_IntervalType.Day:
                     {
                         return 86400.0 * cycle;
                     }
-                case V2Enum_IntervalType.Week:
+                case Enum_IntervalType.Week:
                     {
                         return 86400.0 * (7.0 * cycle);
                     }
-                case V2Enum_IntervalType.Month:
+                case Enum_IntervalType.Month:
                     {
                         return 86400.0 * 7.0 * (30.0 * cycle);
                     }
@@ -311,21 +311,21 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-        public void AddInitEvent(V2Enum_IntervalType v2Enum_IntervalType, OnCallBack_Double action)
+        public void AddInitEvent(Enum_IntervalType v2Enum_IntervalType, OnCallBack_Double action)
         {
             switch (v2Enum_IntervalType)
             {
-                case V2Enum_IntervalType.Day:
+                case Enum_IntervalType.Day:
                     {
                         OnInitDailyContent += action;
                         break;
                     }
-                case V2Enum_IntervalType.Week:
+                case Enum_IntervalType.Week:
                     {
                         OnInitWeekContent += action;
                         break;
                     }
-                case V2Enum_IntervalType.Month:
+                case Enum_IntervalType.Month:
                     {
                         OnInitMonthContent += action;
                         break;

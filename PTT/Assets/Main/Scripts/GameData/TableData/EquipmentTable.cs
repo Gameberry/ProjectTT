@@ -9,7 +9,7 @@ namespace GameBerry.Table
     {
         public Enum_EquipType slot; // (int)Enum_EquipType
         public int instanceId;
-        public int level;
+        public int level; // -1은 파괴된거다 복구 가능
 
         public string Pack() => $"{PackUtil.PackValue(slot.Enum32ToInt())},{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(level)}";
         public void Unpack(string str)
@@ -64,11 +64,10 @@ namespace GameBerry.Table
     public class EquipmentData : IPackable
     {
         public int instanceId;
-        public int enhanceLevel;
 
         public List<EquipmentAddStat> addStatList;
 
-        public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(enhanceLevel)}:{PackUtil.PackList(addStatList, PackSep.L1)}";
+        public string Pack() => $"{PackUtil.PackValue(instanceId)}:{PackUtil.PackList(addStatList, PackSep.L1)}";
 
         public void Unpack(string str)
         {
@@ -80,7 +79,6 @@ namespace GameBerry.Table
             {
                 var sp = tsp[0].Split(',');
                 if (sp.Length > 0) instanceId = PackUtil.UnpackValue<int>(sp[0]);
-                if (sp.Length > 1) enhanceLevel = PackUtil.UnpackValue<int>(sp[1]);
             }
 
             if (tsp.Length > 1 && string.IsNullOrEmpty(tsp[1]) == false)
@@ -113,7 +111,7 @@ namespace GameBerry.Table
                 }
             }
         }
-
+        //------------------------------------------------------------------------------------
         public override Param GetParam()
         {
             Param p = new Param();
@@ -121,7 +119,7 @@ namespace GameBerry.Table
             p.Add(equipmentDataKey, PackUtil.PackDict(equipmentDataDict));
             return p;
         }
-
+        //------------------------------------------------------------------------------------
         public bool AddEquipment(EquipmentData equipmentData)
         {
             if (equipmentDataDict.ContainsKey(equipmentData.instanceId) == true)
@@ -131,7 +129,7 @@ namespace GameBerry.Table
 
             return true;
         }
-
+        //------------------------------------------------------------------------------------
         public EquipmentData GetEquipmentData(int instandeId)
         {
             if (equipmentDataDict.TryGetValue(instandeId, out var data))
@@ -141,7 +139,7 @@ namespace GameBerry.Table
 
             return null;
         }
-
+        //------------------------------------------------------------------------------------
         public bool RemoveEquipment(int instanceId)
         {
             if (equipmentDataDict.ContainsKey(instanceId) == false)
@@ -151,19 +149,74 @@ namespace GameBerry.Table
 
             return true;
         }
-
+        //------------------------------------------------------------------------------------
         public int GetEquippedInstanceId(GameBerry.Enum_EquipType slot)
         {
             var d = equipped.Find(x => x.slot == slot);
             return d != null ? d.instanceId : 0;
         }
-
-        public int GetSlotLevel(GameBerry.Enum_EquipType slot)
+        //------------------------------------------------------------------------------------
+        public int GetStarforceLevel(GameBerry.Enum_EquipType slot)
         {
             var d = equipped.Find(x => x.slot == slot);
-            return d != null ? d.level : 0;
-        }
+            if (d == null)
+                return 0;
 
+            if (d.level == -1)
+                return 0;
+
+            return d.level;
+        }
+        //------------------------------------------------------------------------------------
+        public bool IsDestroyStarforce(GameBerry.Enum_EquipType slot)
+        {
+            var d = equipped.Find(x => x.slot == slot);
+            if (d == null)
+                return false;
+
+            return d.level == -1;
+        }
+        //------------------------------------------------------------------------------------
+        public bool EnhanceSlot(Enum_EquipType slot, Enum_StarforceResult enum_StarforceResult, bool immediate = true)
+        {
+            if (enum_StarforceResult == Enum_StarforceResult.Stay)
+                return true;
+
+            var d = equipped.Find(x => x.slot == slot);
+
+            if (d == null)
+                return false;
+
+            if (enum_StarforceResult == Enum_StarforceResult.Success)
+                d.level += 1;
+            else if (enum_StarforceResult == Enum_StarforceResult.Down)
+                d.level -= 1;
+            else if (enum_StarforceResult == Enum_StarforceResult.Destroy)
+                d.level = -1;
+
+            if (immediate == true)
+                UpdateTable();
+
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        public bool DoSlotRestoration(GameBerry.Enum_EquipType slot, bool immediate = true)
+        {
+            var d = equipped.Find(x => x.slot == slot);
+            if (d == null)
+                return false;
+
+            if (d.level != -1)
+                return false;
+
+            d.level = 12;
+
+            if (immediate == true)
+                UpdateTable();
+
+            return true;
+        }
+        //------------------------------------------------------------------------------------
         public void SetEquipped(GameBerry.Enum_EquipType slot, int instanceId)
         {
             var d = equipped.Find(x => x.slot == slot);
@@ -174,7 +227,7 @@ namespace GameBerry.Table
             }
             d.instanceId = instanceId;
         }
-
+        //------------------------------------------------------------------------------------
         public bool IsEquipped(int instanceId)
         {
             for (int i = 0; i < equipped.Count; i++)
@@ -185,49 +238,16 @@ namespace GameBerry.Table
 
             return false;
         }
-
-
+        //------------------------------------------------------------------------------------
         public bool TryGetData(int instanceId, out EquipmentData data)
         {
             return equipmentDataDict.TryGetValue(instanceId, out data);
         }
-
+        //------------------------------------------------------------------------------------
         public bool HasEquipment(int instanceId)
         {
             return equipmentDataDict.ContainsKey(instanceId);
         }
-
-        public int GetLevel(int instanceId)
-        {
-            if (equipmentDataDict.TryGetValue(instanceId, out var data))
-                return data.enhanceLevel;
-
-            return 0;
-        }
-
-        public void Enhance(List<int> instanceIds, int addLevel = 1)
-        {
-            foreach (var id in instanceIds)
-            {
-                Enhance(id, addLevel, false);
-            }
-
-            UpdateTable();
-        }
-
-        public bool Enhance(int instanceId, int addLevel = 1, bool immediate = true)
-        {
-            if (equipmentDataDict.TryGetValue(instanceId, out var data))
-            {
-                data.enhanceLevel += addLevel;
-
-                if (immediate == true)
-                    UpdateTable();
-
-                return true;
-            }
-
-            return false;
-        }
+        //------------------------------------------------------------------------------------
     }
 }

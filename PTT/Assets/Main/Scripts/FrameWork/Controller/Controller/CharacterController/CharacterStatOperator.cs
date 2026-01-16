@@ -19,12 +19,14 @@ namespace GameBerry
     public class CharacterStatOperator
     {
         protected Dictionary<Enum_Stat, ObscuredDouble> _defauleStatValue = new Dictionary<Enum_Stat, ObscuredDouble>();
+        protected Dictionary<Enum_Stat, ObscuredDouble> _equipmentValue = new Dictionary<Enum_Stat, ObscuredDouble>();  // 추가
         protected Dictionary<Enum_Stat, ObscuredDouble> _buffValue = new Dictionary<Enum_Stat, ObscuredDouble>();
 
         protected Dictionary<Enum_Stat, ObscuredDouble> _outputStatValue = new Dictionary<Enum_Stat, ObscuredDouble>();
 
 #if UNITY_EDITOR
         public List<StatViewer> DefaultViewers = new List<StatViewer>();
+        public List<StatViewer> EquipmentViewers = new List<StatViewer>();  // 추가
         public List<StatViewer> BuffViewers = new List<StatViewer>();
         public List<StatViewer> OutputViewers = new List<StatViewer>();
 #endif
@@ -85,7 +87,42 @@ namespace GameBerry
 
             return _buffValue[v2Enum_Stat];
         }
+        //------------------------------------------------------------------------------------
+        public void SetEquipmentStat(Enum_Stat stat, ObscuredDouble value)
+        {
+            if (_equipmentValue.ContainsKey(stat) == false)
+                _equipmentValue.Add(stat, 0);
 
+            _equipmentValue[stat] = value;
+
+#if UNITY_EDITOR
+            StatViewer statViewer = EquipmentViewers.Find(x => x.v2Enum_Stat == stat);
+            if (statViewer == null)
+            {
+                statViewer = new StatViewer();
+                statViewer.v2Enum_Stat = stat;
+                EquipmentViewers.Add(statViewer);
+            }
+            statViewer.value = value;
+#endif
+        }
+        //------------------------------------------------------------------------------------
+        public double GetEquipmentValue(Enum_Stat stat)
+        {
+            if (_equipmentValue.ContainsKey(stat) == false)
+                return 0;
+
+            return _equipmentValue[stat];
+        }
+        //------------------------------------------------------------------------------------
+        public void ClearEquipmentStats()
+        {
+            _equipmentValue.Clear();
+
+#if UNITY_EDITOR
+            EquipmentViewers.Clear();
+#endif
+        }
         //------------------------------------------------------------------------------------
         public void RefreshOutputStatValue(Enum_Stat v2Enum_Stat = Enum_Stat.Max)
         {
@@ -103,9 +140,10 @@ namespace GameBerry
         public void SetOutputStatValue(Enum_Stat v2Enum_Stat)
         { // 여기서 각 컨텐츠에서 계산되어야 할 값들을 가져와서 다시 셋팅
             double originValue = GetDefaultValue(v2Enum_Stat);
+            double equipValue = GetEquipmentValue(v2Enum_Stat);  // 추가
             double buffvalue = GetBuffValue(v2Enum_Stat);
 
-            _outputStatValue[v2Enum_Stat] = originValue + buffvalue;
+            _outputStatValue[v2Enum_Stat] = originValue + equipValue + buffvalue;  // 수정
 
 #if UNITY_EDITOR
             StatViewer statViewer = OutputViewers.Find(x => x.v2Enum_Stat == v2Enum_Stat);
@@ -115,10 +153,8 @@ namespace GameBerry
                 statViewer.v2Enum_Stat = v2Enum_Stat;
                 OutputViewers.Add(statViewer);
             }
-
-            statViewer.value = originValue;
+            statViewer.value = originValue + equipValue + buffvalue;  // 수정
 #endif
-
         }
         //------------------------------------------------------------------------------------
         public double GetOutPutMyStat(Enum_Stat v2Enum_Stat)
@@ -134,6 +170,7 @@ namespace GameBerry
         {
             _outputStatValue.Clear();
             _defauleStatValue.Clear();
+            _equipmentValue.Clear();  // 추가
         }
         //------------------------------------------------------------------------------------
     }

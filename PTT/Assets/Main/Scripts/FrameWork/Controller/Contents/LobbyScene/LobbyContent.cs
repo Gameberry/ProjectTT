@@ -10,9 +10,6 @@ namespace GameBerry.Contents
 {
     public class LobbyContent : IContent
     {
-        private GameBerry.Event.SetInGameRewardPopupMsg m_setInGameRewardPopupMsg = new GameBerry.Event.SetInGameRewardPopupMsg();
-        private GameBerry.Event.SetInGameRewardPopup_TitleMsg m_SetInGameRewardPopup_TitleMsg = new GameBerry.Event.SetInGameRewardPopup_TitleMsg();
-
         //------------------------------------------------------------------------------------
         protected override void OnLoadStart()
         {

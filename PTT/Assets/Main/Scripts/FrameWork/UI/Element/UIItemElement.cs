@@ -113,25 +113,25 @@ namespace GameBerry.UI
 
             if (_level != null)
             {
-                int level = 0;
+                //int level = 0;
 
-                if (e.isMeta == true)
-                {
-                    if (e.metaLevel > 0)
-                        level = e.metaLevel;
-                }
-                else
-                {
-                    if (enumtype == Enum_ItemType.Equip)
-                        level = Table.UserTable.Get<EquipmentTable>().GetLevel(e.instanceId);
-                }
+                //if (e.isMeta == true)
+                //{
+                //    if (e.metaLevel > 0)
+                //        level = e.metaLevel;
+                //}
+                //else
+                //{
+                //    if (enumtype == Enum_ItemType.Equip)
+                //        level = Table.UserTable.Get<EquipmentTable>().GetLevel(e.instanceId);
+                //}
 
-                if (level > 0)
-                {
-                    _level.SetText("+{0}", level);
-                    _level.gameObject.SetActive(true);
-                }
-                else
+                //if (level > 0)
+                //{
+                //    _level.SetText("+{0}", level);
+                //    _level.gameObject.SetActive(true);
+                //}
+                //else
                     _level.gameObject.SetActive(false);
             }
 

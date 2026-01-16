@@ -157,6 +157,14 @@ namespace GameBerry.Managers
             return _battleSceneCamera;
         }
         //------------------------------------------------------------------------------------
+        public CharacterControllerBase GetPlayer()
+        {
+            if (_currentBattleScene == null)
+                return null;
+
+            return _currentBattleScene.PlayerController;
+        }
+        //------------------------------------------------------------------------------------
         public void PlayCameraShake(
             float strengthOverride = -1f,
             float durationOverride = -1f)

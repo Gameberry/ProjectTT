@@ -55,6 +55,8 @@ namespace GameBerry
             creatureBaseMove.SetCharacterController(this);
             RefreshCheatStat();
 
+            EquipmentManager.Instance.RefreshStat();
+
             _comboController = new ComboController();
             _comboController.Init(this);
             _comboController.SetVisibleComboUI();

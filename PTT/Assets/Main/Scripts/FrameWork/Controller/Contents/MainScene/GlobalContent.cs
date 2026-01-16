@@ -21,11 +21,6 @@ namespace GameBerry.Contents
         private static GameBerry.Event.DoFadeMsg _fadeMsg = new GameBerry.Event.DoFadeMsg();
         private static GameBerry.Event.DoDungeonFadeMsg _dungeonFadeMsg = new GameBerry.Event.DoDungeonFadeMsg();
 
-        private static GameBerry.Event.SetBuffStringMsg _setBuffStringMsg = new GameBerry.Event.SetBuffStringMsg();
-
-        private static GameBerry.Event.SetSelectGoodsPopupMsg _setSelectGoodsPopupMsg = new GameBerry.Event.SetSelectGoodsPopupMsg();
-        private static GameBerry.Event.SetGoodsDescPopupMsg _setGoodsDescPopupMsg = new GameBerry.Event.SetGoodsDescPopupMsg();
-
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {

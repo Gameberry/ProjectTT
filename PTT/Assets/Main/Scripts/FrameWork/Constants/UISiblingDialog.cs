@@ -15,7 +15,7 @@
         PointInventoryDialog,
         SkinSelectDialog,
         InventoryItemDialog,
-
+        StarforceEnhanceDialog,
 
         ItemDescDialog,
 

@@ -331,10 +331,7 @@ namespace GameBerry
             {
                 double recoveryvalue = GetOutPutMyStat(Enum_Stat.HpRecovery);
 
-                double ratio = recoveryvalue * Define.PerSkillEffectRecoverValue;
-
-
-                InCreaseHP(ratio * MaxHP * Time.deltaTime);
+                InCreaseHP(recoveryvalue * MaxHP * Time.deltaTime);
             }
         }
         //------------------------------------------------------------------------------------

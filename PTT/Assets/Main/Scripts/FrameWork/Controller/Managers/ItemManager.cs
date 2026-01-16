@@ -110,12 +110,20 @@ namespace GameBerry
 
         public string GetItemNameLocalKey(int itemId)
         {
-            return string.Format(_itemNameLocalKey, itemId);
+            ItemInfo ItemInfo = GetItemMeta(itemId);
+            if(string.IsNullOrEmpty(ItemInfo.NameLocalKey))
+                ItemInfo.NameLocalKey = string.Format(_itemNameLocalKey, itemId);
+
+            return ItemInfo.NameLocalKey;
         }
 
         public string GetItemDescLocalKey(int itemId)
         {
-            return string.Format(_itemDescLocalKey, itemId);
+            ItemInfo ItemInfo = GetItemMeta(itemId);
+            if (string.IsNullOrEmpty(ItemInfo.DescLocalKey))
+                ItemInfo.DescLocalKey = string.Format(_itemDescLocalKey, itemId);
+
+            return ItemInfo.DescLocalKey;
         }
 
         public AddItemResult AddItem(int itemId, long amount, bool immediateServerUpdate = true)
