@@ -42,7 +42,7 @@ namespace GameBerry
 
                 return percent % 1 == 0
         ? percent.ToString("0", CultureInfo.InvariantCulture) + "%"
-        : percent.ToString("0.#", CultureInfo.InvariantCulture) + "%";
+        : percent.ToString("0.##", CultureInfo.InvariantCulture) + "%";
             }
             else
                 return value.ToString("0", CultureInfo.InvariantCulture);

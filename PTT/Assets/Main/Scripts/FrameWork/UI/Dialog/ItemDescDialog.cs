@@ -99,7 +99,13 @@ namespace GameBerry.UI
 
 
             //// consume/sell은 프로젝트 룰에 따라 조절 가능
-            //if (consumeButton != null) consumeButton.gameObject.SetActive(true);
+            if (consumeButton != null)
+            {
+                if (handle.isMeta == false)
+                    consumeButton.gameObject.SetActive(true);
+                else
+                    consumeButton.gameObject.SetActive(true);
+            }
             //if (sellButton != null) sellButton.gameObject.SetActive(true);
         }
         //------------------------------------------------------------------------------------
