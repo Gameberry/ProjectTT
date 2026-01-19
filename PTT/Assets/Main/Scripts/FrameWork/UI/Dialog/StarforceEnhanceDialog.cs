@@ -51,12 +51,11 @@ namespace GameBerry.UI
         [SerializeField] private Toggle _destroyAidToggle;
         [SerializeField] private Transform _downAidGroup;
         [SerializeField] private Transform _destroyAidGroup;
+        [SerializeField] private Toggle _hideResultPopupToggle;
 
         [Header("Right Panel - Price")]
         [SerializeField] private UIItemElement _mainPriceElement;
-        [SerializeField] private TMP_Text _mainPriceText;
         [SerializeField] private UIItemElement _subPriceElement;
-        [SerializeField] private TMP_Text _subPriceText;
 
         [Header("Right Panel - Buttons")]
         [SerializeField] private Button _enhanceButton;
@@ -64,7 +63,6 @@ namespace GameBerry.UI
 
         [Header("Destroy State")]
         [SerializeField] private Transform _destroyStateGroup;
-        [SerializeField] private TMP_Text _destroyStateMessage;
         [SerializeField] private UIItemElement _restorationItem1Element;
         [SerializeField] private TMP_Text _restorationItem1Text;
         [SerializeField] private UIItemElement _restorationItem2Element;
@@ -75,10 +73,14 @@ namespace GameBerry.UI
         [SerializeField] private Transform _resultPopupRoot;
         [SerializeField] private UIItemElement _resultItemElement;
         [SerializeField] private TMP_Text _resultTitleText;
+        [SerializeField] private TMP_Text _beforeLevel;
+        [SerializeField] private TMP_Text _afterLevel;
+        [SerializeField] private Image _changeLevelArrow;
         [SerializeField] private Image _resultEffectImage;
         [SerializeField] private Transform _resultStatContent;
         [SerializeField] private UIStarforceResultStatElement _resultStatPrefab;
         private readonly List<UIStarforceResultStatElement> _spawnedResultStats = new List<UIStarforceResultStatElement>();
+        [SerializeField] private Transform _spawnedResultStatLine;
 
         [Header("Result Popup Colors")]
         [SerializeField] private Color _successColor = Color.green;
@@ -107,6 +109,9 @@ namespace GameBerry.UI
 
             if (_destroyAidToggle != null)
                 _destroyAidToggle.onValueChanged.AddListener(_ => RefreshProbabilityAndPrice());
+
+            if (_hideResultPopupToggle != null)
+                _hideResultPopupToggle.isOn = false;
 
             for (int i = 0; i < _slotElements.Count; i++)
             {
@@ -205,6 +210,7 @@ namespace GameBerry.UI
             if (isDestroyed)
             {
                 ShowDestroyState();
+                RefreshStatView(handle, currentLevel);
             }
             else
             {
@@ -236,9 +242,6 @@ namespace GameBerry.UI
         {
             if (_destroyStateGroup != null)
                 _destroyStateGroup.gameObject.SetActive(true);
-
-            if (_destroyStateMessage != null)
-                _destroyStateMessage.SetText("장비 슬롯이 파괴되어 강화 효과가 적용되지 않습니다.");
 
             // 복구 재료 표시
             long item1Amount = ItemManager.Instance.GetItemAmount(Define.StarforceRestoration1_Key);
@@ -424,10 +427,10 @@ namespace GameBerry.UI
             bool downAid = _downAidToggle != null && _downAidToggle.isOn;
             bool destroyAid = _destroyAidToggle != null && _destroyAidToggle.isOn;
 
-            float success = info.Success;
-            float stay = info.Stay;
-            float down = info.Down;
-            float destroy = info.Destroy;
+            float success = info.Success * 100;
+            float stay = info.Stay * 100;
+            float down = info.Down * 100;
+            float destroy = info.Destroy * 100;
 
             if (downAid)
             {
@@ -442,17 +445,17 @@ namespace GameBerry.UI
             }
 
             if (_successRateText != null)
-                _successRateText.SetText("{0:P0}", success);
+                _successRateText.SetText(success.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "%");
 
             if (_stayRateText != null)
-                _stayRateText.SetText("{0:P0}", stay);
+                _stayRateText.SetText(stay.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "%");
 
             if (_downRateText != null)
-                _downRateText.SetText("{0:P0}", down);
+                _downRateText.SetText(down.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "%");
 
             if (_destroyRateText != null)
             {
-                _destroyRateText.SetText("{0:P0}", destroy);
+                _destroyRateText.SetText(destroy.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "%");
                 _destroyRateText.color = destroy > 0 ? _destroyColor : Color.white;
             }
 
@@ -462,16 +465,10 @@ namespace GameBerry.UI
             if (destroyAid) subPrice += info.SubPrice;
 
             if (_mainPriceElement != null)
-                _mainPriceElement.Bind(ItemHandle.ForStack(info.MainPriceKey));
-
-            if (_mainPriceText != null)
-                _mainPriceText.SetText("{0}", info.MainPrice);
+                _mainPriceElement.Bind(ItemHandle.ForMeta(info.MainPriceKey, info.MainPrice));
 
             if (_subPriceElement != null)
-                _subPriceElement.Bind(ItemHandle.ForStack(info.SubPriceKey));
-
-            if (_subPriceText != null)
-                Util.SetCommaInteger(_subPriceText, subPrice);
+                _subPriceElement.Bind(ItemHandle.ForMeta(info.SubPriceKey, subPrice));
 
             // 버튼 활성화 체크
             RefreshEnhanceButtonState(info, subPrice);
@@ -545,11 +542,17 @@ namespace GameBerry.UI
 
             int afterLevel = EquipmentManager.Instance.GetStarforceLevel(_selectedSlot);
 
+            bool showpopup = true;
+            if (_hideResultPopupToggle != null)
+                showpopup = _hideResultPopupToggle.isOn == false;
+
             // 결과 팝업 표시
-            await ShowResultPopup(result, beforeLevel, afterLevel);
+            if (showpopup == true)
+                await ShowResultPopup(result, beforeLevel, afterLevel);
 
             _isProcessing = false;
-            RefreshSelectedSlot();
+
+            RefreshAllSlots();
         }
         //------------------------------------------------------------------------------------
         private async UniTask ShowResultPopup(Enum_StarforceResult result, int beforeLevel, int afterLevel)
@@ -600,8 +603,17 @@ namespace GameBerry.UI
             if (_resultEffectImage != null)
                 _resultEffectImage.color = titleColor;
 
-            // 성공 시 스탯 변화 표시
-            if (result == Enum_StarforceResult.Success)
+            if (_beforeLevel != null)
+                _beforeLevel.SetText("{0}", beforeLevel);
+
+            if (_afterLevel != null)
+                _afterLevel.SetText("{0}", afterLevel);
+
+            if (_changeLevelArrow != null)
+                _changeLevelArrow.color = titleColor;
+
+            // 성공, 다운 시 스탯 변화 표시
+            if (result == Enum_StarforceResult.Success || result == Enum_StarforceResult.Down)
             {
                 ShowResultStats(handle, beforeLevel, afterLevel);
             }
@@ -612,6 +624,9 @@ namespace GameBerry.UI
                 {
                     _spawnedResultStats[i].gameObject.SetActive(false);
                 }
+
+                if (_spawnedResultStatLine != null)
+                    _spawnedResultStatLine.gameObject.SetActive(false);
             }
 
             // 팝업 애니메이션 (DOTween)
@@ -649,6 +664,12 @@ namespace GameBerry.UI
                 idx++;
             }
 
+            if (_spawnedResultStatLine != null)
+            {
+                _spawnedResultStatLine.gameObject.SetActive(true);
+                _spawnedResultStatLine.SetAsLastSibling();
+            }
+
             // 추가 스탯
             if (equipData?.addStatList != null)
             {
@@ -684,6 +705,7 @@ namespace GameBerry.UI
 
             element.SetStat(stat, beforeValue, afterValue);
             element.gameObject.SetActive(true);
+            element.transform.SetAsLastSibling();
         }
         //------------------------------------------------------------------------------------
         private void OnClickRestoration()
@@ -693,6 +715,10 @@ namespace GameBerry.UI
 
             if (EquipmentManager.Instance.DoStarforceRestoration(_selectedSlot))
             {
+                RefreshAllSlots();
+                if (_enhanceButton != null)
+                    _enhanceButton.gameObject.SetActive(true);
+
                 RefreshSelectedSlot();
             }
         }

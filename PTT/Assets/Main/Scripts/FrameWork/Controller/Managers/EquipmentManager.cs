@@ -362,7 +362,9 @@ namespace GameBerry
             ItemManager.Instance.ConsumeItem(enhanceInfo.MainPriceKey, enhanceInfo.MainPrice, false);
             ItemManager.Instance.ConsumeItem(enhanceInfo.SubPriceKey, subPrice, false);
 
-            UserTable.TransactionUpdate(EquipSlotEnhanceTables);
+            //UserTable.TransactionUpdate(EquipSlotEnhanceTables);
+            Table.UserTable.Get<Table.EquipmentTable>().UpdateTable(false);
+            Table.UserTable.Get<Table.PointTable>().UpdateTable(false);
 
             // Ω∫≈» ∞ªΩ≈
             RefreshStat();

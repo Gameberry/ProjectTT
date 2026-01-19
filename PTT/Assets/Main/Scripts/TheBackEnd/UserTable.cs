@@ -67,8 +67,11 @@ namespace GameBerry.Table
             if (string.IsNullOrEmpty(TableName) == true)
                 return;
 
-            if(immediate == false)
+            if (immediate == false)
+            { 
                 UpdateWaitData = true;
+                return;
+            }
 
             if (string.IsNullOrEmpty(InData) == true)
             {
