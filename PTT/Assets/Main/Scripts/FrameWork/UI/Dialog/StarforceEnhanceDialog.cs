@@ -105,10 +105,16 @@ namespace GameBerry.UI
                 _restorationButton.onClick.AddListener(OnClickRestoration);
 
             if (_downAidToggle != null)
+            { 
                 _downAidToggle.onValueChanged.AddListener(_ => RefreshProbabilityAndPrice());
+                _downAidToggle.isOn = false;
+            }
 
             if (_destroyAidToggle != null)
+            { 
                 _destroyAidToggle.onValueChanged.AddListener(_ => RefreshProbabilityAndPrice());
+                _destroyAidToggle.isOn = false;
+            }
 
             if (_hideResultPopupToggle != null)
                 _hideResultPopupToggle.isOn = false;
@@ -409,12 +415,6 @@ namespace GameBerry.UI
 
             if (_destroyAidGroup != null)
                 _destroyAidGroup.gameObject.SetActive(currentInfo.Destroy > 0);
-
-            if (_downAidToggle != null && currentInfo.Down <= 0)
-                _downAidToggle.isOn = false;
-
-            if (_destroyAidToggle != null && currentInfo.Destroy <= 0)
-                _destroyAidToggle.isOn = false;
         }
         //------------------------------------------------------------------------------------
         private void RefreshProbabilityAndPrice()
@@ -426,6 +426,12 @@ namespace GameBerry.UI
 
             bool downAid = _downAidToggle != null && _downAidToggle.isOn;
             bool destroyAid = _destroyAidToggle != null && _destroyAidToggle.isOn;
+
+            if (info.Down <= 0)
+                downAid = false;
+
+            if (info.Destroy <= 0)
+                destroyAid = false;
 
             float success = info.Success * 100;
             float stay = info.Stay * 100;
