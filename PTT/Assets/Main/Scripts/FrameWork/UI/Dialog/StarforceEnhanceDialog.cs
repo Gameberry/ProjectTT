@@ -326,7 +326,7 @@ namespace GameBerry.UI
                     double nextValue = addStat.value * (1.0 + nextInfo.SubStatPer);
                     double diff = nextValue - currentValue;
 
-                    AddStatLine(addStat.stat, currentValue, addStat.value, addStat.value * currentInfo.MainStatPer, diff, idx);
+                    AddStatLine(addStat.stat, currentValue, addStat.value, addStat.value * currentInfo.SubStatPer, diff, idx);
                     idx++;
                 }
             }
@@ -385,7 +385,7 @@ namespace GameBerry.UI
             }
 
             if (_subStatPerText != null)
-                _subStatPerText.SetText(string.Format("{0:P0}", nextInfo.SubStatPer));
+                _subStatPerText.SetText(string.Format("{0:P0}", currentInfo.SubStatPer));
 
             bool sameSubPer = currentInfo.SubStatPer == nextInfo.SubStatPer;
 
