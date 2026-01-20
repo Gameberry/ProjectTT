@@ -38,10 +38,10 @@ namespace GameBerry.UI
 			UnloadAll();
 		}
 
-        public static IDialog Get<T>() where T : IDialog
-        {
-            return Instance.Get(typeof(T).Name);
-        }
+		public static T Get<T>() where T : IDialog
+		{
+			return Instance.Get(typeof(T).Name) as T;
+		}
 
 		public IDialog Get(string uiName)
 		{

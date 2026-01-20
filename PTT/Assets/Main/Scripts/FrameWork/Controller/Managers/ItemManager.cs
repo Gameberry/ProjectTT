@@ -331,7 +331,7 @@ namespace GameBerry
 
             UI.UIManager.Instance.DialogEnter<UI.ItemDescDialog>();
 
-            var itemDescDialog = UI.UIManager.Get<UI.ItemDescDialog>() as UI.ItemDescDialog;
+            var itemDescDialog = UI.UIManager.Get<UI.ItemDescDialog>();
             if (itemDescDialog == null)
             {
                 Debug.LogError("[ItemManager] ItemDescDialog not found via UIManager.Get.");

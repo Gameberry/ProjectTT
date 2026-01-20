@@ -24,17 +24,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public static string FormatStatDisplayValue(Enum_Stat stat, double value)
         {
-            bool isPercent = false;
-            if (stat == Enum_Stat.Attack_Inc
-                || stat == Enum_Stat.Hp_Inc
-                || stat == Enum_Stat.Defence_Inc
-                || stat == Enum_Stat.MoveSpeed_Inc
-                || stat == Enum_Stat.AttackSpeed_Inc
-                || stat == Enum_Stat.CritChance
-                || stat == Enum_Stat.CritDmg_Inc)
-                isPercent = true;
-
-
+            bool isPercent = IsPercent(stat);
 
             if (isPercent)
             {
@@ -46,6 +36,20 @@ namespace GameBerry
             }
             else
                 return value.ToString("0", CultureInfo.InvariantCulture);
+        }
+        //------------------------------------------------------------------------------------
+        public static bool IsPercent(Enum_Stat stat)
+        {
+            if (stat == Enum_Stat.Attack_Inc
+    || stat == Enum_Stat.Hp_Inc
+    || stat == Enum_Stat.Defence_Inc
+    || stat == Enum_Stat.MoveSpeed_Inc
+    || stat == Enum_Stat.AttackSpeed_Inc
+    || stat == Enum_Stat.CritChance
+    || stat == Enum_Stat.CritDmg_Inc)
+                return true;
+
+            return false;
         }
         //------------------------------------------------------------------------------------
     }

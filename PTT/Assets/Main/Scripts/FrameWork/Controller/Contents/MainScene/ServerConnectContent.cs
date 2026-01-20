@@ -19,7 +19,7 @@ namespace GameBerry.Contents
         {
             Message.AddListener<LoginResultMsg>(LoginResult);
 
-            _appLoadingDialog = UIManager.Get<AppLoadingDialog>() as AppLoadingDialog;
+            _appLoadingDialog = UIManager.Get<AppLoadingDialog>();
 
             ConnectServer();
         }
