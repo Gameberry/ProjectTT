@@ -559,5 +559,7 @@ namespace GameBerry
         public static long StarforceRestoration1_Price = 5000;
         public static int StarforceRestoration2_Key = 1002;
         public static long StarforceRestoration2_Price = 1000000;
+
+        public static int WeaponAwakeAddLevel = 20;
     }
 }

@@ -43,6 +43,7 @@ namespace GameBerry
         public static ItemHandle FromInventory(InventoryEntry e) => FromData(e);
         public static ItemHandle FromPoint(PointData e) => FromData(e);
         public static ItemHandle FromSkin(SkinData e) => FromData(e);
+        public static ItemHandle FromWeapon(WeaponData e) => FromData(e);
 
         public static ItemHandle ForStack(int itemId)
             => new ItemHandle { itemId = itemId, instanceId = 0, isMeta = false };

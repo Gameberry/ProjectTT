@@ -44,6 +44,11 @@ namespace GameBerry.Chart
                             Define.StarforceRestoration2_Price = PackUtil.UnpackValue<long>(rows[i].value);
                             break;
                         }
+                    case "WeaponAwakeAddLevel":
+                        {
+                            Define.WeaponAwakeAddLevel = PackUtil.UnpackValue<int>(rows[i].value);
+                            break;
+                        }
                 }
             }
         }

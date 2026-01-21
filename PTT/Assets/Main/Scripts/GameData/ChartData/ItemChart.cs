@@ -18,6 +18,8 @@ namespace GameBerry.Chart
         // 희귀도
         public GameBerry.Enum_Rarity Rarity;
 
+        public GameBerry.Enum_Tier Tier;
+
         // 해금/사용 조건 (아직 사용 안함)
         public int UnlockConditionId;
 

@@ -77,6 +77,7 @@ namespace GameBerry
             Register(new InventoryStorageHandler());
             Register(new PointStorageHandler());
             Register(new SkinStorageHandler());
+            Register(new WeaponStorageHandler());
         }
 
         private void Register(IItemStorageHandler h)
@@ -106,6 +107,14 @@ namespace GameBerry
             if (meta == null) return Enum_Rarity.Max;
 
             return meta.Rarity;
+        }
+
+        public Enum_Tier GetItemTier(int itemId)
+        {
+            var meta = GetItemMeta(itemId);
+            if (meta == null) return Enum_Tier.Max;
+
+            return meta.Tier;
         }
 
         public string GetItemNameLocalKey(int itemId)
@@ -522,6 +531,43 @@ namespace GameBerry
             {
                 var st = UserTable.Get<SkinTable>();
                 return st.IsUnlocked(meta.ItemId) ? 1 : 0;
+            }
+        }
+
+        private class WeaponStorageHandler : IItemStorageHandler
+        {
+            public GameBerry.Enum_ItemStorageType StorageType => GameBerry.Enum_ItemStorageType.Weapon;
+
+            public AddItemResult Add(ItemInfo meta, long amount, bool immediate)
+            {
+                var wt = UserTable.Get<WeaponTable>();
+                wt.Add(meta.ItemId, amount);
+                wt.UpdateTable(immediate);
+
+                return new AddItemResult { Success = true, Requested = amount, Added = amount };
+            }
+
+            public ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediate)
+            {
+                var wt = UserTable.Get<WeaponTable>();
+                if (wt.GetAmount(meta.ItemId) < amount)
+                    return new ConsumeItemResult { Success = false, Reason = "NotEnough" };
+
+                wt.Add(meta.ItemId, -amount);
+                wt.UpdateTable(immediate);
+
+                return new ConsumeItemResult { Success = true, Requested = amount, Consumed = amount };
+            }
+
+            public ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediate)
+            {
+                return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
+            }
+
+            public long GetAmount(ItemInfo meta)
+            {
+                var wt = UserTable.Get<WeaponTable>();
+                return wt.GetAmount(meta.ItemId);
             }
         }
     }
