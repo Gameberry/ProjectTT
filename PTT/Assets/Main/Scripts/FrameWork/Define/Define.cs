@@ -85,10 +85,19 @@ namespace GameBerry
         Max,
     }
 
-    // 장비 슬롯 예시(기존 프로젝트 Enum_EquipType이 이미 있으면 이 파일은 삭제/병합)
+    public enum Enum_Tier
+    {
+        Low = 1,    // 하급
+        Normal,    // 중급
+        High,      // 상급
+        Top,       // 최상급
+
+        Max,
+    }
+
     public enum Enum_EquipType
     {
-        Sword = 1,
+        Bow = 1,
         Helmet = 2,
         Armor = 3,
         Glove = 4,
@@ -121,6 +130,8 @@ namespace GameBerry
         Skin,
         Point,
 
+        Weapon,
+
         Max
     }
 
@@ -129,7 +140,8 @@ namespace GameBerry
     {
         Inventory,   // 일반 아이템/장비 인벤토리
         Point,       // 재화(지갑)
-        Skin         // 스킨 컬렉션
+        Skin,         // 스킨 컬렉션
+        Weapon       // 무기
     }
 
     public enum Enum_StarforceResult

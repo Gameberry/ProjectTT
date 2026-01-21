@@ -1,4 +1,4 @@
-using UnityEngine;
+using System;
 using System.Globalization;
 using System.Collections.Generic;
 
@@ -53,6 +53,25 @@ namespace GameBerry
                 return true;
 
             return false;
+        }
+        //------------------------------------------------------------------------------------
+        public static Dictionary<Enum_Stat, double> ParseStatsPacked(string packed)
+        {
+            var dict = new Dictionary<Enum_Stat, double>();
+            if (string.IsNullOrEmpty(packed)) return dict;
+
+            var parts = packed.Split('|');
+            for (int i = 0; i < parts.Length; ++i)
+            {
+                var kv = parts[i].Split('=');
+                if (kv.Length != 2) continue;
+
+                if (Enum.TryParse(kv[0], out Enum_Stat stat) == false) continue;
+                if (double.TryParse(kv[1], out var val) == false) continue;
+
+                dict[stat] = val;
+            }
+            return dict;
         }
         //------------------------------------------------------------------------------------
     }
