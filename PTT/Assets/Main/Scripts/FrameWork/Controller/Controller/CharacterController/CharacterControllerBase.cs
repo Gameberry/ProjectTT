@@ -83,6 +83,8 @@ namespace GameBerry
 
         public float Temp_Accuracy = 1f;
 
+        private System.Random _random = new System.Random();
+
         public bool _blockMove { get; private set; }
         protected bool _blockAttack { get; private set; }
         protected bool _blockSkill { get; private set; }
@@ -191,6 +193,8 @@ namespace GameBerry
                 bool critical = damage.Hitter.ApplyCritical();
                 if (critical == true)
                     setdamage = setdamage * damage.Hitter.GetOutPutMyStat(Enum_Stat.CritDmg_Inc);
+
+                setdamage *= damage.Hitter.GetMinMaxRatio();
 
                 setdamage = System.Math.Truncate(setdamage);
 
@@ -486,6 +490,7 @@ namespace GameBerry
 
             _characterAttack = GetOutPutMyStat(Enum_Stat.Attack);
             _characterAttack += _characterAttack * GetOutPutMyStat(Enum_Stat.Attack_Inc);
+            _characterAttack += _characterAttack * GetOutPutMyStat(Enum_Stat.FinalDamage);
 
             _characterDefense = GetOutPutMyStat(Enum_Stat.Defence);
             _characterDefense += _characterDefense * GetOutPutMyStat(Enum_Stat.Defence_Inc);
@@ -524,6 +529,19 @@ namespace GameBerry
         public bool ApplyCritical()
         {
             return Random.Range(0.0f, 1.0f) <= (float)GetOutPutMyStat(Enum_Stat.CritChance);
+        }
+        //------------------------------------------------------------------------------------
+        public double GetMinMaxRatio()
+        {
+            double min = GetOutPutMyStat(Enum_Stat.MinDamagePer);
+            double max = GetOutPutMyStat(Enum_Stat.MaxDamagePer);
+
+            if (min >= max)
+                return min;
+
+            double value = min + ((max - min) * _random.NextDouble());
+
+            return value;
         }
         //------------------------------------------------------------------------------------
     }

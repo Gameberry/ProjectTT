@@ -177,12 +177,12 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void SetOutputStatValue(Enum_Stat v2Enum_Stat)
         { // 여기서 각 컨텐츠에서 계산되어야 할 값들을 가져와서 다시 셋팅
-            double originValue = GetDefaultValue(v2Enum_Stat);
-            double equipValue = GetEquipmentValue(v2Enum_Stat);  // 추가
-            double engravingValue = GetEngravingValue(v2Enum_Stat);  // 추가
-            double buffvalue = GetBuffValue(v2Enum_Stat);
+            double statvalue = GetDefaultValue(v2Enum_Stat)
+                + GetEquipmentValue(v2Enum_Stat)
+                + GetEngravingValue(v2Enum_Stat)
+                + GetBuffValue(v2Enum_Stat);
 
-            _outputStatValue[v2Enum_Stat] = originValue + equipValue + buffvalue;  // 수정
+            _outputStatValue[v2Enum_Stat] = statvalue;  // 수정
 
 #if UNITY_EDITOR
             StatViewer statViewer = OutputViewers.Find(x => x.v2Enum_Stat == v2Enum_Stat);
@@ -192,7 +192,7 @@ namespace GameBerry
                 statViewer.v2Enum_Stat = v2Enum_Stat;
                 OutputViewers.Add(statViewer);
             }
-            statViewer.value = originValue + equipValue + engravingValue + buffvalue;  // 수정
+            statViewer.value = statvalue;  // 수정
 #endif
         }
         //------------------------------------------------------------------------------------

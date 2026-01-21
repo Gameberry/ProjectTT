@@ -55,7 +55,7 @@ namespace GameBerry.UI
             }
 
             if (_tierIndicator != null)
-                _tierIndicator.sprite = StaticResource.Instance.GetRarityFrame(currentTier);
+                _tierIndicator.color = StaticResource.Instance.GetRarityTextColor(currentTier);
         }
         //------------------------------------------------------------------------------------
         private void UpdateProbabilityTable(int stageNumber, Enum_Rarity currentTier)
@@ -68,7 +68,7 @@ namespace GameBerry.UI
             }
 
             int rowIndex = 0;
-            var engravingChart = GameChart.Get<Engraving>();
+            var engravingChart = GameChart.Get<EngravingChart>();
 
             foreach (var tier in _allTiers)
             {
@@ -139,7 +139,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void UpdateMatchingProbability(int stageNumber)
         {
-            float matchingProb = GameChart.Get<EngravingMatching>().GetMatchingRate(stageNumber);
+            float matchingProb = GameChart.Get<EngravingMatchingChart>().GetMatchingRate(stageNumber);
 
             if (_matchingProbText != null)
                 _matchingProbText.SetText("{0}%", matchingProb);
@@ -153,18 +153,10 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private string GetValueString(EngravingInfo option)
         {
-            bool isPercent = StatHelper.IsPercent(option.StatType);
-
             if (option.MinValue == option.MaxValue)
-            {
-                return isPercent
-                    ? $"{option.MinValue:F0}%"
-                    : $"{option.MinValue:F0}";
-            }
+                return StatHelper.FormatStatDisplayValue(option.StatType, option.MinValue);
 
-            return isPercent
-                ? $"{option.MinValue:F0}~{option.MaxValue:F0}%"
-                : $"{option.MinValue:F0}~{option.MaxValue:F0}";
+            return $"{StatHelper.FormatStatDisplayValue(option.StatType, option.MinValue)}~{StatHelper.FormatStatDisplayValue(option.StatType, option.MaxValue)}";
         }
         //------------------------------------------------------------------------------------
     }

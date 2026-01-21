@@ -56,6 +56,7 @@ namespace GameBerry
             RefreshCheatStat();
 
             EquipmentManager.Instance.RefreshStat();
+            EngravingManager.Instance.RefreshStat();
 
             _comboController = new ComboController();
             _comboController.Init(this);

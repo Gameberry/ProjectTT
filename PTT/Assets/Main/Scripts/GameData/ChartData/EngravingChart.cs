@@ -14,7 +14,7 @@ namespace GameBerry.Chart
         public float Probability;
     }
 
-    public class Engraving : ChartBase
+    public class EngravingChart : ChartBase
     {
         public EngravingInfo this[int index] => rows[index];
         public EngravingInfo[] rows;
@@ -42,7 +42,7 @@ namespace GameBerry.Chart
         public float Probability;
     }
 
-    public class EngravingMatching : ChartBase
+    public class EngravingMatchingChart : ChartBase
     {
         public EngravingMatchingInfo this[int index] => rows[index];
         public EngravingMatchingInfo[] rows;

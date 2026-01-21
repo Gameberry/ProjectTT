@@ -204,6 +204,11 @@ namespace GameBerry
 
         HpRecovery,
 
+        MinDamagePer,
+        MaxDamagePer,
+
+        FinalDamage,
+
         Max,
     }
 

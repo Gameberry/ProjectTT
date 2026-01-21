@@ -17,6 +17,9 @@
         InventoryItemDialog,
         StarforceEnhanceDialog,
 
+        EngravingDialog,
+        EngravingProbabilityDialog,
+
         ItemDescDialog,
 
 

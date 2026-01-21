@@ -17,14 +17,14 @@ namespace GameBerry
         public event Action OnEngravingChanged;
 
         EngravingTable _engravingTable;
-        Engraving _engravingChart;
-        EngravingMatching _engravingMatchingChart;
+        EngravingChart _engravingChart;
+        EngravingMatchingChart _engravingMatchingChart;
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
             _engravingTable = UserTable.Get<EngravingTable>();
-            _engravingChart = GameChart.Get<Engraving>();
-            _engravingMatchingChart = GameChart.Get<EngravingMatching>();
+            _engravingChart = GameChart.Get<EngravingChart>();
+            _engravingMatchingChart = GameChart.Get<EngravingMatchingChart>();
         }
         //------------------------------------------------------------------------------------
         #region Data

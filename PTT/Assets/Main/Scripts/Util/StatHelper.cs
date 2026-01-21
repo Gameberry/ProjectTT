@@ -46,7 +46,10 @@ namespace GameBerry
     || stat == Enum_Stat.MoveSpeed_Inc
     || stat == Enum_Stat.AttackSpeed_Inc
     || stat == Enum_Stat.CritChance
-    || stat == Enum_Stat.CritDmg_Inc)
+    || stat == Enum_Stat.CritDmg_Inc
+    || stat == Enum_Stat.MinDamagePer
+    || stat == Enum_Stat.MaxDamagePer
+    || stat == Enum_Stat.FinalDamage)
                 return true;
 
             return false;

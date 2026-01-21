@@ -49,7 +49,7 @@ namespace GameBerry.UI
                 _uncommonValueText.SetText(uncommonValue);
 
             if (_uncommonProbText != null)
-                _uncommonProbText.SetText("{0:F2}%", uncommonProb);
+                _uncommonProbText.SetText(string.Format("{0:F2}%", uncommonProb));
 
             if (_uncommonBackground != null)
                 _uncommonBackground.sprite = StaticResource.Instance.GetRarityFrame(Enum_Rarity.Uncommon);
@@ -59,7 +59,7 @@ namespace GameBerry.UI
                 _rareValueText.SetText(rareValue);
 
             if (_rareProbText != null)
-                _rareProbText.SetText("{0:F2}%", rareProb);
+                _rareProbText.SetText(string.Format("{0:F2}%", rareProb));
 
             if (_rareBackground != null)
                 _rareBackground.sprite = StaticResource.Instance.GetRarityFrame(Enum_Rarity.Rare);
@@ -69,7 +69,7 @@ namespace GameBerry.UI
                 _epicValueText.SetText(epicValue);
 
             if (_epicProbText != null)
-                _epicProbText.SetText("{0:F2}%", epicProb);
+                _epicProbText.SetText(string.Format("{0:F2}%", epicProb));
 
             if (_epicBackground != null)
                 _epicBackground.sprite = StaticResource.Instance.GetRarityFrame(Enum_Rarity.Epic);
