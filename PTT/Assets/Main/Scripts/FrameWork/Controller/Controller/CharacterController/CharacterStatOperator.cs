@@ -21,6 +21,7 @@ namespace GameBerry
         protected Dictionary<Enum_Stat, ObscuredDouble> _defauleStatValue = new Dictionary<Enum_Stat, ObscuredDouble>();
         protected Dictionary<Enum_Stat, ObscuredDouble> _equipmentValue = new Dictionary<Enum_Stat, ObscuredDouble>();  // 추가
         protected Dictionary<Enum_Stat, ObscuredDouble> _engravingValue = new Dictionary<Enum_Stat, ObscuredDouble>();  // 추가
+        protected Dictionary<Enum_Stat, ObscuredDouble> _weaponValue = new Dictionary<Enum_Stat, ObscuredDouble>();  // 추가
         protected Dictionary<Enum_Stat, ObscuredDouble> _buffValue = new Dictionary<Enum_Stat, ObscuredDouble>();
 
         protected Dictionary<Enum_Stat, ObscuredDouble> _outputStatValue = new Dictionary<Enum_Stat, ObscuredDouble>();
@@ -29,6 +30,7 @@ namespace GameBerry
         public List<StatViewer> DefaultViewers = new List<StatViewer>();
         public List<StatViewer> EquipmentViewers = new List<StatViewer>();  // 추가
         public List<StatViewer> EngravingViewers = new List<StatViewer>();  // 추가
+        public List<StatViewer> WeaponViewers = new List<StatViewer>();  // 추가
         public List<StatViewer> BuffViewers = new List<StatViewer>();
         public List<StatViewer> OutputViewers = new List<StatViewer>();
 #endif
@@ -162,6 +164,42 @@ namespace GameBerry
 #endif
         }
         //------------------------------------------------------------------------------------
+        public void SetWeaponStat(Enum_Stat stat, ObscuredDouble value)
+        {
+            if (_weaponValue.ContainsKey(stat) == false)
+                _weaponValue.Add(stat, 0);
+
+            _weaponValue[stat] = value;
+
+#if UNITY_EDITOR
+            StatViewer statViewer = WeaponViewers.Find(x => x.v2Enum_Stat == stat);
+            if (statViewer == null)
+            {
+                statViewer = new StatViewer();
+                statViewer.v2Enum_Stat = stat;
+                WeaponViewers.Add(statViewer);
+            }
+            statViewer.value = value;
+#endif
+        }
+        //------------------------------------------------------------------------------------
+        public double GetWeaponValue(Enum_Stat stat)
+        {
+            if (_weaponValue.ContainsKey(stat) == false)
+                return 0;
+
+            return _weaponValue[stat];
+        }
+        //------------------------------------------------------------------------------------
+        public void ClearWeaponStats()
+        {
+            _weaponValue.Clear();
+
+#if UNITY_EDITOR
+            WeaponViewers.Clear();
+#endif
+        }
+        //------------------------------------------------------------------------------------
         public void RefreshOutputStatValue(Enum_Stat v2Enum_Stat = Enum_Stat.Max)
         {
             if (v2Enum_Stat == Enum_Stat.Max)
@@ -180,6 +218,7 @@ namespace GameBerry
             double statvalue = GetDefaultValue(v2Enum_Stat)
                 + GetEquipmentValue(v2Enum_Stat)
                 + GetEngravingValue(v2Enum_Stat)
+                + GetWeaponValue(v2Enum_Stat)
                 + GetBuffValue(v2Enum_Stat);
 
             _outputStatValue[v2Enum_Stat] = statvalue;  // 수정
@@ -211,6 +250,7 @@ namespace GameBerry
             _defauleStatValue.Clear();
             _equipmentValue.Clear();  // 추가
             _engravingValue.Clear();
+            _weaponValue.Clear();
         }
         //------------------------------------------------------------------------------------
     }

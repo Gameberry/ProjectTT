@@ -561,5 +561,7 @@ namespace GameBerry
         public static long StarforceRestoration2_Price = 1000000;
 
         public static int WeaponAwakeAddLevel = 20;
+        public static int WeaponCombineCount = 5;
+        public static int WeaponBaseMaxLevel = 100;
     }
 }

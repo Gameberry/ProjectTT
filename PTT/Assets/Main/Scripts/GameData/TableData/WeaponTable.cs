@@ -64,33 +64,110 @@ namespace GameBerry.Table
             return p;
         }
         //------------------------------------------------------------------------------------
-        public long GetAmount(int pointId)
+        public long GetAmount(int itemId)
         {
-            WeaponData pointData = weapons.Find(x => x.itemId == pointId);
-            if (pointData == null)
+            WeaponData weaponData = weapons.Find(x => x.itemId == itemId);
+            if (weaponData == null)
                 return 0;
 
-            return pointData.count;
+            return weaponData.count;
         }
         //------------------------------------------------------------------------------------
-        public void Add(int pointId, long amount)
+        public void Add(int itemId, long amount)
         {
             if (amount == 0) return;
 
-            WeaponData pointData = weapons.Find(x => x.itemId == pointId);
+            WeaponData weaponData = weapons.Find(x => x.itemId == itemId);
 
-            if (pointData == null)
+            if (weaponData == null)
             {
-                WeaponData newPoint = new WeaponData { itemId = pointId, count = 0 };
-                pointData = newPoint;
-                weapons.Add(newPoint);
+                WeaponData newWeapon = new WeaponData { itemId = itemId, count = 0, level = 1, Awake = 0 };
+                weaponData = newWeapon;
+                weapons.Add(newWeapon);
             }
 
-            long next = pointData.count + amount;
+            long next = weaponData.count + amount;
             if (next < 0) next = 0;
 
-            pointData.count = next;
+            weaponData.count = next;
         }
+        //------------------------------------------------------------------------------------
+        public WeaponData GetWeaponData(int itemId)
+        {
+            return weapons.Find(x => x.itemId == itemId);
+        }
+        //------------------------------------------------------------------------------------
+        public List<WeaponData> GetAllWeapons()
+        {
+            return weapons;
+        }
+        //------------------------------------------------------------------------------------
+        #region Equip
+        //------------------------------------------------------------------------------------
+        public int GetEquippedWeaponId()
+        {
+            return equipWeapon;
+        }
+        //------------------------------------------------------------------------------------
+        public void SetEquipped(int itemId)
+        {
+            equipWeapon = itemId;
+        }
+        //------------------------------------------------------------------------------------
+        public bool IsEquipped(int itemId)
+        {
+            return equipWeapon == itemId;
+        }
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
+        #region Level
+        //------------------------------------------------------------------------------------
+        public bool LevelUp(int itemId)
+        {
+            WeaponData weaponData = weapons.Find(x => x.itemId == itemId);
+            if (weaponData == null)
+                return false;
+
+            weaponData.level += 1;
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        public bool SetLevel(int itemId, int level)
+        {
+            WeaponData weaponData = weapons.Find(x => x.itemId == itemId);
+            if (weaponData == null)
+                return false;
+
+            weaponData.level = level;
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        #endregion
+        //------------------------------------------------------------------------------------
+        #region Awake
+        //------------------------------------------------------------------------------------
+        public bool AwakeUp(int itemId)
+        {
+            WeaponData weaponData = weapons.Find(x => x.itemId == itemId);
+            if (weaponData == null)
+                return false;
+
+            weaponData.Awake += 1;
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        public bool SetAwake(int itemId, int awake)
+        {
+            WeaponData weaponData = weapons.Find(x => x.itemId == itemId);
+            if (weaponData == null)
+                return false;
+
+            weaponData.Awake = awake;
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        #endregion
         //------------------------------------------------------------------------------------
     }
 }

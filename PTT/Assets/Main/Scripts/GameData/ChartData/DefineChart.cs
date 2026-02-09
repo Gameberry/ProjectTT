@@ -49,6 +49,16 @@ namespace GameBerry.Chart
                             Define.WeaponAwakeAddLevel = PackUtil.UnpackValue<int>(rows[i].value);
                             break;
                         }
+                    case "WeaponCombineCount":
+                        {
+                            Define.WeaponCombineCount = PackUtil.UnpackValue<int>(rows[i].value);
+                            break;
+                        }
+                    case "WeaponBaseMaxLevel":
+                        {
+                            Define.WeaponBaseMaxLevel = PackUtil.UnpackValue<int>(rows[i].value);
+                            break;
+                        }
                 }
             }
         }
