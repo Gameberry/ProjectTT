@@ -36,7 +36,7 @@ namespace GameBerry.Managers
 
             // 부채꼴 쓸지 여부
             bool useSector = attackData.TargetAttackType == Enum_AttackRangeType.Sector;
-            float sectorAngle = attackData.HitAngle;
+            float sectorAngle = attackData.AttackAngle;
 
             // 부채꼴 기준점: 발/무기 피벗 우선, 없으면 캐릭터 위치
             Vector3 sectorOrigin = pos;

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CodeStage.AntiCheat.ObscuredTypes;
+using GameBerry.Chart;
 
 namespace GameBerry
 {
@@ -19,6 +20,11 @@ namespace GameBerry
 
         [SerializeField]
         private float _attackRange = 1.5f;
+
+        [SerializeField]
+        private SkillInfo _defaultAttackData = new SkillInfo();
+
+        private AttackData _myAttackData = new AttackData();
 
         [SerializeField]
         private List<AttackData> _attackData = new List<AttackData>();
@@ -65,6 +71,14 @@ namespace GameBerry
             _currentSpineModelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
             SetSpineModelData(_currentSpineModelData);
             RefreshPlayerSkin(null);
+
+            // ============================================================
+            // 스킬 시스템 초기화 (3줄 추가!)
+            // ============================================================
+            InitializeSkillSystem();      // CharacterControllerBase의 메서드
+            ApplyPassiveSkills();          // CharacterControllerBase의 메서드
+            AutoUseSkills = true;          // 자동 스킬 사용 활성화
+            // ============================================================
         }
         //------------------------------------------------------------------------------------
         public override void Release()
@@ -72,6 +86,12 @@ namespace GameBerry
             Message.RemoveListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
 
             _comboController?.Release();
+
+            // ============================================================
+            // 스킬 시스템 해제 (1줄 추가!)
+            // ============================================================
+            ReleaseSkillSystem();          // CharacterControllerBase의 메서드
+            // ============================================================
         }
         //------------------------------------------------------------------------------------
         private void RefreshPlayerSkin(Event.RefreshPlayerSkinMsg msg)
@@ -124,6 +144,13 @@ namespace GameBerry
         {
             if (CharacterState == CharacterState.Dead)
                 return;
+
+            // ============================================================
+            // 스킬 시스템 업데이트 (1줄 추가!)
+            // 이제 스킬이 자동으로 사용됨!
+            // ============================================================
+            UpdateSkillSystem();           // CharacterControllerBase의 메서드
+            // ============================================================
 
             if (_blockSkill == false)
             {
@@ -278,6 +305,13 @@ namespace GameBerry
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                     _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
 
+
+                    // ============================================================
+                    // 공격 시 쿨타임 감소 (1줄 추가!)
+                    // ============================================================
+                    OnSkillOwnerAttack();      // CharacterControllerBase의 메서드
+                    // ============================================================
+
                     if (_refreshAggro == true)
                         SetNewTarget();
 
@@ -312,6 +346,18 @@ namespace GameBerry
             }
 
             _currentAttackData = selectAttackData;
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// UI 버튼에서 수동으로 스킬 사용
+        /// </summary>
+        public void UseSkillManually(int slotIndex)
+        {
+            int skillId = SkillManager.Instance.GetEquippedSkillId(slotIndex);
+            if (skillId > 0 && AttackTarget != null)
+            {
+                UseSkill(skillId, AttackTarget); // CharacterControllerBase의 메서드
+            }
         }
         //------------------------------------------------------------------------------------
     }

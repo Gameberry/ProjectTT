@@ -58914,7 +58914,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 811f61db8f5b19d41bbc6817de5e0a04, type: 2}
+  - {fileID: 2100000, guid: ee674001c144df649a25315804363134, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -58948,7 +58948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: 123b04981ea0e834da727a10110d4436, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 6337ed9bd86ad1548af75366439b0b8d, type: 2}
   initialSkinName: Body/Body_001
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
@@ -244906,6 +244906,9 @@ MonoBehaviour:
       value: 100
     - v2Enum_Stat: 14
       value: 1
+    EquipmentViewers: []
+    EngravingViewers: []
+    WeaponViewers: []
     BuffViewers: []
     OutputViewers: []
   _maxHP: 0
@@ -244914,6 +244917,19 @@ MonoBehaviour:
   Temp_Accuracy: 0.8
   _skillPlayer: {fileID: 8712562784642121654}
   _attackRange: 1.5
+  _defaultAttackData:
+    SkillId: 0
+    SkillType: 0
+    AnimationName: 
+    RequireJobLevel: 0
+    RequireCharLevel: 0
+    EnemyCondition: 
+    MyCondition: 
+    CooldownType: 0
+    CooldownValue: 0
+    BaseAttackMultiplier: 0
+    LevelAttackMultiplier: 0
+    HitCount: 0
   _attackData:
   - ResourceIndex: 3
     Hitter: {fileID: 0}
@@ -244922,7 +244938,7 @@ MonoBehaviour:
     HitRange: 1.5
     TargetCount: 10
     TargetAttackType: 13
-    HitAngle: 180
+    AttackAngle: 180
     Cooltime: 0
     NextPlayTime: 0
     CustomParam: 
@@ -244938,7 +244954,7 @@ MonoBehaviour:
     HitRange: 1.5
     TargetCount: 10
     TargetAttackType: 13
-    HitAngle: 180
+    AttackAngle: 180
     Cooltime: 0
     NextPlayTime: 0
     CustomParam: 
@@ -244955,7 +244971,7 @@ MonoBehaviour:
     HitRange: 3
     TargetCount: 9999
     TargetAttackType: 13
-    HitAngle: 200
+    AttackAngle: 0
     Cooltime: 1
     NextPlayTime: 0
     CustomParam: 
@@ -244974,7 +244990,7 @@ MonoBehaviour:
     HitRange: 3
     TargetCount: 10
     TargetAttackType: 11
-    HitAngle: 0
+    AttackAngle: 0
     Cooltime: 55555
     NextPlayTime: 0
     CustomParam: 
@@ -244990,7 +245006,7 @@ MonoBehaviour:
     HitRange: 3
     TargetCount: 1000
     TargetAttackType: 11
-    HitAngle: 0
+    AttackAngle: 0
     Cooltime: 55555
     NextPlayTime: 0
     CustomParam: 

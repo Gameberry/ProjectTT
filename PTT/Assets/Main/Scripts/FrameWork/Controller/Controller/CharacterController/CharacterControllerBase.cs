@@ -4,6 +4,7 @@ using UnityEngine;
 using GameBerry.Managers;
 using Spine;
 using Spine.Unity;
+using GameBerry.Chart;
 
 namespace GameBerry
 {
@@ -23,6 +24,8 @@ namespace GameBerry
 
         [SerializeField]
         private CharacterConditionController _conditionController;
+        public CharacterConditionController CharacterConditionController { get { return _conditionController; } }
+        
 
         [SerializeField]
         protected IFFType _iFFType = IFFType.IFF_None;
@@ -50,6 +53,62 @@ namespace GameBerry
         [SerializeField]
         protected CharacterControllerBase _attackTarget;
         public CharacterControllerBase AttackTarget { get { return _attackTarget; } }
+
+
+
+        #region Skill System Fields
+
+        private SkillChart _skillChart;
+
+        // 장착된 스킬 ID 목록
+        private List<int> _equippedSkillIds = new List<int>();
+
+        // 쿨타임 정보
+        private class SkillCooldownInfo
+        {
+            public int skillId;
+            public Enum_SkillCooldownType cooldownType;
+            public float nextAvailableTime;
+            public int remainingAttackCount;
+            public float cooldownValue;
+
+            public bool IsReady()
+            {
+                if (cooldownType == Enum_SkillCooldownType.Time)
+                    return Time.time >= nextAvailableTime;
+                else if (cooldownType == Enum_SkillCooldownType.AttackCount)
+                    return remainingAttackCount <= 0;
+
+                return true;
+            }
+
+            public void StartCooldown()
+            {
+                if (cooldownType == Enum_SkillCooldownType.Time)
+                    nextAvailableTime = Time.time + cooldownValue;
+                else if (cooldownType == Enum_SkillCooldownType.AttackCount)
+                    remainingAttackCount = Mathf.CeilToInt(cooldownValue);
+            }
+
+            public void OnAttack()
+            {
+                if (cooldownType == Enum_SkillCooldownType.AttackCount && remainingAttackCount > 0)
+                    remainingAttackCount--;
+            }
+        }
+
+        private Dictionary<int, SkillCooldownInfo> _skillCooldowns = new Dictionary<int, SkillCooldownInfo>();
+
+        // 스킬 설정
+        public bool AutoUseSkills { get; set; } = true;
+        public float DefaultSkillRange { get; set; } = 3f;
+
+        // 스킬 사용 이벤트
+        public event System.Action<int, CharacterControllerBase> OnSkillUsed;
+
+        #endregion
+
+
 
 #if UNITY_EDITOR
         [SerializeField]
@@ -112,6 +171,304 @@ namespace GameBerry
         { 
 
         }
+        //------------------------------------------------------------------------------------
+        #region Skill System
+        /// <summary>
+        /// 스킬 시스템 초기화 (Init()에서 호출)
+        /// </summary>
+        protected void InitializeSkillSystem()
+        {
+            _skillChart = GameChart.Get<SkillChart>();
+
+            // 플레이어인 경우 SkillManager에서 장착된 스킬 로드
+            if (this is PlayerController)
+            {
+                LoadPlayerEquippedSkills();
+                SkillManager.Instance.OnSkillSlotChanged += LoadPlayerEquippedSkills;
+            }
+
+            InitializeSkillCooldowns();
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 스킬 시스템 해제 (Release()에서 호출)
+        /// </summary>
+        protected void ReleaseSkillSystem()
+        {
+            if (SkillManager.Instance != null)
+                SkillManager.Instance.OnSkillSlotChanged -= LoadPlayerEquippedSkills;
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 플레이어의 장착된 스킬 목록 로드
+        /// </summary>
+        private void LoadPlayerEquippedSkills()
+        {
+            _equippedSkillIds = SkillManager.Instance.GetEquippedSkillIds();
+            InitializeSkillCooldowns();
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// AI 캐릭터용 스킬 설정 (외부에서 호출)
+        /// </summary>
+        public void SetEquippedSkills(List<int> skillIds)
+        {
+            _equippedSkillIds = new List<int>(skillIds);
+            InitializeSkillCooldowns();
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 쿨타임 정보 초기화
+        /// </summary>
+        private void InitializeSkillCooldowns()
+        {
+            _skillCooldowns.Clear();
+
+            foreach (int skillId in _equippedSkillIds)
+            {
+                if (skillId <= 0)
+                    continue;
+
+                SkillInfo skillInfo = _skillChart?.GetActive(skillId);
+                if (skillInfo == null)
+                    continue;
+
+                _skillCooldowns[skillId] = new SkillCooldownInfo
+                {
+                    skillId = skillId,
+                    cooldownType = skillInfo.CooldownType,
+                    cooldownValue = skillInfo.CooldownValue,
+                    nextAvailableTime = 0f,
+                    remainingAttackCount = 0
+                };
+            }
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 스킬 시스템 업데이트 (Updated()에서 호출)
+        /// </summary>
+        protected void UpdateSkillSystem()
+        {
+            if (CharacterState == CharacterState.Dead)
+                return;
+
+            if (!AutoUseSkills)
+                return;
+
+            // 스킬 사용 차단 상태 체크
+            if (_blockSkill)
+                return;
+
+            CharacterControllerBase target = AttackTarget;
+            if (target == null || target.IsDead)
+                return;
+
+            // 장착된 스킬 중 사용 가능한 것 찾기
+            foreach (var kvp in _skillCooldowns)
+            {
+                int skillId = kvp.Key;
+                var cooldownInfo = kvp.Value;
+
+                if (!cooldownInfo.IsReady())
+                    continue;
+
+                SkillInfo skillInfo = _skillChart?.GetActive(skillId);
+                if (skillInfo == null)
+                    continue;
+
+                // 거리 체크
+                float distance = MathDatas.GetDistance(transform.position, target.transform.position);
+                if (distance > DefaultSkillRange)
+                    continue;
+
+                // 스킬 사용
+                UseSkill(skillId, target);
+                break; // 한 프레임에 하나씩만
+            }
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 스킬 사용 (메인 메서드)
+        /// </summary>
+        public bool UseSkill(int skillId, CharacterControllerBase target)
+        {
+            if (IsDead || target == null || target.IsDead)
+                return false;
+
+            // 쿨타임 체크
+            if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
+                return false;
+
+            if (!cooldownInfo.IsReady())
+                return false;
+
+            SkillInfo skillInfo = _skillChart?.GetActive(skillId);
+            if (skillInfo == null)
+                return false;
+
+            // 스킬 레벨 가져오기 (플레이어만, AI는 레벨 1)
+            int skillLevel = 1;
+            if (this is PlayerController)
+                skillLevel = SkillManager.Instance.GetSkillLevel(skillId);
+
+            // 스킬 데미지 계산
+            double attackMultiplier = skillInfo.GetFinalAttackMultiplier(skillLevel);
+            int hitCount = skillInfo.HitCount;
+
+            // ConditionData 적용
+            var conditionIndexes = skillInfo.GetEnemyConditionIndexes();
+            ApplySkillConditions(target, conditionIndexes);
+
+            // 스킬 실행
+            ExecuteSkillAttack(skillInfo, target, attackMultiplier, hitCount);
+
+            // 쿨타임 시작
+            cooldownInfo.StartCooldown();
+
+            // 이벤트 발생
+            OnSkillUsed?.Invoke(skillId, target);
+
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 스킬 공격 실행
+        /// </summary>
+        private void ExecuteSkillAttack(SkillInfo skillInfo, CharacterControllerBase target, double attackMultiplier, int hitCount)
+        {
+            // AttackData 생성
+            AttackData skillAttackData = new AttackData
+            {
+                Hitter = this,
+                AttackRange = DefaultSkillRange,
+                AttackDuration = 0.5f, // TODO: 스킬별 애니메이션 시간
+                CustomParam = $"Skill_{skillInfo.SkillId}"
+            };
+
+            // TODO: SkillPlayer를 통해 스킬 실행
+            // 실제 프로젝트에 맞게 구현
+
+            Debug.Log($"[Skill] {name} used skill {skillInfo.SkillId} with {attackMultiplier:P0} on {target.name}");
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 스킬의 ConditionData 효과 적용
+        /// </summary>
+        private void ApplySkillConditions(CharacterControllerBase target, IReadOnlyList<int> conditionIndexes)
+        {
+            if (target.CharacterConditionController == null)
+                return;
+
+            var conditionDataList = StaticResource.Instance.GetConditionData();
+
+            foreach (int conditionIdx in conditionIndexes)
+            {
+                ConditionData conditionData = conditionDataList.GetData(conditionIdx);
+                if (conditionData != null)
+                {
+                    target.CharacterConditionController.AddCondition(conditionData);
+                }
+            }
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 공격 횟수 기반 쿨타임 감소
+        /// </summary>
+        public void OnSkillOwnerAttack()
+        {
+            foreach (var cooldownInfo in _skillCooldowns.Values)
+            {
+                cooldownInfo.OnAttack();
+            }
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 특정 스킬이 사용 가능한지 체크
+        /// </summary>
+        public bool CanUseSkill(int skillId)
+        {
+            if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
+                return false;
+
+            return cooldownInfo.IsReady();
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 남은 쿨타임 시간 (초)
+        /// </summary>
+        public float GetRemainingSkillCooldownTime(int skillId)
+        {
+            if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
+                return 0f;
+
+            if (cooldownInfo.cooldownType != Enum_SkillCooldownType.Time)
+                return 0f;
+
+            return Mathf.Max(0f, cooldownInfo.nextAvailableTime - Time.time);
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 남은 쿨타임 공격 횟수
+        /// </summary>
+        public int GetRemainingSkillCooldownAttackCount(int skillId)
+        {
+            if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
+                return 0;
+
+            if (cooldownInfo.cooldownType != Enum_SkillCooldownType.AttackCount)
+                return 0;
+
+            return Mathf.Max(0, cooldownInfo.remainingAttackCount);
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 쿨타임 강제 초기화 (치트/디버그용)
+        /// </summary>
+        public void ResetAllSkillCooldowns()
+        {
+            foreach (var cooldownInfo in _skillCooldowns.Values)
+            {
+                cooldownInfo.nextAvailableTime = 0f;
+                cooldownInfo.remainingAttackCount = 0;
+            }
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 장착된 스킬 목록 반환
+        /// </summary>
+        public List<int> GetEquippedSkillIds()
+        {
+            return new List<int>(_equippedSkillIds);
+        }
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 패시브 스킬 효과 적용 (플레이어 Init()에서 호출)
+        /// </summary>
+        protected void ApplyPassiveSkills()
+        {
+            // 플레이어만 SkillManager에서 패시브 스킬 가져옴
+            if (this is PlayerController)
+            {
+                var passiveSkills = SkillManager.Instance.GetOwnedPassiveSkills();
+
+                foreach (var passiveSkill in passiveSkills)
+                {
+                    var conditionIndexes = passiveSkill.GetEnemyConditionIndexes();
+
+                    foreach (int conditionIdx in conditionIndexes)
+                    {
+                        var conditionData = StaticResource.Instance.GetConditionData().GetData(conditionIdx);
+                        if (conditionData != null)
+                        {
+                            conditionData.Duration = -1f; // 영구 효과
+                            CharacterConditionController?.AddCondition(conditionData);
+                        }
+                    }
+                }
+            }
+        }
+        //------------------------------------------------------------------------------------
+        #endregion
         //------------------------------------------------------------------------------------
         public void SetControlLocks(bool move, bool attack, bool skill)
         {
@@ -259,8 +616,8 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         public virtual void HitResult(AttackData attackData)
-        { 
-
+        {
+            
         }
         //------------------------------------------------------------------------------------
         private void PlayCharacterCondition(List<int> index, Vector3 attackpos)

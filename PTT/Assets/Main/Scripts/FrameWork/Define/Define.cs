@@ -167,7 +167,7 @@ namespace GameBerry
         public int TargetCount;
 
         public Enum_AttackRangeType TargetAttackType;
-        public float HitAngle;
+        public float AttackAngle;
 
         public float Cooltime = 1.0f;
         public float NextPlayTime = 0.0f;
@@ -181,6 +181,13 @@ namespace GameBerry
         public List<int> MyConditionDatas = new List<int>();
 
         public List<CharacterControllerBase> HitEnemy = new List<CharacterControllerBase>();
+    }
+
+    public struct AttackStruct
+    {
+        public CharacterControllerBase Hitter;
+        public int AttackLevel;
+        public List<CharacterControllerBase> HitEnemy;
     }
 
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);
