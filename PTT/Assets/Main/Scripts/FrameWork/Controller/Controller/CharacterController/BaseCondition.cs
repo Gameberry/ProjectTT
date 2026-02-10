@@ -237,11 +237,9 @@ namespace GameBerry
             Vector3 oldVec = _direction * _distance;
 
             Vector3 ownerPos = Owner.transform.position;
-            Vector3 direction = ownerPos - conditionData.EffectPos;
-
-
-            // 새 넉백 벡터
-            Vector3 newVec = direction * conditionData.Param1;
+            Vector3 dir = ownerPos - conditionData.EffectPos;
+            Vector3 newDir = (dir.sqrMagnitude > 0.0001f) ? dir.normalized : Vector3.zero;
+            Vector3 newVec = newDir * Mathf.Max(0f, conditionData.Param1);
 
             // 합산
             Vector3 merged = oldVec + newVec;
@@ -258,6 +256,137 @@ namespace GameBerry
         }
     }
 
+    public class FlingCondition : BaseCondition
+    {
+        private Vector3 _direction;      // 당기기 방향 (정규화)
+        private float _distance;         // 총 당기기 거리
+        private float _baseDuration;     // 요청된 기본 지속 시간
+
+        private Rigidbody _rb;
+        private Vector3 _startPos;       // 시작 위치
+        private Vector3 _prevPos;        // 직전 프레임 목표 위치
+
+        public Vector3 Direction => _direction;
+        public float Distance => _distance;
+        public float BaseDuration => _baseDuration;
+
+        public FlingCondition() : base(Enum_ConditionType.Fling) { }
+
+        public override bool BlocksMove => true;
+        public override bool BlocksAttack => true;
+        public override bool BlocksSkill => true;
+
+        public override void Initialize(ConditionData conditionData)
+        {
+            base.Initialize(conditionData);
+
+            _rb = Owner.MyRigidbody;
+
+            Vector3 ownerPos = Owner.transform.position;
+
+            // 당기기: effectPos 쪽으로 이동
+            Vector3 direction = conditionData.EffectPos - ownerPos;
+
+            if (direction.sqrMagnitude > 0.0001f)
+                _direction = direction.normalized;
+            else
+                _direction = Vector3.zero;
+
+            if (_rb != null)
+            {
+                _startPos = _rb.position;
+                _prevPos = _startPos;
+            }
+            else
+            {
+                _startPos = Owner.transform.position;
+                _prevPos = _startPos;
+            }
+
+            _distance = Mathf.Max(0f, conditionData.Param1);
+            _baseDuration = Mathf.Max(0.0001f, conditionData.Duration);
+        }
+
+        public override void OnUpdate(float deltaTime)
+        {
+            base.OnUpdate(deltaTime);
+
+            if (_direction == Vector3.zero || _distance <= 0f)
+                return;
+
+            if (Duration <= 0f)
+                return;
+
+            float t = Mathf.Clamp01(_elapsed / Duration);
+
+            // Ease-Out (처음 빠르고 점점 멈춤)
+            float easedT = 1f - (1f - t) * (1f - t);
+
+            float currentDist = _distance * easedT;
+            Vector3 targetPos = _startPos + _direction * currentDist;
+
+            Vector3 delta = targetPos - _prevPos;
+            _prevPos = targetPos;
+
+            Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
+            Vector3 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
+
+            if (_rb != null)
+            {
+                Vector3 newpos = _rb.position + delta;
+
+                if (newpos.x < minpos.x) newpos.x = minpos.x;
+                else if (newpos.x > maxpos.x) newpos.x = maxpos.x;
+
+                if (newpos.z < minpos.z) newpos.z = minpos.z;
+                else if (newpos.z > maxpos.z) newpos.z = maxpos.z;
+
+                _rb.MovePosition(newpos);
+            }
+            else
+            {
+                Vector3 newpos = Owner.transform.position + delta;
+
+                if (newpos.x < minpos.x) newpos.x = minpos.x;
+                else if (newpos.x > maxpos.x) newpos.x = maxpos.x;
+
+                if (newpos.z < minpos.z) newpos.z = minpos.z;
+                else if (newpos.z > maxpos.z) newpos.z = maxpos.z;
+
+                Owner.transform.position = newpos;
+            }
+        }
+
+        /// <summary>
+        /// 이미 당기기 중일 때 추가 당기기가 들어오면:
+        /// - 방향/거리: 벡터 합성 (Additive)
+        /// - 시간: Duration 누적
+        /// </summary>
+        public override void Merge(ConditionData conditionData)
+        {
+            // 기존 벡터
+            Vector3 oldVec = _direction * _distance;
+
+            // 새 방향(당기기): effectPos 쪽
+            Vector3 ownerPos = Owner.transform.position;
+            Vector3 direction = conditionData.EffectPos - ownerPos;
+
+            Vector3 newDir = (direction.sqrMagnitude > 0.0001f) ? direction.normalized : Vector3.zero;
+
+            // 새 벡터
+            Vector3 newVec = newDir * Mathf.Max(0f, conditionData.Param1);
+
+            // 합산
+            Vector3 merged = oldVec + newVec;
+
+            _distance = merged.magnitude;
+
+            if (_distance > 0.0001f)
+                _direction = merged.normalized;
+
+            Duration += conditionData.Duration;
+        }
+    }
 
     public class AttackUpCondition : BaseCondition
     {

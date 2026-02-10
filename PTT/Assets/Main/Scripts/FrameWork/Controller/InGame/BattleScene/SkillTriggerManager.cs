@@ -15,8 +15,12 @@ namespace GameBerry.Managers
 
         public bool FixDirec = true;
 
-        public void EffectDamage(AttackData attackData, CharacterControllerBase actortrans, Vector3 attackPos, CharacterControllerBase fixSkillHitReceiver)
+        public void EffectDamage(AttackStruct attackStruct, CharacterControllerBase actortrans, Vector3 attackPos, CharacterControllerBase fixSkillHitReceiver)
         {
+            Chart.SkillInfo attackData = attackStruct.SkillInfo;
+            if (attackData == null)
+                return;
+
             int targetCount = attackData.TargetCount;
             if (targetCount == 0)
                 return;
@@ -25,7 +29,7 @@ namespace GameBerry.Managers
             Vector3 pos = attackPos; // 3D 좌표 기준 (기본 XZ 평면)
 
             // Line 타입 위치 보정 (X축 기준, 필요 없으면 삭제해도 됨)
-            if (attackData.TargetAttackType == Enum_AttackRangeType.Line)
+            if (attackData.AttackRangeType == Enum_AttackRangeType.Line)
             {
                 float offset = attackData.HitRange * 0.5f;
                 if (actortrans.LookDirection == Enum_LookDirection.Left)
@@ -35,7 +39,7 @@ namespace GameBerry.Managers
             }
 
             // 부채꼴 쓸지 여부
-            bool useSector = attackData.TargetAttackType == Enum_AttackRangeType.Sector;
+            bool useSector = attackData.AttackRangeType == Enum_AttackRangeType.Sector;
             float sectorAngle = attackData.AttackAngle;
 
             // 부채꼴 기준점: 발/무기 피벗 우선, 없으면 캐릭터 위치
@@ -98,7 +102,7 @@ namespace GameBerry.Managers
                 debugAngle = useSector ? sectorAngle : 0f;
                 debugForward = sectorForward;
 
-                if (attackData.TargetAttackType == Enum_AttackRangeType.Line)
+                if (attackData.AttackRangeType == Enum_AttackRangeType.Line)
                     debugRangeType = DebugRangeType.Line;
                 else if (useSector)
                     debugRangeType = DebugRangeType.Sector;
@@ -155,7 +159,7 @@ namespace GameBerry.Managers
             for (int i = 0; i < _skillHitReceivers.Count; ++i)
             {
                 if (_skillHitReceivers[i] != null)
-                    _skillHitReceivers[i].Damage(attackData);
+                    _skillHitReceivers[i].Damage(attackStruct);
             }
         }
         //------------------------------------------------------------------------------------
@@ -257,7 +261,7 @@ namespace GameBerry.Managers
             return dot >= cosHalf;
         }
         //------------------------------------------------------------------------------------
-        private void SetHitTarget(CharacterControllerBase actortrans, AttackData skillData, ref List<CharacterControllerBase> recvlist)
+        private void SetHitTarget(CharacterControllerBase actortrans, Chart.SkillInfo skillData, ref List<CharacterControllerBase> recvlist)
         {
             {
                 if (skillData.TargetCount > 0 && recvlist.Count > skillData.TargetCount)

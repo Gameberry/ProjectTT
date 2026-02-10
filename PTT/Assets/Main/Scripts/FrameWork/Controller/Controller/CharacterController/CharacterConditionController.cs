@@ -35,6 +35,7 @@ namespace GameBerry
                 Enum_ConditionType.Snare => new SnareCondition(),
                 Enum_ConditionType.Slow => new SlowCondition(),
                 Enum_ConditionType.Knockback => new KnockbackCondition(),
+                Enum_ConditionType.Fling => new FlingCondition(),
                 Enum_ConditionType.Invincible => new InvincibleCondition(),
 
                 Enum_ConditionType.AttackUp => new AttackUpCondition(),

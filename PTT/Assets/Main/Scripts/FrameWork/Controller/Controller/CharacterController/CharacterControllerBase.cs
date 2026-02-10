@@ -57,11 +57,17 @@ namespace GameBerry
 
 
         #region Skill System Fields
+        [SerializeField]
+        protected SkillPlayer _skillPlayer;
+        protected SkillInfo _nextSkillData = null;
 
         private SkillChart _skillChart;
 
         // 장착된 스킬 ID 목록
         private List<int> _equippedSkillIds = new List<int>();
+
+
+
 
         // 쿨타임 정보
         private class SkillCooldownInfo
@@ -104,7 +110,7 @@ namespace GameBerry
         public float DefaultSkillRange { get; set; } = 3f;
 
         // 스킬 사용 이벤트
-        public event System.Action<int, CharacterControllerBase> OnSkillUsed;
+        public event System.Action<int> OnSkillUsed;
 
         #endregion
 
@@ -187,6 +193,8 @@ namespace GameBerry
                 SkillManager.Instance.OnSkillSlotChanged += LoadPlayerEquippedSkills;
             }
 
+            _nextSkillData = null;
+
             InitializeSkillCooldowns();
         }
         //------------------------------------------------------------------------------------
@@ -195,6 +203,8 @@ namespace GameBerry
         /// </summary>
         protected void ReleaseSkillSystem()
         {
+            _nextSkillData = null;
+
             if (SkillManager.Instance != null)
                 SkillManager.Instance.OnSkillSlotChanged -= LoadPlayerEquippedSkills;
         }
@@ -263,6 +273,9 @@ namespace GameBerry
             if (target == null || target.IsDead)
                 return;
 
+            if (_nextSkillData != null)
+                return;
+
             // 장착된 스킬 중 사용 가능한 것 찾기
             foreach (var kvp in _skillCooldowns)
             {
@@ -276,14 +289,16 @@ namespace GameBerry
                 if (skillInfo == null)
                     continue;
 
-                // 거리 체크
-                float distance = MathDatas.GetDistance(transform.position, target.transform.position);
-                if (distance > DefaultSkillRange)
-                    continue;
+                _nextSkillData = skillInfo;
 
-                // 스킬 사용
-                UseSkill(skillId, target);
-                break; // 한 프레임에 하나씩만
+                //// 거리 체크
+                //float distance = MathDatas.GetDistance(transform.position, target.transform.position);
+                //if (distance > DefaultSkillRange)
+                //    continue;
+
+                //// 스킬 사용
+                //UseSkill(skillId, target);
+                //break; // 한 프레임에 하나씩만
             }
         }
         //------------------------------------------------------------------------------------
@@ -326,9 +341,19 @@ namespace GameBerry
             cooldownInfo.StartCooldown();
 
             // 이벤트 발생
-            OnSkillUsed?.Invoke(skillId, target);
+            OnSkillUsed?.Invoke(skillId);
 
             return true;
+        }
+        //------------------------------------------------------------------------------------
+        public void StartCoolDown(int skillId)
+        {
+            if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
+                return;
+
+            cooldownInfo.StartCooldown();
+
+            OnSkillUsed?.Invoke(skillId);
         }
         //------------------------------------------------------------------------------------
         /// <summary>
@@ -531,55 +556,59 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
-        public void Damage(AttackData damage)
+        public void Damage(AttackStruct damage)
         {
             if (IsDead == true)
                 return;
 
-            if (damage.Hitter != null && damage.Hitter.IsDead == false)
+            if (damage.Hitter != null && damage.Hitter.IsDead == false && damage.SkillInfo != null)
             {
-                bool ishit = Random.Range(0.0f, 1.0f) <= damage.Hitter.Temp_Accuracy;
-                if (ishit == false)
+                for (int i = 0; i < damage.SkillInfo.HitCount; ++i)
                 {
-                    CombatTextSpawner.Instance.ShowMiss(transform);
-                    return;
-                }
-
-                double setdamage = damage.DamageRate * damage.Hitter.FinalAttack;
-
-                bool critical = damage.Hitter.ApplyCritical();
-                if (critical == true)
-                    setdamage = setdamage * damage.Hitter.GetOutPutMyStat(Enum_Stat.CritDmg_Inc);
-
-                setdamage *= damage.Hitter.GetMinMaxRatio();
-
-                setdamage = System.Math.Truncate(setdamage);
-
-                if (_iFFType == IFFType.IFF_Foe)
-                { 
-                    CombatTextSpawner.Instance.ShowDamage(transform, setdamage, critical);
-
-                    if (StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake == true)
+                    bool ishit = Random.Range(0.0f, 1.0f) <= damage.Hitter.Temp_Accuracy;
+                    if (ishit == false)
                     {
-                        Managers.BattleSceneManager.Instance.PlayCameraShake(
-                            StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake_strengthOverride,
-                            StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake_durationOverride);
+                        CombatTextSpawner.Instance.ShowMiss(transform);
+                        return;
                     }
+
+                    double setdamage = damage.SkillInfo.GetFinalAttackMultiplier(damage.AttackLevel) * damage.Hitter.FinalAttack;
+
+                    bool critical = damage.Hitter.ApplyCritical();
+                    if (critical == true)
+                        setdamage = setdamage * damage.Hitter.GetOutPutMyStat(Enum_Stat.CritDmg_Inc);
+
+                    setdamage *= damage.Hitter.GetMinMaxRatio();
+
+                    setdamage = System.Math.Truncate(setdamage);
+
+                    if (_iFFType == IFFType.IFF_Foe)
+                    {
+                        CombatTextSpawner.Instance.ShowDamage(transform, setdamage, critical);
+
+                        if (StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake == true)
+                        {
+                            Managers.BattleSceneManager.Instance.PlayCameraShake(
+                                StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake_strengthOverride,
+                                StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake_durationOverride);
+                        }
+                    }
+
+                    Damage(setdamage);
                 }
 
-                Damage(setdamage);
                 if (IsDead == false)
                 {
                     if (_attackTarget == null)
                         _attackTarget = damage.Hitter;
-                    PlayCharacterCondition(damage.EnemyConditionDatas, damage.Hitter.transform.position);
+                    PlayCharacterCondition(damage.SkillInfo.GetEnemyConditionIndexes(), damage.Hitter.transform.position);
                 }
                 else
                 {
                     damage.Hitter.OnKillCharacter(this);
                 }
 
-                damage.HitEnemy.Add(this);
+                damage.Hitter.OnHitCharacter(this);
             }
         }
         //------------------------------------------------------------------------------------
@@ -593,34 +622,32 @@ namespace GameBerry
 
         }
         //------------------------------------------------------------------------------------
-        public void PlaySkill(AttackData attackData, Vector3 pos)
+        public virtual void OnHitCharacter(CharacterControllerBase characterControllerBase)
         {
-            //if (attackData != null)
-            //{
-            //    PlayCharacterCondition(attackData.MyConditionDatas, pos);
-            //}
+
+        }
+        //------------------------------------------------------------------------------------
+        public void PlaySkill(AttackStruct attackData, Vector3 pos)
+        {
+            if (attackData.SkillInfo != null)
+            {
+                PlayCharacterCondition(attackData.SkillInfo.GetMyConditionIndexes(), pos);
+            }
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, null);
-            HitResult(attackData);
         }
         //------------------------------------------------------------------------------------
-        public void PlaySkill(AttackData attackData, Vector3 pos, CharacterControllerBase fixSkillHitReceiver)
+        public void PlaySkill(AttackStruct attackData, Vector3 pos, CharacterControllerBase fixSkillHitReceiver)
         {
-            //if (attackData != null)
-            //{
-            //    PlayCharacterCondition(attackData.MyConditionDatas, pos);
-            //}
+            if (attackData.SkillInfo != null)
+            {
+                PlayCharacterCondition(attackData.SkillInfo.GetMyConditionIndexes(), pos);
+            }
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, fixSkillHitReceiver);
-            HitResult(attackData);
         }
         //------------------------------------------------------------------------------------
-        public virtual void HitResult(AttackData attackData)
-        {
-            
-        }
-        //------------------------------------------------------------------------------------
-        private void PlayCharacterCondition(List<int> index, Vector3 attackpos)
+        private void PlayCharacterCondition(IReadOnlyList<int> index, Vector3 attackpos)
         {
             for (int i = 0; i < index.Count; ++i)
             {
@@ -754,6 +781,7 @@ namespace GameBerry
             switch (state)
             {
                 case CharacterState.Attack:
+                case CharacterState.Skill:
                     {
                         _mySkeletonAnimationHandler?.SetAnimationSpeed(FinalAttackSpeed);
                         break;

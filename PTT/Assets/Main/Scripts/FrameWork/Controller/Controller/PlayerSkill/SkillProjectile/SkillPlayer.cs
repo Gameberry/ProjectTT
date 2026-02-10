@@ -64,9 +64,9 @@ namespace GameBerry
 
         private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //비활성화시 취소처리
 
-        public void PlaySkill(AttackData attackData, CharacterControllerBase target)
+        public void PlaySkill(AttackStruct attackData, CharacterControllerBase target)
         {
-            SkillObjData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.ResourceIndex);
+            SkillObjData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.SkillInfo.ResourceIndex);
 
             if (skillParticleData == null)
                 return;
@@ -83,9 +83,9 @@ namespace GameBerry
             }
         }
 
-        public void PlaySkill(AttackData attackData, Vector3 pos)
+        public void PlaySkill(AttackStruct attackData, Vector3 pos)
         {
-            SkillObjData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.ResourceIndex);
+            SkillObjData skillParticleData = _skillParticleDatas.Find(x => x.Index == attackData.SkillInfo.ResourceIndex);
 
             if (skillParticleData == null)
                 return;

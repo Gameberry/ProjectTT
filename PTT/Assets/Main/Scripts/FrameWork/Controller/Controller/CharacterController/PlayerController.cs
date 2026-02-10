@@ -10,9 +10,6 @@ namespace GameBerry
     public class PlayerController : CharacterControllerBase
     {
         [SerializeField]
-        private SkillPlayer _skillPlayer;
-
-        [SerializeField]
         private ComboController _comboController;
 
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
@@ -24,25 +21,15 @@ namespace GameBerry
         [SerializeField]
         private SkillInfo _defaultAttackData = new SkillInfo();
 
-        private AttackData _myAttackData = new AttackData();
+        [SerializeField]
+        private List<string> _attackAnimations = new List<string>();
 
         [SerializeField]
-        private List<AttackData> _attackData = new List<AttackData>();
+        private int _attackAniSelectIndex = -1;
 
-        [SerializeField]
-        private AttackData _criticalFakeData = new AttackData();
+        private bool _comboTrigger = false;
 
-        [SerializeField]
-        private int _dataSelectIndex = -1;
-
-        [SerializeField]
-        private bool _setRandom = false;
-
-        [SerializeField]
-        private List<AttackData> _skillDatas = new List<AttackData>();
-
-        // 평타
-        private AttackData _currentAttackData = null;
+        private SkillInfo _currentAttackData = null;
 
         public bool _refreshAggro = false;
 
@@ -104,28 +91,18 @@ namespace GameBerry
             //_comboController?.AddCombo();
         }
         //------------------------------------------------------------------------------------
-        public override void HitResult(AttackData attackData)
+        public override void OnHitCharacter(CharacterControllerBase characterControllerBase)
         {
-            if (attackData != null && attackData.HitEnemy.Count > 0)
+            if (characterControllerBase != null && _comboTrigger == false)
+            {
                 _comboController?.AddCombo();
+                _comboTrigger = true;
+            }
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()
         {
-            for (int i = 0; i < _attackData.Count; ++i)
-            {
-                _attackData[i].Hitter = this;
-            }
-
-            _criticalFakeData.Hitter = this;
-
-            for (int i = 0; i < _skillDatas.Count; ++i)
-            {
-                _skillDatas[i].Hitter = this;
-                _skillDatas[i].NextPlayTime = Time.time + _skillDatas[i].Cooltime;
-            }
-
-            _dataSelectIndex = 0;
+            _attackAniSelectIndex = 0;
 
             ChangeState(CharacterState.Idle);
         }
@@ -145,6 +122,8 @@ namespace GameBerry
             if (CharacterState == CharacterState.Dead)
                 return;
 
+            _comboTrigger = false;
+
             // ============================================================
             // 스킬 시스템 업데이트 (1줄 추가!)
             // 이제 스킬이 자동으로 사용됨!
@@ -152,26 +131,7 @@ namespace GameBerry
             UpdateSkillSystem();           // CharacterControllerBase의 메서드
             // ============================================================
 
-            if (_blockSkill == false)
-            {
-                for (int i = 0; i < _skillDatas.Count; ++i)
-                {
-                    AttackData attackData = _skillDatas[i];
-                    if (attackData.NextPlayTime <= Time.time)
-                    {
-                        if (_attackTarget != null && _attackTarget.IsDead != true)
-                        {
-                            float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                            if (distance <= attackData.AttackRange)
-                            {
-                                _skillPlayer.PlaySkill(attackData, _attackTarget);
-                                attackData.NextPlayTime = Time.time + attackData.Cooltime;
-                            }
-                        }
-                    }
-                }
-            }
-            
+
 
 #if DEV_DEFINE
             _useCustomDirVec = false;
@@ -207,6 +167,52 @@ namespace GameBerry
                 ChangeState(CharacterState.Run);
                 return;
             }
+
+
+            if (Input.GetKey(KeyCode.Alpha1))
+            {
+                // 스킬 해금
+                SkillManager.Instance.UnlockSkill(1001, 99, 999);
+
+                // 스킬 장착
+                SkillManager.Instance.EquipSkillToSlot(0, 1001);
+            }
+
+            if (Input.GetKey(KeyCode.Alpha2))
+            {
+                // 스킬 해금
+                SkillManager.Instance.UnlockSkill(1002, 99, 999);
+
+                // 스킬 장착
+                SkillManager.Instance.EquipSkillToSlot(1, 1002);
+            }
+
+            if (Input.GetKey(KeyCode.Alpha3))
+            {
+                // 스킬 해금
+                SkillManager.Instance.UnlockSkill(1003, 99, 999);
+
+                // 스킬 장착
+                SkillManager.Instance.EquipSkillToSlot(2, 1003);
+            }
+
+            if (Input.GetKey(KeyCode.Alpha4))
+            {
+                // 스킬 해금
+                SkillManager.Instance.UnlockSkill(1004, 99, 999);
+
+                // 스킬 장착
+                SkillManager.Instance.EquipSkillToSlot(3, 1004);
+            }
+
+            if (Input.GetKey(KeyCode.Alpha5))
+            {
+                // 스킬 해금
+                SkillManager.Instance.UnlockSkill(1005, 99, 999);
+
+                // 스킬 장착
+                SkillManager.Instance.EquipSkillToSlot(4, 1005);
+            }
 #endif
 
             if (CharacterState == CharacterState.Idle || CharacterState == CharacterState.Run)
@@ -229,45 +235,48 @@ namespace GameBerry
                 if (_currentAttackData == null)
                     SetAttackData();
 
+                if (_currentAttackData == null)
+                    return;
+
                 float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                if (distance <= _currentAttackData.AttackRange && _blockAttack == false)
+                if (distance <= _currentAttackData.AttackRange)
                 {
-                    AttackData selectAttackData = _currentAttackData;
+                    SkillInfo selectAttackData = _currentAttackData;
 
-                    float attackduration = selectAttackData.AttackDuration / FinalAttackSpeed;
-                    _attackTimming = Time.time + attackduration;
+                    _attackTimming = Time.time + 10f;
 
-                    if (string.IsNullOrEmpty(selectAttackData.CustomAni) == false)
+                    CharacterState characterState = _currentAttackData == _nextSkillData ? CharacterState.Skill : CharacterState.Attack;
+
+                    if (string.IsNullOrEmpty(_currentAttackData.AnimationName) == false)
                     { 
-                        ChangeState(CharacterState.Attack, false);
-                        PlayAnimation_AniName(selectAttackData.CustomAni);
+                        ChangeState(characterState, false);
+                        PlayAnimation_AniName(_currentAttackData.AnimationName);
                     }
                     else
-                        ChangeState(CharacterState.Attack);
-
+                        ChangeState(characterState);
                     
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                 }
             }
-            else if (CharacterState == CharacterState.Attack)
-            {
-                if (_attackTimming <= Time.time)
-                {
-                    _currentAttackData = null;
+            //else if (CharacterState == CharacterState.Attack)
+            //{
+            //    if (_attackTimming <= Time.time)
+            //    {
+            //        _currentAttackData = null;
 
-                    ChangeState(CharacterState.Idle);
-                    if (_refreshAggro == true)
-                        SetNewTarget();
-                    //if (AttackTarget != null)
-                    //{
-                    //    if (AttackTarget.IsDead)
-                    //        ChangeState(CharacterState.Idle);
-                    //    else
-                    //        _attackTimming = Time.time + _attackData.Cooltime;
-                    //}
+            //        ChangeState(CharacterState.Idle);
+            //        if (_refreshAggro == true)
+            //            SetNewTarget();
+            //        //if (AttackTarget != null)
+            //        //{
+            //        //    if (AttackTarget.IsDead)
+            //        //        ChangeState(CharacterState.Idle);
+            //        //    else
+            //        //        _attackTimming = Time.time + _attackData.Cooltime;
+            //        //}
 
-                }
-            }
+            //    }
+            //}
         }
         //------------------------------------------------------------------------------------
         protected override void SpineAnimationEvent(string aniName, string eventName)
@@ -276,16 +285,16 @@ namespace GameBerry
             {
                 if (eventName.Contains("AniAction"))
                 {
-                    AttackData selectAttackData = _currentAttackData;
+                    SkillInfo selectAttackData = _currentAttackData;
 
                     selectAttackData.CustomParam = eventName;
 
-                    if(AttackTarget == null || AttackTarget.IsDead)
+                    if (AttackTarget == null || AttackTarget.IsDead)
                         SetNewTarget();
 
                     if (AttackTarget == null || AttackTarget.IsDead)
-                    { 
-                        _attackTimming = 0f;
+                    {
+                        ReleaseAttack();
                         return;
                     }
 
@@ -294,16 +303,14 @@ namespace GameBerry
                         float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                         if (distance > _currentAttackData.AttackRange && _blockAttack == false)
                         {
-                            _attackTimming = 0f;
+                            ReleaseAttack();
 
                             return;
                         }
                     }
 
-                    selectAttackData.HitEnemy.Clear();
-
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                    _skillPlayer.PlaySkill(selectAttackData, AttackTarget);
+                    _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this), AttackTarget);
 
 
                     // ============================================================
@@ -318,34 +325,98 @@ namespace GameBerry
                     if (AttackTarget == null || AttackTarget.IsDead)
                         SetNewTarget();
 
+                    if (_nextSkillData != null)
+                    {
+                        ReleaseAttack();
+                        return;
+                    }
+
                     if (_currentAttackData != null && AttackTarget != null)
                     {
                         float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                         if (distance > _currentAttackData.AttackRange && _blockAttack == false)
                         {
-                            _attackTimming = 0f;
+                            ReleaseAttack();
                         }
                     }
-                    
+
+                }
+                else if (eventName.Contains("End"))
+                    ReleaseAttack();
+            }
+            else if (CharacterState == CharacterState.Skill)
+            {
+                if (eventName.Contains("AniAction"))
+                {
+                    SkillInfo selectAttackData = _currentAttackData;
+
+                    selectAttackData.CustomParam = eventName;
+
+                    if (AttackTarget == null || AttackTarget.IsDead)
+                        SetNewTarget();
+
+                    if (AttackTarget == null || AttackTarget.IsDead)
+                    {
+                        ReleaseAttack();
+                        return;
+                    }
+
+                    if (_currentAttackData != null && AttackTarget != null)
+                    {
+                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                        if (distance > _currentAttackData.AttackRange && _blockSkill == false)
+                        {
+                            ReleaseAttack();
+
+                            return;
+                        }
+                    }
+
+                    ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
+                    _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), AttackTarget);
+                }
+                else if (eventName.Contains("End"))
+                {
+                    if (_currentAttackData != null)
+                    {
+                        _nextSkillData = null;
+                        StartCoolDown(_currentAttackData.SkillId);
+                    }
+
+                    ReleaseAttack();
                 }
             }
         }
         //------------------------------------------------------------------------------------
+        public void ReleaseAttack()
+        {
+            _attackTimming = 0f;
+            _currentAttackData = null;
+
+            ChangeState(CharacterState.Idle);
+            if (_refreshAggro == true)
+                SetNewTarget();
+        }
+        //------------------------------------------------------------------------------------
         public void SetAttackData()
         {
-            AttackData selectAttackData = _attackData.GetRandom();
-
-            if (_setRandom == false)
+            if (_nextSkillData != null && _blockSkill == false)
             {
-                if (_attackData.Count <= _dataSelectIndex)
-                    _dataSelectIndex = 0;
-
-                selectAttackData = _attackData[_dataSelectIndex];
-
-                _dataSelectIndex++;
+                _currentAttackData = _nextSkillData;
             }
+            else
+            {
+                if (_blockAttack == true)
+                    return;
+                _currentAttackData = _defaultAttackData;
 
-            _currentAttackData = selectAttackData;
+                if (_attackAnimations.Count <= _attackAniSelectIndex)
+                    _attackAniSelectIndex = 0;
+
+                _defaultAttackData.AnimationName = _attackAnimations[_attackAniSelectIndex];
+
+                _attackAniSelectIndex++;
+            }
         }
         //------------------------------------------------------------------------------------
         /// <summary>

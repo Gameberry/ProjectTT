@@ -27,6 +27,9 @@ namespace GameBerry.Chart
         public Enum_SkillType SkillType; // Active or Passive
 
         public string AnimationName;     // 애니메이션 이름
+        [NonSerialized]
+        public string CustomParam;     // 애니메이션 이름
+        public int ResourceIndex;
 
         public int RequireJobLevel;      // 해금에 필요한 전직 차수 (1~5차)
         public int RequireCharLevel;     // 해금에 필요한 캐릭터 레벨 (액티브만 사용)
@@ -35,7 +38,7 @@ namespace GameBerry.Chart
         // "1,2,3" -> [1,2,3]
         public string EnemyCondition;
 
-        [NonSerialized] private List<int> _enemyConditionIndexList;
+        public List<int> _enemyConditionIndexList;
 
         public IReadOnlyList<int> GetEnemyConditionIndexes()
         {
@@ -57,7 +60,7 @@ namespace GameBerry.Chart
 
         public string MyCondition;
 
-        [NonSerialized] private List<int> _myConditionIndexList;
+        public List<int> _myConditionIndexList;
 
         public IReadOnlyList<int> GetMyConditionIndexes()
         {
@@ -86,6 +89,11 @@ namespace GameBerry.Chart
         public double LevelAttackMultiplier;        // 스킬 공격력 레벨당 추가 배율
 
         public int HitCount;                        // 스킬 타격 횟수
+        public Enum_AttackRangeType AttackRangeType;
+        public float AttackAngle;                 // Sector일 때 각도
+        public float AttackRange;                 // Sector일 때 각도
+        public int TargetCount;                        // 스킬 타격 횟수
+        public float HitRange;                 // Sector일 때 각도
 
         /// <summary>
         /// 스킬 최종 공격배율 계산
@@ -99,6 +107,16 @@ namespace GameBerry.Chart
             return BaseAttackMultiplier + (LevelAttackMultiplier * (skillLevel - 1));
         }
         // ActiveSKill
+
+        public AttackStruct GetAttackStruct(CharacterControllerBase hitter, int level = 0)
+        {
+            AttackStruct attackStruct = new AttackStruct();
+            attackStruct.Hitter = hitter;
+            attackStruct.AttackLevel = level;
+            attackStruct.SkillInfo = this;
+
+            return attackStruct;
+        }
     }
 
     public class SkillChart : ChartBase

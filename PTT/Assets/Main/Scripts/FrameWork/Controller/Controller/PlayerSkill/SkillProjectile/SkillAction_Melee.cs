@@ -58,7 +58,7 @@ namespace GameBerry
 
             Enum_LookDirection stageGenerateDirections = MyPos.x < TargetPos.x ? Enum_LookDirection.Right : Enum_LookDirection.Left;
 
-            MeleeParticle meleeParticle = _attackParticles.Find(x => x.CustomParam == _attackData.CustomParam);
+            MeleeParticle meleeParticle = _attackParticles.Find(x => x.CustomParam == _attackData.SkillInfo.CustomParam);
 
             if (meleeParticle != null)
                 _attakParticle = meleeParticle.ParticleSystem;

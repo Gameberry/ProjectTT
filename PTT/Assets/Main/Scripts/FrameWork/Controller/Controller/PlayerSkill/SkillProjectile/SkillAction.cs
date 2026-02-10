@@ -9,7 +9,7 @@ namespace GameBerry
         protected Vector3 _targetPosition;
         protected SkillPlayer _skillProjectilePlayer;
         public System.Action<SkillAction> _stopCallBack;
-        protected AttackData _attackData;
+        protected AttackStruct _attackData;
         protected CharacterControllerBase _target;
 
         public void SetSkillTarget(Vector3 pos)
@@ -28,7 +28,7 @@ namespace GameBerry
         }
 
 
-        public void SetSkillManageInfo(AttackData attackData)
+        public void SetSkillManageInfo(AttackStruct attackData)
         {
             _attackData = attackData;
         }

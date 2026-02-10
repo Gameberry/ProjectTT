@@ -166,7 +166,7 @@ namespace GameBerry
         public float HitRange;
         public int TargetCount;
 
-        public Enum_AttackRangeType TargetAttackType;
+        public Enum_AttackRangeType AttackRangeType;
         public float AttackAngle;
 
         public float Cooltime = 1.0f;
@@ -179,15 +179,13 @@ namespace GameBerry
 
         public List<int> EnemyConditionDatas = new List<int>();
         public List<int> MyConditionDatas = new List<int>();
-
-        public List<CharacterControllerBase> HitEnemy = new List<CharacterControllerBase>();
     }
 
     public struct AttackStruct
     {
         public CharacterControllerBase Hitter;
         public int AttackLevel;
-        public List<CharacterControllerBase> HitEnemy;
+        public Chart.SkillInfo SkillInfo;
     }
 
     public delegate void CallMonsterHitState(double currDamage, double currHp, double totalHp);
@@ -276,6 +274,7 @@ namespace GameBerry
         Slow = 16, // 둔화 (이속 공속 감소)
 
         Knockback = 17, // 넉백
+        Fling = 18, // 당기기
 
         // --- Buffs ---
         AttackUp = 101,      // 공격력 증가
