@@ -91,7 +91,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public override void DeadMonster(MonsterController monsterController)
         {
-            
+            PlayerManager.Instance.AddExp(10);
         }
         //------------------------------------------------------------------------------------
     }

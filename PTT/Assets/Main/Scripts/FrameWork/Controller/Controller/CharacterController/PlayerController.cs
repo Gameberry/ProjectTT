@@ -48,6 +48,7 @@ namespace GameBerry
             creatureBaseMove.SetCharacterController(this);
             RefreshCheatStat();
 
+            PlayerManager.Instance.RefreshStat();
             EquipmentManager.Instance.RefreshStat();
             EngravingManager.Instance.RefreshStat();
 
