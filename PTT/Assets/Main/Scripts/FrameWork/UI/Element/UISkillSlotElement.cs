@@ -37,12 +37,6 @@ namespace GameBerry.UI
                 _button.onClick.AddListener(OnClick);
         }
         //------------------------------------------------------------------------------------
-        private void Start()
-        {
-            // 플레이어 찾기
-            _player = Managers.BattleSceneManager.Instance?.GetPlayer();
-        }
-        //------------------------------------------------------------------------------------
         private void Update()
         {
             // 쿨타임 업데이트
@@ -59,9 +53,10 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         public void RefreshSlot()
         {
+            _player = Managers.BattleSceneManager.Instance?.GetPlayer();
             int skillId = SkillManager.Instance.GetEquippedSkillId(_slotIndex);
             _currentSkillId = skillId;
-
+            
             if (skillId <= 0)
             {
                 ShowEmptySlot();
@@ -101,8 +96,7 @@ namespace GameBerry.UI
             if (_skillIcon != null)
             {
                 _skillIcon.gameObject.SetActive(true);
-                // TODO: 스킬 아이콘 로드
-                // _skillIcon.sprite = ResourceLoader.LoadSkillIcon(skillInfo.SkillId);
+                _skillIcon.sprite = SkillManager.Instance.GetIcon(skillInfo.SkillId);
             }
 
             UpdateCooldown();
@@ -143,7 +137,7 @@ namespace GameBerry.UI
                     {
                         // CharacterControllerBase의 메서드 호출
                         float remaining = _player.GetRemainingSkillCooldownTime(_currentSkillId);
-                        _cooldownText.SetText("{0:F1}s", remaining);
+                        _cooldownText.SetText(string.Format("{0:0.0}s", remaining));
 
                         // 쿨타임 진행도 (fillAmount)
                         if (_cooldownOverlay != null && _cooldownOverlay.type == Image.Type.Filled)

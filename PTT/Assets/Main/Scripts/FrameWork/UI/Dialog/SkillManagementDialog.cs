@@ -16,16 +16,12 @@ namespace GameBerry.UI
     public class SkillManagementDialog : IDialog
     {
         [Header("Skill Slots")]
-        [SerializeField] private List<UISkillSlotElement> _skillSlotElements = new List<UISkillSlotElement>();
+        [SerializeField] private UISkillSlotGroup _uISkillSlotGroup;
 
         [Header("Skill List")]
         [SerializeField] private Transform _skillListContent;
-        [SerializeField] private UISkillElement _skillElementPrefab;
-        [SerializeField] private Button _activeTabButton;
-        [SerializeField] private Button _passiveTabButton;
-
-        private readonly List<UISkillElement> _spawnedSkillElements = new List<UISkillElement>();
-        private Enum_SkillType _currentTab = Enum_SkillType.Active;
+        [SerializeField] private UISkillJobGroup _skillJobGroupPrefab;
+        private List<UISkillJobGroup> _spawnSkillJobGroups = new List<UISkillJobGroup>();
 
         [Header("Selected Skill Info")]
         [SerializeField] private Transform _selectedSkillInfoGroup;
@@ -33,14 +29,13 @@ namespace GameBerry.UI
         [SerializeField] private TMP_Text _selectedSkillName;
         [SerializeField] private TMP_Text _selectedSkillType;
         [SerializeField] private TMP_Text _selectedSkillLevel;
+        [SerializeField] private TMP_Text _selectedSkillConditionDataDescription;
         [SerializeField] private TMP_Text _selectedSkillDescription;
 
-        [Header("Active Skill Info")]
-        [SerializeField] private Transform _activeSkillInfoGroup;
+        [Header("Active CoolTime Info")]
+        [SerializeField] private Transform _activeSkillCoolTimeGroup;
         [SerializeField] private TMP_Text _cooldownTypeText;
         [SerializeField] private TMP_Text _cooldownValueText;
-        [SerializeField] private TMP_Text _attackMultiplierText;
-        [SerializeField] private TMP_Text _hitCountText;
 
         [Header("Buttons")]
         [SerializeField] private Button _equipButton;
@@ -52,19 +47,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         protected override void OnLoad()
         {
-            // 스킬 슬롯 초기화
-            for (int i = 0; i < _skillSlotElements.Count; i++)
-            {
-                _skillSlotElements[i].Init(i);
-                _skillSlotElements[i].OnSlotClicked += OnSlotClicked;
-            }
-
-            // 탭 버튼
-            if (_activeTabButton != null)
-                _activeTabButton.onClick.AddListener(() => SetTab(Enum_SkillType.Active));
-
-            if (_passiveTabButton != null)
-                _passiveTabButton.onClick.AddListener(() => SetTab(Enum_SkillType.Passive));
+            _uISkillSlotGroup?.OnConnect_SlotClicked(OnSlotClicked);
 
             // 액션 버튼
             if (_equipButton != null)
@@ -75,91 +58,58 @@ namespace GameBerry.UI
 
             if (_levelUpButton != null)
                 _levelUpButton.onClick.AddListener(OnLevelUpButtonClicked);
+
+            SkillChart skillChart = Chart.GameChart.Get<SkillChart>();
+            if (skillChart != null)
+            {
+                foreach (var pair in skillChart.GetJobLevelToSkills())
+                {
+                    var element = Instantiate(_skillJobGroupPrefab, _skillListContent);
+                    element.SetJobSkill(pair.Key, pair.Value, OnSkillElementClicked);
+                    _spawnSkillJobGroups.Add(element);
+                }
+            }
         }
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
-            SkillManager.Instance.OnSkillDataChanged += RefreshAll;
-            SkillManager.Instance.OnSkillSlotChanged += RefreshSlots;
+            SkillManager.Instance.OnSkillDataChanged += RefreshSkill;
 
-            SetTab(Enum_SkillType.Active);
-            RefreshSlots();
             ClearSelectedSkillInfo();
+
+            RefreshAll();
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()
         {
             if (SkillManager.Instance != null)
             {
-                SkillManager.Instance.OnSkillDataChanged -= RefreshAll;
-                SkillManager.Instance.OnSkillSlotChanged -= RefreshSlots;
+                SkillManager.Instance.OnSkillDataChanged -= RefreshSkill;
             }
         }
         //------------------------------------------------------------------------------------
-        private void SetTab(Enum_SkillType tab)
+        private void RefreshSkill(int skillId)
         {
-            _currentTab = tab;
             RefreshSkillList();
+
+            if (_selectedSkillId == skillId)
+                ShowSkillInfo(_selectedSkillId);
         }
         //------------------------------------------------------------------------------------
         private void RefreshAll()
         {
-            RefreshSlots();
             RefreshSkillList();
 
             if (_selectedSkillId > 0)
                 ShowSkillInfo(_selectedSkillId);
         }
         //------------------------------------------------------------------------------------
-        private void RefreshSlots()
-        {
-            for (int i = 0; i < _skillSlotElements.Count; i++)
-            {
-                _skillSlotElements[i].RefreshSlot();
-            }
-        }
-        //------------------------------------------------------------------------------------
         private void RefreshSkillList()
         {
-            // 기존 리스트 제거
-            for (int i = 0; i < _spawnedSkillElements.Count; i++)
+            for (int i = 0; i < _spawnSkillJobGroups.Count; ++i)
             {
-                if (_spawnedSkillElements[i] != null)
-                    Destroy(_spawnedSkillElements[i].gameObject);
+                _spawnSkillJobGroups[i].Refresh();
             }
-            _spawnedSkillElements.Clear();
-
-            if (_skillElementPrefab == null || _skillListContent == null)
-                return;
-
-            SkillChart skillChart = Chart.GameChart.Get<SkillChart>();
-            if (skillChart == null)
-                return;
-
-            // 보유한 스킬 목록
-            var ownedSkills = SkillManager.Instance.HasSkill(0) 
-                ? UserTable.Get<SkillTable>().GetAllSkills() 
-                : new Dictionary<int, SkillData>();
-
-            // 탭에 따라 필터링
-            foreach (var kvp in ownedSkills)
-            {
-                SkillInfo skillInfo = skillChart.Get(kvp.Key);
-                if (skillInfo == null || skillInfo.SkillType != _currentTab)
-                    continue;
-
-                CreateSkillElement(kvp.Key);
-            }
-
-            // 미해금 스킬도 표시 (선택사항)
-            // TODO: 해금 가능한 스킬 목록 추가
-        }
-        //------------------------------------------------------------------------------------
-        private void CreateSkillElement(int skillId)
-        {
-            var element = Instantiate(_skillElementPrefab, _skillListContent);
-            element.Bind(skillId, OnSkillElementClicked);
-            _spawnedSkillElements.Add(element);
         }
         //------------------------------------------------------------------------------------
         private void OnSlotClicked(int slotIndex)
@@ -196,6 +146,7 @@ namespace GameBerry.UI
             if (_selectedSkillIcon != null)
             {
                 // TODO: 스킬 아이콘 로드
+                _selectedSkillIcon.sprite = SkillManager.Instance.GetIcon(skillInfo.SkillId);
             }
 
             if (_selectedSkillName != null)
@@ -208,12 +159,13 @@ namespace GameBerry.UI
                 _selectedSkillType.SetText(skillInfo.SkillType.ToString());
 
             bool hasSkill = SkillManager.Instance.HasSkill(skillId);
+            int level = 0;
 
             if (_selectedSkillLevel != null)
             {
                 if (hasSkill)
                 {
-                    int level = SkillManager.Instance.GetSkillLevel(skillId);
+                    level = SkillManager.Instance.GetSkillLevel(skillId);
                     _selectedSkillLevel.SetText($"Lv.{level}");
                     _selectedSkillLevel.gameObject.SetActive(true);
                 }
@@ -223,32 +175,69 @@ namespace GameBerry.UI
                 }
             }
 
-            if (_selectedSkillDescription != null)
+            if (_selectedSkillConditionDataDescription != null)
             {
-                // TODO: 스킬 설명 (ConditionData 기반)
-                _selectedSkillDescription.SetText("Skill description here");
+                string desc = "-";
+
+                int setCount = 0;
+
+                IReadOnlyList<int> conditions = skillInfo.GetMyConditionIndexes();
+
+                for (int i = 0; i < conditions.Count; ++i)
+                {
+                    if(setCount == 0)
+                        desc = StaticResource.Instance.GetConditionData().GetConditionDataDesc(conditions[i]);
+                    else
+                        desc += string.Format(", {0}", StaticResource.Instance.GetConditionData().GetConditionDataDesc(conditions[i]));
+
+                    setCount++;
+                }
+
+                conditions = skillInfo.GetEnemyConditionIndexes();
+
+                for (int i = 0; i < conditions.Count; ++i)
+                {
+                    if (setCount == 0)
+                        desc = StaticResource.Instance.GetConditionData().GetConditionDataDesc(conditions[i]);
+                    else
+                        desc += string.Format(", {0}", StaticResource.Instance.GetConditionData().GetConditionDataDesc(conditions[i]));
+
+                    setCount++;
+                }
+                _selectedSkillConditionDataDescription.SetText(desc);
             }
+
 
             // 액티브 스킬 추가 정보
             if (skillInfo.SkillType == Enum_SkillType.Active)
             {
-                SkillInfo activeInfo = skillInfo;
-                ShowActiveSkillInfo(activeInfo, hasSkill);
+                if (_selectedSkillDescription != null)
+                {
+                    string desc = $"Deals <color=#E50008>{SkillManager.Instance.GetSkillFinalAttackMultiplier(skillInfo.SkillId) * 100}%</color>" +
+                        $"damage to <color=#FFFFFF>{skillInfo.TargetCount}</color> nearby target(s) " +
+                        $"<color=#FFFFFF>{skillInfo.HitCount}</color> time(s).";
+                    _selectedSkillDescription.SetText(desc);
+                }
+
+                ShowActiveCoolTimeInfo(skillInfo);
             }
             else
             {
-                if (_activeSkillInfoGroup != null)
-                    _activeSkillInfoGroup.gameObject.SetActive(false);
+                if (_selectedSkillDescription != null)
+                    _selectedSkillDescription.SetText("{0}Job Passive", skillInfo.RequireJobLevel);
+
+                if (_activeSkillCoolTimeGroup != null)
+                    _activeSkillCoolTimeGroup.gameObject.SetActive(false);
             }
 
             // 버튼 상태 갱신
             RefreshButtons(skillInfo, hasSkill);
         }
         //------------------------------------------------------------------------------------
-        private void ShowActiveSkillInfo(SkillInfo activeInfo, bool hasSkill)
+        private void ShowActiveCoolTimeInfo(SkillInfo activeInfo)
         {
-            if (_activeSkillInfoGroup != null)
-                _activeSkillInfoGroup.gameObject.SetActive(true);
+            if (_activeSkillCoolTimeGroup != null)
+                _activeSkillCoolTimeGroup.gameObject.SetActive(true);
 
             if (_cooldownTypeText != null)
                 _cooldownTypeText.SetText(activeInfo.CooldownType.ToString());
@@ -261,21 +250,6 @@ namespace GameBerry.UI
                     _cooldownValueText.SetText($"{activeInfo.CooldownValue:F0} attacks");
             }
 
-            if (_attackMultiplierText != null)
-            {
-                if (hasSkill)
-                {
-                    double finalMultiplier = SkillManager.Instance.GetSkillFinalAttackMultiplier(activeInfo.SkillId);
-                    _attackMultiplierText.SetText($"{finalMultiplier:P0}");
-                }
-                else
-                {
-                    _attackMultiplierText.SetText($"{activeInfo.BaseAttackMultiplier:P0}");
-                }
-            }
-
-            if (_hitCountText != null)
-                _hitCountText.SetText($"{activeInfo.HitCount} hits");
         }
         //------------------------------------------------------------------------------------
         private void RefreshButtons(SkillInfo skillInfo, bool hasSkill)
@@ -318,8 +292,8 @@ namespace GameBerry.UI
             if (_selectedSkillInfoGroup != null)
                 _selectedSkillInfoGroup.gameObject.SetActive(false);
 
-            if (_activeSkillInfoGroup != null)
-                _activeSkillInfoGroup.gameObject.SetActive(false);
+            if (_activeSkillCoolTimeGroup != null)
+                _activeSkillCoolTimeGroup.gameObject.SetActive(false);
         }
         //------------------------------------------------------------------------------------
         private void OnEquipButtonClicked()

@@ -23,6 +23,12 @@ namespace GameBerry.UI
         [SerializeField]
         private Button m_cheatApplyBtn;
 
+        [Header("------------SkillGroup------------")]
+        [SerializeField]
+        private TMP_Dropdown m_cheatSkillIndexDropdown;
+
+        [SerializeField]
+        private Button m_cheatOpenSkillBtn;
 
 
         [SerializeField]
@@ -136,6 +142,28 @@ namespace GameBerry.UI
                 if (m_cheatApplyBtn != null)
                     m_cheatApplyBtn.onClick.AddListener(OnClick_CheatApplyBtn);
 
+
+                if (m_cheatSkillIndexDropdown != null)
+                {
+                    m_cheatSkillIndexDropdown.ClearOptions();
+
+                    Chart.SkillChart itemChart = Chart.GameChart.Get<Chart.SkillChart>();
+
+                    List<TMP_Dropdown.OptionData> optiondatalabel = new List<TMP_Dropdown.OptionData>();
+
+                    for (int i = 0; i < itemChart.rows.Length; ++i)
+                    {
+                        TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
+                        optionData.text = itemChart.rows[i].SkillId.ToString();
+                        optionData.image = SkillManager.Instance.GetIcon(itemChart.rows[i].SkillId);
+                        optiondatalabel.Add(optionData);
+                    }
+
+                    m_cheatSkillIndexDropdown.AddOptions(optiondatalabel);
+                }
+
+                if (m_cheatOpenSkillBtn != null)
+                    m_cheatOpenSkillBtn.onClick.AddListener(OnClick_CheatOpenSkillBtn);
 
                 if (m_maxStageInputField != null)
                     m_maxStageInputField.contentType = TMP_InputField.ContentType.IntegerNumber;
@@ -293,6 +321,19 @@ namespace GameBerry.UI
             long itemamount = m_cheatGoodsAmountInputField.text.ToLong();
 
             ItemManager.Instance.AddItem(itemInfo.ItemId, itemamount);
+        }
+        //------------------------------------------------------------------------------------
+        private void OnClick_CheatOpenSkillBtn()
+        {
+            if (m_cheatSkillIndexDropdown == null)
+                return;
+
+            int idx = m_cheatSkillIndexDropdown.value;
+
+            Chart.SkillChart skillChart = Chart.GameChart.Get<Chart.SkillChart>();
+            Chart.SkillInfo itemInfo = skillChart.rows[idx];
+
+            SkillManager.Instance.UnlockSkill(itemInfo.SkillId, 99, 999);
         }
         //------------------------------------------------------------------------------------
         private void OnValueChanged_AdFreeMode(bool value)

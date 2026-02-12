@@ -16,6 +16,7 @@
         SkinSelectDialog,
         InventoryItemDialog,
         StarforceEnhanceDialog,
+        SkillManagementDialog,
 
         EngravingDialog,
         EngravingProbabilityDialog,

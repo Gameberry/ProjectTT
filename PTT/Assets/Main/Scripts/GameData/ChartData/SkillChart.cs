@@ -91,9 +91,9 @@ namespace GameBerry.Chart
         public int HitCount;                        // 스킬 타격 횟수
         public Enum_AttackRangeType AttackRangeType;
         public float AttackAngle;                 // Sector일 때 각도
-        public float AttackRange;                 // Sector일 때 각도
+        public float AttackRange;                 // 때릴려는 범위
         public int TargetCount;                        // 스킬 타격 횟수
-        public float HitRange;                 // Sector일 때 각도
+        public float HitRange;                 // 타격 범위
 
         /// <summary>
         /// 스킬 최종 공격배율 계산
@@ -164,6 +164,14 @@ namespace GameBerry.Chart
             if (info != null && info.SkillType == Enum_SkillType.Passive)
                 return info;
             return null;
+        }
+
+        /// <summary>
+        /// 전직별로 정리한 스킬 목록 반환
+        /// </summary> Dictionary<int, List<SkillInfo>> _jobLevelToSkills; // 전직 레벨별 스킬 목록
+        public Dictionary<int, List<SkillInfo>> GetJobLevelToSkills()
+        {
+            return _jobLevelToSkills;
         }
 
         /// <summary>

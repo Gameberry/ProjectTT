@@ -45,11 +45,14 @@ namespace GameBerry
             Table.UserTable.Get<Table.SkillTable>()
         };
 
-        public event Action OnSkillDataChanged;    // 스킬 해금, 레벨업 등
+        public event Action<int> OnSkillDataChanged;    // 스킬 해금, 레벨업 등
         public event Action OnSkillSlotChanged;    // 스킬 슬롯 변경
 
         private SkillTable _skillTable;
         private SkillChart _skillChart;
+
+        private const string _iconPath = "Icon/skill/{0}";
+        private Dictionary<int, Sprite> _skillIcons = new Dictionary<int, Sprite>();
 
         // 쿨타임 추적용
         private Dictionary<int, SkillCooldownTracker> _cooldownTrackers = new Dictionary<int, SkillCooldownTracker>();
@@ -59,6 +62,29 @@ namespace GameBerry
         {
             _skillTable = UserTable.Get<SkillTable>();
             _skillChart = GameChart.Get<SkillChart>();
+        }
+        //------------------------------------------------------------------------------------
+        public Sprite GetIcon(int itemId)
+        {
+            Sprite sp = null;
+
+            if (_skillIcons.ContainsKey(itemId) == false)
+            {
+                ResourceLoader.Instance.Load<Sprite>(string.Format(_iconPath, itemId), o =>
+                {
+                    sp = o as Sprite;
+                    _skillIcons.Add(itemId, sp);
+                });
+            }
+            else
+                sp = _skillIcons[itemId];
+
+            return sp;
+        }
+        //------------------------------------------------------------------------------------
+        public void RefreshSkillSlot()
+        {
+            OnSkillSlotChanged?.Invoke();
         }
         //------------------------------------------------------------------------------------
         #region Skill Unlock & Level
@@ -109,7 +135,7 @@ namespace GameBerry
 
             UserTable.TransactionUpdate_WaitSecond(SkillTables);
 
-            OnSkillDataChanged?.Invoke();
+            OnSkillDataChanged?.Invoke(skillId);
 
             return true;
         }
@@ -127,7 +153,7 @@ namespace GameBerry
 
             UserTable.TransactionUpdate_WaitSecond(SkillTables);
 
-            OnSkillDataChanged?.Invoke();
+            OnSkillDataChanged?.Invoke(skillId);
 
             return true;
         }

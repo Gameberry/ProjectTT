@@ -23,10 +23,16 @@ namespace GameBerry
         public string Desc = string.Empty; // 필요없는건데 인스팩터창에서 잘 보이게하려고 잠시 만듬
         public int Index;
         public Enum_ConditionType Type;
+
         public float Param1;
+        public float Param1_Level;
         public float Param2;
+        public float Param2_Level;
+
         public float Duration;
+
         public float Rate = 1.0f;
+
         [HideInInspector]
         public Vector3 EffectPos;
     }
@@ -90,6 +96,58 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public ConditionData GetData(int index)
             => conditionDatas.Find(x => x.Index == index);
+        //------------------------------------------------------------------------------------
+        public string GetConditionDataDesc(int index, int level = 0)
+        {
+            ConditionData conditionData = GetData(index);
+
+            string desc = string.Empty;
+
+            float finalParam1 = conditionData.Param1 + (conditionData.Param1_Level * level);
+            float finalParam2 = conditionData.Param2 + (conditionData.Param2_Level * level);
+            float finalDuration = conditionData.Duration;
+
+            switch (conditionData.Type)
+            {
+                case Enum_ConditionType.Invincible:
+                case Enum_ConditionType.Stun:
+                case Enum_ConditionType.Snare:
+                    {
+                        desc = string.Format("{0}({1:0.##}s)", conditionData.Type, conditionData.Duration);
+                        break;
+                    }
+                case Enum_ConditionType.Slow:
+                    {
+                        if (finalParam1 > 0 && finalParam2 > 0)
+                            desc = string.Format("{0}({1:0.##}s), AttackDown : {2:0.##}%, MoveDown : {3:0.##}%", conditionData.Type, conditionData.Duration, finalParam1 * 100, finalParam2 * 100);
+                        else if (finalParam1 > 0)
+                            desc = string.Format("{0}({1:0.##}s), AttackDown : {2:0.##}%", conditionData.Type, conditionData.Duration, finalParam1 * 100);
+                        else if (finalParam2 > 0)
+                            desc = string.Format("{0}({1:0.##}s), MoveDown : {2:0.##}%", conditionData.Type, conditionData.Duration, finalParam2 * 100);
+                        break;
+                    }
+                case Enum_ConditionType.Knockback:
+                case Enum_ConditionType.Fling:
+                    {
+                        desc = string.Format("{0}", conditionData.Type);
+                        break;
+                    }
+                case Enum_ConditionType.AttackUp:
+                case Enum_ConditionType.HpUp:
+                case Enum_ConditionType.DefenseUp:
+                case Enum_ConditionType.MoveSpeedUp:
+                case Enum_ConditionType.AttackSpeedUp:
+                case Enum_ConditionType.ComboBuff_AttackSpeedUp:
+                case Enum_ConditionType.ComboBuff_AttackUp:
+                case Enum_ConditionType.ComboBuff_CriticalChangeUp:
+                    {
+                        desc = string.Format("{0:0.##}%{1}({2:0.##}s)", finalParam1 * 100, conditionData.Type, conditionData.Duration);
+                        break;
+                    }
+            }
+
+            return desc;
+        }
         //------------------------------------------------------------------------------------
     }
 }

@@ -32,10 +32,14 @@ namespace GameBerry.UI
                 _button.onClick.AddListener(OnClick);
         }
         //------------------------------------------------------------------------------------
-        public void Bind(int skillId, System.Action<int> onClickCallback = null)
+        public void ConnectCallBack(System.Action<int> onClickCallback = null)
+        {
+            _onClickCallback = onClickCallback;
+        }
+        //------------------------------------------------------------------------------------
+        public void Bind(int skillId)
         {
             _skillId = skillId;
-            _onClickCallback = onClickCallback;
 
             SkillInfo skillInfo = Chart.GameChart.Get<SkillChart>()?.Get(skillId);
             if (skillInfo == null)
@@ -50,7 +54,7 @@ namespace GameBerry.UI
             if (_skillIcon != null)
             {
                 // TODO: 스킬 아이콘 로드
-                // _skillIcon.sprite = ResourceLoader.LoadSkillIcon(skillId);
+                _skillIcon.sprite = SkillManager.Instance.GetIcon(skillInfo.SkillId);
             }
 
             // 스킬 이름
@@ -108,7 +112,7 @@ namespace GameBerry.UI
         public void Refresh()
         {
             if (_skillId > 0)
-                Bind(_skillId, _onClickCallback);
+                Bind(_skillId);
         }
         //------------------------------------------------------------------------------------
         private void OnClick()

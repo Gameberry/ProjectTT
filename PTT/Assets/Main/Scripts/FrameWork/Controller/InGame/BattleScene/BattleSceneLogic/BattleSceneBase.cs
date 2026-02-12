@@ -40,6 +40,7 @@ namespace GameBerry
         {
             IsPlay = true;
             OnPlayBattleScene();
+            SkillManager.Instance.RefreshSkillSlot();
         }
         //------------------------------------------------------------------------------------
         protected virtual void OnPlayBattleScene()
