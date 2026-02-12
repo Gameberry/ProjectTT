@@ -81,7 +81,7 @@ namespace GameBerry
                 _comboByTarget.Remove(target);
         }
 
-        public void ShowMiss(Transform target)
+        public void ShowMiss(Transform target, Sprite icon = null)
         {
             if (target == null) return;
 
@@ -95,7 +95,8 @@ namespace GameBerry
                 CombatTextStyle.Miss,
                 UIFloatingCombatText.MSG_MISS,
                 textPresets.miss,
-                motionPresets.miss);
+                motionPresets.miss,
+                icon);
         }
 
         public void ShowCritical(Transform target)
@@ -115,7 +116,7 @@ namespace GameBerry
                 motionPresets.critical);
         }
 
-        public void ShowDamage(Transform target, double damage, bool isCritical)
+        public void ShowDamage(Transform target, double damage, bool isCritical, Sprite icon)
         {
             if (target == null) return;
 
@@ -139,7 +140,8 @@ namespace GameBerry
                     CombatTextStyle.Critical,
                     damage,
                     textPresets.critical,
-                    motionPresets.critical);
+                    motionPresets.critical,
+                    icon);
             }
             else
             {
@@ -150,7 +152,8 @@ namespace GameBerry
                     CombatTextStyle.Damage,
                     damage,
                     textPresets.damage,
-                    motionPresets.damage);
+                    motionPresets.damage,
+                    icon);
             }
         }
     }

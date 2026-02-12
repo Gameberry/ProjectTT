@@ -25,7 +25,7 @@ namespace GameBerry
         [SerializeField]
         private CharacterConditionController _conditionController;
         public CharacterConditionController CharacterConditionController { get { return _conditionController; } }
-        
+
 
         [SerializeField]
         protected IFFType _iFFType = IFFType.IFF_None;
@@ -174,7 +174,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         public virtual void Release()
-        { 
+        {
 
         }
         //------------------------------------------------------------------------------------
@@ -228,21 +228,38 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 쿨타임 정보 초기화
+        /// 쿨타임 정보 초기화 (기존 쿨타임 정보 보존)
         /// </summary>
         private void InitializeSkillCooldowns()
         {
-            _skillCooldowns.Clear();
+            // 제거된 스킬의 쿨타임 정보 삭제
+            var skillIdsToRemove = new List<int>();
+            foreach (var skillId in _skillCooldowns.Keys)
+            {
+                if (!_equippedSkillIds.Contains(skillId))
+                    skillIdsToRemove.Add(skillId);
+            }
 
+            foreach (var skillId in skillIdsToRemove)
+            {
+                _skillCooldowns.Remove(skillId);
+            }
+
+            // 새로 추가된 스킬만 쿨타임 정보 생성 (기존 스킬은 유지)
             foreach (int skillId in _equippedSkillIds)
             {
                 if (skillId <= 0)
+                    continue;
+
+                // 이미 쿨타임 정보가 있으면 건너뛰기 (기존 쿨타임 보존!)
+                if (_skillCooldowns.ContainsKey(skillId))
                     continue;
 
                 SkillInfo skillInfo = _skillChart?.GetActive(skillId);
                 if (skillInfo == null)
                     continue;
 
+                // 새로운 스킬만 쿨타임 정보 생성
                 _skillCooldowns[skillId] = new SkillCooldownInfo
                 {
                     skillId = skillId,
@@ -568,7 +585,7 @@ namespace GameBerry
                     bool ishit = Random.Range(0.0f, 1.0f) <= damage.Hitter.Temp_Accuracy;
                     if (ishit == false)
                     {
-                        CombatTextSpawner.Instance.ShowMiss(transform);
+                        CombatTextSpawner.Instance.ShowMiss(transform, SkillManager.Instance.GetIcon(damage.SkillInfo.SkillId));
                         return;
                     }
 
@@ -584,7 +601,7 @@ namespace GameBerry
 
                     if (_iFFType == IFFType.IFF_Foe)
                     {
-                        CombatTextSpawner.Instance.ShowDamage(transform, setdamage, critical);
+                        CombatTextSpawner.Instance.ShowDamage(transform, setdamage, critical, SkillManager.Instance.GetIcon(damage.SkillInfo.SkillId));
 
                         if (StaticResource.Instance.GetBattleModeStaticData().CriticalAttackShake == true)
                         {
@@ -613,12 +630,12 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         protected virtual void OnDamage()
-        { 
+        {
 
         }
         //------------------------------------------------------------------------------------
         public virtual void OnKillCharacter(CharacterControllerBase characterControllerBase)
-        { 
+        {
 
         }
         //------------------------------------------------------------------------------------
@@ -807,7 +824,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         protected virtual void OnDead()
-        { 
+        {
         }
         //------------------------------------------------------------------------------------
         protected virtual void PlayAnimation(CharacterState state)
@@ -886,7 +903,7 @@ namespace GameBerry
             _characterAttackSpeed = (float)(GetOutPutMyStat(Enum_Stat.AttackSpeed));
             _characterAttackSpeed += _characterAttackSpeed * (float)(GetOutPutMyStat(Enum_Stat.AttackSpeed_Inc));
 
-            if(CharacterState == CharacterState.Attack
+            if (CharacterState == CharacterState.Attack
                 || CharacterState == CharacterState.Skill)
                 _mySkeletonAnimationHandler?.SetAnimationSpeed(FinalAttackSpeed);
             else if (CharacterState == CharacterState.Run)
@@ -908,7 +925,7 @@ namespace GameBerry
             else
                 _currentHP = _maxHP * currHpRatio;
 
-            
+
         }
         //------------------------------------------------------------------------------------
         public bool ApplyCritical()

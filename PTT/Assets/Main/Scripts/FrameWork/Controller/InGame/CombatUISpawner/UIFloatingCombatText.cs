@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum CombatTextStyle : byte
 {
@@ -19,6 +20,7 @@ namespace GameBerry.UI
         [SerializeField] private ScreenSpaceFollower follower;
         [SerializeField] private RectTransform rect;
 
+        [SerializeField] private Image mainTmpIcon;
         [SerializeField] private TMP_Text mainTmp;
 
         [SerializeField] private TMP_Text comboNumberTmp;
@@ -90,13 +92,20 @@ namespace GameBerry.UI
             CombatTextStyle style,
             string message,
             CombatTextPresetAsset textPreset,
-            CombatTextMotionPresetAsset motionPreset)
+            CombatTextMotionPresetAsset motionPreset,
+            Sprite icon = null)
         {
             SetupCommon(target, baseWorldOffset, pixelOffset, style, motionPreset, null);
 
             SetComboVisible(false);
             textPreset.ApplyTo(mainTmp);
             mainTmp.SetText(message);
+
+            if (icon)
+            {
+                mainTmpIcon.gameObject.SetActive(true);
+                mainTmpIcon.sprite = icon;
+            }
 
             gameObject.SetActive(true);
         }
@@ -126,13 +135,21 @@ namespace GameBerry.UI
         CombatTextStyle style,
         double value,
         CombatTextPresetAsset textPreset,
-        CombatTextMotionPresetAsset motionPreset)
+        CombatTextMotionPresetAsset motionPreset,
+        Sprite icon = null)
         {
             SetupCommon(target, baseWorldOffset, pixelOffset, style, motionPreset, null);
 
             SetComboVisible(false);
             textPreset.ApplyTo(mainTmp);
             Util.SetCommaFromDoubleFloor(mainTmp, value);
+
+
+            if (icon)
+            {
+                mainTmpIcon.gameObject.SetActive(true);
+                mainTmpIcon.sprite = icon;
+            }
 
             gameObject.SetActive(true);
         }
@@ -233,6 +250,8 @@ namespace GameBerry.UI
             rect.anchoredPosition = _baseAnchored;
             CurrentTarget = null;
             _ownerSpawner = null;
+
+            mainTmpIcon.gameObject.SetActive(false);
         }
 
         void Despawn()
