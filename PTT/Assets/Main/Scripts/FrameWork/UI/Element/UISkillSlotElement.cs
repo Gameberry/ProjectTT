@@ -142,7 +142,7 @@ namespace GameBerry.UI
                         // 쿨타임 진행도 (fillAmount)
                         if (_cooldownOverlay != null && _cooldownOverlay.type == Image.Type.Filled)
                         {
-                            float progress = 1f - (remaining / skillInfo.CooldownValue);
+                            float progress = (remaining / skillInfo.CooldownValue);
                             _cooldownOverlay.fillAmount = Mathf.Clamp01(progress);
                         }
                     }
@@ -155,7 +155,7 @@ namespace GameBerry.UI
                         // 쿨타임 진행도
                         if (_cooldownOverlay != null && _cooldownOverlay.type == Image.Type.Filled)
                         {
-                            float progress = 1f - ((float)remaining / skillInfo.CooldownValue);
+                            float progress = ((float)remaining / skillInfo.CooldownValue);
                             _cooldownOverlay.fillAmount = Mathf.Clamp01(progress);
                         }
                     }

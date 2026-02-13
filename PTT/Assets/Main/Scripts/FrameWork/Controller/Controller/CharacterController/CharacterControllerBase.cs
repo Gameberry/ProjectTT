@@ -591,7 +591,7 @@ namespace GameBerry
                     if (ishit == false)
                     {
                         CombatTextSpawner.Instance.ShowMiss(transform, SkillManager.Instance.GetIcon(damage.SkillInfo.SkillId));
-                        return;
+                        continue;
                     }
 
                     double setdamage = damage.SkillInfo.GetFinalAttackMultiplier(damage.AttackLevel) * damage.Hitter.FinalAttack;
