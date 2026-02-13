@@ -68,6 +68,9 @@ namespace GameBerry
         {
             Sprite sp = null;
 
+            if (itemId <= 0)
+                return null;
+
             if (_skillIcons.ContainsKey(itemId) == false)
             {
                 ResourceLoader.Instance.Load<Sprite>(string.Format(_iconPath, itemId), o =>

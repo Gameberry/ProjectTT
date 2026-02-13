@@ -133,7 +133,7 @@ MonoBehaviour:
     - characterState: 5
       animationName: idle/idle_00
     DefaultSlotSkins: []
-  - ResourceIndex: 0
+  - ResourceIndex: -2
     SkeletonData: {fileID: 11400000, guid: 123b04981ea0e834da727a10110d4436, type: 2}
     Name: basic_setting_00_cha_skeletondata
     SkinList:
@@ -157,6 +157,50 @@ MonoBehaviour:
     - stateName: Idle_1
     - stateName: pose_1
     - stateName: Run
+    - stateName: spin
+    AnimationState:
+    - characterState: 1
+      animationName: Idle_1
+    - characterState: 2
+      animationName: Run
+    - characterState: 3
+      animationName: Attack_s_01
+    - characterState: 4
+      animationName: Idle_1
+    - characterState: 5
+      animationName: Idle_1
+    DefaultSlotSkins:
+    - Slot: 0
+      SkinName: Body/Body_001
+    - Slot: 1
+      SkinName: Hair/Hair_001
+    - Slot: 2
+      SkinName: Weapon/Weapon_000
+  - ResourceIndex: 0
+    SkeletonData: {fileID: 11400000, guid: 516b32aa46ea67642a0981c3005e638c, type: 2}
+    Name: basic_setting_00_cha_skeletondata
+    SkinList:
+    - Body/Body_000
+    - Body/Body_001
+    - Hair/Hair_001
+    - Weapon/Weapon_000
+    AnimationList:
+    - stateName: Attack_01
+    - stateName: Attack_01~05
+    - stateName: Attack_02
+    - stateName: Attack_03
+    - stateName: Attack_set_01
+    - stateName: Attack_set_02
+    - stateName: Attack_s_01
+    - stateName: Attack_s_02
+    - stateName: Attack_s_03
+    - stateName: Attack_s_04
+    - stateName: Attack_s_05
+    - stateName: Attack_s_06
+    - stateName: Idle_1
+    - stateName: pose_1
+    - stateName: Run
+    - stateName: Skill_dash
     - stateName: spin
     AnimationState:
     - characterState: 1

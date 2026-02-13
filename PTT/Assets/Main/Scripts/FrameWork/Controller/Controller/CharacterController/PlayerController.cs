@@ -30,6 +30,7 @@ namespace GameBerry
         private bool _comboTrigger = false;
 
         private SkillInfo _currentAttackData = null;
+        private SkillAction _currentSkillAction = null;
 
         public bool _refreshAggro = false;
 
@@ -233,6 +234,9 @@ namespace GameBerry
                     return;
                 }
 
+                if (_currentAttackData != null && _nextSkillData != null)
+                    _currentAttackData = _nextSkillData; // 혹시라도 평타 들어있으면 임의로 바로 바꾸기
+
                 if (_currentAttackData == null)
                     SetAttackData();
 
@@ -255,7 +259,10 @@ namespace GameBerry
                     }
                     else
                         ChangeState(characterState);
-                    
+
+                    if (characterState == CharacterState.Skill)
+                        _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), AttackTarget);
+
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                 }
             }
@@ -312,7 +319,6 @@ namespace GameBerry
 
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                     _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this), AttackTarget);
-
 
                     // ============================================================
                     // 공격 시 쿨타임 감소 (1줄 추가!)
@@ -374,7 +380,7 @@ namespace GameBerry
                     }
 
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                    _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), AttackTarget);
+                    PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), transform.position, AttackTarget);
                 }
                 else if (eventName.Contains("End"))
                 {
@@ -393,6 +399,11 @@ namespace GameBerry
         {
             _attackTimming = 0f;
             _currentAttackData = null;
+
+            if (_currentSkillAction != null)
+                _currentSkillAction.Release();
+
+            _currentSkillAction = null;
 
             ChangeState(CharacterState.Idle);
             if (_refreshAggro == true)

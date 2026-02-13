@@ -1,104 +1,96 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Spine;
+using Spine.Unity;
 
 namespace GameBerry
 {
     public class SkillAction_Melee : SkillAction
     {
-        [System.Serializable]
-        public class MeleeParticle
-        { 
-            public string CustomParam;
-            public ParticleSystem ParticleSystem;
-        }
-
-        [SerializeField]
-        private List<MeleeParticle> _attackParticles = new List<MeleeParticle>();
-
-
         [SerializeField]
         private ParticleSystem _attakParticle;
 
-        [SerializeField]
-        private float _hitDuraion = 1.0f;
-
-        private float _endTime;
-
-        private float _playHit;
+        private SkeletonAnimation _skeletonAnim;
 
         private CharacterControllerBase _characterControllerBase;
 
-        private bool _onHit = false;
+        private bool _released;
 
         public override void Play()
         {
-            if (_skillProjectilePlayer == null
-                || _skillProjectilePlayer.CharacterControllerBase == null
-                || _skillProjectilePlayer.CharacterControllerBase.AttackTarget == null)
+            if (_skillProjectilePlayer == null || _skillProjectilePlayer.CharacterControllerBase == null)
             {
-                Release();
+                ReleaseOnce();
                 return;
             }
 
-            _characterControllerBase = _skillProjectilePlayer.CharacterControllerBase;
 
-            Vector3 TargetPos = _target.transform.position;
+            var caster = _skillProjectilePlayer.CharacterControllerBase;
 
-            Vector3 MyPos = _characterControllerBase.transform.position;
-
-            Vector3 dirvec = TargetPos - MyPos;
-            dirvec.Normalize();
-
-            _onHit = false;
-
-            //_playHit = Time.time + _attackData.MeleeAttackDelay;
-            _playHit = Time.time;
-            //transform.rotation = Quaternion.FromToRotation(Vector3.left, dirvec);
-
-            Enum_LookDirection stageGenerateDirections = MyPos.x < TargetPos.x ? Enum_LookDirection.Right : Enum_LookDirection.Left;
-
-            MeleeParticle meleeParticle = _attackParticles.Find(x => x.CustomParam == _attackData.SkillInfo.CustomParam);
-
-            if (meleeParticle != null)
-                _attakParticle = meleeParticle.ParticleSystem;
-
-            if (stageGenerateDirections == Enum_LookDirection.Left)
+            // 캐릭터에 SkeletonAnimation이 어디에 붙는지 프로젝트마다 다름
+            _skeletonAnim = caster.GetSkeletonAnimation();
+            if (_skeletonAnim == null)
             {
-                Vector3 rotate = transform.eulerAngles;
-                rotate.y = 0.0f;
-                transform.eulerAngles = rotate;
+                ReleaseOnce();
+                return;
             }
-            else if (stageGenerateDirections == Enum_LookDirection.Right)
-            {
-                Vector3 rotate = transform.eulerAngles;
-                rotate.y = 180.0f;
-                transform.eulerAngles = rotate;
-            }
-            //_endTime = Time.time + _attackData.MeleeAttackDelay + _hitDuraion;
-            _endTime = Time.time + _hitDuraion;
+
+
+            BindSpineEvents();
+
+            _released = false;
+
         }
         //------------------------------------------------------------------------------------
-        private void Update()
+        private void BindSpineEvents()
         {
-            if (_endTime < Time.time)
-            {
-                ReleaseObj();
-            }
+            UnbindSpineEvents();
+            _skeletonAnim.AnimationState.Event += OnSpineEvent;
+            _skeletonAnim.AnimationState.Complete += OnSpineComplete;
+        }
+        //------------------------------------------------------------------------------------
+        private void UnbindSpineEvents()
+        {
+            if (_skeletonAnim == null) return;
+            _skeletonAnim.AnimationState.Event -= OnSpineEvent;
+            _skeletonAnim.AnimationState.Complete -= OnSpineComplete;
+        }
+        //------------------------------------------------------------------------------------
+        private void OnSpineEvent(TrackEntry entry, Spine.Event e)
+        {
+            if (_released || e?.Data == null) return;
 
-            if (_onHit == false && _playHit < Time.time)
+            string name = e.Data.Name;
+
+            if (name.Contains("AniAction"))
             {
-                _onHit = true;
                 _attakParticle?.gameObject.SetActive(true);
                 _attakParticle?.Play();
-                _characterControllerBase.PlaySkill(_attackData, transform.position, _target);
             }
         }
         //------------------------------------------------------------------------------------
-        private void ReleaseObj()
+        private void OnSpineComplete(TrackEntry entry)
         {
+            // 이벤트 누락 대비: 애니 끝났는데 release 안 됐으면 정리
+            if (_released) return;
+
+            ReleaseOnce();
+        }
+        //------------------------------------------------------------------------------------
+        private void ReleaseOnce()
+        {
+            if (_released) return;
+            _released = true;
+
+            UnbindSpineEvents();
             _attakParticle?.gameObject.SetActive(false);
-            Release();
+            base.Release();
+        }
+        //------------------------------------------------------------------------------------
+        public override void Release()
+        {
+            ReleaseOnce();
         }
         //------------------------------------------------------------------------------------
     }

@@ -59,6 +59,8 @@ namespace GameBerry
             Add(Enum_ConditionType.Slow, ConditionCategory.CrowdControl, ConditionStackPolicy.Refresh, "icon_slow");
 
             Add(Enum_ConditionType.Knockback, ConditionCategory.CrowdControl, ConditionStackPolicy.MergyValue, "icon_knockback");
+            Add(Enum_ConditionType.Fling, ConditionCategory.CrowdControl, ConditionStackPolicy.MergyValue, "icon_fling");
+            Add(Enum_ConditionType.Dash, ConditionCategory.CrowdControl, ConditionStackPolicy.MergyValue, "icon_dash");
 
             Add(Enum_ConditionType.AttackUp, ConditionCategory.Buff, ConditionStackPolicy.MultipleInstances, "icon_AttackUp");
             Add(Enum_ConditionType.DefenseUp, ConditionCategory.Buff, ConditionStackPolicy.MultipleInstances, "icon_DefenseUp");

@@ -256,19 +256,24 @@ namespace GameBerry
         }
     }
 
+
     public class FlingCondition : BaseCondition
     {
-        private Vector3 _direction;      // 당기기 방향 (정규화)
+        private Vector3 _direction;      // 당기기 기본 방향(정규화)
         private float _distance;         // 총 당기기 거리
-        private float _baseDuration;     // 요청된 기본 지속 시간
+        private float _baseDuration;
+
+        private float _minStopDistance;  // 대상과 최소 유지 거리(이 거리 이내로는 안 들어감)
+        private Vector3 _pullTargetPos;  // 끌어당길 목표 위치 (EffectPos 스냅)
 
         private Rigidbody _rb;
-        private Vector3 _startPos;       // 시작 위치
-        private Vector3 _prevPos;        // 직전 프레임 목표 위치
+        private Vector3 _startPos;
+        private Vector3 _prevPos;
 
         public Vector3 Direction => _direction;
         public float Distance => _distance;
         public float BaseDuration => _baseDuration;
+        public float MinStopDistance => _minStopDistance;
 
         public FlingCondition() : base(Enum_ConditionType.Fling) { }
 
@@ -282,15 +287,31 @@ namespace GameBerry
 
             _rb = Owner.MyRigidbody;
 
-            Vector3 ownerPos = Owner.transform.position;
+            _pullTargetPos = conditionData.EffectPos;
 
-            // 당기기: effectPos 쪽으로 이동
-            Vector3 direction = conditionData.EffectPos - ownerPos;
+            _distance = Mathf.Max(0f, conditionData.Param1);
+            _baseDuration = Mathf.Max(0.0001f, conditionData.Duration);
+            _minStopDistance = Mathf.Max(0f, conditionData.Param2);
 
-            if (direction.sqrMagnitude > 0.0001f)
-                _direction = direction.normalized;
-            else
-                _direction = Vector3.zero;
+            Duration = _baseDuration;
+
+            Vector3 curPos = (_rb != null) ? _rb.position : Owner.transform.position;
+            curPos.y = 0f;
+
+            Vector3 targetPos = _pullTargetPos;
+            targetPos.y = 0f;
+
+            float remainToTarget = Vector3.Distance(curPos, targetPos);
+
+            // 이미 최소 거리 안쪽이면 즉시 종료
+            if (remainToTarget <= _minStopDistance + 0.0001f)
+            {
+                _elapsed = Duration; // IsFinished = true
+                return;
+            }
+
+            Vector3 dir = targetPos - curPos;
+            _direction = (dir.sqrMagnitude > 0.0001f) ? dir.normalized : Vector3.zero;
 
             if (_rb != null)
             {
@@ -302,32 +323,46 @@ namespace GameBerry
                 _startPos = Owner.transform.position;
                 _prevPos = _startPos;
             }
-
-            _distance = Mathf.Max(0f, conditionData.Param1);
-            _baseDuration = Mathf.Max(0.0001f, conditionData.Duration);
         }
 
         public override void OnUpdate(float deltaTime)
         {
-            base.OnUpdate(deltaTime);
-
-            if (_direction == Vector3.zero || _distance <= 0f)
+            if (IsFinished)
                 return;
 
-            if (Duration <= 0f)
+            base.OnUpdate(deltaTime);
+
+            Vector3 curPos = (_rb != null) ? _rb.position : Owner.transform.position;
+            curPos.y = 0f;
+
+            Vector3 targetPos = _pullTargetPos;
+            targetPos.y = 0f;
+
+            float remainToTarget = Vector3.Distance(curPos, targetPos);
+
+            // 최소 거리 안쪽이면 즉시 종료
+            if (remainToTarget <= _minStopDistance + 0.0001f)
+            {
+                _elapsed = Duration;
+                return;
+            }
+
+            if (_direction == Vector3.zero || _distance <= 0f || Duration <= 0f)
                 return;
 
             float t = Mathf.Clamp01(_elapsed / Duration);
-
-            // Ease-Out (처음 빠르고 점점 멈춤)
             float easedT = 1f - (1f - t) * (1f - t);
 
-            float currentDist = _distance * easedT;
-            Vector3 targetPos = _startPos + _direction * currentDist;
+            float wantedDist = _distance * easedT;
+            float maxAllowedMove = Mathf.Max(0f, remainToTarget - _minStopDistance);
+            float clampedDist = Mathf.Min(wantedDist, maxAllowedMove);
 
-            Vector3 delta = targetPos - _prevPos;
-            _prevPos = targetPos;
+            Vector3 targetMovePos = _startPos + _direction * clampedDist;
 
+            Vector3 delta = targetMovePos - _prevPos;
+            _prevPos = targetMovePos;
+
+            // 맵 범위 클램프는 네 방식 그대로
             Vector3 minpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Min;
             Vector3 maxpos = StaticResource.Instance.GetBattleModeStaticData().MapRange_Max;
 
@@ -357,36 +392,34 @@ namespace GameBerry
             }
         }
 
-        /// <summary>
-        /// 이미 당기기 중일 때 추가 당기기가 들어오면:
-        /// - 방향/거리: 벡터 합성 (Additive)
-        /// - 시간: Duration 누적
-        /// </summary>
         public override void Merge(ConditionData conditionData)
         {
             // 기존 벡터
             Vector3 oldVec = _direction * _distance;
 
-            // 새 방향(당기기): effectPos 쪽
-            Vector3 ownerPos = Owner.transform.position;
-            Vector3 direction = conditionData.EffectPos - ownerPos;
+            // 타겟은 최신 것으로 갱신(스킬이 연속으로 당길 때 타겟이 바뀌는 느낌)
+            _pullTargetPos = conditionData.EffectPos;
 
-            Vector3 newDir = (direction.sqrMagnitude > 0.0001f) ? direction.normalized : Vector3.zero;
+            Vector3 curPos = (_rb != null) ? _rb.position : Owner.transform.position;
+            Vector3 dir = _pullTargetPos - curPos;
 
-            // 새 벡터
+            Vector3 newDir = (dir.sqrMagnitude > 0.0001f) ? dir.normalized : Vector3.zero;
             Vector3 newVec = newDir * Mathf.Max(0f, conditionData.Param1);
 
-            // 합산
             Vector3 merged = oldVec + newVec;
 
             _distance = merged.magnitude;
-
             if (_distance > 0.0001f)
                 _direction = merged.normalized;
 
-            Duration += conditionData.Duration;
+            // 최소 거리 정책: 더 큰 값을 유지(안전거리 우선)
+            _minStopDistance = Mathf.Max(_minStopDistance, Mathf.Max(0f, conditionData.Param2));
+
+            // 시간 누적
+            Duration += Mathf.Max(0.0001f, conditionData.Duration);
         }
     }
+
 
     public class AttackUpCondition : BaseCondition
     {

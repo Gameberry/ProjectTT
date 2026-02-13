@@ -275,6 +275,7 @@ namespace GameBerry
 
         Knockback = 17, // 넉백
         Fling = 18, // 당기기
+        Dash = 19, // 대쉬
 
         // --- Buffs ---
         AttackUp = 101,      // 공격력 증가

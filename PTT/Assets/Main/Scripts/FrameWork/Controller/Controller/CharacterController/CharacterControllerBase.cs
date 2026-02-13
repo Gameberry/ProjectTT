@@ -290,8 +290,8 @@ namespace GameBerry
             if (target == null || target.IsDead)
                 return;
 
-            if (_nextSkillData != null)
-                return;
+            //if (_nextSkillData != null)
+            //    return;
 
             // 장착된 스킬 중 사용 가능한 것 찾기
             foreach (var kvp in _skillCooldowns)
@@ -306,12 +306,12 @@ namespace GameBerry
                 if (skillInfo == null)
                     continue;
 
-                _nextSkillData = skillInfo;
+                // 거리 체크
+                float distance = MathDatas.GetDistance(transform.position, target.transform.position);
+                if (distance > skillInfo.AttackRange)
+                    continue;
 
-                //// 거리 체크
-                //float distance = MathDatas.GetDistance(transform.position, target.transform.position);
-                //if (distance > DefaultSkillRange)
-                //    continue;
+                _nextSkillData = skillInfo;
 
                 //// 스킬 사용
                 //UseSkill(skillId, target);
@@ -537,6 +537,11 @@ namespace GameBerry
         public void ChangeSpineColor(Color color)
         {
             _mySkeletonAnimationHandler?.SetColor(color);
+        }
+        //------------------------------------------------------------------------------------
+        public SkeletonAnimation GetSkeletonAnimation()
+        {
+            return _mySkeletonAnimationHandler?._skeletonAnimation;
         }
         //------------------------------------------------------------------------------------
         public void RefreshCheatStat()
