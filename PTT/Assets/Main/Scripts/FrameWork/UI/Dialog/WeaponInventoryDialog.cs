@@ -262,7 +262,7 @@ namespace GameBerry.UI
                 _levelUpNeedCountText.SetText($"{levelUpCurrency}/{levelUpCost}");
 
             if (_detailEquipStats != null)
-                _detailEquipStats.SetText(BuildStatText(weaponInfo.GetEquipStats(), level));
+                _detailEquipStats.SetText(BuildEquipStatText(weaponInfo, level));
 
             if (_detailOwnStats != null)
                 _detailOwnStats.SetText(BuildStatText(weaponInfo.GetOwnStats(), level));
@@ -329,6 +329,60 @@ namespace GameBerry.UI
                 _sb.Append(StatHelper.GetStatDisplayName(kv.Key));
                 _sb.Append(' ');
                 _sb.Append(StatHelper.FormatStatDisplayValue(kv.Key, value));
+                if (i < ordered.Count - 1)
+                    _sb.Append('\n');
+            }
+
+            return _sb.ToString();
+        }
+
+        private string BuildEquipStatText(WeaponInfo weaponInfo, int level)
+        {
+            if (weaponInfo == null)
+                return "-";
+
+            var equipStats = weaponInfo.GetEquipStats();
+            var equipBonusStats = weaponInfo.GetEquipBonusStats();
+
+            if ((equipStats == null || equipStats.Count <= 0) &&
+                (equipBonusStats == null || equipBonusStats.Count <= 0))
+                return "-";
+
+            Dictionary<Enum_Stat, double> merged = new Dictionary<Enum_Stat, double>();
+            double multiplier = 1.0 + (level - 1) * 0.1;
+
+            if (equipStats != null)
+            {
+                foreach (var kvp in equipStats)
+                {
+                    if (merged.ContainsKey(kvp.Key))
+                        merged[kvp.Key] += kvp.Value * multiplier;
+                    else
+                        merged[kvp.Key] = kvp.Value * multiplier;
+                }
+            }
+
+            if (equipBonusStats != null)
+            {
+                foreach (var kvp in equipBonusStats)
+                {
+                    if (merged.ContainsKey(kvp.Key))
+                        merged[kvp.Key] += kvp.Value;
+                    else
+                        merged[kvp.Key] = kvp.Value;
+                }
+            }
+
+            _sb.Clear();
+            var ordered = new List<KeyValuePair<Enum_Stat, double>>(merged);
+            ordered.Sort((a, b) => a.Key.CompareTo(b.Key));
+
+            for (int i = 0; i < ordered.Count; ++i)
+            {
+                var kv = ordered[i];
+                _sb.Append(StatHelper.GetStatDisplayName(kv.Key));
+                _sb.Append(' ');
+                _sb.Append(StatHelper.FormatStatDisplayValue(kv.Key, kv.Value));
                 if (i < ordered.Count - 1)
                     _sb.Append('\n');
             }

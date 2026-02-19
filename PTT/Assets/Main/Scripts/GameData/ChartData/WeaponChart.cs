@@ -8,6 +8,7 @@ namespace GameBerry.Chart
         public int ItemId;
         public int MaxAwake;
         public string EquipStat;
+        public string EquipBonusStat;
         public string OwnStat;
 
         [NonSerialized] private Dictionary<Enum_Stat, double> _equipStatDict;
@@ -17,6 +18,16 @@ namespace GameBerry.Chart
             if (_equipStatDict == null)
                 _equipStatDict = StatHelper.ParseStatsPacked(EquipStat);
             return _equipStatDict;
+        }
+
+
+        [NonSerialized] private Dictionary<Enum_Stat, double> _equipBonusStatDict;
+
+        public IReadOnlyDictionary<Enum_Stat, double> GetEquipBonusStats()
+        {
+            if (_equipBonusStatDict == null)
+                _equipBonusStatDict = StatHelper.ParseStatsPacked(EquipBonusStat);
+            return _equipBonusStatDict;
         }
 
 
