@@ -59,6 +59,11 @@ namespace GameBerry.Chart
                             Define.WeaponBaseMaxLevel = PackUtil.UnpackValue<int>(rows[i].value);
                             break;
                         }
+                    case "WeaponLevelUpCostKey":
+                        {
+                            Define.WeaponLevelUpCostKey = PackUtil.UnpackValue<int>(rows[i].value);
+                            break;
+                        }
                 }
             }
         }

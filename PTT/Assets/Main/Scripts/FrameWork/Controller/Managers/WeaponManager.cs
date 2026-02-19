@@ -13,8 +13,15 @@ namespace GameBerry
             Table.UserTable.Get<Table.WeaponTable>()
         };
 
-        public event Action OnWeaponChanged;
+        public event Action OnWeaponDataChanged;
         public event Action OnWeaponEquipChanged;
+
+        [Obsolete("Use OnWeaponDataChanged instead.")]
+        public event Action OnWeaponChanged
+        {
+            add => OnWeaponDataChanged += value;
+            remove => OnWeaponDataChanged -= value;
+        }
 
         WeaponTable _weaponTable;
         WeaponChart _weaponChart;
@@ -127,6 +134,37 @@ namespace GameBerry
             return GetWeaponLevel(itemId) >= GetMaxLevel(itemId);
         }
         //------------------------------------------------------------------------------------
+        public long GetLevelUpCost(int itemId)
+        {
+            WeaponData data = GetWeaponData(itemId);
+            if (data == null)
+                return 0;
+
+            if (IsMaxLevel(itemId))
+                return 0;
+
+            ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);
+            if (itemInfo == null)
+                return 0;
+
+            int nextLevel = Mathf.Max(1, data.level + 1);
+            int rarityIndex = Mathf.Max(0, (int)itemInfo.Rarity - 1);
+            int tierIndex = Mathf.Max(0, (int)itemInfo.Tier - 1);
+            int awakeLevel = Mathf.Max(0, data.Awake);
+
+            // Cost curve:
+            // - nextLevel: quadratic growth
+            // - rarity/tier: multiplicative weights
+            // - awake: mild extra multiplier for expanded max-level range
+            double levelCurve = 12.0 + (nextLevel * 2.2) + (nextLevel * nextLevel * 0.38);
+            double rarityWeight = 1.0 + (rarityIndex * 0.30);
+            double tierWeight = 1.0 + (tierIndex * 0.25);
+            double awakeWeight = 1.0 + (awakeLevel * 0.12);
+
+            long cost = (long)Math.Ceiling(levelCurve * rarityWeight * tierWeight * awakeWeight);
+            return Math.Max(1, cost);
+        }
+        //------------------------------------------------------------------------------------
         public bool DoLevelUp(int itemId, bool immediate = true)
         {
             WeaponData data = GetWeaponData(itemId);
@@ -138,16 +176,17 @@ namespace GameBerry
                 return false;
 
             // TODO: 레벨업 비용 체크 및 소모
-            // if (ItemManager.Instance.GetItemAmount(Define.WeaponLevelUpCostKey) < GetLevelUpCost(itemId))
-            //     return false;
-            // ItemManager.Instance.ConsumeItem(Define.WeaponLevelUpCostKey, GetLevelUpCost(itemId), false);
+            long cost = GetLevelUpCost(itemId);
+            if (ItemManager.Instance.GetItemAmount(Define.WeaponLevelUpCostKey) < cost)
+                return false;
+            ItemManager.Instance.ConsumeItem(Define.WeaponLevelUpCostKey, cost, false);
 
             _weaponTable.LevelUp(itemId);
 
             if (immediate)
-                UserTable.TransactionUpdate(WeaponTables);
+                UserTable.TransactionUpdate_WaitSecond(WeaponTables);
 
-            OnWeaponChanged?.Invoke();
+            OnWeaponDataChanged?.Invoke();
 
             RefreshStat();
 
@@ -211,9 +250,9 @@ namespace GameBerry
             _weaponTable.AwakeUp(itemId);
 
             if (immediate)
-                UserTable.TransactionUpdate(WeaponTables);
+                UserTable.TransactionUpdate_WaitSecond(WeaponTables);
 
-            OnWeaponChanged?.Invoke();
+            OnWeaponDataChanged?.Invoke();
 
             RefreshStat();
 
@@ -273,9 +312,9 @@ namespace GameBerry
             _weaponTable.Add(nextId, 1);
 
             if (immediate)
-                UserTable.TransactionUpdate(WeaponTables);
+                UserTable.TransactionUpdate_WaitSecond(WeaponTables);
 
-            OnWeaponChanged?.Invoke();
+            OnWeaponDataChanged?.Invoke();
 
             RefreshStat();
 
@@ -410,6 +449,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         #region Add Weapon (획득)
         //------------------------------------------------------------------------------------
+        public void ShowWeaponInventoryDialog()
+        {
+            UI.UIManager.Instance.DialogEnter<UI.WeaponInventoryDialog>();
+        }
+        //------------------------------------------------------------------------------------
         public bool AddWeapon(int itemId, long amount = 1)
         {
             WeaponInfo info = _weaponChart.Get(itemId);
@@ -420,7 +464,7 @@ namespace GameBerry
 
             UserTable.TransactionUpdate_WaitSecond(WeaponTables);
 
-            OnWeaponChanged?.Invoke();
+            OnWeaponDataChanged?.Invoke();
 
             RefreshStat();
 

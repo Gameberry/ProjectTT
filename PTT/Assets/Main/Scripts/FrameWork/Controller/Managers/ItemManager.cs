@@ -58,7 +58,14 @@ namespace GameBerry
         public event Action OnInventoryChanged;
         public event Action OnPointChanged;
         public event Action OnSkinChanged;
-        public event Action OnWeaponChanged;
+        public event Action OnWeaponStorageChanged;
+
+        [Obsolete("Use OnWeaponStorageChanged instead.")]
+        public event Action OnWeaponChanged
+        {
+            add => OnWeaponStorageChanged += value;
+            remove => OnWeaponStorageChanged -= value;
+        }
 
         private readonly Dictionary<GameBerry.Enum_ItemStorageType, IItemStorageHandler> _handlers = new();
         private Dictionary<int, Action<long>> _itemRefreshEvent = new Dictionary<int, Action<long>>();
@@ -282,7 +289,7 @@ namespace GameBerry
             if (t == GameBerry.Enum_ItemStorageType.Inventory) OnInventoryChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Point) OnPointChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Skin) OnSkinChanged?.Invoke();
-            else if (t == GameBerry.Enum_ItemStorageType.Weapon) OnWeaponChanged?.Invoke();
+            else if (t == GameBerry.Enum_ItemStorageType.Weapon) OnWeaponStorageChanged?.Invoke();
         }
 
         public Sprite GetIcon(int itemId)

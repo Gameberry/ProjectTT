@@ -570,5 +570,6 @@ namespace GameBerry
         public static int WeaponAwakeAddLevel = 20;
         public static int WeaponCombineCount = 5;
         public static int WeaponBaseMaxLevel = 100;
+        public static int WeaponLevelUpCostKey = 1003;
     }
 }
