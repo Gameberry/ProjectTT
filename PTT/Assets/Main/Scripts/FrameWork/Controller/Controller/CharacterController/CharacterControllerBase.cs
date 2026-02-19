@@ -8,76 +8,105 @@ using GameBerry.Chart;
 
 namespace GameBerry
 {
+    /// <summary>
+    /// 캐릭터의 기본 컨트롤러 클래스
+    /// 플레이어와 NPC 캐릭터의 공통 기능을 담당합니다.
+    /// - 스켈레톤 애니메이션 (Spine) 관리
+    /// - 스킬 시스템 구현
+    /// - 체력 및 스탯 관리
+    /// - 조건 상태 (상태이상) 처리
+    /// </summary>
     public class CharacterControllerBase : MonoBehaviour
     {
+        //------------------------------------------------------------------------------------
+        // [ 기본 상태 정보 ]
+        //------------------------------------------------------------------------------------
+        /// <summary> 캐릭터가 바라보는 방향 (좌측/우측) </summary>
         public Enum_LookDirection LookDirection { get { return _lookDirection; } }
         [SerializeField]
         protected Enum_LookDirection _lookDirection = Enum_LookDirection.Right;
 
-        [SerializeField]
-        private Vector3 _element_leftRot;
-        [SerializeField]
-        private Vector3 _element_rightRot;
-
+        /// <summary> 캐릭터의 빌보드 (카메라 방향 유지) 컨트롤러 </summary>
         [SerializeField]
         private CharacterBillboardController _characterBillboardController;
 
+        /// <summary> 캐릭터의 상태이상(버프/디버프) 관리 컨트롤러 </summary>
         [SerializeField]
         private CharacterConditionController _conditionController;
         public CharacterConditionController CharacterConditionController { get { return _conditionController; } }
 
 
+        /// <summary> 캐릭터의 팀 정보 (아군/적군/중립) </summary>
         [SerializeField]
         protected IFFType _iFFType = IFFType.IFF_None;
 
         public IFFType IFFType { get { return _iFFType; } }
 
+        /// <summary> 캐릭터의 현재 상태 (대기/이동/공격/피격/사망 등) </summary>
         [SerializeField]
         protected CharacterState _characterState = CharacterState.None;
         public CharacterState CharacterState { get { return _characterState; } }
 
+        /// <summary> Spine 애니메이션 핸들러 </summary>
         [SerializeField] protected SkeletonAnimationHandler _mySkeletonAnimationHandler;
 
+        /// <summary> 현재 적용 중인 Spine 모델 데이터 </summary>
         [SerializeField] protected SpineModelData _currentSpineModelData;
 
+        /// <summary> UI에 표시되는 캐릭터 상태 </summary>
         [SerializeField]
         protected UICharacterState _uiCharacterState;
 
+        /// <summary> 캐릭터 사망 여부 </summary>
         public bool IsDead { get { return CharacterState == CharacterState.Dead; } }
 
 
+        /// <summary> 캐릭터의 물리 엔진 컴포넌트 </summary>
         [SerializeField]
         protected Rigidbody _rigidbody;
         public Rigidbody MyRigidbody { get { return _rigidbody; } }
 
+        /// <summary> 현재 공격 대상 캐릭터 </summary>
         [SerializeField]
         protected CharacterControllerBase _attackTarget;
         public CharacterControllerBase AttackTarget { get { return _attackTarget; } }
 
 
 
+        //------------------------------------------------------------------------------------
+        // [ 스킬 시스템 필드 ]
+        //------------------------------------------------------------------------------------
         #region Skill System Fields
+        /// <summary> 스킬 실행 플레이어 </summary>
         [SerializeField]
         protected SkillPlayer _skillPlayer;
+        /// <summary> 다음에 사용 예정인 스킬 정보 </summary>
         protected SkillInfo _nextSkillData = null;
 
+        /// <summary> 게임의 스킬 데이터 차트 </summary>
         private SkillChart _skillChart;
 
-        // 장착된 스킬 ID 목록
+        /// <summary> 캐릭터가 장착한 스킬 ID 목록 </summary>
         private List<int> _equippedSkillIds = new List<int>();
 
 
 
 
-        // 쿨타임 정보
+        /// <summary> 스킬 쿨타임 정보를 저장하는 내부 클래스 </summary>
         private class SkillCooldownInfo
         {
+            /// <summary> 스킬 ID </summary>
             public int skillId;
+            /// <summary> 쿨타임 유형 (시간/공격 횟수) </summary>
             public Enum_SkillCooldownType cooldownType;
+            /// <summary> 스킬 재사용 가능 시간 </summary>
             public float nextAvailableTime;
+            /// <summary> 남은 공격 횟수 (공격 횟수 기반 쿨타임인 경우) </summary>
             public int remainingAttackCount;
+            /// <summary> 쿨타임 값 </summary>
             public float cooldownValue;
 
+            /// <summary> 스킬 사용 준비 완료 여부 </summary>
             public bool IsReady()
             {
                 if (cooldownType == Enum_SkillCooldownType.Time)
@@ -88,6 +117,7 @@ namespace GameBerry
                 return true;
             }
 
+            /// <summary> 쿨타임 시작 </summary>
             public void StartCooldown()
             {
                 if (cooldownType == Enum_SkillCooldownType.Time)
@@ -96,6 +126,7 @@ namespace GameBerry
                     remainingAttackCount = Mathf.CeilToInt(cooldownValue);
             }
 
+            /// <summary> 공격 시 호출 (공격 횟수 감소) </summary>
             public void OnAttack()
             {
                 if (cooldownType == Enum_SkillCooldownType.AttackCount && remainingAttackCount > 0)
@@ -103,36 +134,41 @@ namespace GameBerry
             }
         }
 
+        /// <summary> 스킬별 쿨타임 정보 딕셔너리 </summary>
         private Dictionary<int, SkillCooldownInfo> _skillCooldowns = new Dictionary<int, SkillCooldownInfo>();
 
-        // 스킬 설정
+        /// <summary> 자동 스킬 사용 여부 </summary>
         public bool AutoUseSkills { get; set; } = true;
+        /// <summary> 기본 스킬 사거리 </summary>
         public float DefaultSkillRange { get; set; } = 3f;
 
-        // 스킬 사용 이벤트
+        /// <summary> 스킬 사용 이벤트 (스킬 ID를 파라미터로 전달) </summary>
         public event System.Action<int> OnSkillUsed;
 
         #endregion
 
-
-
+        //------------------------------------------------------------------------------------
+        // [ 스탯 및 체력 ]
+        //------------------------------------------------------------------------------------
 #if UNITY_EDITOR
         [SerializeField]
 #endif
+        /// <summary> 캐릭터의 모든 스탯을 관리하는 오퍼레이터 </summary>
         protected CharacterStatOperator _characterStatOperator = new CharacterStatOperator();
         public CharacterStatOperator CharacterStatOperator { get { return _characterStatOperator; } }
 
 
+        /// <summary> 캐릭터의 최대 체력 </summary>
         [SerializeField]
         protected double _maxHP = 0.0;
         public double MaxHP { get { return _maxHP; } }
 
-
+        /// <summary> 캐릭터의 현재 체력 </summary>
         [SerializeField]
         protected double _currentHP = 0.0;
         public double CurrentHP { get { return _currentHP; } }
 
-
+        /// <summary> 애니메이션 컨트롤러의 재생 속도 (1.0 = 기본 속도) </summary>
         [SerializeField]
         protected float _aniControllerSpeed = 1.0f;
         public float AniControllerSpeed
@@ -141,25 +177,44 @@ namespace GameBerry
             set { _aniControllerSpeed = value; }
         }
 
+        /// <summary> 캐릭터의 공격력 </summary>
         protected double _characterAttack = 1.0f;
+        /// <summary> 캐릭터의 방어력 </summary>
         protected double _characterDefense = 1.0f;
+        /// <summary> 캐릭터의 공격 속도 </summary>
         protected float _characterAttackSpeed = 1.0f;
+        /// <summary> 캐릭터의 이동 속도 </summary>
         protected float _characterMoveSpeed = 1.0f;
 
+        /// <summary> 임시: 명중률 (아직 미구현) </summary>
         public float Temp_Accuracy = 1f;
 
+        /// <summary> 난수 생성기 </summary>
         private System.Random _random = new System.Random();
 
+        //------------------------------------------------------------------------------------
+        // [ 행동 제어 플래그 ]
+        //------------------------------------------------------------------------------------
+        /// <summary> 이동 차단 여부 </summary>
         public bool _blockMove { get; private set; }
+        /// <summary> 공격 차단 여부 </summary>
         protected bool _blockAttack { get; private set; }
+        /// <summary> 스킬 사용 차단 여부 </summary>
         protected bool _blockSkill { get; private set; }
 
+        /// <summary> 모든 버프/디버프를 적용한 최종 공격력 </summary>
         public double FinalAttack => _characterAttack;
+        /// <summary> 모든 버프/디버프를 적용한 최종 방어력 </summary>
         public double FinalDefense => _characterDefense;
+        /// <summary> 모든 버프/디버프를 적용한 최종 이동 속도 </summary>
         public float FinalMoveSpeed => _characterMoveSpeed;
+        /// <summary> 모든 버프/디버프를 적용한 최종 공격 속도 </summary>
         public float FinalAttackSpeed => _characterAttackSpeed;
 
         //------------------------------------------------------------------------------------
+        // [ 생명주기 ]
+        //------------------------------------------------------------------------------------
+        /// <summary> Unity 초기화 시 호출 </summary>
         private void Awake()
         {
             if (_mySkeletonAnimationHandler != null)
@@ -168,11 +223,13 @@ namespace GameBerry
             _conditionController = gameObject.AddComponent<CharacterConditionController>();
         }
         //------------------------------------------------------------------------------------
+        /// <summary> 캐릭터 초기화 (파생 클래스에서 오버라이드) </summary>
         public virtual void Init()
         {
 
         }
         //------------------------------------------------------------------------------------
+        /// <summary> 캐릭터 해제 (파생 클래스에서 오버라이드) </summary>
         public virtual void Release()
         {
 
@@ -322,6 +379,9 @@ namespace GameBerry
         /// <summary>
         /// 스킬 사용 (메인 메서드)
         /// </summary>
+        /// <param name="skillId">사용할 스킬의 ID</param>
+        /// <param name="target">대상 캐릭터</param>
+        /// <returns>스킬 사용 성공 여부</returns>
         public bool UseSkill(int skillId, CharacterControllerBase target)
         {
             if (IsDead || target == null || target.IsDead)
@@ -362,7 +422,10 @@ namespace GameBerry
 
             return true;
         }
-        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 스킬 쿨타임 시작 (외부에서 쿨타임 강제 시작)
+        /// </summary>
+        /// <param name="skillId">쿨타임을 시작할 스킬의 ID</param>
         public void StartCoolDown(int skillId)
         {
             if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
@@ -372,10 +435,13 @@ namespace GameBerry
 
             OnSkillUsed?.Invoke(skillId);
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
         /// 스킬 공격 실행
         /// </summary>
+        /// <param name="skillInfo">스킬 정보</param>
+        /// <param name="target">대상 캐릭터</param>
+        /// <param name="attackMultiplier">공격 배수 (레벨별 계산됨)</param>
+        /// <param name="hitCount">명중 횟수</param>
         private void ExecuteSkillAttack(SkillInfo skillInfo, CharacterControllerBase target, double attackMultiplier, int hitCount)
         {
             // AttackData 생성
@@ -392,10 +458,11 @@ namespace GameBerry
 
             Debug.Log($"[Skill] {name} used skill {skillInfo.SkillId} with {attackMultiplier:P0} on {target.name}");
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬의 ConditionData 효과 적용
+        /// 스킬의 ConditionData 효과 적용 (상태이상 등)
         /// </summary>
+        /// <param name="target">대상 캐릭터</param>
+        /// <param name="conditionIndexes">적용할 상태이상 인덱스 목록</param>
         private void ApplySkillConditions(CharacterControllerBase target, IReadOnlyList<int> conditionIndexes)
         {
             if (target.CharacterConditionController == null)
@@ -412,9 +479,9 @@ namespace GameBerry
                 }
             }
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
         /// 공격 횟수 기반 쿨타임 감소
+        /// 희망 스킬은 캐릭터가 공격할 때마다 쿨타임 카운트가 감소합니다.
         /// </summary>
         public void OnSkillOwnerAttack()
         {
@@ -423,10 +490,11 @@ namespace GameBerry
                 cooldownInfo.OnAttack();
             }
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
-        /// 특정 스킬이 사용 가능한지 체크
+        /// 특정 스킬이 사용 가능한지 체크 (쿨타임 확인)
         /// </summary>
+        /// <param name="skillId">확인할 스킬의 ID</param>
+        /// <returns>스킬 사용 가능 여부</returns>
         public bool CanUseSkill(int skillId)
         {
             if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
@@ -434,10 +502,11 @@ namespace GameBerry
 
             return cooldownInfo.IsReady();
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
         /// 남은 쿨타임 시간 (초)
         /// </summary>
+        /// <param name="skillId">확인할 스킬의 ID</param>
+        /// <returns>남은 쿨타임 시간 (시간 기반 쿨타임이 아니면 0)</returns>
         public float GetRemainingSkillCooldownTime(int skillId)
         {
             if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
@@ -448,10 +517,11 @@ namespace GameBerry
 
             return Mathf.Max(0f, cooldownInfo.nextAvailableTime - Time.time);
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
         /// 남은 쿨타임 공격 횟수
         /// </summary>
+        /// <param name="skillId">확인할 스킬의 ID</param>
+        /// <returns>남은 쿨타임 공격 횟수 (공격 횟수 기반 쿨타임이 아니면 0)</returns>
         public int GetRemainingSkillCooldownAttackCount(int skillId)
         {
             if (!_skillCooldowns.TryGetValue(skillId, out var cooldownInfo))
@@ -462,9 +532,9 @@ namespace GameBerry
 
             return Mathf.Max(0, cooldownInfo.remainingAttackCount);
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
-        /// 쿨타임 강제 초기화 (치트/디버그용)
+        /// 모든 스킬 쿨타임 강제 초기화
+        /// (치트/디버그/테스트용)
         /// </summary>
         public void ResetAllSkillCooldowns()
         {
@@ -474,17 +544,17 @@ namespace GameBerry
                 cooldownInfo.remainingAttackCount = 0;
             }
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
         /// 장착된 스킬 목록 반환
         /// </summary>
+        /// <returns>장착된 스킬ID 목록의 복사본</returns>
         public List<int> GetEquippedSkillIds()
         {
             return new List<int>(_equippedSkillIds);
         }
-        //------------------------------------------------------------------------------------
         /// <summary>
         /// 패시브 스킬 효과 적용 (플레이어 Init()에서 호출)
+        /// 패시브 스킬의 상태이상 효과를 캐릭터에 적용합니다 (영구 효과).
         /// </summary>
         protected void ApplyPassiveSkills()
         {
@@ -512,6 +582,14 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
+        // [ 행동 제어 및 모델 관리 ]
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터의 행동 차단 설정 (이동/공격/스킬)
+        /// </summary>
+        /// <param name="move">이동 차단 여부</param>
+        /// <param name="attack">공격 차단 여부</param>
+        /// <param name="skill">스킬 사용 차단 여부</param>
         public void SetControlLocks(bool move, bool attack, bool skill)
         {
             _blockMove = move;
@@ -519,6 +597,10 @@ namespace GameBerry
             _blockSkill = skill;
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// Spine 애니메이션 모델 데이터 설정
+        /// </summary>
+        /// <param name="spineModelData">설정할 모델 데이터</param>
         public void SetSpineModelData(SpineModelData spineModelData)
         {
             if (spineModelData == null)
@@ -528,12 +610,18 @@ namespace GameBerry
 
             _mySkeletonAnimationHandler?.SetSpineModel(_currentSpineModelData);
         }
-        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// Spine 스킨 설정
+        /// </summary>
+        /// <param name="skin">설정할 스킨</param>
         public void SetSpineSkin(Skin skin)
         {
             _mySkeletonAnimationHandler?.SetSkin(skin);
         }
-        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// Spine 애니메이션 색상 변경
+        /// </summary>
+        /// <param name="color">적용할 색상</param>
         public void ChangeSpineColor(Color color)
         {
             _mySkeletonAnimationHandler?.SetColor(color);
@@ -707,11 +795,19 @@ namespace GameBerry
             OnPlay();
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터 게임시작 콜백 (오버라이드 권장)
+        /// </summary>
         protected virtual void OnPlay()
         {
 
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// Spine 애니메이션 이벤트 핸들러 (오버라이드 권장)
+        /// </summary>
+        /// <param name="aniName">재생된 애니메이션 이름</param>
+        /// <param name="eventName">발생한 이벤트 이름</param>
         protected virtual void SpineAnimationEvent(string aniName, string eventName)
         {
 
@@ -745,11 +841,20 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 체력 증가 처리 (overridable)
+        /// </summary>
+        /// <param name="hp">증가할 체력</param>
         protected virtual void InCreaseHP(double hp)
         {
             SetHP(_currentHP + hp);
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 체력 감소 처리 (데미지 적용)
+        /// 사기 모드에서 플레이어 무적 처리
+        /// </summary>
+        /// <param name="hp">감소할 체력</param>
         protected void DeCreaseHP(double hp)
         {
             if (IFFType == IFFType.IFF_Friend)
@@ -770,6 +875,11 @@ namespace GameBerry
             SetHP(_currentHP - decreaseValue);
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터의 현재 체력 설정 (0~MaxHP 범위로 정규화)
+        /// UI 체력바 업데이트
+        /// </summary>
+        /// <param name="hp">설정할 체력</param>
         protected void SetHP(double hp)
         {
             _currentHP = hp;
@@ -788,11 +898,21 @@ namespace GameBerry
             _uiCharacterState?.SetHPBar(hpratio);
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터 상태 변경 (외부 호출용)
+        /// </summary>
+        /// <param name="state">변경할 상태</param>
         public void ChangeCharacterState(CharacterState state)
         { // �ܺο��� ���� ��
             ChangeState(state);
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터 상태 변경 (내부 구현)
+        /// 애니메이션 속도 조정 및 상태 이벤트 발생
+        /// </summary>
+        /// <param name="state">변경할 상태</param>
+        /// <param name="playAni">애니메이션 재생 여부</param>
         protected virtual void ChangeState(CharacterState state, bool playAni = true)
         {
             if (_characterState == state)
@@ -828,10 +948,18 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터 사망 콜백 (overridable)
+        /// Aggro 목록에서 제거됨
+        /// </summary>
         protected virtual void OnDead()
         {
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터 상태에 따른 애니메이션 재생 (overridable)
+        /// </summary>
+        /// <param name="state">재생할 상태별 애니메이션</param>
         protected virtual void PlayAnimation(CharacterState state)
         {
             if (_mySkeletonAnimationHandler != null)
@@ -840,6 +968,11 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 특정 애니메이션 이름으로 재생
+        /// </summary>
+        /// <param name=\"aniName\">재생할 애니메이션 이름 (Spine 내 정의된 이름)</param>
+        /// <param name=\"loop\">반복 여부 (기본값: true)</param>
         public void PlayAnimation_AniName(string aniName, bool loop = true)
         {
             if (_mySkeletonAnimationHandler != null)
@@ -848,11 +981,20 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 파생 클래스에서 구현할 커스텀 업데이트 (overridable)
+        /// </summary>
         protected virtual void Updated()
         {
 
         }
         //------------------------------------------------------------------------------------
+        // [ 캐릭터 방향 및 타겟 관리 ]
+        //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터 바라보는 방향 변경 (좌측/우측)
+        /// </summary>
+        /// <param name=\"direction\">변경할 방향</param>
         public void ChangeCharacterLookAtDirection(Enum_LookDirection direction)
         {
             if (direction == _lookDirection)
@@ -873,6 +1015,10 @@ namespace GameBerry
             _characterBillboardController?.RefreshBillboard();
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 특정 트랜스폼을 바라보는 방향으로 변경
+        /// </summary>
+        /// <param name=\"targetTrans\">바라볼 목표 위치</param>
         public void ChangeCharacterLookAtDirection_Target(Transform targetTrans)
         {
             Vector3 direction = targetTrans.transform.position - transform.position;
@@ -886,11 +1032,20 @@ namespace GameBerry
             _attackTarget = Managers.AggroManager.Instance.GetIFFTargetCharacter(this);
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 캐릭터의 속성, 능력치 요정 계산 (특정 스킬 사용)
+        /// Attack, Defense, MoveSpeed, AttackSpeed 를 모두 계산
+        /// </summary>
         public virtual double GetOutPutMyStat(Enum_Stat v2Enum_Stat)
         {
             return _characterStatOperator.GetOutPutMyStat(v2Enum_Stat);
         }
         //------------------------------------------------------------------------------------
+        /// <summary>
+        /// 모든 스킬 및 버프/디버프를 반영한 최종 스킬 계산
+        /// 체력 또는 목표 체력 비율에 따라 최대 체력 설정
+        /// </summary>
+        /// <param name="setFullHp">전체 체력 설정 여부</param>
         public void RefreshStat(bool setFullHp = false)
         {
             _characterStatOperator.RefreshOutputStatValue();
