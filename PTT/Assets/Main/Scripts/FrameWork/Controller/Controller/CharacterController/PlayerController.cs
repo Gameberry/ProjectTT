@@ -169,52 +169,6 @@ namespace GameBerry
                 ChangeState(CharacterState.Run);
                 return;
             }
-
-
-            if (Input.GetKey(KeyCode.Alpha1))
-            {
-                // 스킬 해금
-                SkillManager.Instance.UnlockSkill(1001, 99, 999);
-
-                // 스킬 장착
-                SkillManager.Instance.EquipSkillToSlot(0, 1001);
-            }
-
-            if (Input.GetKey(KeyCode.Alpha2))
-            {
-                // 스킬 해금
-                SkillManager.Instance.UnlockSkill(1002, 99, 999);
-
-                // 스킬 장착
-                SkillManager.Instance.EquipSkillToSlot(1, 1002);
-            }
-
-            if (Input.GetKey(KeyCode.Alpha3))
-            {
-                // 스킬 해금
-                SkillManager.Instance.UnlockSkill(1003, 99, 999);
-
-                // 스킬 장착
-                SkillManager.Instance.EquipSkillToSlot(2, 1003);
-            }
-
-            if (Input.GetKey(KeyCode.Alpha4))
-            {
-                // 스킬 해금
-                SkillManager.Instance.UnlockSkill(1004, 99, 999);
-
-                // 스킬 장착
-                SkillManager.Instance.EquipSkillToSlot(3, 1004);
-            }
-
-            if (Input.GetKey(KeyCode.Alpha5))
-            {
-                // 스킬 해금
-                SkillManager.Instance.UnlockSkill(1005, 99, 999);
-
-                // 스킬 장착
-                SkillManager.Instance.EquipSkillToSlot(4, 1005);
-            }
 #endif
 
             if (CharacterState == CharacterState.Idle || CharacterState == CharacterState.Run)
