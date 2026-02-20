@@ -116,6 +116,8 @@ namespace GameBerry
         RoyalCoin,
         Pact,
         Starforce,
+        WeaponSummon,
+        LanternSummon,
         Mileage,
 
         Max,
@@ -142,6 +144,13 @@ namespace GameBerry
         Point,       // 재화(지갑)
         Skin,         // 스킨 컬렉션
         Weapon       // 무기
+    }
+
+    public enum Enum_SummonType
+    {
+        Weapon = 11,
+        Lantern = 12,
+        Max,
     }
 
     public enum Enum_StarforceResult
@@ -571,5 +580,6 @@ namespace GameBerry
         public static int WeaponCombineCount = 5;
         public static int WeaponBaseMaxLevel = 100;
         public static int WeaponLevelUpCostKey = 1003;
+        public static int SummonAdDrawCount = 10;
     }
 }
