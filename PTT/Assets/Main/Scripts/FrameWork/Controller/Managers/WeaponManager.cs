@@ -47,7 +47,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public bool HasWeapon(int itemId)
         {
-            return _weaponTable.GetAmount(itemId) > 0;
+            return GetWeaponData(itemId) != null;
         }
         //------------------------------------------------------------------------------------
         public long GetWeaponCount(int itemId)
@@ -232,8 +232,59 @@ namespace GameBerry
             int cost = GetAwakeCost(itemId);
             long currentCount = GetWeaponCount(itemId);
 
-            // 각성 비용(소모) + 1개(보유 유지)가 필요
-            return currentCount > cost;
+            // 각성 비용만큼 보유하면 각성 가능 (count가 0이 되어도 보유 상태는 유지)
+            return currentCount >= cost;
+        }
+        //------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------
+        public bool CanAnyAwake()
+        {
+            List<WeaponData> allWeapons = GetAllWeaponData();
+            if (allWeapons == null)
+                return false;
+
+            for (int i = 0; i < allWeapons.Count; ++i)
+            {
+                WeaponData data = allWeapons[i];
+                if (data == null)
+                    continue;
+
+                if (CanAwake(data.itemId))
+                    return true;
+            }
+
+            return false;
+        }
+        //------------------------------------------------------------------------------------
+        public bool DoAllAwake()
+        {
+            WeaponInfo[] allWeapons = _weaponChart.rows;
+            if (allWeapons == null || allWeapons.Length <= 0)
+                return false;
+
+            bool changed = false;
+
+            for (int i = 0; i < allWeapons.Length; ++i)
+            {
+                int itemId = allWeapons[i].ItemId;
+
+                while (CanAwake(itemId))
+                {
+                    int cost = GetAwakeCost(itemId);
+                    _weaponTable.Add(itemId, -cost);
+                    _weaponTable.AwakeUp(itemId);
+                    changed = true;
+                }
+            }
+
+            if (changed == false)
+                return false;
+
+            UserTable.TransactionUpdate(WeaponTables);
+            OnWeaponDataChanged?.Invoke();
+            RefreshStat();
+
+            return true;
         }
         //------------------------------------------------------------------------------------
         public bool DoAwake(int itemId, bool immediate = true)
@@ -296,6 +347,60 @@ namespace GameBerry
             WeaponInfo nextInfo = _weaponChart.Get(nextId);
 
             return nextInfo != null;
+        }
+        //------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------
+        public bool CanAnyCombine()
+        {
+            List<WeaponData> allWeapons = GetAllWeaponData();
+            if (allWeapons == null)
+                return false;
+
+            for (int i = 0; i < allWeapons.Count; ++i)
+            {
+                WeaponData data = allWeapons[i];
+                if (data == null)
+                    continue;
+
+                if (CanCombine(data.itemId))
+                    return true;
+            }
+
+            return false;
+        }
+        //------------------------------------------------------------------------------------
+        public bool DoAllCombine()
+        {
+            WeaponInfo[] allWeapons = _weaponChart.rows;
+            if (allWeapons == null || allWeapons.Length <= 0)
+                return false;
+
+            bool changed = false;
+
+            for (int i = 0; i < allWeapons.Length; ++i)
+            {
+                int itemId = allWeapons[i].ItemId;
+
+                if (CanCombine(itemId))
+                {
+                    int nextId = GetNextWeaponId(itemId);
+
+                    long currentCount = GetWeaponCount(itemId);
+                    long nextAddCount = currentCount / Define.WeaponCombineCount;
+                    _weaponTable.Add(itemId, -Define.WeaponCombineCount * nextAddCount);
+                    _weaponTable.Add(nextId, nextAddCount);
+                    changed = true;
+                }
+            }
+
+            if (changed == false)
+                return false;
+
+            UserTable.TransactionUpdate(WeaponTables);
+            OnWeaponDataChanged?.Invoke();
+            RefreshStat();
+
+            return true;
         }
         //------------------------------------------------------------------------------------
         public bool DoCombine(int itemId, bool immediate = true)
@@ -363,7 +468,7 @@ namespace GameBerry
 
             foreach (var weaponData in allWeapons)
             {
-                if (weaponData == null || weaponData.count <= 0)
+                if (weaponData == null)
                     continue;
 
                 WeaponInfo info = _weaponChart.Get(weaponData.itemId);

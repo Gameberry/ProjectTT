@@ -41,18 +41,23 @@ namespace GameBerry.UI
 
         [SerializeField] private Button _equipButton;
         [SerializeField] private TMP_Text _equipButtonText;
+        [Header("Batch Buttons")]
+        [SerializeField] private Button _allAwakeOrCombineButton;
+        [SerializeField] private TMP_Text _allAwakeOrCombineButtonText;
 
         private readonly List<UIWeaponElement> _spawned = new List<UIWeaponElement>();
         private readonly ObjectPool<UIWeaponElement> _elementPool = new ObjectPool<UIWeaponElement>();
         private readonly List<int> _weaponItemIds = new List<int>();
         private readonly StringBuilder _sb = new StringBuilder(128);
         private int _selectedItemId = 0;
+        private bool _batchActionIsAwake = false;
 
         protected override void OnLoad()
         {
             if (_awakeButton != null) _awakeButton.onClick.AddListener(OnClickAwakeOrCombine);
             if (_levelUpButton != null) _levelUpButton.onClick.AddListener(OnClickLevelUp);
             if (_equipButton != null) _equipButton.onClick.AddListener(OnClickEquip);
+            if (_allAwakeOrCombineButton != null) _allAwakeOrCombineButton.onClick.AddListener(OnClickAllAwakeOrCombine);
 
             Refresh();
         }
@@ -135,7 +140,25 @@ namespace GameBerry.UI
         {
             BuildWeaponIdList();
             Rebuild();
+            RefreshBatchButtons();
             RefreshDetail();
+        }
+
+        private void RefreshBatchButtons()
+        {
+            WeaponManager wm = WeaponManager.Instance;
+            bool anyAwake = wm != null && wm.CanAnyAwake();
+            bool anyCombine = wm != null && wm.CanAnyCombine();
+            _batchActionIsAwake = anyAwake;
+
+            if (_allAwakeOrCombineButton != null)
+            {
+                _allAwakeOrCombineButton.gameObject.SetActive(true);
+                _allAwakeOrCombineButton.interactable = anyAwake || anyCombine;
+            }
+
+            if (_allAwakeOrCombineButtonText != null)
+                _allAwakeOrCombineButtonText.SetText(anyAwake ? "AllAwake" : "AllCombine");
         }
 
         private UIWeaponElement GetOrCreateElement()
@@ -422,6 +445,18 @@ namespace GameBerry.UI
                 return;
 
             WeaponManager.Instance.SetEquip(_selectedItemId);
+        }
+
+        private void OnClickAllAwakeOrCombine()
+        {
+            WeaponManager wm = WeaponManager.Instance;
+            if (wm == null)
+                return;
+
+            if (_batchActionIsAwake)
+                wm.DoAllAwake();
+            else
+                wm.DoAllCombine();
         }
     }
 }
