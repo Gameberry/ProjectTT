@@ -10,6 +10,13 @@ namespace GameBerry.Chart
         Max
     }
 
+    public enum Enum_SkillActorType
+    {
+        Player = 0,
+        Lantern = 1,
+        Max
+    }
+
     public enum Enum_SkillCooldownType
     {
         Time = 0,        // 시간 기반 쿨타임
@@ -24,8 +31,8 @@ namespace GameBerry.Chart
     public class SkillInfo
     {
         public int SkillId;              // 스킬 고유 ID
+        public Enum_SkillActorType ActorType; // 스킬 시전 주체 (플레이어, 랜턴 등)
         public Enum_SkillType SkillType; // Active or Passive
-
         public string AnimationName;     // 애니메이션 이름
         [NonSerialized]
         public string CustomParam;     // 애니메이션 이름

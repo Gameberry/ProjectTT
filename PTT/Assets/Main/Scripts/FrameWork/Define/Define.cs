@@ -163,6 +163,19 @@ namespace GameBerry
         Max
     }
 
+    public enum Enum_LanternSlotType
+    {
+        Main,
+        Sub1,
+        Sub2,
+        Sub3,
+        Sub4,
+        Sub5,
+        Sub6,
+
+        Max,
+    }
+
 
     [System.Serializable]
     public class AttackData
