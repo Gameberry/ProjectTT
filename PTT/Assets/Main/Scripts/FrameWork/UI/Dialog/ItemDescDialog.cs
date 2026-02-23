@@ -104,7 +104,7 @@ namespace GameBerry.UI
                 if (handle.isMeta == false)
                     consumeButton.gameObject.SetActive(true);
                 else
-                    consumeButton.gameObject.SetActive(true);
+                    consumeButton.gameObject.SetActive(false);
             }
             //if (sellButton != null) sellButton.gameObject.SetActive(true);
         }

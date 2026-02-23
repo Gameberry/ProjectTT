@@ -75,8 +75,8 @@ namespace GameBerry.UI
         private readonly List<UIItemElement> _resultItems = new List<UIItemElement>();
         private Enum_SummonType _selectedType = Enum_SummonType.Weapon;
 
-        private const int MinBulkCount = 10;
-        private int _bulkCount = MinBulkCount;
+        private const int DefaultMinBulkCount = 10;
+        private int _bulkCount = DefaultMinBulkCount;
 
         protected override void OnLoad()
         {
@@ -272,7 +272,8 @@ namespace GameBerry.UI
                 if (_oneCostText != null) _oneCostText.SetText("0");
             }
 
-            if (sm.TryGetCostPreview(_selectedType, MinBulkCount, out SummonCostPreview bulkPreview))
+            int bulkMinCount = GetBulkMinCount(sm);
+            if (sm.TryGetCostPreview(_selectedType, bulkMinCount, out SummonCostPreview bulkPreview))
             {
                 if (_bulkCostIcon != null) _bulkCostIcon.sprite = ItemManager.Instance.GetIcon(bulkPreview.PointItemId);
                 if (_bulkCostText != null) _bulkCostText.SetText(bulkPreview.TotalPrice.ToString());
@@ -282,9 +283,9 @@ namespace GameBerry.UI
                 _bulkCostText.SetText("0");
             }
 
-            int maxAffordableCount = sm.GetMaxAffordableCount(_selectedType, MinBulkCount);
+            int maxAffordableCount = GetBulkMaxCount(sm);
             if (_bulkSummonButton != null)
-                _bulkSummonButton.interactable = maxAffordableCount >= MinBulkCount;
+                _bulkSummonButton.interactable = maxAffordableCount > 0;
 
             int adRemain = sm.GetRemainDailyAdViewCount(_selectedType);
             int adLimit = sm.GetDailyAdViewLimit(_selectedType);
@@ -388,14 +389,15 @@ namespace GameBerry.UI
             if (sm == null)
                 return;
 
-            int max = Mathf.Max(MinBulkCount, sm.GetMaxAffordableCount(_selectedType, MinBulkCount));
-            _bulkCount = Mathf.Clamp(_bulkCount, MinBulkCount, max);
+            int max = GetBulkMaxCount(sm);
+            int min = GetBulkMinCount(sm);
+            _bulkCount = Mathf.Clamp(_bulkCount, min, Mathf.Max(min, max));
 
             if (_bulkCountSlider != null)
             {
                 _bulkCountSlider.wholeNumbers = true;
-                _bulkCountSlider.minValue = MinBulkCount;
-                _bulkCountSlider.maxValue = max;
+                _bulkCountSlider.minValue = min;
+                _bulkCountSlider.maxValue = Mathf.Max(min, max);
                 _bulkCountSlider.SetValueWithoutNotify(_bulkCount);
             }
 
@@ -417,8 +419,9 @@ namespace GameBerry.UI
             if (sm == null)
                 return;
 
-            int max = Mathf.Max(MinBulkCount, sm.GetMaxAffordableCount(_selectedType, MinBulkCount));
-            _bulkCount = Mathf.Clamp(_bulkCount + delta, MinBulkCount, max);
+            int max = GetBulkMaxCount(sm);
+            int min = GetBulkMinCount(sm);
+            _bulkCount = Mathf.Clamp(_bulkCount + delta, min, Mathf.Max(min, max));
             if (_bulkCountSlider != null)
                 _bulkCountSlider.SetValueWithoutNotify(_bulkCount);
 
@@ -427,7 +430,11 @@ namespace GameBerry.UI
 
         private void SetBulkToMin()
         {
-            _bulkCount = MinBulkCount;
+            SummonManager sm = SummonManager.Instance;
+            if (sm == null)
+                return;
+
+            _bulkCount = GetBulkMinCount(sm);
             if (_bulkCountSlider != null)
                 _bulkCountSlider.SetValueWithoutNotify(_bulkCount);
 
@@ -440,7 +447,7 @@ namespace GameBerry.UI
             if (sm == null)
                 return;
 
-            _bulkCount = Mathf.Max(MinBulkCount, sm.GetMaxAffordableCount(_selectedType, MinBulkCount));
+            _bulkCount = Mathf.Max(GetBulkMinCount(sm), GetBulkMaxCount(sm));
             if (_bulkCountSlider != null)
                 _bulkCountSlider.SetValueWithoutNotify(_bulkCount);
 
@@ -449,7 +456,11 @@ namespace GameBerry.UI
 
         private void OnClickBulkSummonConfirm()
         {
-            if (_bulkCount < MinBulkCount)
+            SummonManager sm = SummonManager.Instance;
+            if (sm == null)
+                return;
+
+            if (_bulkCount < GetBulkMinCount(sm))
                 return;
 
             DoPaidSummon(_bulkCount);
@@ -463,23 +474,24 @@ namespace GameBerry.UI
             if (sm == null)
                 return;
 
-            int maxAffordableCount = Mathf.Max(0, sm.GetMaxAffordableCount(_selectedType, MinBulkCount));
-            int sliderMax = Mathf.Max(MinBulkCount, maxAffordableCount);
-            _bulkCount = Mathf.Clamp(_bulkCount, MinBulkCount, sliderMax);
+            int maxAffordableCount = Mathf.Max(0, GetBulkMaxCount(sm));
+            int minBulkCount = GetBulkMinCount(sm);
+            int sliderMax = Mathf.Max(minBulkCount, maxAffordableCount);
+            _bulkCount = Mathf.Clamp(_bulkCount, minBulkCount, sliderMax);
 
             if (_bulkCountText != null) _bulkCountText.SetText(_bulkCount.ToString());
-            if (_bulkMinCountText != null) _bulkMinCountText.SetText(MinBulkCount.ToString());
+            if (_bulkMinCountText != null) _bulkMinCountText.SetText(minBulkCount.ToString());
             if (_bulkMaxCountText != null) _bulkMaxCountText.SetText(maxAffordableCount.ToString());
 
             if (_bulkCountSlider != null)
             {
-                _bulkCountSlider.minValue = MinBulkCount;
+                _bulkCountSlider.minValue = minBulkCount;
                 _bulkCountSlider.maxValue = sliderMax;
                 _bulkCountSlider.wholeNumbers = true;
                 _bulkCountSlider.SetValueWithoutNotify(_bulkCount);
             }
 
-            bool canBulk = maxAffordableCount >= MinBulkCount;
+            bool canBulk = maxAffordableCount >= minBulkCount && maxAffordableCount > 0;
             if (sm.TryGetCostPreview(_selectedType, _bulkCount, out SummonCostPreview preview))
             {
                 if (_bulkPopupCostIcon != null) _bulkPopupCostIcon.sprite = ItemManager.Instance.GetIcon(preview.PointItemId);
@@ -491,6 +503,23 @@ namespace GameBerry.UI
                 if (_bulkPopupCostText != null) _bulkPopupCostText.SetText("0");
                 if (_bulkPopupConfirmButton != null) _bulkPopupConfirmButton.interactable = false;
             }
+        }
+
+        private int GetBulkMaxCount(SummonManager sm)
+        {
+            if (sm == null)
+                return 0;
+
+            return Mathf.Max(0, sm.GetMaxBulkSummonCount(_selectedType));
+        }
+
+        private int GetBulkMinCount(SummonManager sm)
+        {
+            int max = GetBulkMaxCount(sm);
+            if (max <= 0)
+                return DefaultMinBulkCount;
+
+            return Mathf.Min(DefaultMinBulkCount, max);
         }
 
         private void OpenSummonInfoDialog()

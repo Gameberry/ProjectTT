@@ -84,7 +84,7 @@ namespace GameBerry.UI
         {
             _summonType = summonType;
             BuildDrawLevelList();
-            ResolveDefaultDrawLevel();
+            ResolveDefaultDrawLevel(forceCurrentLevel: true);
             SelectTab(openProbabilityTab ? InfoTab.Probability : InfoTab.LevelReward);
             RefreshAll();
         }
@@ -95,7 +95,7 @@ namespace GameBerry.UI
                 return;
 
             BuildDrawLevelList();
-            ResolveDefaultDrawLevel();
+            ResolveDefaultDrawLevel(forceCurrentLevel: true);
             RefreshAll();
         }
 
@@ -137,7 +137,7 @@ namespace GameBerry.UI
             _availableDrawLevels.Sort();
         }
 
-        private void ResolveDefaultDrawLevel()
+        private void ResolveDefaultDrawLevel(bool forceCurrentLevel = false)
         {
             if (_availableDrawLevels.Count <= 0)
             {
@@ -155,6 +155,12 @@ namespace GameBerry.UI
                 int level = _availableDrawLevels[i];
                 if (level <= currentSummonLevel)
                     resolved = level;
+            }
+
+            if (forceCurrentLevel)
+            {
+                _selectedDrawLevel = resolved;
+                return;
             }
 
             if (_availableDrawLevels.Contains(_selectedDrawLevel))

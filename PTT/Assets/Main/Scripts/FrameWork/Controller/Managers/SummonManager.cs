@@ -339,6 +339,30 @@ namespace GameBerry
             return Math.Max(0, limit - used);
         }
 
+        public int GetMaxBulkSummonCount(Enum_SummonType summonType)
+        {
+            int affordable = GetMaxAffordableCount(summonType, 1);
+            if (affordable <= 0)
+                return 0;
+
+            if (_summonLevelChart == null)
+                return affordable;
+
+            int currentLevel = GetSummonLevel(summonType);
+            int maxLevel = _summonLevelChart.GetMaxLevel(summonType);
+            if (currentLevel >= maxLevel)
+                return affordable;
+
+            int need = GetExpToNextLevel(summonType);
+            int exp = GetSummonExp(summonType);
+            int remainToNextLevel = Math.Max(0, need - exp);
+
+            if (remainToNextLevel <= 0)
+                return affordable;
+
+            return Math.Min(affordable, remainToNextLevel);
+        }
+
         private int RollItemId(Enum_SummonType summonType, int summonLevel)
         {
             int drawLevel = ResolveDrawLevel(summonType, summonLevel);
