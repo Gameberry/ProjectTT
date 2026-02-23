@@ -51,7 +51,6 @@ namespace GameBerry.UI
 
         private int _selectedItemId;
         private int _selectedPageIndex;
-        private bool _isSelectedDetailMode;
         private int _lastMainLanternId = -1;
 
         protected override void OnLoad()
@@ -117,11 +116,8 @@ namespace GameBerry.UI
             if (_lastMainLanternId != currentMainLanternId)
             {
                 _lastMainLanternId = currentMainLanternId;
-                _isSelectedDetailMode = false;
+                _selectedItemId = currentMainLanternId > 0 ? currentMainLanternId : _selectedItemId;
             }
-
-            if (_isSelectedDetailMode == false)
-                _selectedItemId = currentMainLanternId;
 
             RefreshSelectionVisual();
             RefreshSlotElements();
@@ -270,9 +266,7 @@ namespace GameBerry.UI
         private void OnSelectLantern(int itemId)
         {
             _selectedItemId = itemId;
-            _isSelectedDetailMode = true;
             RefreshSelectionVisual();
-            RefreshCenterInfo();
         }
 
         private void EnsureSelectedLantern()
@@ -280,7 +274,6 @@ namespace GameBerry.UI
             if (_lanternItemIds.Count <= 0)
             {
                 _selectedItemId = 0;
-                _isSelectedDetailMode = false;
                 return;
             }
 
@@ -291,12 +284,10 @@ namespace GameBerry.UI
             if (equippedMain > 0 && _lanternItemIds.Contains(equippedMain))
             {
                 _selectedItemId = equippedMain;
-                _isSelectedDetailMode = false;
                 return;
             }
 
             _selectedItemId = _lanternItemIds[0];
-            _isSelectedDetailMode = true;
         }
 
         private void RefreshSelectionVisual()
@@ -315,7 +306,7 @@ namespace GameBerry.UI
 
         private void RefreshCenterInfo()
         {
-            int targetItemId = GetCenterTargetItemId();
+            int targetItemId = LanternManager.Instance.GetMainLanternId();
             LanternInfo lanternInfo = LanternManager.Instance.GetLanternInfo(targetItemId);
             LanternData lanternData = LanternManager.Instance.GetLanternData(targetItemId);
             ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(targetItemId);
@@ -374,18 +365,6 @@ namespace GameBerry.UI
 
         }
 
-        private int GetCenterTargetItemId()
-        {
-            if (_isSelectedDetailMode && _selectedItemId > 0)
-                return _selectedItemId;
-
-            int mainId = LanternManager.Instance.GetMainLanternId();
-            if (mainId > 0)
-                return mainId;
-
-            return _selectedItemId;
-        }
-
         private string BuildStatText(IReadOnlyDictionary<Enum_Stat, double> stats, int level)
         {
             _sb.Clear();
@@ -416,7 +395,17 @@ namespace GameBerry.UI
             if (_selectedItemId <= 0)
                 return;
 
-            LanternManager.Instance.SetEquip(slotType, _selectedItemId);
+            if (LanternManager.Instance.SetEquip(slotType, _selectedItemId) == false)
+                return;
+
+            if (slotType == Enum_LanternSlotType.Main)
+            {
+                // Main equip should immediately drive center info.
+                _lastMainLanternId = _selectedItemId;
+                RefreshSelectionVisual();
+                RefreshSlotElements();
+                RefreshCenterInfo();
+            }
         }
 
         private void OnClickAutoEquip()
@@ -455,4 +444,3 @@ namespace GameBerry.UI
         }
     }
 }
-
