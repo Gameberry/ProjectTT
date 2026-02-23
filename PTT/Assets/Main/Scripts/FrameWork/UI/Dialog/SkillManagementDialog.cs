@@ -62,7 +62,7 @@ namespace GameBerry.UI
             SkillChart skillChart = Chart.GameChart.Get<SkillChart>();
             if (skillChart != null)
             {
-                foreach (var pair in skillChart.GetJobLevelToSkills())
+                foreach (var pair in skillChart.GetJobLevelToSkills(Enum_SkillActorType.Player))
                 {
                     var element = Instantiate(_skillJobGroupPrefab, _skillListContent);
                     element.SetJobSkill(pair.Key, pair.Value, OnSkillElementClicked);

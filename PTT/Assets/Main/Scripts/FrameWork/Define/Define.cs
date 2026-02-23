@@ -133,6 +133,7 @@ namespace GameBerry
         Point,
 
         Weapon,
+        Lantern,
 
         Max
     }
@@ -143,7 +144,8 @@ namespace GameBerry
         Inventory,   // 일반 아이템/장비 인벤토리
         Point,       // 재화(지갑)
         Skin,         // 스킨 컬렉션
-        Weapon       // 무기
+        Weapon,      // 무기
+        Lantern,     // 랜턴
     }
 
     public enum Enum_SummonType
@@ -593,6 +595,8 @@ namespace GameBerry
         public static int WeaponCombineCount = 5;
         public static int WeaponBaseMaxLevel = 100;
         public static int WeaponLevelUpCostKey = 1003;
+        public static int LanternBaseMaxLevel = 20;
+        public static int LanternCombineCount = 5;
         public static int SummonAdDrawCount = 10;
     }
 }

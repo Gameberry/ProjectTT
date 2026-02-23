@@ -59,6 +59,7 @@ namespace GameBerry
         public event Action OnPointChanged;
         public event Action OnSkinChanged;
         public event Action OnWeaponStorageChanged;
+        public event Action OnLanternStorageChanged;
 
         [Obsolete("Use OnWeaponStorageChanged instead.")]
         public event Action OnWeaponChanged
@@ -86,6 +87,7 @@ namespace GameBerry
             Register(new PointStorageHandler());
             Register(new SkinStorageHandler());
             Register(new WeaponStorageHandler());
+            Register(new LanternStorageHandler());
         }
 
         private void Register(IItemStorageHandler h)
@@ -290,6 +292,7 @@ namespace GameBerry
             else if (t == GameBerry.Enum_ItemStorageType.Point) OnPointChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Skin) OnSkinChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Weapon) OnWeaponStorageChanged?.Invoke();
+            else if (t == GameBerry.Enum_ItemStorageType.Lantern) OnLanternStorageChanged?.Invoke();
         }
 
         public Sprite GetIcon(int itemId)
@@ -577,6 +580,54 @@ namespace GameBerry
             {
                 var wt = UserTable.Get<WeaponTable>();
                 return wt.GetAmount(meta.ItemId);
+            }
+        }
+
+        private class LanternStorageHandler : IItemStorageHandler
+        {
+            public GameBerry.Enum_ItemStorageType StorageType => GameBerry.Enum_ItemStorageType.Lantern;
+
+            public AddItemResult Add(ItemInfo meta, long amount, bool immediate)
+            {
+                var lt = UserTable.Get<LanternTable>();
+                if (lt == null)
+                    return new AddItemResult { Success = false, Requested = amount, Added = 0, Reason = "LanternTableMissing" };
+
+                lt.Add(meta.ItemId, amount);
+                lt.UpdateTable(immediate);
+                LanternManager.Instance.RefreshStat();
+
+                return new AddItemResult { Success = true, Requested = amount, Added = amount };
+            }
+
+            public ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediate)
+            {
+                var lt = UserTable.Get<LanternTable>();
+                if (lt == null)
+                    return new ConsumeItemResult { Success = false, Requested = amount, Consumed = 0, Reason = "LanternTableMissing" };
+
+                if (lt.GetAmount(meta.ItemId) < amount)
+                    return new ConsumeItemResult { Success = false, Reason = "NotEnough" };
+
+                lt.Add(meta.ItemId, -amount);
+                lt.UpdateTable(immediate);
+                LanternManager.Instance.RefreshStat();
+
+                return new ConsumeItemResult { Success = true, Requested = amount, Consumed = amount };
+            }
+
+            public ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediate)
+            {
+                return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
+            }
+
+            public long GetAmount(ItemInfo meta)
+            {
+                var lt = UserTable.Get<LanternTable>();
+                if (lt == null)
+                    return 0;
+
+                return lt.GetAmount(meta.ItemId);
             }
         }
     }

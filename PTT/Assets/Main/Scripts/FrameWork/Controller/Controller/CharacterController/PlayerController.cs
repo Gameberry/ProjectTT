@@ -52,6 +52,7 @@ namespace GameBerry
             PlayerManager.Instance.RefreshStat();
             EquipmentManager.Instance.RefreshStat();
             EngravingManager.Instance.RefreshStat();
+            LanternManager.Instance.RefreshStat();
 
             _comboController = new ComboController();
             _comboController.Init(this);

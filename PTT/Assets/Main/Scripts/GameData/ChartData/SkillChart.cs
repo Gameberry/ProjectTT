@@ -157,18 +157,18 @@ namespace GameBerry.Chart
         public SkillInfo Get(int skillId)
             => _skillIdToInfo != null && _skillIdToInfo.TryGetValue(skillId, out var v) ? v : null;
 
-        public SkillInfo GetActive(int skillId)
+        public SkillInfo GetActive(int skillId, Enum_SkillActorType actorType = Enum_SkillActorType.Player)
         {
             var info = Get(skillId);
-            if (info != null && info.SkillType == Enum_SkillType.Active)
+            if (info != null && info.SkillType == Enum_SkillType.Active && info.ActorType == actorType)
                 return info;
             return null;
         }
 
-        public SkillInfo GetPassive(int skillId)
+        public SkillInfo GetPassive(int skillId, Enum_SkillActorType actorType = Enum_SkillActorType.Player)
         {
             var info = Get(skillId);
-            if (info != null && info.SkillType == Enum_SkillType.Passive)
+            if (info != null && info.SkillType == Enum_SkillType.Passive && info.ActorType == actorType)
                 return info;
             return null;
         }
@@ -176,18 +176,33 @@ namespace GameBerry.Chart
         /// <summary>
         /// 전직별로 정리한 스킬 목록 반환
         /// </summary> Dictionary<int, List<SkillInfo>> _jobLevelToSkills; // 전직 레벨별 스킬 목록
-        public Dictionary<int, List<SkillInfo>> GetJobLevelToSkills()
+        public Dictionary<int, List<SkillInfo>> GetJobLevelToSkills(Enum_SkillActorType actorType = Enum_SkillActorType.Player)
         {
-            return _jobLevelToSkills;
+            Dictionary<int, List<SkillInfo>> filtered = new Dictionary<int, List<SkillInfo>>();
+            if (_jobLevelToSkills == null)
+                return filtered;
+
+            foreach (var kvp in _jobLevelToSkills)
+            {
+                List<SkillInfo> list = kvp.Value;
+                if (list == null || list.Count <= 0)
+                    continue;
+
+                List<SkillInfo> actorSkills = list.FindAll(x => x != null && x.ActorType == actorType);
+                if (actorSkills.Count > 0)
+                    filtered[kvp.Key] = actorSkills;
+            }
+
+            return filtered;
         }
 
         /// <summary>
         /// 특정 전직 레벨에 해당하는 스킬 목록 반환
         /// </summary>
-        public List<SkillInfo> GetSkillsByJobLevel(int jobLevel)
+        public List<SkillInfo> GetSkillsByJobLevel(int jobLevel, Enum_SkillActorType actorType = Enum_SkillActorType.Player)
         {
             if (_jobLevelToSkills != null && _jobLevelToSkills.TryGetValue(jobLevel, out var list))
-                return list;
+                return list.FindAll(x => x != null && x.ActorType == actorType);
 
             return new List<SkillInfo>();
         }
@@ -195,13 +210,15 @@ namespace GameBerry.Chart
         /// <summary>
         /// 해금 가능한 스킬 목록 반환
         /// </summary>
-        public List<SkillInfo> GetUnlockableSkills(int currentJobLevel, int currentCharLevel)
+        public List<SkillInfo> GetUnlockableSkills(int currentJobLevel, int currentCharLevel, Enum_SkillActorType actorType = Enum_SkillActorType.Player)
         {
             var result = new List<SkillInfo>();
 
             foreach (var skill in rows)
             {
                 if (skill == null) continue;
+                if (skill.ActorType != actorType)
+                    continue;
 
                 // 전직 레벨 체크
                 if (skill.RequireJobLevel > currentJobLevel)

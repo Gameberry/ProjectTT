@@ -80,6 +80,7 @@ namespace GameBerry
         /// <summary> 스킬 실행 플레이어 </summary>
         [SerializeField]
         protected SkillPlayer _skillPlayer;
+        protected virtual Enum_SkillActorType SkillActorType => Enum_SkillActorType.Player;
         /// <summary> 다음에 사용 예정인 스킬 정보 </summary>
         protected SkillInfo _nextSkillData = null;
 
@@ -271,7 +272,7 @@ namespace GameBerry
         /// </summary>
         private void LoadPlayerEquippedSkills()
         {
-            _equippedSkillIds = SkillManager.Instance.GetEquippedSkillIds();
+            _equippedSkillIds = SkillManager.Instance.GetEquippedSkillIds(SkillActorType);
             InitializeSkillCooldowns();
         }
         //------------------------------------------------------------------------------------
@@ -312,7 +313,7 @@ namespace GameBerry
                 if (_skillCooldowns.ContainsKey(skillId))
                     continue;
 
-                SkillInfo skillInfo = _skillChart?.GetActive(skillId);
+                SkillInfo skillInfo = _skillChart?.GetActive(skillId, SkillActorType);
                 if (skillInfo == null)
                     continue;
 
@@ -359,7 +360,7 @@ namespace GameBerry
                 if (!cooldownInfo.IsReady())
                     continue;
 
-                SkillInfo skillInfo = _skillChart?.GetActive(skillId);
+                SkillInfo skillInfo = _skillChart?.GetActive(skillId, SkillActorType);
                 if (skillInfo == null)
                     continue;
 
@@ -394,7 +395,7 @@ namespace GameBerry
             if (!cooldownInfo.IsReady())
                 return false;
 
-            SkillInfo skillInfo = _skillChart?.GetActive(skillId);
+            SkillInfo skillInfo = _skillChart?.GetActive(skillId, SkillActorType);
             if (skillInfo == null)
                 return false;
 
@@ -561,7 +562,7 @@ namespace GameBerry
             // 플레이어만 SkillManager에서 패시브 스킬 가져옴
             if (this is PlayerController)
             {
-                var passiveSkills = SkillManager.Instance.GetOwnedPassiveSkills();
+                var passiveSkills = SkillManager.Instance.GetOwnedPassiveSkills(SkillActorType);
 
                 foreach (var passiveSkill in passiveSkills)
                 {

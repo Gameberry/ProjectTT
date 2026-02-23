@@ -16,8 +16,10 @@
         SkinSelectDialog,
         InventoryItemDialog,
         WeaponInventoryDialog,
+        LanternInventoryDialog,
         SummonDialog,
         SummonInfoDialog,
+        LanternAppliedEffectDialog,
         StarforceEnhanceDialog,
         SkillManagementDialog,
 
