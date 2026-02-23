@@ -217,6 +217,14 @@ namespace GameBerry
             return true;
         }
 
+        public SummonPriceInfo GetSummonPriceInfo(Enum_SummonType summonType)
+        {
+            if (_summonPriceChart != null && _summonPriceChart.TryGetInfo(summonType, out SummonPriceInfo priceInfo))
+                return priceInfo;
+
+            return default;
+        }
+
         public bool TryGetCostPreview(Enum_SummonType summonType, int count, out SummonCostPreview preview)
         {
             preview = default;

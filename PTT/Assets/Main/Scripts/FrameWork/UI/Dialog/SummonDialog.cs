@@ -19,6 +19,9 @@ namespace GameBerry.UI
             public bool Unlocked = true;
         }
 
+        [Header("SummonTicket")]
+        [SerializeField] private UIItemElement _summonTicketItem;
+
         [Header("Left Tabs")]
         [SerializeField] private Transform _tabRoot;
         [SerializeField] private UISummonTypeTabElement _tabPrefab;
@@ -66,16 +69,10 @@ namespace GameBerry.UI
         [SerializeField] private Transform _resultContentRoot;
         [SerializeField] private UIItemElement _resultItemPrefab;
 
-        [Header("Level Rewards Popup")]
-        [SerializeField] private GameObject _levelRewardsPopupRoot;
         [SerializeField] private Button _openLevelRewardsPopupButton;
-        [SerializeField] private Button _closeLevelRewardsPopupButton;
-        [SerializeField] private Transform _levelRewardsContentRoot;
-        [SerializeField] private UISummonLevelRewardElement _levelRewardElementPrefab;
 
         private readonly List<UISummonTypeTabElement> _tabs = new List<UISummonTypeTabElement>();
         private readonly List<UIItemElement> _resultItems = new List<UIItemElement>();
-        private readonly List<UISummonLevelRewardElement> _rewardRows = new List<UISummonLevelRewardElement>();
         private Enum_SummonType _selectedType = Enum_SummonType.Weapon;
 
         private const int MinBulkCount = 10;
@@ -87,8 +84,7 @@ namespace GameBerry.UI
             if (_oneSummonButton != null) _oneSummonButton.onClick.AddListener(() => DoPaidSummon(1));
             if (_bulkSummonButton != null) _bulkSummonButton.onClick.AddListener(OpenBulkPopup);
             if (_claimRewardButton != null) _claimRewardButton.onClick.AddListener(OnClickClaimReward);
-            if (_openLevelRewardsPopupButton != null) _openLevelRewardsPopupButton.onClick.AddListener(OpenLevelRewardsPopup);
-            if (_closeLevelRewardsPopupButton != null) _closeLevelRewardsPopupButton.onClick.AddListener(CloseLevelRewardsPopup);
+            if (_openLevelRewardsPopupButton != null) _openLevelRewardsPopupButton.onClick.AddListener(OpenSummonInfoDialog);
 
             if (_bulkCountSlider != null) _bulkCountSlider.onValueChanged.AddListener(OnBulkSliderChanged);
             if (_bulkMinusButton != null) _bulkMinusButton.onClick.AddListener(() => ChangeBulkCount(-1));
@@ -99,7 +95,6 @@ namespace GameBerry.UI
 
             BuildTabs();
             if (_resultRoot != null) _resultRoot.Load_Element();
-            if (_levelRewardsPopupRoot != null) _levelRewardsPopupRoot.SetActive(false);
             if (_bulkPopupRoot != null) _bulkPopupRoot.Load_Element();
         }
 
@@ -148,6 +143,7 @@ namespace GameBerry.UI
         private void OnClickTab(Enum_SummonType summonType)
         {
             _selectedType = summonType;
+
             RefreshAll();
         }
 
@@ -171,7 +167,6 @@ namespace GameBerry.UI
             RefreshMainInfo();
             RefreshRewardIcon();
             RefreshSummonButtons();
-            RefreshLevelRewardsPopup();
             RefreshBulkPopup();
         }
 
@@ -187,6 +182,13 @@ namespace GameBerry.UI
             }
 
             RefreshTabRedDots();
+
+            SummonPriceInfo info = SummonManager.Instance.GetSummonPriceInfo(_selectedType);
+
+            ItemHandle _handle = ItemHandle.ForStack(info.MainPoint);
+            _summonTicketItem.RemoveEvent();
+            _summonTicketItem.Bind(_handle);
+            _summonTicketItem.AddEvent();
         }
 
         private void RefreshTabRedDots()
@@ -242,7 +244,11 @@ namespace GameBerry.UI
             }
 
             if (_claimRewardButton != null)
-                _claimRewardButton.interactable = hasInfo && info.IsClaimable;
+            {
+                bool canClaim = hasInfo && info.IsClaimable;
+                _claimRewardButton.gameObject.SetActive(canClaim);
+                _claimRewardButton.interactable = canClaim;
+            }
 
             if (_claimRewardButtonText != null)
                 _claimRewardButtonText.SetText(hasInfo && info.IsClaimable ? "Claim" : "0/1");
@@ -487,57 +493,17 @@ namespace GameBerry.UI
             }
         }
 
-        private void OpenLevelRewardsPopup()
+        private void OpenSummonInfoDialog()
         {
-            if (_levelRewardsPopupRoot != null)
-                _levelRewardsPopupRoot.SetActive(true);
-
-            RefreshLevelRewardsPopup();
-        }
-
-        private void CloseLevelRewardsPopup()
-        {
-            if (_levelRewardsPopupRoot != null)
-                _levelRewardsPopupRoot.SetActive(false);
-        }
-
-        private void RefreshLevelRewardsPopup()
-        {
-            SummonLevelChart levelChart = GameChart.Get<SummonLevelChart>();
-            SummonManager sm = SummonManager.Instance;
-            if (levelChart == null || sm == null)
-                return;
-
-            IReadOnlyList<SummonLevelInfo> infos = levelChart.GetInfos(_selectedType);
-            if (infos == null)
-                return;
-
-            EnsureRewardRowCount(infos.Count);
-            int currentLevel = sm.GetSummonLevel(_selectedType);
-
-            for (int i = 0; i < infos.Count; ++i)
+            UIManager.Instance.Load(nameof(SummonInfoDialog), ui =>
             {
-                SummonLevelInfo info = infos[i];
-                bool claimed = sm.IsRewardClaimed(_selectedType, info.SummonLevel);
-                bool claimable = currentLevel >= info.SummonLevel && claimed == false;
-                _rewardRows[i].gameObject.SetActive(true);
-                _rewardRows[i].Bind(info, claimable, claimed);
-            }
+                SummonInfoDialog dialog = ui as SummonInfoDialog;
+                if (dialog == null)
+                    return;
 
-            for (int i = infos.Count; i < _rewardRows.Count; ++i)
-                _rewardRows[i].gameObject.SetActive(false);
-        }
-
-        private void EnsureRewardRowCount(int count)
-        {
-            if (_levelRewardElementPrefab == null || _levelRewardsContentRoot == null)
-                return;
-
-            while (_rewardRows.Count < count)
-            {
-                UISummonLevelRewardElement el = Instantiate(_levelRewardElementPrefab, _levelRewardsContentRoot);
-                _rewardRows.Add(el);
-            }
+                dialog.Bind(_selectedType, openProbabilityTab: true);
+                dialog.Enter();
+            });
         }
 
         private SummonTabConfig GetCurrentConfig()

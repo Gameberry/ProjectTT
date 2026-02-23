@@ -58,6 +58,14 @@ namespace GameBerry.UI
             ItemManager.Instance.AddItemRefreshEvent(_handle.itemId, SetStaticAmount);
         }
 
+        public void RemoveEvent()
+        {
+            if (enableAutoRefresh == true)
+                return;
+
+            ItemManager.Instance.RemoveItemRefreshEvent(_handle.itemId, SetStaticAmount);
+        }
+
         private void SetStaticAmount(long amount)
         {
             Util.SetCommaInteger(_amount, amount);
@@ -100,13 +108,14 @@ namespace GameBerry.UI
                         amount = ItemManager.Instance.GetItemAmount(itemId);
                 }
 
-                if (amount > 0)
-                {
-                    Util.SetCommaInteger(_amount, amount);
-                    _amount.gameObject.SetActive(true);
-                }
-                else
-                    _amount.gameObject.SetActive(false);
+                Util.SetCommaInteger(_amount, amount);
+
+                // if (amount > 0)
+                // {
+                //     Util.SetCommaInteger(_amount, amount);
+                // }
+                // else
+                //     _amount.gameObject.SetActive(false);
             }
 
             Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);

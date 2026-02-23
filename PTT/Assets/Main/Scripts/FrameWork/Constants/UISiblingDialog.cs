@@ -17,6 +17,7 @@
         InventoryItemDialog,
         WeaponInventoryDialog,
         SummonDialog,
+        SummonInfoDialog,
         StarforceEnhanceDialog,
         SkillManagementDialog,
 
