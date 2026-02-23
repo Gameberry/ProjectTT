@@ -48,7 +48,7 @@ namespace GameBerry.UI
         [SerializeField] private Button _bulkSummonButton;
 
         [Header("Bulk Popup")]
-        [SerializeField] private GameObject _bulkPopupRoot;
+        [SerializeField] private IDialog _bulkPopupRoot;
         [SerializeField] private Slider _bulkCountSlider;
         [SerializeField] private TMP_Text _bulkCountText;
         [SerializeField] private TMP_Text _bulkMinCountText;
@@ -60,10 +60,9 @@ namespace GameBerry.UI
         [SerializeField] private Image _bulkPopupCostIcon;
         [SerializeField] private TMP_Text _bulkPopupCostText;
         [SerializeField] private Button _bulkPopupConfirmButton;
-        [SerializeField] private Button _bulkPopupCloseButton;
 
         [Header("Summon Result")]
-        [SerializeField] private GameObject _resultRoot;
+        [SerializeField] private IDialog _resultRoot;
         [SerializeField] private Transform _resultContentRoot;
         [SerializeField] private UIItemElement _resultItemPrefab;
 
@@ -97,12 +96,11 @@ namespace GameBerry.UI
             if (_bulkMinButton != null) _bulkMinButton.onClick.AddListener(SetBulkToMin);
             if (_bulkMaxButton != null) _bulkMaxButton.onClick.AddListener(SetBulkToMax);
             if (_bulkPopupConfirmButton != null) _bulkPopupConfirmButton.onClick.AddListener(OnClickBulkSummonConfirm);
-            if (_bulkPopupCloseButton != null) _bulkPopupCloseButton.onClick.AddListener(CloseBulkPopup);
 
             BuildTabs();
-            if (_resultRoot != null) _resultRoot.SetActive(false);
+            if (_resultRoot != null) _resultRoot.Load_Element();
             if (_levelRewardsPopupRoot != null) _levelRewardsPopupRoot.SetActive(false);
-            if (_bulkPopupRoot != null) _bulkPopupRoot.SetActive(false);
+            if (_bulkPopupRoot != null) _bulkPopupRoot.Load_Element();
         }
 
         protected override void OnEnter()
@@ -348,7 +346,7 @@ namespace GameBerry.UI
                 _resultItems[i].gameObject.SetActive(false);
 
             if (_resultRoot != null)
-                _resultRoot.SetActive(true);
+                _resultRoot.ElementEnter();
         }
 
         private void EnsureResultItemCount(int count)
@@ -396,15 +394,9 @@ namespace GameBerry.UI
             }
 
             if (_bulkPopupRoot != null)
-                _bulkPopupRoot.SetActive(true);
+                _bulkPopupRoot.ElementEnter();
 
             RefreshBulkPopup();
-        }
-
-        private void CloseBulkPopup()
-        {
-            if (_bulkPopupRoot != null)
-                _bulkPopupRoot.SetActive(false);
         }
 
         private void OnBulkSliderChanged(float value)
@@ -455,7 +447,8 @@ namespace GameBerry.UI
                 return;
 
             DoPaidSummon(_bulkCount);
-            CloseBulkPopup();
+            if (_bulkPopupRoot != null)
+                _bulkPopupRoot.ElementExit(); // Close the popup after confirming the summon   
         }
 
         private void RefreshBulkPopup()
