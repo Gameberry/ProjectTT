@@ -66,11 +66,12 @@ namespace GameBerry
             }
         }
 
-        public void OnDeadMonster(MonsterController monsterController)
+        public void OnDeadMonster(MonsterController monsterController, bool immediatePool = true)
         {
             _monsters.Remove(monsterController);
             Managers.BattleSceneManager.Instance.DeadMonster(monsterController);
-            Managers.MonsterManager.Instance.PoolMonster(monsterController);
+            if (immediatePool)
+                Managers.MonsterManager.Instance.PoolMonster(monsterController);
         }
 
         private void OnDrawGizmos()
@@ -418,3 +419,4 @@ namespace GameBerry
         }
     }
 }
+

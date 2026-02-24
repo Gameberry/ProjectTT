@@ -14,42 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpineModelDatas:
   - ResourceIndex: 1000
-    SkeletonData: {fileID: 11400000, guid: 1b2249151cef5c643b24a09223cc48a4, type: 2}
-    Name: basic_mon_spine_setting_skeletondata
-    SkinList:
-    - base/000
-    - base/001
-    - base/002
-    - base/003
-    - fat_man/005
-    - fat_woman/007
-    - normal_man/004
-    - normal_woman/006
+    SkeletonData: {fileID: 11400000, guid: 61abc454deece8948b59ba6ecea8d4bf, type: 2}
+    Name: mon_001_skeletondata
+    SkinList: []
     AnimationList:
-    - stateName: idle/idle_00
-    - stateName: idle/idle_01
-    - stateName: idle/idle_02
-    - stateName: idle/idle_03
-    - stateName: idle/idle_04
-    - stateName: Run/Run_01
-    - stateName: Run/Run_02
-    - stateName: Run/Run_03
-    - stateName: Run/Run_04
-    - stateName: setting/pose_idle_standing_01
-    - stateName: setting/pose_idle_standing_02
-    - stateName: setting/Run_setting_01
+    - stateName: Attack
+    - stateName: Die
+    - stateName: Hit
+    - stateName: Idle
+    - stateName: Run
+    - stateName: wing
     AnimationState:
     - characterState: 1
-      animationName: idle/idle_00
+      animationName: Idle
     - characterState: 2
-      animationName: Run/Run_01
+      animationName: Run
     - characterState: 3
-      animationName: idle/idle_00
+      animationName: Attack
     - characterState: 4
-      animationName: idle/idle_00
+      animationName: Hit
     - characterState: 5
-      animationName: idle/idle_00
-    DefaultSlotSkins: []
+      animationName: Die
+    DefaultSlotSkins:
+    - Slot: 0
+      SkinName: default
   - ResourceIndex: 0
     SkeletonData: {fileID: 11400000, guid: 516b32aa46ea67642a0981c3005e638c, type: 2}
     Name: basic_setting_00_cha_skeletondata

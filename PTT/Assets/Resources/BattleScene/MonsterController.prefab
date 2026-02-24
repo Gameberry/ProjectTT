@@ -456,7 +456,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b1690ad8a8850f441b18a64206901108, type: 2}
+  - {fileID: 2100000, guid: 316e5c89d9023f249913127d9d7a59ac, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -490,8 +490,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: 1b2249151cef5c643b24a09223cc48a4, type: 2}
-  initialSkinName: fat_man/005
+  skeletonDataAsset: {fileID: 11400000, guid: 1b799df609e830f49bf26ee75ff496fb, type: 2}
+  initialSkinName: 
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
@@ -690,8 +690,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookDirection: 1
-  _element_leftRot: {x: 0, y: 0, z: 0}
-  _element_rightRot: {x: 0, y: 0, z: 0}
   _characterBillboardController: {fileID: 6065039365546199035}
   _conditionController: {fileID: 0}
   _iFFType: 2
@@ -708,6 +706,7 @@ MonoBehaviour:
   _uiCharacterState: {fileID: 6192595543854459148}
   _rigidbody: {fileID: 7567136673507066349}
   _attackTarget: {fileID: 0}
+  _skillPlayer: {fileID: 0}
   _characterStatOperator:
     DefaultViewers:
     - v2Enum_Stat: 11
@@ -716,7 +715,12 @@ MonoBehaviour:
       value: 10
     - v2Enum_Stat: 14
       value: 0.5
+    EquipmentViewers: []
+    EngravingViewers: []
+    WeaponViewers: []
+    LanternViewers: []
     BuffViewers: []
+    PlayerViewers: []
     OutputViewers: []
   _maxHP: 0
   _currentHP: 0

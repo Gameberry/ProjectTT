@@ -44,15 +44,51 @@ namespace GameBerry
         [SerializeField]
         private float attackRange = 1.0f;
 
-        // Áö±ÝÀº ¾îÅÃ ¾Ö´Ïµµ ¹¹ ¾ø¾î¼­ ÀÏ´Ü ÀÌÁ¤µµ·Î ±¸Çö
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ïµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½î¼­ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         [SerializeField]
         private float _attackTimming = 1.0f;
 
-        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ºñÈ°¼ºÈ­½Ã Ãë¼ÒÃ³¸®
+        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ï¿½ï¿½È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½Ã³ï¿½ï¿?
 
         private BattleSceneMap_Aggro _battleSceneMap_Aggro;
 
         private Vector3 _spawnPos;
+        private bool _isDeadHandling = false;
+        private Coroutine _delayedPoolCoroutine;
+        private Collider[] _cachedColliders;
+
+        private void ResetDamageCancellation()
+        {
+            if (disableCancellation != null)
+            {
+                disableCancellation.Cancel();
+                disableCancellation.Dispose();
+            }
+
+            disableCancellation = new CancellationTokenSource();
+        }
+
+        private void CacheColliders()
+        {
+            if (_cachedColliders == null || _cachedColliders.Length == 0)
+                _cachedColliders = GetComponentsInChildren<Collider>(true);
+        }
+
+        private void SetCollisionEnabled(bool enabled)
+        {
+            CacheColliders();
+            for (int i = 0; i < _cachedColliders.Length; ++i)
+            {
+                if (_cachedColliders[i] != null)
+                    _cachedColliders[i].enabled = enabled;
+            }
+
+            if (MyRigidbody != null)
+            {
+                MyRigidbody.linearVelocity = Vector3.zero;
+                MyRigidbody.angularVelocity = Vector3.zero;
+            }
+        }
 
         public override void Init()
         {
@@ -62,11 +98,22 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector3 spawnPos, int modelIndex)
         { 
+            _isDeadHandling = false;
+            SetCollisionEnabled(true);
+            ChangeSpineColor(Color.white);
+            ResetDamageCancellation();
+
+            if (_delayedPoolCoroutine != null)
+            {
+                StopCoroutine(_delayedPoolCoroutine);
+                _delayedPoolCoroutine = null;
+            }
+
             RefreshCheatStat();
 
             _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(1000);
             SetSpineModelData(_currentSpineModelData);
-            _mySkeletonAnimationHandler._skeletonAnimation.initialSkinName = _currentSpineModelData.SkinList[Random.Range(4, _currentSpineModelData.SkinList.Count)];
+            _mySkeletonAnimationHandler._skeletonAnimation.initialSkinName = "default";
             _mySkeletonAnimationHandler._skeletonAnimation.Initialize(true);
 
             _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetSlotsToSetupPose();
@@ -111,15 +158,35 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void TestAniPlay(string aniname, bool isloop = true)
         {
+            return;
             PlayAnimation_AniName(aniname, isloop);
         }
         //------------------------------------------------------------------------------------
         private async UniTask OnDamageDirection()
         {
+            if (_isDeadHandling || CharacterState == CharacterState.Dead)
+                return;
+
             ChangeState(CharacterState.Hit);
             TestAniPlay(hitAniName, false);
             ChangeSpineColor(StaticResource.Instance.GetBattleModeStaticData().MonsterHitColor);
-            await UniTask.WaitForSeconds(StaticResource.Instance.GetBattleModeStaticData().MonsterHitDuration, false, PlayerLoopTiming.Update, disableCancellation.Token);
+
+            try
+            {
+                await UniTask.WaitForSeconds(StaticResource.Instance.GetBattleModeStaticData().MonsterHitDuration, false, PlayerLoopTiming.Update, disableCancellation.Token);
+            }
+            catch (System.OperationCanceledException)
+            {
+                ChangeSpineColor(Color.white);
+                return;
+            }
+
+            if (_isDeadHandling || CharacterState == CharacterState.Dead)
+            {
+                ChangeSpineColor(Color.white);
+                return;
+            }
+
             ChangeSpineColor(Color.white);
 
             ChangeState(CharacterState.Idle);
@@ -145,15 +212,32 @@ namespace GameBerry
             if (LanternManager.isAlive)
                 LanternManager.Instance.PlaySoulAbsorbEffect(transform.position);
 
+            if (_isDeadHandling)
+                return;
+
+            _isDeadHandling = true;
+            SetCollisionEnabled(false);
+            ChangeSpineColor(Color.white);
+            disableCancellation.Cancel();
+
             if (_battleSceneMap_Aggro != null)
             {
-                _battleSceneMap_Aggro.OnDeadMonster(this);
+                _battleSceneMap_Aggro.OnDeadMonster(this, false);
                 _battleSceneMap_Aggro = null;
             }
+
+            float deadDuration = 0f;
+            if (StaticResource.Instance != null && StaticResource.Instance.GetBattleModeStaticData() != null)
+                deadDuration = Mathf.Max(0f, StaticResource.Instance.GetBattleModeStaticData().MonsterDeadDuration);
+
+            _delayedPoolCoroutine = StartCoroutine(Co_DelayedPool(deadDuration));
         }
         //------------------------------------------------------------------------------------
         protected override void Updated()
         {
+            if (_isDeadHandling)
+                return;
+
             if (CharacterState != CharacterState.Dead && CharacterState != CharacterState.Hit)
             {
                 if (CharacterState == CharacterState.Idle)
@@ -211,8 +295,24 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
+        private IEnumerator Co_DelayedPool(float delay)
+        {
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
+
+            Managers.MonsterManager.Instance.PoolMonster(this);
+            _delayedPoolCoroutine = null;
+        }
     }
 }
+
+
+
+
+
+
+
+
 
 
 

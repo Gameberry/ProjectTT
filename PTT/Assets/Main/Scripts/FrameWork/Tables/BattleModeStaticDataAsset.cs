@@ -28,7 +28,7 @@ namespace GameBerry
 
         public float MonsterHitDuration = 0.167f;
         public Color MonsterHitColor = Color.white;
-
+        public float MonsterDeadDuration = 1.167f;
         public float ComboReleaseTime = 2.0f;
 
         [Header("카메라 흔들기")]
