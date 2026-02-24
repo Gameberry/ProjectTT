@@ -20,6 +20,10 @@ namespace GameBerry
         private LanternChart _lanternChart;
         private LanternSlotChart _lanternSlotChart;
         private SkillChart _skillChart;
+        private GameObject _lanternControllerPrefab;
+        private bool _isLanternControllerPrefabLoading;
+        private readonly List<Action<GameObject>> _lanternPrefabLoadWaiters = new List<Action<GameObject>>();
+        private const string LanternControllerPrefabPath = "BattleScene/LanternController";
 
         protected override void Init()
         {
@@ -386,6 +390,61 @@ namespace GameBerry
                 return null;
 
             return _skillChart?.GetActive(skillId, Enum_SkillActorType.Lantern);
+        }
+
+        public void LoadLanternControllerPrefab(Action<GameObject> onLoaded)
+        {
+            if (onLoaded == null)
+                return;
+
+            if (_lanternControllerPrefab != null)
+            {
+                onLoaded.Invoke(_lanternControllerPrefab);
+                return;
+            }
+
+            _lanternPrefabLoadWaiters.Add(onLoaded);
+            if (_isLanternControllerPrefabLoading)
+                return;
+
+            _isLanternControllerPrefabLoading = true;
+            ResourceLoader.Instance.Load<GameObject>(LanternControllerPrefabPath, o =>
+            {
+                _isLanternControllerPrefabLoading = false;
+                _lanternControllerPrefab = o as GameObject;
+
+                for (int i = 0; i < _lanternPrefabLoadWaiters.Count; ++i)
+                {
+                    _lanternPrefabLoadWaiters[i]?.Invoke(_lanternControllerPrefab);
+                }
+
+                _lanternPrefabLoadWaiters.Clear();
+            });
+        }
+
+        public void CreateLanternController(PlayerController ownerPlayer, Transform parent, int lanternItemId, Action<LanternController> onCreated)
+        {
+            if (ownerPlayer == null)
+            {
+                onCreated?.Invoke(null);
+                return;
+            }
+
+            LoadLanternControllerPrefab(prefab =>
+            {
+                GameObject clone = prefab != null
+                    ? UnityEngine.Object.Instantiate(prefab, parent)
+                    : new GameObject("LanternController");
+
+                LanternController controller = clone.GetComponent<LanternController>();
+                if (controller == null)
+                    controller = clone.AddComponent<LanternController>();
+
+                controller.Init();
+                controller.Setup(ownerPlayer, lanternItemId);
+
+                onCreated?.Invoke(controller);
+            });
         }
 
         public void AddLantern(int itemId, long amount = 1, bool immediate = true)

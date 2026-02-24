@@ -64,7 +64,7 @@ namespace GameBerry
         { 
             RefreshCheatStat();
 
-            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(98);
+            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(1000);
             SetSpineModelData(_currentSpineModelData);
             _mySkeletonAnimationHandler._skeletonAnimation.initialSkinName = _currentSpineModelData.SkinList[Random.Range(4, _currentSpineModelData.SkinList.Count)];
             _mySkeletonAnimationHandler._skeletonAnimation.Initialize(true);

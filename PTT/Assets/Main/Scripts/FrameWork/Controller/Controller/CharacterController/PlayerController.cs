@@ -9,6 +9,7 @@ namespace GameBerry
     // 임시 네이밍 클래스. 클래스 이름 바꿀 수 있다면 바꾸자
     public class PlayerController : CharacterControllerBase
     {
+        public event System.Action OnAttackPerformed;
         [SerializeField]
         private ComboController _comboController;
 
@@ -39,6 +40,9 @@ namespace GameBerry
 
         private Vector3 _customDieVec = Vector3.zero;
         // 조이스틱 넣기 전에 임시 변수
+        private LanternController _lanternController;
+        private int _lastMainLanternId = -1;
+        private bool _isLanternPrefabLoading = false;
 
         //------------------------------------------------------------------------------------
         public override void Init()
@@ -53,6 +57,9 @@ namespace GameBerry
             EquipmentManager.Instance.RefreshStat();
             EngravingManager.Instance.RefreshStat();
             LanternManager.Instance.RefreshStat();
+
+            if (LanternManager.isAlive)
+                LanternManager.Instance.OnLanternEquipChanged += HandleLanternEquipChanged;
 
             _comboController = new ComboController();
             _comboController.Init(this);
@@ -81,6 +88,11 @@ namespace GameBerry
             // 스킬 시스템 해제 (1줄 추가!)
             // ============================================================
             ReleaseSkillSystem();          // CharacterControllerBase의 메서드
+
+            if (LanternManager.isAlive)
+                LanternManager.Instance.OnLanternEquipChanged -= HandleLanternEquipChanged;
+
+            ReleaseLanternController();
             // ============================================================
         }
         //------------------------------------------------------------------------------------
@@ -122,6 +134,8 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void Updated()
         {
+            RefreshLanternController();
+
             if (CharacterState == CharacterState.Dead)
                 return;
 
@@ -279,6 +293,7 @@ namespace GameBerry
                     // 공격 시 쿨타임 감소 (1줄 추가!)
                     // ============================================================
                     OnSkillOwnerAttack();      // CharacterControllerBase의 메서드
+                    OnAttackPerformed?.Invoke();
                     // ============================================================
 
                     if (_refreshAggro == true)
@@ -386,6 +401,65 @@ namespace GameBerry
             }
         }
         //------------------------------------------------------------------------------------
+        private void HandleLanternEquipChanged()
+        {
+            _lastMainLanternId = -1;
+        }
+        //------------------------------------------------------------------------------------
+        private void RefreshLanternController()
+        {
+            int mainLanternId = LanternManager.isAlive ? LanternManager.Instance.GetMainLanternId() : 0;
+            if (_lastMainLanternId == mainLanternId && _lanternController != null)
+                return;
+
+            _lastMainLanternId = mainLanternId;
+
+            if (mainLanternId <= 0)
+            {
+                ReleaseLanternController();
+                return;
+            }
+
+            if (_lanternController != null)
+            {
+                _lanternController.Setup(this, mainLanternId);
+                return;
+            }
+
+            TryCreateLanternController(mainLanternId);
+        }
+        //------------------------------------------------------------------------------------
+        private void TryCreateLanternController(int mainLanternId)
+        {
+            if (_isLanternPrefabLoading)
+                return;
+
+            if (LanternManager.isAlive == false)
+                return;
+
+            _isLanternPrefabLoading = true;
+
+            Transform root = Managers.BattleSceneManager.Instance != null ? Managers.BattleSceneManager.Instance.transform : null;
+            LanternManager.Instance.CreateLanternController(this, root, mainLanternId, controller =>
+            {
+                _isLanternPrefabLoading = false;
+
+                if (controller == null)
+                    return;
+
+                _lanternController = controller;
+            });
+        }
+        //------------------------------------------------------------------------------------
+        private void ReleaseLanternController()
+        {
+            if (_lanternController == null)
+                return;
+
+            _lanternController.Release();
+            Object.Destroy(_lanternController.gameObject);
+            _lanternController = null;
+        }
         /// <summary>
         /// UI 버튼에서 수동으로 스킬 사용
         /// </summary>
@@ -400,3 +474,4 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
     }
 }
+

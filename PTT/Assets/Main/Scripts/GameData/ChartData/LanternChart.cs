@@ -5,6 +5,7 @@ namespace GameBerry.Chart
     public class LanternInfo
     {
         public int ItemId;
+        public int SpineResourceId;
         public string EquipStat;
         public string OwnStat;
         public int Skill;

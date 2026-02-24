@@ -365,7 +365,7 @@ namespace GameBerry
                     continue;
 
                 // 거리 체크
-                float distance = MathDatas.GetDistance(transform.position, target.transform.position);
+                float distance = MathDatas.GetDistance(transform.position.x, transform.position.z, target.transform.position.x, target.transform.position.z);
                 if (distance > skillInfo.AttackRange)
                     continue;
 
@@ -742,7 +742,9 @@ namespace GameBerry
         {
             if (attackData.SkillInfo != null)
             {
-                PlayCharacterCondition(attackData.SkillInfo.GetMyConditionIndexes(), pos);
+                CharacterControllerBase myConditionReceiver = GetMyConditionReceiver(attackData);
+                if (myConditionReceiver != null)
+                    myConditionReceiver.PlayCharacterCondition(attackData.SkillInfo.GetMyConditionIndexes(), pos);
             }
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, null);
@@ -752,10 +754,17 @@ namespace GameBerry
         {
             if (attackData.SkillInfo != null)
             {
-                PlayCharacterCondition(attackData.SkillInfo.GetMyConditionIndexes(), pos);
+                CharacterControllerBase myConditionReceiver = GetMyConditionReceiver(attackData);
+                if (myConditionReceiver != null)
+                    myConditionReceiver.PlayCharacterCondition(attackData.SkillInfo.GetMyConditionIndexes(), pos);
             }
 
             SkillTriggerManager.Instance.EffectDamage(attackData, this, pos, fixSkillHitReceiver);
+        }
+        //------------------------------------------------------------------------------------
+        protected virtual CharacterControllerBase GetMyConditionReceiver(AttackStruct attackData)
+        {
+            return this;
         }
         //------------------------------------------------------------------------------------
         private void PlayCharacterCondition(IReadOnlyList<int> index, Vector3 attackpos)
