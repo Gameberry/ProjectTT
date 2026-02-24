@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using TMPro;
 using GameBerry.Common;
@@ -20,6 +19,8 @@ namespace GameBerry.UI
         [SerializeField] private UILanternSlotElement _mainSlotElement;
         [SerializeField] private UILanternSlotElement _subSlotPrefab;
         [SerializeField] private Transform _subSlotRoot;
+        [SerializeField] private GameObject _slotFocusDimmedRoot;
+        [SerializeField] private Button _slotFocusDimmedButton;
 
         [Header("Center Info")]
         [SerializeField] private TMP_Text _detailName;
@@ -38,6 +39,7 @@ namespace GameBerry.UI
         [SerializeField] private Button _allLevelUpButton;
         [SerializeField] private Button _showAppliedEffectButton;
         [SerializeField] private LanternAppliedEffectDialog _appliedEffectDialog;
+        [SerializeField] private LanternDetailDialog _detailDialog;
 
         [Header("Page Buttons (Visual Only)")]
         [SerializeField] private List<Button> _pageButtons = new List<Button>();
@@ -50,6 +52,7 @@ namespace GameBerry.UI
         private readonly StringBuilder _sb = new StringBuilder(128);
 
         private int _selectedItemId;
+        private int _pendingEquipItemId;
         private int _selectedPageIndex;
         private int _lastMainLanternId = -1;
 
@@ -58,6 +61,10 @@ namespace GameBerry.UI
             if (_autoEquipButton != null) _autoEquipButton.onClick.AddListener(OnClickAutoEquip);
             if (_allLevelUpButton != null) _allLevelUpButton.onClick.AddListener(OnClickAllLevelUp);
             if (_showAppliedEffectButton != null) _showAppliedEffectButton.onClick.AddListener(OnClickShowAppliedEffects);
+            if (_slotFocusDimmedButton == null && _slotFocusDimmedRoot != null)
+                _slotFocusDimmedButton = _slotFocusDimmedRoot.GetComponent<Button>();
+            if (_slotFocusDimmedButton != null)
+                _slotFocusDimmedButton.onClick.AddListener(OnClickCancelEquipStep);
 
             for (int i = 0; i < _pageButtons.Count; ++i)
             {
@@ -70,6 +77,8 @@ namespace GameBerry.UI
 
             if (_appliedEffectDialog != null)
                 _appliedEffectDialog.Load_Element();
+            if (_detailDialog != null)
+                _detailDialog.Load_Element();
 
             Refresh();
         }
@@ -123,6 +132,7 @@ namespace GameBerry.UI
             RefreshSlotElements();
             RefreshCenterInfo();
             RefreshPageVisual();
+            RefreshSlotFocusVisual();
         }
 
         private void BuildLanternIdList()
@@ -254,6 +264,8 @@ namespace GameBerry.UI
                 int itemId = unlocked ? LanternManager.Instance.GetEquippedLanternId(slotType) : 0;
                 element.Bind(itemId, unlocked, BuildSlotLockText(slotType));
             }
+
+            RefreshSlotFocusVisual();
         }
 
         private string BuildSlotLockText(Enum_LanternSlotType slotType)
@@ -266,7 +278,10 @@ namespace GameBerry.UI
         private void OnSelectLantern(int itemId)
         {
             _selectedItemId = itemId;
+            _pendingEquipItemId = 0;
             RefreshSelectionVisual();
+            RefreshSlotFocusVisual();
+            OpenDetailPopup(itemId);
         }
 
         private void EnsureSelectedLantern()
@@ -339,10 +354,10 @@ namespace GameBerry.UI
                 _skillType.SetText(skillInfo != null ? skillInfo.SkillType.ToString() : "-");
 
             if (_skillName != null)
-                _skillName.SetText(skillInfo != null ? $"Skill {skillInfo.SkillId}" : "-");
+                _skillName.SetText(skillInfo != null ? SkillManager.Instance.GetSkillNameText(skillInfo.SkillId) : "-");
 
             if (_selectedSkillConditionDataDescription != null)
-                _selectedSkillConditionDataDescription.SetText(skillInfo != null ? $"{(skillInfo.GetFinalAttackMultiplier(level) * 100.0):0.#}%" : "-");
+                _selectedSkillConditionDataDescription.SetText(skillInfo != null ? SkillManager.Instance.GetSkillConditionDescription(skillInfo) : "-");
 
             
 
@@ -351,17 +366,17 @@ namespace GameBerry.UI
                 if (skillInfo == null)
                     _selectedSkillDescription.SetText("-");
                 else
-                    _selectedSkillDescription.SetText($"Hits {skillInfo.TargetCount} targets for {skillInfo.HitCount} times.");
+                    _selectedSkillDescription.SetText(SkillManager.Instance.GetSkillDescriptionText(skillInfo, level));
             }
 
             if (_activeSkillCoolTimeGroup != null)
                 _activeSkillCoolTimeGroup.gameObject.SetActive(skillInfo != null);
 
             if (_cooldownTypeText != null)
-                _cooldownTypeText.SetText(skillInfo != null ? skillInfo.CooldownType.ToString() : "-");
+                _cooldownTypeText.SetText(skillInfo != null ? SkillManager.Instance.GetCooldownTypeText(skillInfo) : "-");
 
             if (_cooldownValueText != null)
-                _cooldownValueText.SetText(skillInfo != null ? $"{skillInfo.CooldownValue:0.#}s" : "-");
+                _cooldownValueText.SetText(skillInfo != null ? SkillManager.Instance.GetCooldownValueText(skillInfo) : "-");
 
         }
 
@@ -392,11 +407,15 @@ namespace GameBerry.UI
         {
             if (LanternManager.Instance.IsSlotUnlocked(slotType) == false)
                 return;
-            if (_selectedItemId <= 0)
+            if (_pendingEquipItemId <= 0)
                 return;
 
-            if (LanternManager.Instance.SetEquip(slotType, _selectedItemId) == false)
+            if (LanternManager.Instance.SetEquip(slotType, _pendingEquipItemId) == false)
                 return;
+
+            _selectedItemId = _pendingEquipItemId;
+            _pendingEquipItemId = 0;
+            RefreshSlotFocusVisual();
 
             if (slotType == Enum_LanternSlotType.Main)
             {
@@ -406,6 +425,10 @@ namespace GameBerry.UI
                 RefreshSlotElements();
                 RefreshCenterInfo();
             }
+
+            // Keep detail closed after successful equip step.
+            if (_detailDialog != null && _detailDialog.isEnter)
+                _detailDialog.ElementExit();
         }
 
         private void OnClickAutoEquip()
@@ -427,6 +450,66 @@ namespace GameBerry.UI
             _appliedEffectDialog.ElementEnter();
         }
 
+        private void OpenDetailPopup(int itemId)
+        {
+            if (_detailDialog == null || itemId <= 0)
+                return;
+
+            _detailDialog.Open(itemId, OnClickDetailEquipButton);
+        }
+
+        private void OnClickDetailEquipButton(int itemId)
+        {
+            if (itemId <= 0)
+                return;
+
+            _pendingEquipItemId = itemId;
+            _selectedItemId = itemId;
+            RefreshSelectionVisual();
+            RefreshSlotFocusVisual();
+
+            // Enter slot-select step with detail closed.
+            if (_detailDialog != null && _detailDialog.isEnter)
+                _detailDialog.ElementExit();
+        }
+
+        private void OnClickCancelEquipStep()
+        {
+            if (_pendingEquipItemId <= 0)
+                return;
+
+            int releasedItemId = _pendingEquipItemId;
+            _pendingEquipItemId = 0;
+            RefreshSlotFocusVisual();
+
+            // Cancelled equip step: reopen detail for the released selection.
+            int reopenItemId = _selectedItemId > 0 ? _selectedItemId : releasedItemId;
+            OpenDetailPopup(reopenItemId);
+        }
+
+        private void RefreshSlotFocusVisual()
+        {
+            bool isSelectingSlot = _pendingEquipItemId > 0;
+            if (LanternManager.isAlive == false)
+                isSelectingSlot = false;
+
+            if (_slotFocusDimmedRoot != null)
+                _slotFocusDimmedRoot.SetActive(isSelectingSlot);
+
+            if (_mainSlotElement != null)
+                _mainSlotElement.SetFocus(isSelectingSlot && LanternManager.isAlive && LanternManager.Instance.IsSlotUnlocked(Enum_LanternSlotType.Main));
+
+            for (int i = 0; i < _subSlotElements.Count; ++i)
+            {
+                UILanternSlotElement slot = _subSlotElements[i];
+                if (slot == null || slot.gameObject.activeSelf == false)
+                    continue;
+
+                bool focus = isSelectingSlot && LanternManager.isAlive && LanternManager.Instance.IsSlotUnlocked(slot.SlotType);
+                slot.SetFocus(focus);
+            }
+        }
+
         private void SetPage(int index)
         {
             _selectedPageIndex = Mathf.Clamp(index, 0, Mathf.Max(0, _pageButtons.Count - 1));
@@ -443,4 +526,5 @@ namespace GameBerry.UI
             }
         }
     }
+
 }

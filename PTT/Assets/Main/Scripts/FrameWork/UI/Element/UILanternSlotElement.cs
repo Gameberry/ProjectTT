@@ -14,6 +14,7 @@ namespace GameBerry.UI
         [SerializeField] private GameObject _emptyRoot;
         [SerializeField] private GameObject _lockRoot;
         [SerializeField] private TMP_Text _lockText;
+        [SerializeField] private GameObject _focusRoot;
         [SerializeField] private Button _button;
 
         private Enum_LanternSlotType _slotType = Enum_LanternSlotType.Main;
@@ -70,6 +71,12 @@ namespace GameBerry.UI
 
             if (_level != null)
                 _level.SetText($"Lv.{LanternManager.Instance.GetLanternLevel(itemId)}");
+        }
+
+        public void SetFocus(bool focused)
+        {
+            if (_focusRoot != null)
+                _focusRoot.SetActive(focused);
         }
 
         private void OnClick()

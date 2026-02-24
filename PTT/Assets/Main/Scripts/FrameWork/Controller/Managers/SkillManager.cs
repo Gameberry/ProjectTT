@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using GameBerry.Chart;
 using GameBerry.Table;
@@ -53,6 +54,7 @@ namespace GameBerry
         private const string _iconPath = "Icon/skill/{0}";
         private readonly Dictionary<int, Sprite> _skillIcons = new Dictionary<int, Sprite>();
         private readonly Dictionary<int, SkillCooldownTracker> _cooldownTrackers = new Dictionary<int, SkillCooldownTracker>();
+        private readonly StringBuilder _descBuilder = new StringBuilder(256);
 
         protected override void Init()
         {
@@ -326,6 +328,79 @@ namespace GameBerry
             {
                 Debug.Log($"[SkillManager] Applied passive skill: {passive.SkillId}");
             }
+        }
+
+        public string GetSkillNameText(int skillId)
+        {
+            if (skillId <= 0)
+                return "-";
+
+            return $"Skill {skillId}";
+        }
+
+        public string GetSkillConditionDescription(SkillInfo skillInfo)
+        {
+            if (skillInfo == null)
+                return "-";
+
+            _descBuilder.Clear();
+            int setCount = 0;
+
+            IReadOnlyList<int> conditions = skillInfo.GetMyConditionIndexes();
+            for (int i = 0; i < conditions.Count; ++i)
+            {
+                if (setCount > 0)
+                    _descBuilder.Append(", ");
+
+                _descBuilder.Append(StaticResource.Instance.GetConditionData().GetConditionDataDesc(conditions[i]));
+                setCount++;
+            }
+
+            conditions = skillInfo.GetEnemyConditionIndexes();
+            for (int i = 0; i < conditions.Count; ++i)
+            {
+                if (setCount > 0)
+                    _descBuilder.Append(", ");
+
+                _descBuilder.Append(StaticResource.Instance.GetConditionData().GetConditionDataDesc(conditions[i]));
+                setCount++;
+            }
+
+            return setCount > 0 ? _descBuilder.ToString() : "-";
+        }
+
+        public string GetSkillDescriptionText(SkillInfo skillInfo, int displayLevel = 1)
+        {
+            if (skillInfo == null)
+                return "-";
+
+            if (skillInfo.SkillType == Enum_SkillType.Active)
+            {
+                int level = Mathf.Max(1, displayLevel);
+                double multiplier = skillInfo.GetFinalAttackMultiplier(level) * 100.0;
+                return $"Deals <color=#E50008>{multiplier:0.#}%</color>damage to <color=#FFFFFF>{skillInfo.TargetCount}</color> nearby target(s) <color=#FFFFFF>{skillInfo.HitCount}</color> time(s).";
+            }
+
+            return string.Format("{0}Job Passive", skillInfo.RequireJobLevel);
+        }
+
+        public string GetCooldownTypeText(SkillInfo skillInfo)
+        {
+            if (skillInfo == null)
+                return "-";
+
+            return skillInfo.CooldownType.ToString();
+        }
+
+        public string GetCooldownValueText(SkillInfo skillInfo)
+        {
+            if (skillInfo == null)
+                return "-";
+
+            if (skillInfo.CooldownType == Enum_SkillCooldownType.Time)
+                return $"{skillInfo.CooldownValue:F1}s";
+
+            return $"{skillInfo.CooldownValue:F0} attacks";
         }
     }
 }

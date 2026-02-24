@@ -50,9 +50,17 @@ namespace GameBerry
             if (slotInfo == null)
                 return false;
 
-            int summonLevel = SummonManager.isAlive
-                ? SummonManager.Instance.GetSummonLevel(Enum_SummonType.Lantern)
-                : 1;
+            int summonLevel = 1;
+            if (SummonManager.isAlive)
+            {
+                summonLevel = SummonManager.Instance.GetSummonLevel(Enum_SummonType.Lantern);
+            }
+            else
+            {
+                SummonTable summonTable = UserTable.Get<SummonTable>();
+                if (summonTable != null)
+                    summonLevel = summonTable.GetLevel(Enum_SummonType.Lantern);
+            }
 
             return summonLevel >= Mathf.Max(1, slotInfo.UnLockSummonLevel);
         }
@@ -206,7 +214,7 @@ namespace GameBerry
                 return false;
             if (IsSlotUnlocked(slotType) == false)
                 return false;
-            if (GetLanternCount(itemId) <= 0)
+            if (GetLanternData(itemId) == null)
                 return false;
             if (_lanternChart?.Get(itemId) == null)
                 return false;
@@ -254,7 +262,7 @@ namespace GameBerry
             for (int i = 0; i < allLanterns.Count; ++i)
             {
                 LanternData data = allLanterns[i];
-                if (data == null || data.count <= 0)
+                if (data == null)
                     continue;
                 if (_lanternChart.Get(data.itemId) == null)
                     continue;
@@ -403,7 +411,7 @@ namespace GameBerry
             for (int i = 0; i < allLanterns.Count; ++i)
             {
                 LanternData lanternData = allLanterns[i];
-                if (lanternData == null || lanternData.count <= 0)
+                if (lanternData == null)
                     continue;
 
                 LanternInfo info = _lanternChart?.Get(lanternData.itemId);

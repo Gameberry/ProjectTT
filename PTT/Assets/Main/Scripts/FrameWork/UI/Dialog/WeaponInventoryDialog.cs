@@ -306,7 +306,7 @@ namespace GameBerry.UI
                 _levelUpButtonText.SetText("Level Up");
 
             if (_equipButton != null)
-                _equipButton.interactable = neverObtained == false && count > 0 && isEquipped == false;
+                _equipButton.interactable = neverObtained == false && isEquipped == false;
 
             if (_equipButtonText != null)
                 _equipButtonText.SetText(isEquipped ? "Equipped" : "Equip");

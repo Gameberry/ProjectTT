@@ -60,7 +60,7 @@ namespace GameBerry.UI
                 return;
 
             LanternData lanternData = LanternManager.Instance.GetLanternData(_itemId);
-            bool neverObtained = lanternData == null || lanternData.count <= 0;
+            bool neverObtained = lanternData == null;
 
             if (_icon != null)
                 _icon.sprite = ItemManager.Instance.GetIcon(_itemId);
