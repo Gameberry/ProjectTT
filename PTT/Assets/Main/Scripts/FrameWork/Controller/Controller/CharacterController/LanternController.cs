@@ -13,6 +13,9 @@ namespace GameBerry
         [SerializeField] private float _followLerp = 12f;
         [SerializeField] private float _hoverAmplitude = 0.25f;
         [SerializeField] private float _hoverFrequency = 1.8f;
+        [Header("Move State")]
+        [SerializeField] private float _runStartDistance = 0.45f;
+        [SerializeField] private float _runStopDistance = 0.25f;
         [Header("Soul Effect")]
         [SerializeField] private GameObject _soulOrbPrefab;
         [SerializeField] private float _soulTravelDuration = 0.35f;
@@ -26,6 +29,7 @@ namespace GameBerry
         private SkillInfo _mainSkillInfo;
         private float _hoverSeed;
         private bool _isSkillSystemInitialized;
+        private bool _isMoveRunState;
 
         public override void Init()
         {
@@ -74,6 +78,7 @@ namespace GameBerry
             _lanternItemId = lanternItemId;
             _attackTarget = _ownerPlayer != null ? _ownerPlayer.AttackTarget : null;
             ChangeState(CharacterState.Idle);
+            _isMoveRunState = false;
 
             RefreshSpineModel();
             PlayIdleAnimation();
@@ -89,6 +94,7 @@ namespace GameBerry
             if (_ownerPlayer == null || _ownerPlayer.IsDead)
                 return;
 
+            RefreshMoveState();
             FollowOwner();
             SyncTarget();
 
@@ -170,6 +176,41 @@ namespace GameBerry
             ChangeCharacterLookAtDirection(_ownerPlayer.LookDirection);
         }
 
+        private void RefreshMoveState()
+        {
+            Vector3 desired = GetDesiredPosition();
+            float distance = Vector3.Distance(transform.position, desired);
+
+            float runStart = Mathf.Max(0.01f, _runStartDistance);
+            float runStop = Mathf.Clamp(_runStopDistance, 0.0f, runStart);
+
+            // if (_isMoveRunState == false && distance >= runStart)
+            // {
+            //     _isMoveRunState = true;
+            //     ChangeState(CharacterState.Run);
+            // }
+            // else if (_isMoveRunState && distance <= runStop)
+            // {
+            //     _isMoveRunState = false;
+            //     ChangeState(CharacterState.Idle);
+            // }
+            if (distance >= runStart)
+            {
+                _characterMoveSpeed = 1.0f;
+                ChangeState(CharacterState.Run);
+            }
+            else
+            {
+                ChangeState(CharacterState.Idle);
+            }
+        }
+
+        protected override void PlayAnimation(CharacterState state)
+        {
+            Debug.Log(state);
+            base.PlayAnimation(state);
+        }
+
         private Vector3 GetDesiredPosition()
         {
             Vector3 offset = _baseFollowOffset;
@@ -217,15 +258,6 @@ namespace GameBerry
             StartCoolDown(castSkill.SkillId);
         }
 
-        protected override void SpineAnimationEvent(string aniName, string eventName)
-        {
-            if (CharacterState == CharacterState.Attack)
-            {
-                if (eventName.Contains("End"))
-                    ChangeState(CharacterState.Idle);
-            }
-        }
-        
         private void BindOwnerAttack()
         {
             if (_ownerPlayer == null)
@@ -292,20 +324,52 @@ namespace GameBerry
 
         private IEnumerator CoMoveSoulOrb(Transform orb, Vector3 startPos)
         {
-            float duration = Mathf.Max(0.05f, _soulTravelDuration);
-            float elapsed = 0f;
+            float totalDuration = Mathf.Max(0.12f, _soulTravelDuration);
+            float burstDuration = Mathf.Min(0.28f, totalDuration * 0.45f);
+            float absorbDuration = Mathf.Max(0.05f, totalDuration - burstDuration);
 
-            Vector3 endPos = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
-            while (elapsed < duration && orb != null)
+            Vector3 goalPos = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
+            Vector3 dir = goalPos - startPos;
+            float distance = dir.magnitude;
+            if (distance > 0.0001f)
+                dir /= distance;
+            else
+                dir = Vector3.up;
+
+            Vector3 cross = new Vector3(-dir.y, dir.x, 0f).normalized;
+            float randomCrossDir = Random.Range(0, 2) == 0 ? -1f : 1f;
+            float convertDis = distance * 0.5f;
+
+            float elapsed = 0f;
+            while (elapsed < burstDuration && orb != null)
             {
                 elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
+                float ratio = Mathf.Clamp01(elapsed / burstDuration);
 
-                endPos = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
-                Vector3 pos = Vector3.Lerp(startPos, endPos, t);
-                pos.y += Mathf.Sin(t * Mathf.PI) * _soulArcHeight;
+                Vector3 newDir = -dir * Mathf.Sin(Mathf.PI * ratio);
+                Vector3 newCross = cross * Mathf.Sin(Mathf.PI * 0.5f * ratio) * randomCrossDir;
+                Vector3 offset = convertDis * ((newDir * 0.8f) + newCross);
+
+                Vector3 pos = startPos + offset;
+                pos.y += Mathf.Sin(Mathf.PI * ratio) * (_soulArcHeight * 0.55f);
                 orb.position = pos;
-                orb.localScale = Vector3.one * Mathf.Lerp(1f, 0.25f, t);
+                orb.localScale = Vector3.one * Mathf.Lerp(1f, 0.82f, ratio);
+                yield return null;
+            }
+
+            Vector3 absorbStart = orb != null ? orb.position : startPos;
+            elapsed = 0f;
+            while (elapsed < absorbDuration && orb != null)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / absorbDuration);
+                float eased = EaseOutQuart(t);
+
+                goalPos = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
+                Vector3 pos = Vector3.Lerp(absorbStart, goalPos, eased);
+                pos.y += Mathf.Sin(Mathf.PI * t) * (_soulArcHeight * 0.35f);
+                orb.position = pos;
+                orb.localScale = Vector3.one * Mathf.Lerp(0.82f, 0.2f, eased);
                 yield return null;
             }
 
@@ -317,6 +381,13 @@ namespace GameBerry
                 yield return null;
                 Destroy(orb.gameObject);
             }
+        }
+
+        private static float EaseOutQuart(float t)
+        {
+            t = Mathf.Clamp01(t);
+            float inv = 1f - t;
+            return 1f - (inv * inv * inv * inv);
         }
 
         private void PlayIdleAnimation()

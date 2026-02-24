@@ -63696,8 +63696,8 @@ Transform:
   m_GameObject: {fileID: 693811164629779049}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.39, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5496486814429824818}
@@ -63733,7 +63733,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fdbf7c3532e7c6e43b28d9fd0d6e0058, type: 2}
+  - {fileID: 2100000, guid: b4b0d6310618d65458c2a46518d5d86f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -63767,8 +63767,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: c616e659c39894c4da3deb9455a9a9f7, type: 2}
-  initialSkinName: 00
+  skeletonDataAsset: {fileID: 11400000, guid: 60ea6fc91aedd114b8bc0c58c8d44cc4, type: 2}
+  initialSkinName: 
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
@@ -63811,17 +63811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skeletonAnimation: {fileID: 936474778013735736}
-  _statesAndAnimation:
-  - stateName: Attack
-  - stateName: Hit
-  - stateName: Idle
-  - stateName: Run
-  - stateName: Skill_01
-  - stateName: Skill_02
-  - stateName: Skill_05
-  - stateName: Skill_06
-  - stateName: Skill_07
-  - stateName: Skill_08
+  _statesAndAnimation: []
   _transitions: []
   _eventparticle: []
   _awakeInit: 0
@@ -254559,9 +254549,11 @@ MonoBehaviour:
   _aniControllerSpeed: 1
   Temp_Accuracy: 1
   _baseFollowOffset: {x: 0.56, y: 0.72, z: 0}
-  _followLerp: 12
-  _hoverAmplitude: 0.25
+  _followLerp: 4
+  _hoverAmplitude: 0
   _hoverFrequency: 1.8
+  _runStartDistance: 0.45
+  _runStopDistance: 0.25
   _soulOrbPrefab: {fileID: 2338562702360936224, guid: 3692d7575cefb17438f33eb9d5c88ca1, type: 3}
   _soulTravelDuration: 1
   _soulArcHeight: 0.8
