@@ -142,8 +142,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         protected override void OnDead()
         {
+            if (LanternManager.isAlive)
+                LanternManager.Instance.PlaySoulAbsorbEffect(transform.position);
+
             if (_battleSceneMap_Aggro != null)
-            { 
+            {
                 _battleSceneMap_Aggro.OnDeadMonster(this);
                 _battleSceneMap_Aggro = null;
             }
@@ -210,3 +213,6 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
     }
 }
+
+
+

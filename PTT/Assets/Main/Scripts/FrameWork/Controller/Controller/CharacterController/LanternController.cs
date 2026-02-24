@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameBerry.Chart;
@@ -12,6 +13,11 @@ namespace GameBerry
         [SerializeField] private float _followLerp = 12f;
         [SerializeField] private float _hoverAmplitude = 0.25f;
         [SerializeField] private float _hoverFrequency = 1.8f;
+        [Header("Soul Effect")]
+        [SerializeField] private GameObject _soulOrbPrefab;
+        [SerializeField] private float _soulTravelDuration = 0.35f;
+        [SerializeField] private float _soulArcHeight = 0.8f;
+        [SerializeField] private Transform _soulGoalTransform = null;
 
         protected override Enum_SkillActorType SkillActorType => Enum_SkillActorType.Lantern;
 
@@ -73,6 +79,9 @@ namespace GameBerry
             PlayIdleAnimation();
             RefreshMainSkill();
             SnapToOwner();
+
+            if (LanternManager.isAlive)
+                LanternManager.Instance.RegisterActiveLanternController(this);
         }
 
         protected override void Updated()
@@ -239,6 +248,77 @@ namespace GameBerry
             OnSkillOwnerAttack();
         }
 
+        public void PlaySoulAbsorbFrom(Vector3 sourceWorldPos)
+        {
+            if (isActiveAndEnabled == false)
+                return;
+
+            GameObject orb = CreateSoulOrb(sourceWorldPos);
+            if (orb == null)
+                return;
+
+            StartCoroutine(CoMoveSoulOrb(orb.transform, sourceWorldPos));
+        }
+
+        private GameObject CreateSoulOrb(Vector3 sourceWorldPos)
+        {
+            if (_soulOrbPrefab != null)
+            {
+                GameObject clone = Instantiate(_soulOrbPrefab, sourceWorldPos, Quaternion.identity);
+                Destroy(clone, Mathf.Max(0.5f, _soulTravelDuration + 0.5f));
+                return clone;
+            }
+
+            GameObject fallback = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            fallback.name = "LanternSoulOrb";
+            fallback.transform.position = sourceWorldPos;
+            fallback.transform.localScale = Vector3.one * 0.22f;
+
+            Collider col = fallback.GetComponent<Collider>();
+            if (col != null)
+                Destroy(col);
+
+            Renderer renderer = fallback.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+                renderer.material.color = new Color(0.4f, 0.95f, 1f, 1f);
+            }
+
+            Destroy(fallback, Mathf.Max(0.5f, _soulTravelDuration + 0.5f));
+            return fallback;
+        }
+
+        private IEnumerator CoMoveSoulOrb(Transform orb, Vector3 startPos)
+        {
+            float duration = Mathf.Max(0.05f, _soulTravelDuration);
+            float elapsed = 0f;
+
+            Vector3 endPos = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
+            while (elapsed < duration && orb != null)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                endPos = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
+                Vector3 pos = Vector3.Lerp(startPos, endPos, t);
+                pos.y += Mathf.Sin(t * Mathf.PI) * _soulArcHeight;
+                orb.position = pos;
+                orb.localScale = Vector3.one * Mathf.Lerp(1f, 0.25f, t);
+                yield return null;
+            }
+
+            if (orb != null)
+            {
+                // Ensure the soul arrives exactly at lantern position.
+                orb.position = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
+                orb.localScale = Vector3.one * 0.2f;
+                yield return null;
+                Destroy(orb.gameObject);
+            }
+        }
+
         private void PlayIdleAnimation()
         {
             if (_currentSpineModelData != null)
@@ -281,6 +361,12 @@ namespace GameBerry
 
             if (hasAny)
                 SetSpineSkin(skin);
+        }
+
+        private void OnDestroy()
+        {
+            if (LanternManager.isAlive)
+                LanternManager.Instance.UnregisterActiveLanternController(this);
         }
     }
 }

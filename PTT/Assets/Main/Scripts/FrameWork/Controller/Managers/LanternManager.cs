@@ -20,6 +20,7 @@ namespace GameBerry
         private LanternChart _lanternChart;
         private LanternSlotChart _lanternSlotChart;
         private SkillChart _skillChart;
+        private LanternController _activeLanternController;
         private GameObject _lanternControllerPrefab;
         private bool _isLanternControllerPrefabLoading;
         private readonly List<Action<GameObject>> _lanternPrefabLoadWaiters = new List<Action<GameObject>>();
@@ -442,9 +443,34 @@ namespace GameBerry
 
                 controller.Init();
                 controller.Setup(ownerPlayer, lanternItemId);
+                RegisterActiveLanternController(controller);
 
                 onCreated?.Invoke(controller);
             });
+        }
+
+        public void RegisterActiveLanternController(LanternController controller)
+        {
+            _activeLanternController = controller;
+        }
+
+        public void UnregisterActiveLanternController(LanternController controller)
+        {
+            if (_activeLanternController == controller)
+                _activeLanternController = null;
+        }
+
+        public LanternController GetActiveLanternController()
+        {
+            return _activeLanternController;
+        }
+
+        public void PlaySoulAbsorbEffect(Vector3 sourceWorldPos)
+        {
+            if (_activeLanternController == null)
+                return;
+
+            _activeLanternController.PlaySoulAbsorbFrom(sourceWorldPos);
         }
 
         public void AddLantern(int itemId, long amount = 1, bool immediate = true)
