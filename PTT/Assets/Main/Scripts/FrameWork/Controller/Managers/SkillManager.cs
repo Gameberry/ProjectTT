@@ -38,7 +38,7 @@ namespace GameBerry
         }
     }
 
-    public class SkillManager : Singleton<SkillManager>
+    public class SkillManager : MonoSingleton<SkillManager>
     {
         private readonly List<Table.TableBase> SkillTables = new List<Table.TableBase>()
         {
@@ -56,10 +56,13 @@ namespace GameBerry
         private readonly Dictionary<int, SkillCooldownTracker> _cooldownTrackers = new Dictionary<int, SkillCooldownTracker>();
         private readonly StringBuilder _descBuilder = new StringBuilder(256);
 
+public SkillInfo[] SkillInfoVIew = null;
+
         protected override void Init()
         {
             _skillTable = UserTable.Get<SkillTable>();
             _skillChart = GameChart.Get<SkillChart>();
+            SkillInfoVIew = _skillChart.rows;
         }
 
         public Sprite GetIcon(int itemId)

@@ -12,42 +12,10 @@ namespace GameBerry
     public class MonsterController : CharacterControllerBase
     {
         [SerializeField]
-        private List<string> idleAniNameList = new();
-
-        [SerializeField]
-        private List<string> AttackAniNameList = new();
-
-        [SerializeField]
-        private List<string> run1AniNameList = new();
-
-        [SerializeField]
-        private List<string> run2AniNameList = new();
-
-        [SerializeField]
-        private List<string> hitAniNameList = new();
-
-        [SerializeField]
-        private string idleAniName;
-
-        [SerializeField]
-        private string AttackAniName;
-
-        [SerializeField]
-        private string runAniName;
-
-        [SerializeField]
-        private string hitAniName;
-
-
-        [SerializeField]
         private float attackRangeDefault = 1.5f;
 
         [SerializeField]
         private float attackRange = 1.0f;
-
-        // ������ ���� �ִϵ� �� ��� �ϴ� �������� ����
-        [SerializeField]
-        private float _attackTimming = 1.0f;
 
         private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //��Ȱ��ȭ�� ���ó��?
 
@@ -98,7 +66,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector3 spawnPos, int modelIndex)
-        { 
+        {
             _isDeadHandling = false;
             SetCollisionEnabled(true);
             ChangeSpineColor(Color.white);
@@ -114,13 +82,13 @@ namespace GameBerry
 
             _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(1000);
             SetSpineModelData(_currentSpineModelData);
-            _mySkeletonAnimationHandler._skeletonAnimation.initialSkinName = "default";
-            _mySkeletonAnimationHandler._skeletonAnimation.Initialize(true);
+            // _mySkeletonAnimationHandler._skeletonAnimation.initialSkinName = "default";
+            // _mySkeletonAnimationHandler._skeletonAnimation.Initialize(true);
 
-            _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetSlotsToSetupPose();
-            _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetBonesToSetupPose();
+            // _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetSlotsToSetupPose();
+            // _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetBonesToSetupPose();
 
-            attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
+            // attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
 
             if (_battleSceneMap_Aggro != null)
             {
@@ -128,18 +96,6 @@ namespace GameBerry
             }
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
             _spawnPos = spawnPos;
-
-            int idleattackidx = Random.Range(0, 2);
-
-            idleAniName = idleAniNameList[Random.Range(0, idleAniNameList.Count)];
-            AttackAniName = AttackAniNameList[Random.Range(0, AttackAniNameList.Count)];
-
-            if (idleattackidx == 0)
-                runAniName = run1AniNameList[Random.Range(0, run1AniNameList.Count)];
-            else if (idleattackidx == 1)
-                runAniName = run2AniNameList[Random.Range(0, run2AniNameList.Count)];
-
-            hitAniName = idleAniName;
         }
         //------------------------------------------------------------------------------------
         public void SetAggro(PlayerController playerController)
@@ -157,19 +113,12 @@ namespace GameBerry
             OnDamageDirection().Forget();
         }
         //------------------------------------------------------------------------------------
-        private void TestAniPlay(string aniname, bool isloop = true)
-        {
-            return;
-            PlayAnimation_AniName(aniname, isloop);
-        }
-        //------------------------------------------------------------------------------------
         private async UniTask OnDamageDirection()
         {
             if (_isDeadHandling || CharacterState == CharacterState.Dead)
                 return;
 
             ChangeState(CharacterState.Hit);
-            TestAniPlay(hitAniName, false);
             ChangeSpineColor(StaticResource.Instance.GetBattleModeStaticData().MonsterHitColor);
 
             try
@@ -191,13 +140,11 @@ namespace GameBerry
             ChangeSpineColor(Color.white);
 
             ChangeState(CharacterState.Idle);
-            TestAniPlay(idleAniName);
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()
         {
             ChangeState(CharacterState.Idle);
-            TestAniPlay(idleAniName);
         }
         //------------------------------------------------------------------------------------
         public override Vector3 GetMoveDirection()
@@ -246,7 +193,6 @@ namespace GameBerry
                     if (_attackTarget != null)
                     {
                         ChangeState(CharacterState.Run);
-                        TestAniPlay(runAniName);
                     }
                     else
                     {
@@ -254,7 +200,6 @@ namespace GameBerry
                         if (distance > StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
                         {
                             ChangeState(CharacterState.Run);
-                            TestAniPlay(runAniName);
                         }
                     }
                 }
@@ -266,8 +211,6 @@ namespace GameBerry
                         if (distance <= attackRange && _blockAttack == false)
                         {
                             ChangeState(CharacterState.Attack);
-                            TestAniPlay(AttackAniName);
-                            _attackTimming = Time.time + FinalAttackSpeed;
                         }
                     }
                     else
@@ -276,27 +219,26 @@ namespace GameBerry
                         if (distance < StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
                         {
                             ChangeState(CharacterState.Idle);
-                            TestAniPlay(idleAniName);
                         }
                     }
                 }
-                else if (CharacterState == CharacterState.Attack)
+            }
+        }
+        //------------------------------------------------------------------------------------
+        protected override void SpineAnimationEvent(string aniName, string eventName)
+        {
+            if (CharacterState == CharacterState.Attack)
+            {
+                if (eventName.Contains("AniAction"))
                 {
-                    if (_attackTimming <= Time.time)
-                    {
-                        if (AttackTarget != null)
-                        {
-                            ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                            SkillInfo defaultAttackData = StaticResource.Instance.GetBattleModeStaticData().MonsterDefaultAttackData;
-                            if (defaultAttackData != null)
-                                AttackTarget.Damage(defaultAttackData.GetAttackStruct(this));
-                            else
-                                AttackTarget.Damage(FinalAttack);
-                            ChangeState(CharacterState.Idle);
-                            TestAniPlay(idleAniName);
-                        }
-                    }
+                    SkillInfo defaultAttackData = StaticResource.Instance.GetBattleModeStaticData().MonsterDefaultAttackData;
+                    if (defaultAttackData != null)
+                        AttackTarget.Damage(defaultAttackData.GetAttackStruct(this));
+                    else
+                        AttackTarget.Damage(FinalAttack);
                 }
+                else if (eventName.Contains("End"))
+                    ChangeState(CharacterState.Idle);
             }
         }
         //------------------------------------------------------------------------------------

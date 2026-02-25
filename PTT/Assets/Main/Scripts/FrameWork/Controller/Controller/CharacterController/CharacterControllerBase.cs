@@ -5,6 +5,8 @@ using GameBerry.Managers;
 using Spine;
 using Spine.Unity;
 using GameBerry.Chart;
+using UnityEngine.TextCore.Text;
+using UnityEngine.AdaptivePerformance.Provider;
 
 namespace GameBerry
 {
@@ -594,6 +596,30 @@ namespace GameBerry
             _blockMove = move;
             _blockAttack = attack;
             _blockSkill = skill;
+            if (_blockMove == true && _blockAttack == true && _blockSkill == true)
+            {
+                ReleaseAttack();
+                ChangeState(CharacterState.Hit);
+            }
+            else if (_blockMove == false || _blockAttack == false || _blockSkill == false)
+            {
+                if (CharacterState == CharacterState.Hit)
+                    ChangeState(CharacterState.Idle);
+            }
+            else if (_blockAttack == true)
+            {
+                if (CharacterState != CharacterState.Attack)
+                    ReleaseAttack();
+            }
+            else if (_blockSkill == true)
+            {
+                if (CharacterState == CharacterState.Skill)
+                    ReleaseAttack();
+            }
+        }
+        //------------------------------------------------------------------------------------
+        protected virtual void ReleaseAttack()
+        {
         }
         //------------------------------------------------------------------------------------
         /// <summary>
@@ -940,6 +966,9 @@ namespace GameBerry
         /// <param name="playAni">애니메이션 재생 여부</param>
         protected virtual void ChangeState(CharacterState state, bool playAni = true)
         {
+            if (state == CharacterState.Run && _blockMove == true)
+                state = CharacterState.Idle;
+
             if (_characterState == state)
                 return;
 
@@ -955,6 +984,8 @@ namespace GameBerry
                     }
                 case CharacterState.Run:
                     {
+
+
                         _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterMoveSpeed);
                         break;
                     }

@@ -340,21 +340,21 @@ namespace GameBerry
 
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                     PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), transform.position, AttackTarget);
-                }
-                else if (eventName.Contains("End"))
-                {
+
                     if (_currentAttackData != null)
                     {
                         _nextSkillData = null;
                         StartCoolDown(_currentAttackData.SkillId);
                     }
-
+                }
+                else if (eventName.Contains("End"))
+                {
                     ReleaseAttack();
                 }
             }
         }
         //------------------------------------------------------------------------------------
-        public void ReleaseAttack()
+        protected override void ReleaseAttack()
         {
             _currentAttackData = null;
 
