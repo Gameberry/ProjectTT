@@ -1,10 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using CodeStage.AntiCheat.ObscuredTypes;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using GameBerry.Common;
 using GameBerry.Chart;
 
 namespace GameBerry
@@ -17,7 +14,7 @@ namespace GameBerry
         [SerializeField]
         private float attackRange = 1.0f;
 
-        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //��Ȱ��ȭ�� ���ó��?
+        private CancellationTokenSource disableCancellation = new CancellationTokenSource();
 
         private BattleSceneMap_Aggro _battleSceneMap_Aggro;
 
@@ -25,6 +22,11 @@ namespace GameBerry
         private bool _isDeadHandling = false;
         private Coroutine _delayedPoolCoroutine;
         private Collider[] _cachedColliders;
+
+        private bool _isWandering = false;
+        private Vector3 _wanderTargetPos;
+        private float _nextWanderStartTime = 0f;
+        private bool _isReturningToSpawn = false;
 
         private void ResetDamageCancellation()
         {
@@ -82,30 +84,37 @@ namespace GameBerry
 
             _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(1000);
             SetSpineModelData(_currentSpineModelData);
-            // _mySkeletonAnimationHandler._skeletonAnimation.initialSkinName = "default";
-            // _mySkeletonAnimationHandler._skeletonAnimation.Initialize(true);
 
-            // _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetSlotsToSetupPose();
-            // _mySkeletonAnimationHandler._skeletonAnimation.skeleton.SetBonesToSetupPose();
-
-            // attackRange = attackRangeDefault + Random.Range(0.1f, 0.5f);
-
-            if (_battleSceneMap_Aggro != null)
-            {
-                Debug.Log("sdf");
-            }
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
             _spawnPos = spawnPos;
+            _attackTarget = null;
+            _isWandering = false;
+            _isReturningToSpawn = false;
+            _wanderTargetPos = _spawnPos;
+            ScheduleNextWander();
         }
         //------------------------------------------------------------------------------------
         public void SetAggro(PlayerController playerController)
         {
             if (playerController == null)
             {
-                if (_attackTarget != null && _maxHP > CurrentHP)
+                // Lost aggro while chasing: reset and return to spawn before wandering.
+                if (_attackTarget != null)
+                {
+                    _attackTarget = null;
+                    _isWandering = false;
+                    _isReturningToSpawn = true;
+                    SetHP(_maxHP);
                     return;
+                }
+
+                _attackTarget = null;
+                return;
             }
+
             _attackTarget = playerController;
+            _isWandering = false;
+            _isReturningToSpawn = false;
         }
         //------------------------------------------------------------------------------------
         protected override void OnDamage()
@@ -138,21 +147,28 @@ namespace GameBerry
             }
 
             ChangeSpineColor(Color.white);
-
             ChangeState(CharacterState.Idle);
         }
         //------------------------------------------------------------------------------------
         protected override void OnPlay()
         {
+            _isWandering = false;
+            _wanderTargetPos = _spawnPos;
+            ScheduleNextWander();
             ChangeState(CharacterState.Idle);
         }
         //------------------------------------------------------------------------------------
         public override Vector3 GetMoveDirection()
         {
             if (_attackTarget == null)
+            {
+                if (_isWandering)
+                    return (_wanderTargetPos - transform.position).normalized;
+
                 return (_spawnPos - transform.position).normalized;
-            else
-                return base.GetMoveDirection();
+            }
+
+            return base.GetMoveDirection();
         }
         //------------------------------------------------------------------------------------
         protected override void OnDead()
@@ -186,43 +202,122 @@ namespace GameBerry
             if (_isDeadHandling)
                 return;
 
-            if (CharacterState != CharacterState.Dead && CharacterState != CharacterState.Hit)
+            if (CharacterState == CharacterState.Dead || CharacterState == CharacterState.Hit)
+                return;
+
+            if (_attackTarget != null && _attackTarget.IsDead)
             {
+                _attackTarget = null;
+                _isWandering = false;
+                _isReturningToSpawn = true;
+                ScheduleNextWander();
+                ChangeState(CharacterState.Idle);
+                return;
+            }
+
+            if (_attackTarget != null)
+            {
+                _isWandering = false;
+
                 if (CharacterState == CharacterState.Idle)
                 {
-                    if (_attackTarget != null)
-                    {
-                        ChangeState(CharacterState.Run);
-                    }
-                    else
-                    {
-                        float distance = MathDatas.GetDistance(transform.position, _spawnPos);
-                        if (distance > StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
-                        {
-                            ChangeState(CharacterState.Run);
-                        }
-                    }
+                    ChangeState(CharacterState.Run);
+                    return;
                 }
-                else if (CharacterState == CharacterState.Run)
+
+                if (CharacterState == CharacterState.Run)
                 {
-                    if (_attackTarget != null)
-                    {
-                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                        if (distance <= attackRange && _blockAttack == false)
-                        {
-                            ChangeState(CharacterState.Attack);
-                        }
-                    }
-                    else
-                    {
-                        float distance = MathDatas.GetDistance(transform.position, _spawnPos);
-                        if (distance < StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius && _blockAttack == false)
-                        {
-                            ChangeState(CharacterState.Idle);
-                        }
-                    }
+                    float distanceToTarget = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                    if (distanceToTarget <= attackRange && _blockAttack == false)
+                        ChangeState(CharacterState.Attack);
                 }
+
+                return;
             }
+
+            if (_isReturningToSpawn)
+            {
+                float distanceToSpawn = MathDatas.GetDistance(transform.position, _spawnPos);
+                if (distanceToSpawn <= StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius)
+                {
+                    _isReturningToSpawn = false;
+                    ScheduleNextWander();
+                    ChangeState(CharacterState.Idle);
+                }
+                else if (CharacterState != CharacterState.Run)
+                {
+                    ChangeState(CharacterState.Run);
+                }
+
+                return;
+            }
+
+            if (_isWandering)
+            {
+                float distanceToWanderTarget = MathDatas.GetDistance(transform.position, _wanderTargetPos);
+                if (distanceToWanderTarget <= StaticResource.Instance.GetBattleModeStaticData().MonsterReturnRadius)
+                {
+                    _isWandering = false;
+                    ScheduleNextWander();
+                    ChangeState(CharacterState.Idle);
+                }
+                else if (CharacterState != CharacterState.Run)
+                {
+                    ChangeState(CharacterState.Run);
+                }
+
+                return;
+            }
+
+            if (Time.time >= _nextWanderStartTime)
+            {
+                StartWander();
+                if (CharacterState != CharacterState.Run)
+                    ChangeState(CharacterState.Run);
+            }
+            else if (CharacterState != CharacterState.Idle)
+            {
+                ChangeState(CharacterState.Idle);
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private void ScheduleNextWander()
+        {
+            BattleModeStaticDataAsset data = StaticResource.Instance?.GetBattleModeStaticData();
+            if (data == null)
+            {
+                _nextWanderStartTime = Time.time + 1f;
+                return;
+            }
+
+            float minTime = Mathf.Max(0f, data.MonsterWanderIdleMinTime);
+            float maxTime = Mathf.Max(minTime, data.MonsterWanderIdleMaxTime);
+            _nextWanderStartTime = Time.time + Random.Range(minTime, maxTime);
+        }
+        //------------------------------------------------------------------------------------
+        private void StartWander()
+        {
+            BattleModeStaticDataAsset data = StaticResource.Instance?.GetBattleModeStaticData();
+            if (data == null)
+            {
+                _wanderTargetPos = _spawnPos;
+                _isWandering = false;
+                ScheduleNextWander();
+                return;
+            }
+            float radius = Mathf.Max(0f, data.MonsterWanderRadius);
+
+            if (radius <= 0f)
+            {
+                _wanderTargetPos = _spawnPos;
+                _isWandering = false;
+                ScheduleNextWander();
+                return;
+            }
+
+            Vector2 randomCircle = Random.insideUnitCircle * radius;
+            _wanderTargetPos = _spawnPos + new Vector3(randomCircle.x, 0f, randomCircle.y);
+            _isWandering = true;
         }
         //------------------------------------------------------------------------------------
         protected override void SpineAnimationEvent(string aniName, string eventName)
@@ -231,6 +326,12 @@ namespace GameBerry
             {
                 if (eventName.Contains("AniAction"))
                 {
+                    if (AttackTarget == null || AttackTarget.IsDead)
+                    {
+                        ChangeState(CharacterState.Idle);
+                        return;
+                    }
+
                     SkillInfo defaultAttackData = StaticResource.Instance.GetBattleModeStaticData().MonsterDefaultAttackData;
                     if (defaultAttackData != null)
                         AttackTarget.Damage(defaultAttackData.GetAttackStruct(this));
@@ -252,17 +353,3 @@ namespace GameBerry
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

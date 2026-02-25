@@ -31,6 +31,39 @@ namespace GameBerry
                 SetAggro();
         }
 
+        private void Update()
+        {
+            if (_playerController == null)
+                _playerController = Managers.BattleSceneManager.Instance?.GetPlayer() as PlayerController;
+
+            RefreshAggroByDistance();
+        }
+
+        private void RefreshAggroByDistance()
+        {
+            if (_monsters == null || _monsters.Count <= 0)
+                return;
+
+            float aggroDistance = StaticResource.Instance.GetBattleModeStaticData().MonsterAggroDistance;
+            float aggroDistanceSqr = aggroDistance * aggroDistance;
+
+            for (int i = 0; i < _monsters.Count; ++i)
+            {
+                MonsterController monster = _monsters[i];
+                if (monster == null)
+                    continue;
+
+                if (_playerController == null)
+                {
+                    monster.SetAggro(null);
+                    continue;
+                }
+
+                Vector3 diff = _playerController.transform.position - monster.transform.position;
+                bool inAggroRange = diff.sqrMagnitude <= aggroDistanceSqr;
+                monster.SetAggro(inAggroRange ? _playerController : null);
+            }
+        }
         private void SetAggro()
         {
             for (int i = 0; i < _monsters.Count; ++i)

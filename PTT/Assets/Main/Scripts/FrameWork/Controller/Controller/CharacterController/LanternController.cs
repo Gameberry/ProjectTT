@@ -18,6 +18,8 @@ namespace GameBerry
         [SerializeField] private float _runStopDistance = 0.25f;
         [Header("Soul Effect")]
         [SerializeField] private GameObject _soulOrbPrefab;
+        [SerializeField] private float _soulVisibleDelayTime = 0.5f;
+        [SerializeField] private float _soulWaitTime = 0.5f;
         [SerializeField] private float _soulTravelDuration = 0.35f;
         [SerializeField] private float _soulArcHeight = 0.8f;
         [SerializeField] private Transform _soulGoalTransform = null;
@@ -297,7 +299,7 @@ namespace GameBerry
             if (_soulOrbPrefab != null)
             {
                 GameObject clone = Instantiate(_soulOrbPrefab, sourceWorldPos, Quaternion.identity);
-                Destroy(clone, Mathf.Max(0.5f, _soulTravelDuration + 0.5f));
+                //Destroy(clone, Mathf.Max(0.5f, _soulTravelDuration + 0.5f));
                 return clone;
             }
 
@@ -324,9 +326,19 @@ namespace GameBerry
 
         private IEnumerator CoMoveSoulOrb(Transform orb, Vector3 startPos)
         {
-            float totalDuration = Mathf.Max(0.12f, _soulTravelDuration);
-            float burstDuration = Mathf.Min(0.28f, totalDuration * 0.45f);
-            float absorbDuration = Mathf.Max(0.05f, totalDuration - burstDuration);
+
+            orb.gameObject.SetActive(false);
+
+            yield return new WaitForSeconds(_soulVisibleDelayTime);
+
+            orb.gameObject.SetActive(true);
+            orb.position = startPos;
+
+            yield return new WaitForSeconds(_soulWaitTime);
+
+            float totalDuration = _soulTravelDuration;
+            float burstDuration = totalDuration * 0.45f;
+            float absorbDuration = totalDuration - burstDuration;
 
             Vector3 goalPos = _soulGoalTransform != null ? _soulGoalTransform.position : transform.position;
             Vector3 dir = goalPos - startPos;

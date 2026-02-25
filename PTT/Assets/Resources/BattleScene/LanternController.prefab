@@ -63697,9 +63697,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8800588014828551764}
   m_Father: {fileID: 5496486814429824818}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &998137833315034314
@@ -254547,17 +254548,18 @@ MonoBehaviour:
   _maxHP: 0
   _currentHP: 0
   _aniControllerSpeed: 1
-  Temp_Accuracy: 1
-  _baseFollowOffset: {x: 0.56, y: 0.72, z: 0}
+  _baseFollowOffset: {x: 0.8, y: 0.72, z: 0}
   _followLerp: 4
   _hoverAmplitude: 0
   _hoverFrequency: 1.8
   _runStartDistance: 0.45
   _runStopDistance: 0.25
-  _soulOrbPrefab: {fileID: 2338562702360936224, guid: 3692d7575cefb17438f33eb9d5c88ca1, type: 3}
+  _soulOrbPrefab: {fileID: 1751450360626006475, guid: 311b28b28ca69ed428399acbd9867d7f, type: 3}
+  _soulVisibleDelayTime: 0.3
+  _soulWaitTime: 1
   _soulTravelDuration: 1
-  _soulArcHeight: 0.8
-  _soulGoalTransform: {fileID: 9075032051780752504}
+  _soulArcHeight: 0
+  _soulGoalTransform: {fileID: 8800588014828551764}
 --- !u!114 &5437201128437125724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469685,6 +469687,60 @@ MonoBehaviour:
     ParticleSystem: {fileID: 6728284206604183506}
   _attakParticle: {fileID: 0}
   _hitDuraion: 1
+--- !u!1 &7044737541581528366
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8800588014828551764}
+  - component: {fileID: 8695582054993228248}
+  m_Layer: 11
+  m_Name: Bone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8800588014828551764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7044737541581528366}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.0000000036088723, w: 1}
+  m_LocalPosition: {x: -0.00006841038, y: -0.10599931, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9207865300152265896}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8695582054993228248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7044737541581528366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1fd8daaed7b64148a34acb96ba14ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skeletonRenderer: {fileID: 936474778013735736}
+  boneName: fire
+  followXYPosition: 1
+  followZPosition: 1
+  followBoneRotation: 1
+  followSkeletonFlip: 1
+  followLocalScale: 0
+  followParentWorldScale: 0
+  maintainedAxisOrientation: 1
+  initializeOnAwake: 1
 --- !u!1 &7057435024409765520
 GameObject:
   m_ObjectHideFlags: 0

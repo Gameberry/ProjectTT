@@ -596,6 +596,10 @@ namespace GameBerry
             _blockMove = move;
             _blockAttack = attack;
             _blockSkill = skill;
+
+            if (IsDead == true)
+                return;
+
             if (_blockMove == true && _blockAttack == true && _blockSkill == true)
             {
                 ReleaseAttack();

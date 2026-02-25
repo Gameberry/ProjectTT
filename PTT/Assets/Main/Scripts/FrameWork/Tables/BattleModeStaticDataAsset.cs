@@ -18,8 +18,12 @@ namespace GameBerry
         public float SpawnTurm = 5f;
         public float SpawnrouteRadius = 5f;
         public float MonsterMinSeparation = 0.5f;
+        public float MonsterAggroDistance = 6.0f;
         public float MonsterReturnRadius = 0.01f;
         public bool PlayerOutReturnMonster = true;
+        public float MonsterWanderRadius = 1.5f;
+        public float MonsterWanderIdleMinTime = 0.5f;
+        public float MonsterWanderIdleMaxTime = 2.0f;
 
         public Vector3 MapRange_Min;
         public Vector3 MapRange_Max;
@@ -33,7 +37,7 @@ namespace GameBerry
         public float ComboReleaseTime = 2.0f;
         public SkillInfo MonsterDefaultAttackData = new SkillInfo();
 
-        [Header("카메라 흔들기")]
+        [Header("Camera Shake")]
         public bool NormalAttackShake = false;
         public float NormalAttackShake_strengthOverride = 0.01f;
         public float NormalAttackShake_durationOverride = 0.08f;
@@ -46,8 +50,7 @@ namespace GameBerry
         public float PetMoveSpeed = 4.0f;
 
         public float PetRadius = 1.5f;
-        public float PetStartAngle = 125f; // Look 방향의 시작 각도
+        public float PetStartAngle = 125f; // Start angle from look direction
         public float PetSectorAngle = 115f;
     }
 }
-
