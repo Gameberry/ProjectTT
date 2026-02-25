@@ -228,7 +228,14 @@ namespace GameBerry
                     SkillInfo selectAttackData = _currentAttackData;
 
                     CharacterState characterState = _currentAttackData == _nextSkillData ? CharacterState.Skill : CharacterState.Attack;
+                    if(_currentSkillAction != null)
+                    {
+                        if (characterState == CharacterState.Skill)
+                            _currentSkillAction.Release();
 
+                        _currentSkillAction = null;
+                    }
+                    
                     if (string.IsNullOrEmpty(_currentAttackData.AnimationName) == false)
                     { 
                         ChangeState(characterState, false);
@@ -238,7 +245,7 @@ namespace GameBerry
                         ChangeState(characterState);
 
                     if (characterState == CharacterState.Skill)
-                        _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), AttackTarget);
+                        _currentSkillAction = _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), AttackTarget);
 
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                 }

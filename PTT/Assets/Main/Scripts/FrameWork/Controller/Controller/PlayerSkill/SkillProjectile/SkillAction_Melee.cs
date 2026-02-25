@@ -25,7 +25,8 @@ namespace GameBerry
                 return;
             }
 
-
+            _attakParticle?.gameObject.SetActive(false);
+            
             var caster = _skillProjectilePlayer.CharacterControllerBase;
 
             // 캐릭터에 SkeletonAnimation이 어디에 붙는지 프로젝트마다 다름
@@ -84,7 +85,7 @@ namespace GameBerry
             _released = true;
 
             UnbindSpineEvents();
-            _attakParticle?.gameObject.SetActive(false);
+            //_attakParticle?.gameObject.SetActive(false);
             base.Release();
         }
         //------------------------------------------------------------------------------------

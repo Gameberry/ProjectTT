@@ -48,10 +48,16 @@ namespace GameBerry
             if (skillProjectilAction == null)
                 return;
 
+            Pool(skillProjectilAction).Forget();
+        }
+
+        private async UniTask Pool(SkillAction skillProjectilAction)
+        {
+            await UniTask.Delay(100); // 대충 초기화 시간
+
             skillProjectilAction.transform.SetParent(ProjectileRoot);
             skillProjectilAction.gameObject.SetActive(false);
             _projectilePool.Enqueue(skillProjectilAction);
-
         }
     }
 
