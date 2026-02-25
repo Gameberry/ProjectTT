@@ -24,9 +24,9 @@ MonoBehaviour:
   MapRange_Max: {x: 8, y: 0, z: 4}
   TempPlayerStat:
   - v2Enum_Stat: 11
-    value: 1
+    value: 10
   - v2Enum_Stat: 12
-    value: 100000
+    value: 10000
   - v2Enum_Stat: 14
     value: 2
   - v2Enum_Stat: 15
@@ -34,16 +34,18 @@ MonoBehaviour:
   - v2Enum_Stat: 21
     value: 0.1
   - v2Enum_Stat: 25
-    value: 4
+    value: 0.01
   - v2Enum_Stat: 22
     value: 2
   - v2Enum_Stat: 26
     value: 0.8
   - v2Enum_Stat: 27
     value: 1
+  - v2Enum_Stat: 23
+    value: 100
   TempMonsterStat:
   - v2Enum_Stat: 11
-    value: 1
+    value: 100
   - v2Enum_Stat: 12
     value: 3000
   - v2Enum_Stat: 14
@@ -54,10 +56,36 @@ MonoBehaviour:
     value: 1
   - v2Enum_Stat: 27
     value: 1
+  - v2Enum_Stat: 23
+    value: 5000
+  - v2Enum_Stat: 24
+    value: 100
   MonsterHitDuration: 0.5
   MonsterHitColor: {r: 1, g: 0, b: 0, a: 1}
   MonsterDeadDuration: 1.1
   ComboReleaseTime: 1.5
+  MonsterDefaultAttackData:
+    SkillId: 0
+    ActorType: 0
+    SkillType: 0
+    AnimationName: 
+    ResourceIndex: 0
+    RequireJobLevel: 0
+    RequireCharLevel: 0
+    EnemyCondition: 
+    _enemyConditionIndexList: 00000000
+    MyCondition: 
+    _myConditionIndexList: 
+    CooldownType: 0
+    CooldownValue: 0.32
+    BaseAttackMultiplier: 1
+    LevelAttackMultiplier: 0
+    HitCount: 1
+    AttackRangeType: 13
+    AttackAngle: 180
+    AttackRange: 0
+    TargetCount: 1
+    HitRange: 0
   NormalAttackShake: 0
   NormalAttackShake_strengthOverride: 0.01
   NormalAttackShake_durationOverride: 0.08

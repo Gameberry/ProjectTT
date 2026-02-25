@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -16,6 +15,15 @@ namespace GameBerry.UI
         private TMP_Text _comboText;
 
         [SerializeField]
+        private TMP_Text _playerCurrentHp;
+
+        [SerializeField]
+        private TMP_Text _playerMaxHp;
+
+        [SerializeField]
+        private Image _playerHpbar;
+
+        [SerializeField]
         private TMP_Text _playerLevel;
 
         [SerializeField]
@@ -23,6 +31,10 @@ namespace GameBerry.UI
 
         [SerializeField]
         private Image _playerExpBar;
+
+        private long _cachedCurrentHp = -1;
+        private long _cachedMaxHp = -1;
+        private float _cachedHpRatio = -1f;
 
         //------------------------------------------------------------------------------------
         protected override void OnLoad()
@@ -36,11 +48,19 @@ namespace GameBerry.UI
             RefreshExp(PlayerManager.Instance.GetExp());
 
             Message.AddListener<Event.RefreshComboUIMsg>(ShowComboUI);
+            Message.AddListener<Event.RefreshPlayerHpMsg>(OnRefreshPlayerHp);
         }
         //------------------------------------------------------------------------------------
         protected override void OnUnload()
         {
+            if (PlayerManager.Instance != null)
+            {
+                PlayerManager.Instance.OnLevelChanged -= RefreshLevel;
+                PlayerManager.Instance.OnExpChanged -= RefreshExp;
+            }
+
             Message.RemoveListener<Event.RefreshComboUIMsg>(ShowComboUI);
+            Message.RemoveListener<Event.RefreshPlayerHpMsg>(OnRefreshPlayerHp);
         }
         //------------------------------------------------------------------------------------
         private void ShowComboUI(Event.RefreshComboUIMsg msg)
@@ -72,6 +92,41 @@ namespace GameBerry.UI
 
             if (_playerExpBar != null)
                 _playerExpBar.fillAmount = expProgress;
+        }
+        //------------------------------------------------------------------------------------
+        private void OnRefreshPlayerHp(Event.RefreshPlayerHpMsg msg)
+        {
+            if (msg == null)
+                return;
+
+            RefreshHp(msg.CurrentHp, msg.MaxHp);
+        }
+        //------------------------------------------------------------------------------------
+        private void RefreshHp(double currentHp, double maxHp)
+        {
+            float hpRatio = 0f;
+
+            if (maxHp > 0)
+                hpRatio = Mathf.Clamp01((float)(currentHp / maxHp));
+
+            long currentHpInt = (long)Math.Floor(Math.Max(0, currentHp));
+            long maxHpInt = (long)Math.Floor(Math.Max(0, maxHp));
+
+            if (_cachedCurrentHp == currentHpInt && _cachedMaxHp == maxHpInt && Mathf.Approximately(_cachedHpRatio, hpRatio))
+                return;
+
+            _cachedCurrentHp = currentHpInt;
+            _cachedMaxHp = maxHpInt;
+            _cachedHpRatio = hpRatio;
+
+            if (_playerCurrentHp != null)
+                _playerCurrentHp.SetText(string.Format("{0:#,###}", currentHpInt));
+
+            if (_playerMaxHp != null)
+                _playerMaxHp.SetText(string.Format("{0:#,###}", maxHpInt));
+
+            if (_playerHpbar != null)
+                _playerHpbar.fillAmount = hpRatio;
         }
         //------------------------------------------------------------------------------------
     }

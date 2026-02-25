@@ -16,4 +16,10 @@ namespace GameBerry.Event
     {
         public int Combo = 0;
     }
+
+    public class RefreshPlayerHpMsg : Message
+    {
+        public double CurrentHp = 0;
+        public double MaxHp = 0;
+    }
 }

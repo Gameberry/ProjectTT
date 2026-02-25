@@ -2,6 +2,7 @@ using LitJson;
 using BackEnd;
 using System.Collections.Generic;
 using GameBerry.Chart;
+using Spine;
 
 namespace GameBerry.Table
 {
@@ -246,7 +247,12 @@ namespace GameBerry.Table
             if (slotIndex < 0 || slotIndex >= MaxSlotCount)
                 return 0;
 
-            return skillSlots[slotIndex].skillId;
+            SkillSlotData skillSlot = skillSlots.Find(s => s.slotIndex == slotIndex);
+            if (skillSlot == null)                
+                return 0;
+
+
+            return skillSlot.skillId;
         }
         //------------------------------------------------------------------------------------
         /// <summary>

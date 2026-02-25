@@ -168,6 +168,7 @@ namespace GameBerry
         [SerializeField]
         protected double _currentHP = 0.0;
         public double CurrentHP { get { return _currentHP; } }
+        public event System.Action<double, double> OnHpChanged;
 
         /// <summary> 애니메이션 컨트롤러의 재생 속도 (1.0 = 기본 속도) </summary>
         [SerializeField]
@@ -186,9 +187,6 @@ namespace GameBerry
         protected float _characterAttackSpeed = 1.0f;
         /// <summary> 캐릭터의 이동 속도 </summary>
         protected float _characterMoveSpeed = 1.0f;
-
-        /// <summary> 임시: 명중률 (아직 미구현) </summary>
-        public float Temp_Accuracy = 1f;
 
         /// <summary> 난수 생성기 </summary>
         private System.Random _random = new System.Random();
@@ -674,14 +672,20 @@ namespace GameBerry
 
             if (damage.Hitter != null && damage.Hitter.IsDead == false && damage.SkillInfo != null)
             {
+                float hitChance = CalcHitRate(damage.Hitter.CharacterStatOperator, CharacterStatOperator);
+
+                bool hasHit = false;
+
                 for (int i = 0; i < damage.SkillInfo.HitCount; ++i)
                 {
-                    bool ishit = Random.Range(0.0f, 1.0f) <= damage.Hitter.Temp_Accuracy;
+                    bool ishit = Random.Range(0.0f, 1.0f) <= hitChance;
                     if (ishit == false)
                     {
                         CombatTextSpawner.Instance.ShowMiss(transform, SkillManager.Instance.GetIcon(damage.SkillInfo.SkillId));
                         continue;
                     }
+
+                    hasHit = true;
 
                     double setdamage = damage.SkillInfo.GetFinalAttackMultiplier(damage.AttackLevel) * damage.Hitter.FinalAttack;
 
@@ -712,7 +716,8 @@ namespace GameBerry
                 {
                     if (_attackTarget == null)
                         _attackTarget = damage.Hitter;
-                    PlayCharacterCondition(damage.SkillInfo.GetEnemyConditionIndexes(), damage.Hitter.transform.position);
+                    if (hasHit)
+                        PlayCharacterCondition(damage.SkillInfo.GetEnemyConditionIndexes(), damage.Hitter.transform.position);
                 }
                 else
                 {
@@ -721,6 +726,16 @@ namespace GameBerry
 
                 damage.Hitter.OnHitCharacter(this);
             }
+        }
+        //------------------------------------------------------------------------------------
+        public float CalcHitRate(CharacterStatOperator attacker, CharacterStatOperator defender)
+        {
+            double accuracy = attacker.GetOutPutMyStat(Enum_Stat.Accuracy);
+            double evasion = defender.GetOutPutMyStat(Enum_Stat.Evasion);
+
+            float bonus = (float)(accuracy / (accuracy + evasion + 1.0));
+
+            return Mathf.Clamp(bonus, 0.05f, 0.99f);
         }
         //------------------------------------------------------------------------------------
         protected virtual void OnDamage()
@@ -900,12 +915,12 @@ namespace GameBerry
             if (_currentHP > _maxHP)
                 _currentHP = _maxHP;
 
-            if (_maxHP == 0)
-                return;
-
-            double hpratio = _currentHP / _maxHP;
+            double hpratio = 0;
+            if (_maxHP > 0)
+                hpratio = _currentHP / _maxHP;
 
             _uiCharacterState?.SetHPBar(hpratio);
+            OnHpChanged?.Invoke(_currentHP, _maxHP);
         }
         //------------------------------------------------------------------------------------
         /// <summary>
@@ -1095,7 +1110,7 @@ namespace GameBerry
             else
                 _currentHP = _maxHP * currHpRatio;
 
-
+            SetHP(_currentHP);
         }
         //------------------------------------------------------------------------------------
         public bool ApplyCritical()

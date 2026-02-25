@@ -5,6 +5,7 @@ using CodeStage.AntiCheat.ObscuredTypes;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using GameBerry.Common;
+using GameBerry.Chart;
 
 namespace GameBerry
 {
@@ -48,7 +49,7 @@ namespace GameBerry
         [SerializeField]
         private float _attackTimming = 1.0f;
 
-        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //��Ȱ��ȭ�� ���ó��?
+        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //��Ȱ��ȭ�� ���ó��?
 
         private BattleSceneMap_Aggro _battleSceneMap_Aggro;
 
@@ -286,7 +287,11 @@ namespace GameBerry
                         if (AttackTarget != null)
                         {
                             ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
-                            AttackTarget.Damage(FinalAttack);
+                            SkillInfo defaultAttackData = StaticResource.Instance.GetBattleModeStaticData().MonsterDefaultAttackData;
+                            if (defaultAttackData != null)
+                                AttackTarget.Damage(defaultAttackData.GetAttackStruct(this));
+                            else
+                                AttackTarget.Damage(FinalAttack);
                             ChangeState(CharacterState.Idle);
                             TestAniPlay(idleAniName);
                         }
@@ -305,6 +310,9 @@ namespace GameBerry
         }
     }
 }
+
+
+
 
 
 

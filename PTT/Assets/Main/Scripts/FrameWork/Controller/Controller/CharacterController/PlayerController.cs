@@ -10,12 +10,11 @@ namespace GameBerry
     public class PlayerController : CharacterControllerBase
     {
         public event System.Action OnAttackPerformed;
+        private Event.RefreshPlayerHpMsg _refreshPlayerHpMsg = new Event.RefreshPlayerHpMsg();
         [SerializeField]
         private ComboController _comboController;
 
         // 지금은 어택 애니도 뭐 없어서 일단 이정도로 구현
-        private float _attackTimming = 0.2f;
-
         [SerializeField]
         private float _attackRange = 1.5f;
 
@@ -48,6 +47,7 @@ namespace GameBerry
         public override void Init()
         {
             Message.AddListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
+            OnHpChanged += SendRefreshPlayerHpMsg;
 
             MoveController_Base creatureBaseMove = gameObject.AddComponent<MoveController_Base>();
             creatureBaseMove.SetCharacterController(this);
@@ -76,11 +76,14 @@ namespace GameBerry
             ApplyPassiveSkills();          // CharacterControllerBase의 메서드
             AutoUseSkills = true;          // 자동 스킬 사용 활성화
             // ============================================================
+
+            SendRefreshPlayerHpMsg(CurrentHP, MaxHP);
         }
         //------------------------------------------------------------------------------------
         public override void Release()
         {
             Message.RemoveListener<Event.RefreshPlayerSkinMsg>(RefreshPlayerSkin);
+            OnHpChanged -= SendRefreshPlayerHpMsg;
 
             _comboController?.Release();
 
@@ -94,6 +97,13 @@ namespace GameBerry
 
             ReleaseLanternController();
             // ============================================================
+        }
+        //------------------------------------------------------------------------------------
+        private void SendRefreshPlayerHpMsg(double currentHp, double maxHp)
+        {
+            _refreshPlayerHpMsg.CurrentHp = currentHp;
+            _refreshPlayerHpMsg.MaxHp = maxHp;
+            Message.Send(_refreshPlayerHpMsg);
         }
         //------------------------------------------------------------------------------------
         private void RefreshPlayerSkin(Event.RefreshPlayerSkinMsg msg)
@@ -217,8 +227,6 @@ namespace GameBerry
                 {
                     SkillInfo selectAttackData = _currentAttackData;
 
-                    _attackTimming = Time.time + 10f;
-
                     CharacterState characterState = _currentAttackData == _nextSkillData ? CharacterState.Skill : CharacterState.Attack;
 
                     if (string.IsNullOrEmpty(_currentAttackData.AnimationName) == false)
@@ -235,25 +243,6 @@ namespace GameBerry
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                 }
             }
-            //else if (CharacterState == CharacterState.Attack)
-            //{
-            //    if (_attackTimming <= Time.time)
-            //    {
-            //        _currentAttackData = null;
-
-            //        ChangeState(CharacterState.Idle);
-            //        if (_refreshAggro == true)
-            //            SetNewTarget();
-            //        //if (AttackTarget != null)
-            //        //{
-            //        //    if (AttackTarget.IsDead)
-            //        //        ChangeState(CharacterState.Idle);
-            //        //    else
-            //        //        _attackTimming = Time.time + _attackData.Cooltime;
-            //        //}
-
-            //    }
-            //}
         }
         //------------------------------------------------------------------------------------
         protected override void SpineAnimationEvent(string aniName, string eventName)
@@ -367,7 +356,6 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public void ReleaseAttack()
         {
-            _attackTimming = 0f;
             _currentAttackData = null;
 
             if (_currentSkillAction != null)

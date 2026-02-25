@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Spine;
 using Spine.Unity;
+using GameBerry.Chart;
 
 namespace GameBerry
 {
@@ -30,6 +31,7 @@ namespace GameBerry
         public Color MonsterHitColor = Color.white;
         public float MonsterDeadDuration = 1.167f;
         public float ComboReleaseTime = 2.0f;
+        public SkillInfo MonsterDefaultAttackData = new SkillInfo();
 
         [Header("카메라 흔들기")]
         public bool NormalAttackShake = false;
@@ -48,3 +50,4 @@ namespace GameBerry
         public float PetSectorAngle = 115f;
     }
 }
+
