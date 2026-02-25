@@ -7,12 +7,12 @@ using Spine;
 namespace GameBerry.Table
 {
     /// <summary>
-    /// 스킬 슬롯 데이터 (액티브 스킬 장착용)
+    /// ?�킬 ?�롯 ?�이??(?�티�??�킬 ?�착??
     /// </summary>
     public class SkillSlotData : IPackable
     {
-        public int slotIndex; // 0~4 (5개 슬롯)
-        public int skillId;   // 장착된 스킬 ID (0이면 빈 슬롯)
+        public int slotIndex; // 0~4 (5�??�롯)
+        public int skillId;   // ?�착???�킬 ID (0?�면 �??�롯)
 
         public string Pack() => $"{PackUtil.PackValue(slotIndex)},{PackUtil.PackValue(skillId)}";
 
@@ -35,12 +35,11 @@ namespace GameBerry.Table
     }
 
     /// <summary>
-    /// 유저가 보유한 스킬 데이터
-    /// </summary>
+    /// ?��?가 보유???�킬 ?�이??    /// </summary>
     public class SkillData : IPackable
     {
         public int skillId;
-        public int level; // 스킬 레벨 (기본 1)
+        public int level; // ?�킬 ?�벨 (기본 1)
 
         public string Pack() => $"{PackUtil.PackValue(skillId)},{PackUtil.PackValue(level)}";
 
@@ -70,12 +69,12 @@ namespace GameBerry.Table
         private const string skillSlotsKey = "SkillSlots";
         private List<SkillSlotData> skillSlots = new List<SkillSlotData>();
 
-        public const int MaxSlotCount = 5; // 스킬 슬롯 최대 개수
+        public const int MaxSlotCount = 5; // ?�킬 ?�롯 최�? 개수
 
         //------------------------------------------------------------------------------------
         public override void SetData(JsonData data)
         {
-            if (data == null || data.Count == 0) return;
+            if (data == null || data.Count == 0) { InitializeSlots(); return; }
 
             for (int i = 0; i < data.Count; ++i)
             {
@@ -90,7 +89,7 @@ namespace GameBerry.Table
                 }
             }
 
-            // 슬롯 초기화 (빈 슬롯이면 생성)
+            // ?�롯 초기??(�??�롯?�면 ?�성)
             InitializeSlots();
         }
         //------------------------------------------------------------------------------------
@@ -104,14 +103,16 @@ namespace GameBerry.Table
         //------------------------------------------------------------------------------------
         private void InitializeSlots()
         {
-            // 슬롯이 부족하면 빈 슬롯 추가
+            if (skillSlots == null)
+                skillSlots = new List<SkillSlotData>();
+
+            // ?�롯??부족하�?�??�롯 추�?
             while (skillSlots.Count < MaxSlotCount)
             {
                 skillSlots.Add(new SkillSlotData { slotIndex = skillSlots.Count, skillId = 0 });
             }
 
-            // 슬롯 인덱스 정렬 및 검증
-            skillSlots.Sort((a, b) => a.slotIndex.CompareTo(b.slotIndex));
+            // ?�롯 ?�덱???�렬 �?검�?            skillSlots.Sort((a, b) => a.slotIndex.CompareTo(b.slotIndex));
 
             for (int i = 0; i < skillSlots.Count; i++)
             {
@@ -119,22 +120,27 @@ namespace GameBerry.Table
             }
         }
         //------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------
+        private void EnsureSlotsInitialized()
+        {
+            if (skillSlots == null || skillSlots.Count < MaxSlotCount)
+                InitializeSlots();
+        }
         #region Skill Ownership & Level
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬 해금 (보유)
+        /// ?�킬 ?�금 (보유)
         /// </summary>
         public bool UnlockSkill(int skillId)
         {
             if (skillDataDict.ContainsKey(skillId))
-                return false; // 이미 보유 중
-
+                return false; // ?��? 보유 �?
             skillDataDict.Add(skillId, new SkillData { skillId = skillId, level = 1 });
             return true;
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬 보유 여부 확인
+        /// ?�킬 보유 ?��? ?�인
         /// </summary>
         public bool HasSkill(int skillId)
         {
@@ -142,8 +148,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬 데이터 가져오기
-        /// </summary>
+        /// ?�킬 ?�이??가?�오�?        /// </summary>
         public SkillData GetSkillData(int skillId)
         {
             if (skillDataDict.TryGetValue(skillId, out var data))
@@ -153,8 +158,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬 레벨 가져오기
-        /// </summary>
+        /// ?�킬 ?�벨 가?�오�?        /// </summary>
         public int GetSkillLevel(int skillId)
         {
             if (skillDataDict.TryGetValue(skillId, out var data))
@@ -164,8 +168,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬 레벨 업
-        /// </summary>
+        /// ?�킬 ?�벨 ??        /// </summary>
         public bool LevelUpSkill(int skillId)
         {
             if (!skillDataDict.TryGetValue(skillId, out var data))
@@ -176,7 +179,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬 레벨 설정
+        /// ?�킬 ?�벨 ?�정
         /// </summary>
         public bool SetSkillLevel(int skillId, int level)
         {
@@ -191,7 +194,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 보유한 모든 스킬 목록
+        /// 보유??모든 ?�킬 목록
         /// </summary>
         public Dictionary<int, SkillData> GetAllSkills()
         {
@@ -203,22 +206,24 @@ namespace GameBerry.Table
         #region Skill Slots (Active Skills Only)
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 슬롯에 스킬 장착
+        /// ?�롯???�킬 ?�착
         /// </summary>
         public bool EquipSkillToSlot(int slotIndex, int skillId)
         {
+            EnsureSlotsInitialized();
+
             if (slotIndex < 0 || slotIndex >= MaxSlotCount)
                 return false;
 
             if (!HasSkill(skillId))
-                return false; // 보유하지 않은 스킬
+                return false; // 보유?��? ?��? ?�킬
 
-            // 이미 다른 슬롯에 장착되어 있는지 확인
+            // ?��? ?�른 ?�롯???�착?�어 ?�는지 ?�인
             for (int i = 0; i < skillSlots.Count; i++)
             {
                 if (skillSlots[i].skillId == skillId && i != slotIndex)
                 {
-                    // 기존 슬롯 해제
+                    // 기존 ?�롯 ?�제
                     skillSlots[i].skillId = 0;
                 }
             }
@@ -228,10 +233,12 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 슬롯에서 스킬 해제
+        /// ?�롯?�서 ?�킬 ?�제
         /// </summary>
         public bool UnequipSkillFromSlot(int slotIndex)
         {
+            EnsureSlotsInitialized();
+
             if (slotIndex < 0 || slotIndex >= MaxSlotCount)
                 return false;
 
@@ -240,10 +247,11 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 특정 슬롯에 장착된 스킬 ID 가져오기
-        /// </summary>
+        /// ?�정 ?�롯???�착???�킬 ID 가?�오�?        /// </summary>
         public int GetEquippedSkillId(int slotIndex)
         {
+            EnsureSlotsInitialized();
+
             if (slotIndex < 0 || slotIndex >= MaxSlotCount)
                 return 0;
 
@@ -256,10 +264,12 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬이 장착된 슬롯 인덱스 찾기 (-1이면 미장착)
+        /// ?�킬???�착???�롯 ?�덱??찾기 (-1?�면 미장�?
         /// </summary>
         public int FindSlotIndexBySkillId(int skillId)
         {
+            EnsureSlotsInitialized();
+
             for (int i = 0; i < skillSlots.Count; i++)
             {
                 if (skillSlots[i].skillId == skillId)
@@ -270,7 +280,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 스킬이 장착되어 있는지 확인
+        /// ?�킬???�착?�어 ?�는지 ?�인
         /// </summary>
         public bool IsSkillEquipped(int skillId)
         {
@@ -278,10 +288,11 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 모든 슬롯 데이터 가져오기
-        /// </summary>
+        /// 모든 ?�롯 ?�이??가?�오�?        /// </summary>
         public List<SkillSlotData> GetAllSlots()
         {
+            EnsureSlotsInitialized();
+
             return skillSlots;
         }
         //------------------------------------------------------------------------------------
