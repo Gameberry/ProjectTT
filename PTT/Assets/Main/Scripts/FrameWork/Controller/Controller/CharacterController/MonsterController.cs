@@ -250,40 +250,51 @@ namespace GameBerry
                 _isWandering = false;
 
                 float distanceToTarget = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                bool hasReachedSlot = false;
-                float distanceToSlot = 0f;
+                if (distanceToTarget <= attackRange && CharacterState == CharacterState.Attack)
+                {
+                    // 사거리 내에서 공격 중이면 계속 공격
+                    return;
+                }
+
                 if (_hasReservedAttackSlot)
                 {
-                    distanceToSlot = MathDatas.GetDistance(transform.position, _reservedAttackSlotPos);
-                    hasReachedSlot = distanceToSlot <= AttackSlotReachThreshold;
-                }
+                    float distanceToSlot = MathDatas.GetDistance(transform.position, _reservedAttackSlotPos);
+                    bool hasReachedSlot = distanceToSlot <= AttackSlotReachThreshold;
 
-                // 슬롯 도착 후 사거리 미달이면 제자리 대기해서 좌우 흔들림을 막는다.
-                if (_hasReservedAttackSlot && hasReachedSlot && distanceToTarget > attackRange)
-                {
-                    if (CharacterState != CharacterState.Idle)
-                        ChangeState(CharacterState.Idle);
-
-                    return;
-                }
-
-                if (CharacterState == CharacterState.Idle)
-                {
-                    ChangeState(CharacterState.Run);
-                    return;
-                }
-
-                if (CharacterState == CharacterState.Run)
-                {
-                    if (_hasReservedAttackSlot)
+                    // 1) 사거리 미달이면 슬롯으로 이동(이미 도착했으면 대기)
+                    if (distanceToTarget > attackRange)
                     {
-                        if (distanceToSlot > AttackSlotReachThreshold)
-                            return;
+                        if (hasReachedSlot)
+                        {
+                            if (CharacterState != CharacterState.Idle)
+                                ChangeState(CharacterState.Idle);
+                        }
+                        else if (CharacterState != CharacterState.Run)
+                        {
+                            ChangeState(CharacterState.Run);
+                        }
+
+                        return;
                     }
 
-                    if (distanceToTarget <= attackRange && _blockAttack == false)
-                        ChangeState(CharacterState.Attack);
+                    // 2) 슬롯 도착 + 사거리 충분하면 공격
+                    if (hasReachedSlot)
+                    {
+                        if (_blockAttack == false && CharacterState != CharacterState.Attack)
+                            ChangeState(CharacterState.Attack);
+                    }
+                    else if (CharacterState != CharacterState.Run)
+                    {
+                        // 사거리는 되더라도 슬롯 미도착 상태면 슬롯까지 이동
+                        ChangeState(CharacterState.Run);
+                    }
+
+                    return;
                 }
+
+                // 슬롯이 없으면 기존 추적 이동
+                if (CharacterState != CharacterState.Run)
+                    ChangeState(CharacterState.Run);
 
                 return;
             }
@@ -392,7 +403,21 @@ namespace GameBerry
                         AttackTarget.Damage(FinalAttack);
                 }
                 else if (eventName.Contains("End"))
-                    ChangeState(CharacterState.Idle);
+                {
+                    if (_attackTarget != null)
+                    {
+                        float distanceToTarget = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                        if (distanceToTarget > attackRange)
+                        {
+                            ChangeState(CharacterState.Idle);
+                        }
+                        
+                    }
+                    else
+                    {
+                        ChangeState(CharacterState.Idle);
+                    }
+                }
             }
         }
         //------------------------------------------------------------------------------------
