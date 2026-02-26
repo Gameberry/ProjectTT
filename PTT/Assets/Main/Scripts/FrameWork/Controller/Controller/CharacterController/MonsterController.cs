@@ -27,6 +27,21 @@ namespace GameBerry
         private Vector3 _wanderTargetPos;
         private float _nextWanderStartTime = 0f;
         private bool _isReturningToSpawn = false;
+        private PlayerController _slotOwnerPlayer = null;
+        private Vector3 _reservedAttackSlotPos = Vector3.zero;
+        private int _reservedSlotRingIndex = -1;
+        private bool _hasReservedAttackSlot = false;
+        private float _nextSlotSyncTime = 0f;
+        private float _nextFrontRowRetryTime = 0f;
+
+        private const float AttackSlotReachThreshold = 0.25f;
+        private const float SlotSyncInterval = 0.15f;
+        private const float FrontRowRetryInterval = 0.5f;
+
+        private void OnDisable()
+        {
+            ReleaseAttackSlotReservation();
+        }
 
         private void ResetDamageCancellation()
         {
@@ -88,6 +103,7 @@ namespace GameBerry
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
             _spawnPos = spawnPos;
             _attackTarget = null;
+            ReleaseAttackSlotReservation();
             _isWandering = false;
             _isReturningToSpawn = false;
             _wanderTargetPos = _spawnPos;
@@ -101,6 +117,7 @@ namespace GameBerry
                 // Lost aggro while chasing: reset and return to spawn before wandering.
                 if (_attackTarget != null)
                 {
+                    ReleaseAttackSlotReservation();
                     _attackTarget = null;
                     _isWandering = false;
                     _isReturningToSpawn = true;
@@ -108,11 +125,13 @@ namespace GameBerry
                     return;
                 }
 
+                ReleaseAttackSlotReservation();
                 _attackTarget = null;
                 return;
             }
 
             _attackTarget = playerController;
+            EnsureAttackSlotReservation(playerController);
             _isWandering = false;
             _isReturningToSpawn = false;
         }
@@ -168,6 +187,9 @@ namespace GameBerry
                 return (_spawnPos - transform.position).normalized;
             }
 
+            if (_hasReservedAttackSlot)
+                return (_reservedAttackSlotPos - transform.position).normalized;
+
             return base.GetMoveDirection();
         }
         //------------------------------------------------------------------------------------
@@ -180,6 +202,7 @@ namespace GameBerry
                 return;
 
             _isDeadHandling = true;
+            ReleaseAttackSlotReservation();
             SetCollisionEnabled(false);
             ChangeSpineColor(Color.white);
             disableCancellation.Cancel();
@@ -207,6 +230,7 @@ namespace GameBerry
 
             if (_attackTarget != null && _attackTarget.IsDead)
             {
+                ReleaseAttackSlotReservation();
                 _attackTarget = null;
                 _isWandering = false;
                 _isReturningToSpawn = true;
@@ -217,6 +241,12 @@ namespace GameBerry
 
             if (_attackTarget != null)
             {
+                PlayerController attackTargetPlayer = _attackTarget as PlayerController;
+                if (attackTargetPlayer != null)
+                    EnsureAttackSlotReservation(attackTargetPlayer);
+                else
+                    ReleaseAttackSlotReservation();
+
                 _isWandering = false;
 
                 if (CharacterState == CharacterState.Idle)
@@ -227,6 +257,13 @@ namespace GameBerry
 
                 if (CharacterState == CharacterState.Run)
                 {
+                    if (_hasReservedAttackSlot)
+                    {
+                        float distanceToSlot = MathDatas.GetDistance(transform.position, _reservedAttackSlotPos);
+                        if (distanceToSlot > AttackSlotReachThreshold)
+                            return;
+                    }
+
                     float distanceToTarget = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                     if (distanceToTarget <= attackRange && _blockAttack == false)
                         ChangeState(CharacterState.Attack);
@@ -341,6 +378,90 @@ namespace GameBerry
                 else if (eventName.Contains("End"))
                     ChangeState(CharacterState.Idle);
             }
+        }
+        //------------------------------------------------------------------------------------
+        private void EnsureAttackSlotReservation(PlayerController playerController)
+        {
+            if (playerController == null)
+            {
+                ReleaseAttackSlotReservation();
+                return;
+            }
+
+            if (_slotOwnerPlayer != playerController)
+                ReleaseAttackSlotReservation();
+
+            if (_hasReservedAttackSlot == false)
+            {
+                TryReserveAttackSlot(playerController);
+                return;
+            }
+
+            if (Time.time >= _nextSlotSyncTime)
+            {
+                if (playerController.TryGetReservedAttackSlotPosition(this, out Vector3 slotPosition, out int ringIndex))
+                {
+                    _reservedAttackSlotPos = slotPosition;
+                    _reservedSlotRingIndex = ringIndex;
+                }
+                else
+                {
+                    _hasReservedAttackSlot = false;
+                    TryReserveAttackSlot(playerController);
+                }
+
+                _nextSlotSyncTime = Time.time + SlotSyncInterval;
+            }
+
+            if (_reservedSlotRingIndex == 1 && Time.time >= _nextFrontRowRetryTime)
+            {
+                if (playerController.TryReassignAttackSlot(this, out Vector3 slotPosition, out int ringIndex))
+                {
+                    _reservedAttackSlotPos = slotPosition;
+                    _reservedSlotRingIndex = ringIndex;
+                    _hasReservedAttackSlot = true;
+                    _slotOwnerPlayer = playerController;
+                }
+
+                _nextFrontRowRetryTime = Time.time + FrontRowRetryInterval;
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private void TryReserveAttackSlot(PlayerController playerController)
+        {
+            if (playerController == null)
+                return;
+
+            if (playerController.TryReserveAttackSlot(this, out Vector3 slotPosition, out int ringIndex))
+            {
+                _slotOwnerPlayer = playerController;
+                _reservedAttackSlotPos = slotPosition;
+                _reservedSlotRingIndex = ringIndex;
+                _hasReservedAttackSlot = true;
+                _nextSlotSyncTime = Time.time + SlotSyncInterval;
+                _nextFrontRowRetryTime = Time.time + FrontRowRetryInterval;
+                return;
+            }
+
+            _slotOwnerPlayer = playerController;
+            _reservedAttackSlotPos = playerController.GetOverflowWaitPosition(this);
+            _reservedSlotRingIndex = -1;
+            _hasReservedAttackSlot = true;
+            _nextSlotSyncTime = Time.time + SlotSyncInterval;
+            _nextFrontRowRetryTime = Time.time + FrontRowRetryInterval;
+        }
+        //------------------------------------------------------------------------------------
+        private void ReleaseAttackSlotReservation()
+        {
+            if (_slotOwnerPlayer != null)
+                _slotOwnerPlayer.ReleaseAttackSlot(this);
+
+            _slotOwnerPlayer = null;
+            _reservedAttackSlotPos = Vector3.zero;
+            _reservedSlotRingIndex = -1;
+            _hasReservedAttackSlot = false;
+            _nextSlotSyncTime = 0f;
+            _nextFrontRowRetryTime = 0f;
         }
         //------------------------------------------------------------------------------------
         private IEnumerator Co_DelayedPool(float delay)
