@@ -107,10 +107,13 @@ namespace GameBerry
                 Managers.MonsterManager.Instance.PoolMonster(monsterController);
         }
 
+        public bool DrawGizmos = true;
+
         private void OnDrawGizmos()
         {
 #if UNITY_EDITOR
-            Gizmos.DrawWireSphere(transform.position, StaticResource.Instance.GetBattleModeStaticData().SpawnrouteRadius);
+            if (DrawGizmos)
+                Gizmos.DrawWireSphere(transform.position, StaticResource.Instance.GetBattleModeStaticData().SpawnrouteRadius);
 #endif
         }
     }

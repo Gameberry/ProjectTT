@@ -885,6 +885,14 @@ namespace GameBerry
                 RefreshCheatStat();
             }
 
+            if (Input.GetKey(KeyCode.T))
+            {
+                if(_iFFType == IFFType.IFF_Foe)
+                {
+                    Damage(MaxHP * 2);
+                }
+            }
+
             Updated();
 
             if (_characterState != CharacterState.Dead
