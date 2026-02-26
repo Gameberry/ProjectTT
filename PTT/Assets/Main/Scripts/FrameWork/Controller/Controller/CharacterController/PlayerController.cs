@@ -59,6 +59,10 @@ namespace GameBerry
         private bool _drawAttackSlotGizmos = true;
         [SerializeField]
         private float _attackSlotGizmoSphereRadius = 0.12f;
+        [SerializeField]
+        private float _slotReassignCooldown = 0.75f;
+        [SerializeField]
+        private float _slotStealMinDistanceDelta = 0.2f;
         private struct AttackSlotReservation
         {
             public int RingIndex;
@@ -66,6 +70,7 @@ namespace GameBerry
         }
         private readonly Dictionary<MonsterController, AttackSlotReservation> _monsterSlotReservations = new Dictionary<MonsterController, AttackSlotReservation>();
         private readonly Dictionary<int, MonsterController> _occupiedSlots = new Dictionary<int, MonsterController>();
+        private readonly Dictionary<MonsterController, float> _monsterSlotAssignTimes = new Dictionary<MonsterController, float>();
 
         //------------------------------------------------------------------------------------
         public override void Init()
@@ -505,15 +510,22 @@ namespace GameBerry
                 slotPosition = GetSlotWorldPosition(reservedSlot.RingIndex, reservedSlot.SlotIndex);
                 return true;
             }
-            if (TryFindNearestEmptySlot(monster.transform.position, 0, out int frontSlotIndex))
+            Vector3 monsterPosition = monster.transform.position;
+            if (TryFindNearestSlotWithReassignment(monster, monsterPosition, 0, out int frontSlotIndex, out MonsterController frontDisplacedMonster))
             {
+                if (object.ReferenceEquals(frontDisplacedMonster, null) == false)
+                    ReleaseAttackSlot(frontDisplacedMonster);
+                _occupiedSlots.Remove(GetSlotKey(0, frontSlotIndex));
                 RegisterSlot(monster, 0, frontSlotIndex);
                 ringIndex = 0;
                 slotPosition = GetSlotWorldPosition(0, frontSlotIndex);
                 return true;
             }
-            if (TryFindNearestEmptySlot(monster.transform.position, 1, out int secondSlotIndex))
+            if (TryFindNearestSlotWithReassignment(monster, monsterPosition, 1, out int secondSlotIndex, out MonsterController secondDisplacedMonster))
             {
+                if (object.ReferenceEquals(secondDisplacedMonster, null) == false)
+                    ReleaseAttackSlot(secondDisplacedMonster);
+                _occupiedSlots.Remove(GetSlotKey(1, secondSlotIndex));
                 RegisterSlot(monster, 1, secondSlotIndex);
                 ringIndex = 1;
                 slotPosition = GetSlotWorldPosition(1, secondSlotIndex);
@@ -550,6 +562,7 @@ namespace GameBerry
             {
                 _monsterSlotReservations.Remove(monster);
                 _occupiedSlots.Remove(GetSlotKey(reservation.RingIndex, reservation.SlotIndex));
+                _monsterSlotAssignTimes.Remove(monster);
             }
         }
         //------------------------------------------------------------------------------------
@@ -570,6 +583,7 @@ namespace GameBerry
             };
             _monsterSlotReservations[monster] = reservation;
             _occupiedSlots[GetSlotKey(ringIndex, slotIndex)] = monster;
+            _monsterSlotAssignTimes[monster] = Time.time;
         }
         //------------------------------------------------------------------------------------
         private bool TryFindNearestEmptySlot(Vector3 monsterPosition, int ringIndex, out int slotIndex)
@@ -593,6 +607,83 @@ namespace GameBerry
                 }
             }
             return slotIndex >= 0;
+        }
+        //------------------------------------------------------------------------------------
+        private bool TryFindNearestSlotWithReassignment(MonsterController requester, Vector3 requesterPosition, int ringIndex, out int slotIndex, out MonsterController displacedMonster)
+        {
+            slotIndex = -1;
+            displacedMonster = null;
+            int slotCount = GetSlotCount(ringIndex);
+            if (slotCount <= 0)
+                return false;
+            float bestEmptyDistanceSqr = float.MaxValue;
+            int bestEmptySlotIndex = -1;
+            float bestSwapDistanceSqr = float.MaxValue;
+            int bestSwapSlotIndex = -1;
+            MonsterController bestSwapMonster = null;
+            for (int i = 0; i < slotCount; ++i)
+            {
+                int slotKey = GetSlotKey(ringIndex, i);
+                Vector3 slotWorldPosition = GetSlotWorldPosition(ringIndex, i);
+                float requesterDistanceSqr = (requesterPosition - slotWorldPosition).sqrMagnitude;
+                if (_occupiedSlots.TryGetValue(slotKey, out MonsterController occupiedMonster) == false || object.ReferenceEquals(occupiedMonster, null))
+                {
+                    if (requesterDistanceSqr < bestEmptyDistanceSqr)
+                    {
+                        bestEmptyDistanceSqr = requesterDistanceSqr;
+                        bestEmptySlotIndex = i;
+                    }
+                    continue;
+                }
+                if (occupiedMonster == requester)
+                {
+                    slotIndex = i;
+                    displacedMonster = null;
+                    return true;
+                }
+                if (_monsterSlotReservations.TryGetValue(occupiedMonster, out AttackSlotReservation occupiedReservation) == false)
+                    continue;
+                if (occupiedMonster.IsDead)
+                {
+                    if (requesterDistanceSqr < bestSwapDistanceSqr)
+                    {
+                        bestSwapDistanceSqr = requesterDistanceSqr;
+                        bestSwapSlotIndex = i;
+                        bestSwapMonster = occupiedMonster;
+                    }
+                    continue;
+                }
+                if (_monsterSlotAssignTimes.TryGetValue(occupiedMonster, out float assignedTime))
+                {
+                    if (Time.time - assignedTime < Mathf.Max(0f, _slotReassignCooldown))
+                        continue;
+                }
+                Vector3 occupiedMonsterPosition = occupiedMonster.transform.position;
+                Vector3 occupiedSlotPosition = GetSlotWorldPosition(occupiedReservation.RingIndex, occupiedReservation.SlotIndex);
+                float occupiedDistanceSqr = (occupiedMonsterPosition - occupiedSlotPosition).sqrMagnitude;
+                float requesterDistance = Mathf.Sqrt(requesterDistanceSqr);
+                float occupiedDistance = Mathf.Sqrt(occupiedDistanceSqr);
+                float stealDelta = Mathf.Max(0f, _slotStealMinDistanceDelta);
+                if (requesterDistance + stealDelta < occupiedDistance && requesterDistanceSqr < bestSwapDistanceSqr)
+                {
+                    bestSwapDistanceSqr = requesterDistanceSqr;
+                    bestSwapSlotIndex = i;
+                    bestSwapMonster = occupiedMonster;
+                }
+            }
+            if (bestEmptySlotIndex >= 0)
+            {
+                slotIndex = bestEmptySlotIndex;
+                displacedMonster = null;
+                return true;
+            }
+            if (bestSwapSlotIndex >= 0)
+            {
+                slotIndex = bestSwapSlotIndex;
+                displacedMonster = bestSwapMonster;
+                return true;
+            }
+            return false;
         }
         //------------------------------------------------------------------------------------
         private Vector3 GetSlotWorldPosition(int ringIndex, int slotIndex)
@@ -649,6 +740,7 @@ namespace GameBerry
         {
             _monsterSlotReservations.Clear();
             _occupiedSlots.Clear();
+            _monsterSlotAssignTimes.Clear();
         }
         //------------------------------------------------------------------------------------
         private void OnDrawGizmosSelected()

@@ -396,11 +396,18 @@ namespace GameBerry
                         return;
                     }
 
+                    ChangeCharacterLookAtDirection_Target(_attackTarget.transform);
+                    
                     SkillInfo defaultAttackData = StaticResource.Instance.GetBattleModeStaticData().MonsterDefaultAttackData;
                     if (defaultAttackData != null)
                         AttackTarget.Damage(defaultAttackData.GetAttackStruct(this));
                     else
                         AttackTarget.Damage(FinalAttack);
+                }
+                else if (eventName.Contains("Start"))
+                {
+                    if (_attackTarget != null)
+                        ChangeCharacterLookAtDirection_Target(_attackTarget.transform);
                 }
                 else if (eventName.Contains("End"))
                 {
@@ -411,7 +418,7 @@ namespace GameBerry
                         {
                             ChangeState(CharacterState.Idle);
                         }
-                        
+
                     }
                     else
                     {
