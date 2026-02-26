@@ -249,6 +249,24 @@ namespace GameBerry
 
                 _isWandering = false;
 
+                float distanceToTarget = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                bool hasReachedSlot = false;
+                float distanceToSlot = 0f;
+                if (_hasReservedAttackSlot)
+                {
+                    distanceToSlot = MathDatas.GetDistance(transform.position, _reservedAttackSlotPos);
+                    hasReachedSlot = distanceToSlot <= AttackSlotReachThreshold;
+                }
+
+                // 슬롯 도착 후 사거리 미달이면 제자리 대기해서 좌우 흔들림을 막는다.
+                if (_hasReservedAttackSlot && hasReachedSlot && distanceToTarget > attackRange)
+                {
+                    if (CharacterState != CharacterState.Idle)
+                        ChangeState(CharacterState.Idle);
+
+                    return;
+                }
+
                 if (CharacterState == CharacterState.Idle)
                 {
                     ChangeState(CharacterState.Run);
@@ -259,12 +277,10 @@ namespace GameBerry
                 {
                     if (_hasReservedAttackSlot)
                     {
-                        float distanceToSlot = MathDatas.GetDistance(transform.position, _reservedAttackSlotPos);
                         if (distanceToSlot > AttackSlotReachThreshold)
                             return;
                     }
 
-                    float distanceToTarget = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
                     if (distanceToTarget <= attackRange && _blockAttack == false)
                         ChangeState(CharacterState.Attack);
                 }
