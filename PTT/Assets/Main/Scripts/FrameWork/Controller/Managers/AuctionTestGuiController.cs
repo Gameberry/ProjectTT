@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace GameBerry
 {
@@ -27,6 +28,8 @@ namespace GameBerry
         private List<Auction> _myAuctions = new List<Auction>();
         private List<Auction> _searchAuctions = new List<Auction>();
         private bool _styleApplied = false;
+        private EventSystem _blockedEventSystem = null;
+        private bool _blockedEventSystemPrevEnabled = true;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
@@ -49,6 +52,7 @@ namespace GameBerry
             _isVisible = true;
             _statusText = "Auction Test Window Opened";
             Debug.Log("[AuctionTestGuiController] Show");
+            ApplyUiBlockState();
         }
 
         private void ApplyGuiStyleIfNeeded()
@@ -66,10 +70,13 @@ namespace GameBerry
         private void Hide()
         {
             _isVisible = false;
+            ApplyUiBlockState();
         }
 
         private void Update()
         {
+            ApplyUiBlockState();
+
             if (Input.GetMouseButton(0))
             {
                 if (_isTouchBegin == false)
@@ -107,6 +114,49 @@ namespace GameBerry
             _windowRect.height = Screen.height;
 
             _windowRect = GUI.Window(GetInstanceID(), _windowRect, DrawWindow, "Auction Test");
+        }
+
+        private void OnDisable()
+        {
+            RestoreBlockedEventSystem();
+        }
+
+        private void OnDestroy()
+        {
+            RestoreBlockedEventSystem();
+        }
+
+        private void ApplyUiBlockState()
+        {
+            if (_isVisible == false)
+            {
+                RestoreBlockedEventSystem();
+                return;
+            }
+
+            EventSystem current = EventSystem.current;
+            if (current == null)
+                return;
+
+            if (_blockedEventSystem != current)
+            {
+                RestoreBlockedEventSystem();
+                _blockedEventSystem = current;
+                _blockedEventSystemPrevEnabled = current.enabled;
+            }
+
+            if (_blockedEventSystem != null && _blockedEventSystem.enabled)
+                _blockedEventSystem.enabled = false;
+        }
+
+        private void RestoreBlockedEventSystem()
+        {
+            if (_blockedEventSystem == null)
+                return;
+
+            _blockedEventSystem.enabled = _blockedEventSystemPrevEnabled;
+            _blockedEventSystem = null;
+            _blockedEventSystemPrevEnabled = true;
         }
 
         private void DrawWindow(int windowId)

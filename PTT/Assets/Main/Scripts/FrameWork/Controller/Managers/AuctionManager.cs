@@ -57,6 +57,13 @@ namespace GameBerry
 
         public async UniTask AddAuction(int itemid, int price, int amount)
         {
+
+            if (amount > ItemManager.Instance.GetItemAmount(itemid))
+            {
+                ShowError("Not enough items to put up for auction.");
+                return;
+            }
+
             var auction = new Auction
             {
                 Itemid = itemid,
