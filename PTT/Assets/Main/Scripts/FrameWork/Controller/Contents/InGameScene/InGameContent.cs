@@ -3,7 +3,7 @@ using UnityEngine;
 using GameBerry.UI;
 using CodeStage.AntiCheat.ObscuredTypes;
 using System.Collections;
-
+using Cysharp.Threading.Tasks;
 using System.Linq;
 
 namespace GameBerry.Contents
@@ -17,6 +17,7 @@ namespace GameBerry.Contents
 
             StartCoroutine(CompleteFade());
         }
+
         //------------------------------------------------------------------------------------
         private IEnumerator CompleteFade()
         {

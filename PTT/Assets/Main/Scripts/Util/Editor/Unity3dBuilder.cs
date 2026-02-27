@@ -75,14 +75,14 @@ public static class Unity3dBuilder
 
     private static string[] GetDefine_Symbols()
     {
-        GameBerry.BuildEnvironmentSelectAsset asset = AssetDatabase.LoadAssetAtPath<GameBerry.BuildEnvironmentSelectAsset>("Assets/_ARRR/ScriptableObjectAsset/BuildEnvironmentSelect.asset");
+        GameBerry.BuildEnvironmentSelectAsset asset = AssetDatabase.LoadAssetAtPath<GameBerry.BuildEnvironmentSelectAsset>("Assets/Main/ProjectResources/ScriptableObjectAsset/BuildEnvironmentSelect.asset");
         if (asset.BuildElement == GameBerry.BuildEnvironmentEnum.Develop
             || asset.BuildElement == GameBerry.BuildEnvironmentEnum.QA)
         {
-            return new string[] { "UNITASK_DOTWEEN_SUPPORT", "DEV_DEFINE" };
+            return new string[] { "UNITASK_DOTWEEN_SUPPORT", "UNITY_POST_PROCESSING_STACK_V2", "BACKND_SDK_INSTALLED", "DEV_DEFINE" };
         }
 
-        return new string[] { "UNITASK_DOTWEEN_SUPPORT" };
+        return new string[] { "UNITASK_DOTWEEN_SUPPORT", "UNITY_POST_PROCESSING_STACK_V2", "BACKND_SDK_INSTALLED"};
     }
 
     static string CreateAndroidDirectory(string directoryName)

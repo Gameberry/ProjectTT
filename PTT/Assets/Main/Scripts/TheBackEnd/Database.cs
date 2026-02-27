@@ -1,15 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using BackEnd;
 using BACKND.Database;
-using LitJson;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using System.Collections.Concurrent;
-using GameBerry.Managers;
 
 namespace GameBerry.DB
 {
@@ -23,7 +15,9 @@ namespace GameBerry.DB
             {
                 // 2. 데이터베이스 클라이언트 생성
                 // 뒤끝 콘솔 > 데이터베이스 관리 메뉴에서 발급받은 DB UUID를 입력하세요.
-                DBClient = new Client(SceneManager.Instance.BuildEnvironmentData.Database);
+                //DBClient = new Client(SceneManager.Instance.BuildEnvironmentData.Database);
+
+                DBClient = new Client("019bd957-3a9a-7a11-8fee-edd43cc1a6e5");
 
                 if (DBClient == null)
                 {

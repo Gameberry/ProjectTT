@@ -87,9 +87,21 @@ namespace GameBerry
 
         public async UniTask<List<Auction>> GetAuctionItems(int itemId)
         {
-            return await Database.DBClient.From<Auction>()
-                .Where(x => x.Itemid == itemId)
-                .ToList();
+            try
+            {
+                var btask = Database.DBClient.From<Auction>()
+                    .Where(x => x.Itemid == itemId && x.Issold == false)
+                    .ToList();
+
+                var result = await btask;
+                Debug.Log($"GetAuctionItems success: {result?.Count} items");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"GetAuctionItems failed: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
 
         public async UniTask BuyAuctionItem(Auction selectedAuction)
@@ -166,8 +178,7 @@ namespace GameBerry
         public async UniTask RecvMySoldAuctionItems()
         {
             var soldItems = await Database.DBClient.From<Auction>()
-                .Where(x => x.Owner == Backend.UserInDate)
-                .Where(x => x.Issold == true)
+                .Where(x => x.Owner == Backend.UserInDate && x.Issold == true)
                 .ToList();
 
             TransactionBuilder transaction = Database.DBClient.Transaction();

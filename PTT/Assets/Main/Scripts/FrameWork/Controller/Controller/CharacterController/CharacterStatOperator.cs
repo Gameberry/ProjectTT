@@ -5,7 +5,6 @@ using CodeStage.AntiCheat.ObscuredTypes;
 
 namespace GameBerry
 {
-#if UNITY_EDITOR
     [System.Serializable]
     public class StatViewer
     {
@@ -14,7 +13,6 @@ namespace GameBerry
     }
 
     [System.Serializable]
-#endif
     public class CharacterStatOperator
     {
         protected Dictionary<Enum_Stat, ObscuredDouble> _defauleStatValue = new Dictionary<Enum_Stat, ObscuredDouble>();

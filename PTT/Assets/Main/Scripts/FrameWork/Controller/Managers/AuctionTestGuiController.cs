@@ -1,6 +1,7 @@
 #if DEV_DEFINE || UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using BACKND.Database;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,6 +17,8 @@ namespace GameBerry
         private bool _isVisible = false;
 
         private Rect _windowRect = new Rect(0, 0, 0, 0);
+        private Rect _safeAreaRect = new Rect(0, 0, 0, 0);
+        private Vector2 _mainScrollPos = Vector2.zero;
         private Vector2 _scrollPos = Vector2.zero;
         private Vector2 _searchScrollPos = Vector2.zero;
 
@@ -108,10 +111,16 @@ namespace GameBerry
 
             ApplyGuiStyleIfNeeded();
 
-            _windowRect.x = 0.0f;
-            _windowRect.y = 0.0f;
-            _windowRect.width = Screen.width;
-            _windowRect.height = Screen.height;
+            Rect safeArea = Screen.safeArea;
+            _safeAreaRect.x = safeArea.x;
+            _safeAreaRect.y = Screen.height - safeArea.y - safeArea.height;
+            _safeAreaRect.width = safeArea.width;
+            _safeAreaRect.height = safeArea.height;
+
+            _windowRect.x = _safeAreaRect.x;
+            _windowRect.y = _safeAreaRect.y;
+            _windowRect.width = _safeAreaRect.width;
+            _windowRect.height = _safeAreaRect.height;
 
             _windowRect = GUI.Window(GetInstanceID(), _windowRect, DrawWindow, "Auction Test");
         }
@@ -161,6 +170,28 @@ namespace GameBerry
 
         private void DrawWindow(int windowId)
         {
+            float padding = 16.0f;
+            float closeWidth = 140.0f;
+            float closeHeight = 46.0f;
+            float topBarHeight = closeHeight + 8.0f;
+            float innerWidth = Mathf.Max(100.0f, _windowRect.width - (padding * 2.0f));
+            float innerHeight = Mathf.Max(100.0f, _windowRect.height - (padding * 2.0f));
+            float bodyHeight = Mathf.Max(40.0f, innerHeight - topBarHeight);
+
+            float myListHeight = Mathf.Clamp(bodyHeight * 0.38f, 140.0f, 320.0f);
+            float searchListHeight = Mathf.Clamp(bodyHeight * 0.32f, 120.0f, 280.0f);
+
+            GUILayout.BeginArea(new Rect(padding, padding, innerWidth, innerHeight));
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Close", GUILayout.Width(closeWidth), GUILayout.Height(closeHeight)))
+            {
+                Hide();
+            }
+            GUILayout.EndHorizontal();
+
+            _mainScrollPos = GUILayout.BeginScrollView(_mainScrollPos, GUILayout.Height(bodyHeight));
             GUILayout.BeginVertical();
 
             GUILayout.Label("Hold 5 seconds anywhere to open this test window.");
@@ -204,7 +235,7 @@ namespace GameBerry
             GUILayout.Label("Status: " + _statusText);
             GUILayout.Space(8);
 
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(220));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(myListHeight));
             for (int i = 0; i < _myAuctions.Count; ++i)
             {
                 Auction auction = _myAuctions[i];
@@ -230,7 +261,7 @@ namespace GameBerry
 
             GUILayout.Space(8);
             GUILayout.Label("Search Result");
-            _searchScrollPos = GUILayout.BeginScrollView(_searchScrollPos, GUILayout.Height(160));
+            _searchScrollPos = GUILayout.BeginScrollView(_searchScrollPos, GUILayout.Height(searchListHeight));
             for (int i = 0; i < _searchAuctions.Count; ++i)
             {
                 Auction auction = _searchAuctions[i];
@@ -261,15 +292,9 @@ namespace GameBerry
             GUILayout.EndScrollView();
 
             GUILayout.Space(8);
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Close"))
-            {
-                Hide();
-            }
-            GUILayout.EndHorizontal();
-
             GUILayout.EndVertical();
+            GUILayout.EndScrollView();
+            GUILayout.EndArea();
 
         }
 

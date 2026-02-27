@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 using CodeStage.AntiCheat.ObscuredTypes;
 using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using BACKND.Database;
 
 namespace GameBerry.UI
 {
@@ -265,6 +268,27 @@ namespace GameBerry.UI
 
             if (m_isAdFreeMode != null)
                 m_isAdFreeMode.isOn = Define.IsAdFree;
+
+            GetAuctionItems().Forget();
+        }
+        //------------------------------------------------------------------------------------
+        public async UniTask TestAuction()
+        {
+            await UniTask.Delay(1000);
+            Debug.Log("됨");
+        }
+        //------------------------------------------------------------------------------------
+        public async UniTaskVoid GetAuctionItems()
+        {
+            try
+            {
+                List<Auction> myAuctions = await AuctionManager.Instance.GetAuctionItems(6001);
+                Debug.Log($"[CheatDialog] GetAuctionItems count: {myAuctions.Count} (itemId: 6001)");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[CheatDialog] GetAuctionItems failed: {e}");
+            }
         }
         //------------------------------------------------------------------------------------
         private void OnClick_SetMaxStage()

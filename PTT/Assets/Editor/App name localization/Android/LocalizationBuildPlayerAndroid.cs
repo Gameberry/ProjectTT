@@ -18,7 +18,7 @@ namespace UnityEditor.Localization.Platform.Android
 
             // Set the Product Name, perhaps the name that should represent the app for unsupported localizations
             // At the moment the name shown for unsupported localizations, however, is the name of the executable
-            PlayerSettings.productName = "BarBar";
+            PlayerSettings.productName = "PTT";
 
 
             // Create the list of localizations
@@ -26,20 +26,20 @@ namespace UnityEditor.Localization.Platform.Android
 
 
             // English
-            AppInfo appinfo_en = new AppInfo("en", "BarBar", "");
+            AppInfo appinfo_en = new AppInfo("en", "PTT", "");
             list_appinfo.Add(appinfo_en);
 
             // Korean
-            AppInfo appinfo_ko = new AppInfo("ko", "바바굴리기", "");
+            AppInfo appinfo_ko = new AppInfo("ko", "PTT", "");
             list_appinfo.Add(appinfo_ko);
 
 
             // Taiwan
-            AppInfo appinfo_tw = new AppInfo("zh-TW", "BarBar", "");
+            AppInfo appinfo_tw = new AppInfo("zh-TW", "PTT", "");
             list_appinfo.Add(appinfo_tw);
 
             //
-            AppInfo appinfo_jp = new AppInfo("ja", "BarBar", "");
+            AppInfo appinfo_jp = new AppInfo("ja", "PTT", "");
             list_appinfo.Add(appinfo_jp);        
 
             // Create the localizations in the Android project

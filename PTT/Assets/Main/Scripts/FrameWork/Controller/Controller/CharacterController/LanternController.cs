@@ -207,12 +207,6 @@ namespace GameBerry
             }
         }
 
-        protected override void PlayAnimation(CharacterState state)
-        {
-            Debug.Log(state);
-            base.PlayAnimation(state);
-        }
-
         private Vector3 GetDesiredPosition()
         {
             Vector3 offset = _baseFollowOffset;
