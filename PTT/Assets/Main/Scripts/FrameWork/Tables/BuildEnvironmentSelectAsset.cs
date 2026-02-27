@@ -48,7 +48,7 @@ namespace GameBerry
                 buildEnvironmentData.GameChat_NoticeChannel = "4cf17988-884f-4a37-87e2-50e76d34f64b";
                 buildEnvironmentData.GameChat_AdminChannel = "1d384ed2-f865-467c-bf3a-fddb91ae21de";
 
-                buildEnvironmentData.Database = "019c9915-3586-7581-a6e1-1eda7f2be975";
+                buildEnvironmentData.Database = "019bd957-3a9a-7a11-8fee-edd43cc1a6e5";
 
                 m_buildElementData.Add(BuildEnvironmentEnum.Develop, buildEnvironmentData);
             }
