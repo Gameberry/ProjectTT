@@ -1,4 +1,4 @@
-﻿namespace GameBerry.Contents.Event
+namespace GameBerry.Contents.Event
 {
 	public class EnterContentMsg : Message
 	{

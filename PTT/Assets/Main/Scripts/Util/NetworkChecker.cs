@@ -17,7 +17,7 @@ namespace GameBerry.Managers
         [SerializeField] private int timeoutSeconds = 4;
 
         [Header("UI")]
-        [SerializeField] private GameObject disconnectedPopup; // ¿¬°á ²÷±è ¸Ş½ÃÁö UI ÇÁ¸®ÆÕ or ¿ÀºêÁ§Æ®
+        [SerializeField] private GameObject disconnectedPopup; // ì—°ê²° ëŠê¹€ ë©”ì‹œì§€ UI í”„ë¦¬íŒ¹ or ì˜¤ë¸Œì íŠ¸
 
         private bool _wasConnected = true;
         private bool _running = false;
@@ -66,14 +66,14 @@ namespace GameBerry.Managers
                 if (isConnected && !_wasConnected)
                 {
                     _wasConnected = true;
-                    Debug.Log("ÀÎÅÍ³İ ¿¬°á º¹±¸µÊ");
+                    Debug.Log("ì¸í„°ë„· ì—°ê²° ë³µêµ¬ë¨");
                     disconnectedPopup?.SetActive(false);
                     OnReconnected?.Invoke();
                 }
                 else if (!isConnected && _wasConnected)
                 {
                     _wasConnected = false;
-                    Debug.LogWarning("ÀÎÅÍ³İ ¿¬°á ²÷±è");
+                    Debug.LogWarning("ì¸í„°ë„· ì—°ê²° ëŠê¹€");
                     disconnectedPopup?.SetActive(true);
                     OnDisconnected?.Invoke();
                 }

@@ -18,13 +18,13 @@ public class SecurityPlayerPrefs
 
     static SecurityPlayerPrefs()
     {
-        // 8 ¹ÙÀÌÆ®·Î ÇÏ°í, º¯°æÇØ¼­ ¾µ°Í
+        // 8 ë°”ì´íŠ¸ë¡œ í•˜ê³ , ë³€ê²½í•´ì„œ ì“¸ê²ƒ
         byte[] saltBytes = new byte[] { 1, 12, 55, 19, 72, 25, 54, 28 };
 
-        // ±æÀÌ »ó°ü ¾ø°í, Å°¸¦ ¸¸µé±â À§ÇÑ ¿ëµµ·Î ¾¸
+        // ê¸¸ì´ ìƒê´€ ì—†ê³ , í‚¤ë¥¼ ë§Œë“¤ê¸° ìœ„í•œ ìš©ë„ë¡œ ì”€
         string randomSeedForKey = "354hjkl554kj6l4k5g450g9450g04i0g";
 
-        // ±æÀÌ »ó°ü ¾ø°í, aes¿¡ ¾µ key ¿Í iv ¸¦ ¸¸µé ¿ëµµ
+        // ê¸¸ì´ ìƒê´€ ì—†ê³ , aesì— ì“¸ key ì™€ iv ë¥¼ ë§Œë“¤ ìš©ë„
         string randomSeedForValue = "0dfbiob09fgjdb0950mb50jbjbg49bij";
 
         {

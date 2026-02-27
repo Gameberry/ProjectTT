@@ -7,7 +7,7 @@ namespace GameBerry.Scene
     public class LobbyScene : IScene
     {
         protected override void OnLoadComplete()
-        {// ¿©±â¼­ °¢ ¸Å´ÏÀúµéÀ» ÃÊ±âÈ­ÇÏ°í ´Ù ³¡³µÀ¸¸é ¿©±â¼­ Ã³À½À¸·Î ½ºÅ¸Æ® ÇØÁØ´Ù.
+        {// ì—¬ê¸°ì„œ ê° ë§¤ë‹ˆì €ë“¤ì„ ì´ˆê¸°í™”í•˜ê³  ë‹¤ ëë‚¬ìœ¼ë©´ ì—¬ê¸°ì„œ ì²˜ìŒìœ¼ë¡œ ìŠ¤íƒ€íŠ¸ í•´ì¤€ë‹¤.
 
             //Managers.SceneManager.Instance.DeleteAppInitProcess();
 

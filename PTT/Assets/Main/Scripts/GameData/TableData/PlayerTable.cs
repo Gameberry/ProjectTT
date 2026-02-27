@@ -7,7 +7,7 @@ namespace GameBerry.Table
 {
     public class PlayerTable : TableBase
     {
-        // ÀüÁ÷ ´Ü°è
+        // ì „ì§ ë‹¨ê³„
         private const string jobKey = "Job";
         private int _jobId = 0;
 

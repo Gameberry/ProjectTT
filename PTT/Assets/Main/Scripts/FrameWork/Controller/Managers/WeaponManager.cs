@@ -175,7 +175,7 @@ namespace GameBerry
             if (data.level >= maxLevel)
                 return false;
 
-            // TODO: ·¹º§¾÷ ºñ¿ë Ã¼Å© ¹× ¼Ò¸ğ
+            // TODO: ë ˆë²¨ì—… ë¹„ìš© ì²´í¬ ë° ì†Œëª¨
             long cost = GetLevelUpCost(itemId);
             if (ItemManager.Instance.GetItemAmount(Define.WeaponLevelUpCostKey) < cost)
                 return false;
@@ -216,7 +216,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public int GetAwakeCost(int itemId)
         {
-            // °¢¼º¿¡ ÇÊ¿äÇÑ ¹«±â ¼ö : ÇöÀç °¢¼º ·¹º§ + 1
+            // ê°ì„±ì— í•„ìš”í•œ ë¬´ê¸° ìˆ˜ : í˜„ì¬ ê°ì„± ë ˆë²¨ + 1
             WeaponData data = GetWeaponData(itemId);
             if (data == null)
                 return 1;
@@ -232,7 +232,7 @@ namespace GameBerry
             int cost = GetAwakeCost(itemId);
             long currentCount = GetWeaponCount(itemId);
 
-            // °¢¼º ºñ¿ë¸¸Å­ º¸À¯ÇÏ¸é °¢¼º °¡´É (count°¡ 0ÀÌ µÇ¾îµµ º¸À¯ »óÅÂ´Â À¯Áö)
+            // ê°ì„± ë¹„ìš©ë§Œí¼ ë³´ìœ í•˜ë©´ ê°ì„± ê°€ëŠ¥ (countê°€ 0ì´ ë˜ì–´ë„ ë³´ìœ  ìƒíƒœëŠ” ìœ ì§€)
             return currentCount >= cost;
         }
         //------------------------------------------------------------------------------------
@@ -294,10 +294,10 @@ namespace GameBerry
 
             int cost = GetAwakeCost(itemId);
 
-            // ¹«±â ¼Ò¸ğ
+            // ë¬´ê¸° ì†Œëª¨
             _weaponTable.Add(itemId, -cost);
 
-            // °¢¼º ·¹º§ Áõ°¡
+            // ê°ì„± ë ˆë²¨ ì¦ê°€
             _weaponTable.AwakeUp(itemId);
 
             if (immediate)
@@ -312,11 +312,11 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
-        #region Combine (ÇÕ¼º)
+        #region Combine (í•©ì„±)
         //------------------------------------------------------------------------------------
         public int GetNextWeaponId(int itemId)
         {
-            // ¿¹: 7101 -> 7102, 7104 -> 7201
+            // ì˜ˆ: 7101 -> 7102, 7104 -> 7201
             int lastDigit = itemId % 10;
             if (lastDigit < 4)
             {
@@ -333,16 +333,16 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public bool CanCombine(int itemId)
         {
-            // ÃÖ´ë °¢¼º »óÅÂ¿©¾ß ÇÕ¼º °¡´É
+            // ìµœëŒ€ ê°ì„± ìƒíƒœì—¬ì•¼ í•©ì„± ê°€ëŠ¥
             if (IsMaxAwake(itemId) == false)
                 return false;
 
-            // ÇÕ¼º¿¡ ÇÊ¿äÇÑ ¹«±â ¼ö
+            // í•©ì„±ì— í•„ìš”í•œ ë¬´ê¸° ìˆ˜
             long currentCount = GetWeaponCount(itemId);
             if (currentCount < Define.WeaponCombineCount)
                 return false;
 
-            // ´ÙÀ½ ¹«±â°¡ Â÷Æ®¿¡ Á¸ÀçÇØ¾ß ÇÔ
+            // ë‹¤ìŒ ë¬´ê¸°ê°€ ì°¨íŠ¸ì— ì¡´ì¬í•´ì•¼ í•¨
             int nextId = GetNextWeaponId(itemId);
             WeaponInfo nextInfo = _weaponChart.Get(nextId);
 
@@ -410,10 +410,10 @@ namespace GameBerry
 
             int nextId = GetNextWeaponId(itemId);
 
-            // ÇöÀç ¹«±â ¼Ò¸ğ
+            // í˜„ì¬ ë¬´ê¸° ì†Œëª¨
             _weaponTable.Add(itemId, -Define.WeaponCombineCount);
 
-            // ´ÙÀ½ ¹«±â È¹µæ
+            // ë‹¤ìŒ ë¬´ê¸° íšë“
             _weaponTable.Add(nextId, 1);
 
             if (immediate)
@@ -435,7 +435,7 @@ namespace GameBerry
             Dictionary<Enum_Stat, double> ownStats = CalculateOwnStats();
             Dictionary<Enum_Stat, double> equipStats = CalculateEquipStats();
 
-            // ÀüÃ¼ ¹«±â ½ºÅÈ = º¸À¯ È¿°ú + ÀåÂø È¿°ú
+            // ì „ì²´ ë¬´ê¸° ìŠ¤íƒ¯ = ë³´ìœ  íš¨ê³¼ + ì¥ì°© íš¨ê³¼
             Dictionary<Enum_Stat, double> totalStats = new Dictionary<Enum_Stat, double>();
 
             foreach (var kvp in ownStats)
@@ -448,7 +448,7 @@ namespace GameBerry
                 AddStat(totalStats, kvp.Key, kvp.Value);
             }
 
-            // PlayerController¿¡ ¹«±â ½ºÅÈ Àû¿ë
+            // PlayerControllerì— ë¬´ê¸° ìŠ¤íƒ¯ ì ìš©
             CharacterControllerBase player = Managers.BattleSceneManager.Instance?.GetPlayer();
             if (player != null)
             {
@@ -459,7 +459,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public Dictionary<Enum_Stat, double> CalculateOwnStats()
         {
-            // º¸À¯ È¿°ú: º¸À¯ÇÑ ¸ğµç ¹«±âÀÇ OwnStat ÇÕ»ê
+            // ë³´ìœ  íš¨ê³¼: ë³´ìœ í•œ ëª¨ë“  ë¬´ê¸°ì˜ OwnStat í•©ì‚°
             Dictionary<Enum_Stat, double> totalStats = new Dictionary<Enum_Stat, double>();
 
             List<WeaponData> allWeapons = GetAllWeaponData();
@@ -479,7 +479,7 @@ namespace GameBerry
                 if (ownStats == null)
                     continue;
 
-                // ·¹º§¿¡ µû¸¥ º¸À¯ È¿°ú ¹èÀ² Àû¿ë
+                // ë ˆë²¨ì— ë”°ë¥¸ ë³´ìœ  íš¨ê³¼ ë°°ìœ¨ ì ìš©
                 double levelMultiplier = GetLevelMultiplier(weaponData.level);
 
                 foreach (var kvp in ownStats)
@@ -494,9 +494,9 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public Dictionary<Enum_Stat, double> CalculateEquipStats()
         {
-            // ÀåÂø È¿°ú:
-            // - EquipStat: ·¹º§ ¹èÀ² Àû¿ë
-            // - EquipBonusStat: ·¹º§ ¹èÀ² ¹ÌÀû¿ë
+            // ì¥ì°© íš¨ê³¼:
+            // - EquipStat: ë ˆë²¨ ë°°ìœ¨ ì ìš©
+            // - EquipBonusStat: ë ˆë²¨ ë°°ìœ¨ ë¯¸ì ìš©
             Dictionary<Enum_Stat, double> totalStats = new Dictionary<Enum_Stat, double>();
 
             int equippedId = GetEquippedWeaponId();
@@ -514,7 +514,7 @@ namespace GameBerry
             var equipStats = info.GetEquipStats();
             var equipBonusStats = info.GetEquipBonusStats();
 
-            // ·¹º§¿¡ µû¸¥ ÀåÂø È¿°ú ¹èÀ² Àû¿ë
+            // ë ˆë²¨ì— ë”°ë¥¸ ì¥ì°© íš¨ê³¼ ë°°ìœ¨ ì ìš©
             double levelMultiplier = GetLevelMultiplier(weaponData.level);
 
             if (equipStats != null)
@@ -539,8 +539,8 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private double GetLevelMultiplier(int level)
         {
-            // TODO: ·¹º§¿¡ µû¸¥ ¹èÀ² °è»ê ·ÎÁ÷ (Â÷Æ®³ª Define¿¡¼­ °¡Á®¿Ã ¼ö ÀÖÀ½)
-            // ¿¹½Ã: ·¹º§ 1 = 1.0, ·¹º§ 140 = 14.0 (·¹º§´ç 0.1 Áõ°¡)
+            // TODO: ë ˆë²¨ì— ë”°ë¥¸ ë°°ìœ¨ ê³„ì‚° ë¡œì§ (ì°¨íŠ¸ë‚˜ Defineì—ì„œ ê°€ì ¸ì˜¬ ìˆ˜ ìˆìŒ)
+            // ì˜ˆì‹œ: ë ˆë²¨ 1 = 1.0, ë ˆë²¨ 140 = 14.0 (ë ˆë²¨ë‹¹ 0.1 ì¦ê°€)
             return 1.0 + (level - 1) * 0.1;
         }
         //------------------------------------------------------------------------------------
@@ -564,7 +564,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         #endregion
         //------------------------------------------------------------------------------------
-        #region Add Weapon (È¹µæ)
+        #region Add Weapon (íšë“)
         //------------------------------------------------------------------------------------
         public void ShowWeaponInventoryDialog()
         {

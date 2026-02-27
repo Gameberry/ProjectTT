@@ -53,7 +53,7 @@ namespace GameBerry
 
         private async UniTask Pool(SkillAction skillProjectilAction)
         {
-            await UniTask.Delay(100); // ´ëÃæ ÃÊ±âÈ­ ½Ã°£
+            await UniTask.Delay(100); // ëŒ€ì¶© ì´ˆê¸°í™” ì‹œê°„
 
             skillProjectilAction.transform.SetParent(ProjectileRoot);
             skillProjectilAction.gameObject.SetActive(false);
@@ -68,7 +68,7 @@ namespace GameBerry
         [SerializeField]
         private List<SkillObjData> _skillParticleDatas = new List<SkillObjData>();
 
-        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ºñÈ°¼ºÈ­½Ã Ãë¼ÒÃ³¸®
+        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ë¹„í™œì„±í™”ì‹œ ì·¨ì†Œì²˜ë¦¬
 
         public SkillAction PlaySkill(AttackStruct attackData, CharacterControllerBase target)
         {

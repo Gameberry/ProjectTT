@@ -13,26 +13,26 @@ namespace GameBerry
     public class ZipManager
     {
         /// <summary>
-        /// Æ¯Á¤ Æú´õ¸¦ ZIPÀ¸·Î ¾ĞÃà
+        /// íŠ¹ì • í´ë”ë¥¼ ZIPìœ¼ë¡œ ì••ì¶•
         /// </summary>
-        /// <param name="targetFolderPath">¾ĞÃà ´ë»ó Æú´õ °æ·Î</param>
-        /// <param name="zipFilePath">ÀúÀåÇÒ ZIP ÆÄÀÏ °æ·Î</param>
-        /// <param name="password">¾ĞÃà ¾ÏÈ£</param>
-        /// <param name="isDeleteFolder">Æú´õ »èÁ¦ ¿©ºÎ</param>
-        /// <returns>¾ĞÃà ¼º°ø ¿©ºÎ</returns>
+        /// <param name="targetFolderPath">ì••ì¶• ëŒ€ìƒ í´ë” ê²½ë¡œ</param>
+        /// <param name="zipFilePath">ì €ì¥í•  ZIP íŒŒì¼ ê²½ë¡œ</param>
+        /// <param name="password">ì••ì¶• ì•”í˜¸</param>
+        /// <param name="isDeleteFolder">í´ë” ì‚­ì œ ì—¬ë¶€</param>
+        /// <returns>ì••ì¶• ì„±ê³µ ì—¬ë¶€</returns>
 
         public static bool ZipFiles(string targetFolderPath, string zipFilePath, string password, bool isDeleteFolder)
         {
             bool retVal = false;
 
 
-            // Æú´õ°¡ Á¸ÀçÇÏ´Â °æ¿ì¿¡¸¸ ¼öÇà.
+            // í´ë”ê°€ ì¡´ì¬í•˜ëŠ” ê²½ìš°ì—ë§Œ ìˆ˜í–‰.
             if (Directory.Exists(targetFolderPath))
             {
-                // ¾ĞÃà ´ë»ó Æú´õÀÇ ÆÄÀÏ ¸ñ·Ï.
+                // ì••ì¶• ëŒ€ìƒ í´ë”ì˜ íŒŒì¼ ëª©ë¡.
                 ArrayList ar = GenerateFileList(targetFolderPath);
 
-                // ¾ĞÃà ´ë»ó Æú´õ °æ·ÎÀÇ ±æÀÌ + 1
+                // ì••ì¶• ëŒ€ìƒ í´ë” ê²½ë¡œì˜ ê¸¸ì´ + 1
                 int TrimLength = (Directory.GetParent(targetFolderPath)).ToString().Length + 1;
                 
                 // find number of chars to remove. from orginal file path. remove '\'
@@ -41,15 +41,15 @@ namespace GameBerry
                 byte[] obuffer;
                 string outPath = zipFilePath;
 
-                // ZIP ½ºÆ®¸² »ı¼º.
+                // ZIP ìŠ¤íŠ¸ë¦¼ ìƒì„±.
                 ZipOutputStream oZipStream = new ZipOutputStream(File.Create(outPath));
                 try
                 {
-                    // ÆĞ½º¿öµå°¡ ÀÖ´Â °æ¿ì ÆĞ½º¿öµå ÁöÁ¤.
+                    // íŒ¨ìŠ¤ì›Œë“œê°€ ìˆëŠ” ê²½ìš° íŒ¨ìŠ¤ì›Œë“œ ì§€ì •.
                     if (password != null && password != String.Empty)
                         oZipStream.Password = password;
 
-                    oZipStream.SetLevel(9); // ¾ÏÈ£È­ ·¹º§.(ÃÖ´ë ¾ĞÃà)
+                    oZipStream.SetLevel(9); // ì•”í˜¸í™” ë ˆë²¨.(ìµœëŒ€ ì••ì¶•)
 
                     ZipEntry oZipEntry;
                     foreach (string Fil in ar)
@@ -57,7 +57,7 @@ namespace GameBerry
                         oZipEntry = new ZipEntry(Fil.Remove(0, TrimLength));
                         oZipStream.PutNextEntry(oZipEntry);
 
-                        // ÆÄÀÏÀÎ °æ¿ì.
+                        // íŒŒì¼ì¸ ê²½ìš°.
                         if (!Fil.EndsWith(@"/"))
                         {
                             ostream = File.OpenRead(Fil);
@@ -72,18 +72,18 @@ namespace GameBerry
                 catch
                 {
                     retVal = false;
-                    // ¿À·ù°¡ ³­ °æ¿ì »ı¼º Çß´ø ÆÄÀÏÀ» »èÁ¦.
+                    // ì˜¤ë¥˜ê°€ ë‚œ ê²½ìš° ìƒì„± í–ˆë˜ íŒŒì¼ì„ ì‚­ì œ.
                     if (File.Exists(outPath))
                         File.Delete(outPath);
                 }
                 finally
                 {
-                    // ¾ĞÃà Á¾·á.
+                    // ì••ì¶• ì¢…ë£Œ.
                     oZipStream.Finish();
                     oZipStream.Close();
                 }
 
-                // Æú´õ »èÁ¦¸¦ ¿øÇÒ °æ¿ì Æú´õ »èÁ¦.
+                // í´ë” ì‚­ì œë¥¼ ì›í•  ê²½ìš° í´ë” ì‚­ì œ.
                 if (isDeleteFolder)
                     try
                     {
@@ -95,16 +95,16 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// ÆÄÀÏ, Æú´õ ¸ñ·Ï »ı¼º
+        /// íŒŒì¼, í´ë” ëª©ë¡ ìƒì„±
         /// </summary>
-        /// <param name="Dir">Æú´õ °æ·Î</param>
-        /// <returns>Æú´õ, ÆÄÀÏ ¸ñ·Ï(ArrayList)</returns>
+        /// <param name="Dir">í´ë” ê²½ë¡œ</param>
+        /// <returns>í´ë”, íŒŒì¼ ëª©ë¡(ArrayList)</returns>
         private static ArrayList GenerateFileList(string Dir)
         {
             ArrayList fils = new ArrayList();
 
             bool Empty = true;
-            // Æú´õ ³»ÀÇ ÆÄÀÏ Ãß°¡.
+            // í´ë” ë‚´ì˜ íŒŒì¼ ì¶”ê°€.
             foreach (string file in Directory.GetFiles(Dir))
             {
                 fils.Add(file);
@@ -113,18 +113,18 @@ namespace GameBerry
 
             if (Empty)
             {
-                // ÆÄÀÏÀÌ ¾ø°í, Æú´õµµ ¾ø´Â °æ¿ì ÀÚ½ÅÀÇ Æú´õ Ãß°¡.
+                // íŒŒì¼ì´ ì—†ê³ , í´ë”ë„ ì—†ëŠ” ê²½ìš° ìì‹ ì˜ í´ë” ì¶”ê°€.
                 if (Directory.GetDirectories(Dir).Length == 0)
                     fils.Add(Dir + @"/");
             }
 
-            // Æú´õ ³» Æú´õ ¸ñ·Ï.
+            // í´ë” ë‚´ í´ë” ëª©ë¡.
             foreach (string dirs in Directory.GetDirectories(Dir))
             {
-                // ÇØ´ç Æú´õ·Î ´Ù½Ã GenerateFileList Àç±Í È£Ãâ
+                // í•´ë‹¹ í´ë”ë¡œ ë‹¤ì‹œ GenerateFileList ì¬ê·€ í˜¸ì¶œ
                 foreach (object obj in GenerateFileList(dirs))
                 {
-                    // ÇØ´ç Æú´õ ³»ÀÇ ÆÄÀÏ, Æú´õ Ãß°¡.
+                    // í•´ë‹¹ í´ë” ë‚´ì˜ íŒŒì¼, í´ë” ì¶”ê°€.
                     fils.Add(obj);
                 }
             }
@@ -136,7 +136,7 @@ namespace GameBerry
         {
             List<string> fils = new List<string>();
 
-            // Æú´õ ³»ÀÇ ÆÄÀÏ Ãß°¡.
+            // í´ë” ë‚´ì˜ íŒŒì¼ ì¶”ê°€.
             foreach (string file in Directory.GetFiles(Dir))
             {
                 if (file.Contains(".json") == true)
@@ -152,7 +152,7 @@ namespace GameBerry
         {
             List<string> fils = new List<string>();
 
-            // Æú´õ ³»ÀÇ ÆÄÀÏ Ãß°¡.
+            // í´ë” ë‚´ì˜ íŒŒì¼ ì¶”ê°€.
             foreach (string file in Directory.GetFiles(Dir))
             {
                 string[] filepaths = file.Split('/');
@@ -177,50 +177,50 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// ¾ĞÃà ÆÄÀÏ Ç®±â
+        /// ì••ì¶• íŒŒì¼ í’€ê¸°
         /// </summary>
-        /// <param name="zipFilePath">ZIPÆÄÀÏ °æ·Î</param>
-        /// <param name="unZipTargetFolderPath">¾ĞÃà Ç® Æú´õ °æ·Î</param>
-        /// <param name="password">ÇØÁö ¾ÏÈ£</param>
-        /// <param name="isDeleteZipFile">zipÆÄÀÏ »èÁ¦ ¿©ºÎ</param>
-        /// <returns>¾ĞÃà Ç®±â ¼º°ø ¿©ºÎ </returns>
+        /// <param name="zipFilePath">ZIPíŒŒì¼ ê²½ë¡œ</param>
+        /// <param name="unZipTargetFolderPath">ì••ì¶• í’€ í´ë” ê²½ë¡œ</param>
+        /// <param name="password">í•´ì§€ ì•”í˜¸</param>
+        /// <param name="isDeleteZipFile">zipíŒŒì¼ ì‚­ì œ ì—¬ë¶€</param>
+        /// <returns>ì••ì¶• í’€ê¸° ì„±ê³µ ì—¬ë¶€ </returns>
         public static bool UnZipFiles(string zipFilePath, string unZipTargetFolderPath, string password, bool isDeleteZipFile)
         {
             bool retVal = false;
 
-            // ZIP ÆÄÀÏÀÌ ÀÖ´Â °æ¿ì¸¸ ¼öÇà.
+            // ZIP íŒŒì¼ì´ ìˆëŠ” ê²½ìš°ë§Œ ìˆ˜í–‰.
             if (File.Exists(zipFilePath))
             {
-                // ZIP ½ºÆ®¸² »ı¼º.
+                // ZIP ìŠ¤íŠ¸ë¦¼ ìƒì„±.
                 ZipInputStream zipInputStream = new ZipInputStream(File.OpenRead(zipFilePath));
 
-                // ÆĞ½º¿öµå°¡ ÀÖ´Â °æ¿ì ÆĞ½º¿öµå ÁöÁ¤.
+                // íŒ¨ìŠ¤ì›Œë“œê°€ ìˆëŠ” ê²½ìš° íŒ¨ìŠ¤ì›Œë“œ ì§€ì •.
                 if (password != null && password != String.Empty)
                     zipInputStream.Password = password;
 
                 try
                 {
                     ZipEntry theEntry;
-                    // ¹İº¹ÇÏ¸ç ÆÄÀÏÀ» °¡Á®¿È.
+                    // ë°˜ë³µí•˜ë©° íŒŒì¼ì„ ê°€ì ¸ì˜´.
                     while ((theEntry = zipInputStream.GetNextEntry()) != null)
                     {
-                        // Æú´õ
+                        // í´ë”
                         string directoryName = Path.GetDirectoryName(theEntry.Name);
-                        string fileName = Path.GetFileName(theEntry.Name); // ÆÄÀÏ
+                        string fileName = Path.GetFileName(theEntry.Name); // íŒŒì¼
 
-                        // Æú´õ »ı¼º
+                        // í´ë” ìƒì„±
                         Directory.CreateDirectory(unZipTargetFolderPath + directoryName);
 
-                        // ÆÄÀÏ ÀÌ¸§ÀÌ ÀÖ´Â °æ¿ì
+                        // íŒŒì¼ ì´ë¦„ì´ ìˆëŠ” ê²½ìš°
                         if (fileName != String.Empty)
                         {
-                            // ÆÄÀÏ ½ºÆ®¸² »ı¼º.(ÆÄÀÏ»ı¼º)
+                            // íŒŒì¼ ìŠ¤íŠ¸ë¦¼ ìƒì„±.(íŒŒì¼ìƒì„±)
                             FileStream streamWriter = File.Create((unZipTargetFolderPath + theEntry.Name));
 
                             int size = 2048;
                             byte[] data = new byte[2048];
 
-                            // ÆÄÀÏ º¹»ç
+                            // íŒŒì¼ ë³µì‚¬
                             while (true)
                             {
                                 size = zipInputStream.Read(data, 0, data.Length);
@@ -231,7 +231,7 @@ namespace GameBerry
                                     break;
                             }
 
-                            // ÆÄÀÏ½ºÆ®¸² Á¾·á
+                            // íŒŒì¼ìŠ¤íŠ¸ë¦¼ ì¢…ë£Œ
                             streamWriter.Close();
                         }
                     }
@@ -244,11 +244,11 @@ namespace GameBerry
                 }
                 finally
                 {
-                    // ZIP ÆÄÀÏ ½ºÆ®¸² Á¾·á
+                    // ZIP íŒŒì¼ ìŠ¤íŠ¸ë¦¼ ì¢…ë£Œ
                     zipInputStream.Close();
                 }
 
-                // ZIPÆÄÀÏ »èÁ¦¸¦ ¿øÇÒ °æ¿ì ÆÄÀÏ »èÁ¦.
+                // ZIPíŒŒì¼ ì‚­ì œë¥¼ ì›í•  ê²½ìš° íŒŒì¼ ì‚­ì œ.
                 if (isDeleteZipFile)
                     try
                     {

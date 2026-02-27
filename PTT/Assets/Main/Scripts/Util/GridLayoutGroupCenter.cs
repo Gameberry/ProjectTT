@@ -20,7 +20,7 @@ public class GridLayoutGroupCenter : GridLayoutGroup
     {
         int rectChildrenCount = rectChildren.Count;
 
-        // ÃÖÀûÈ­: ÀÚ½Ä °³¼ö º¯°æÀÌ ¾øÀ¸¸é Àç°è»ê ½ºÅµ
+        // ìµœì í™”: ìì‹ ê°œìˆ˜ ë³€ê²½ì´ ì—†ìœ¼ë©´ ì¬ê³„ì‚° ìŠ¤í‚µ
         if (axis == 1 && _cachedChildCount == rectChildrenCount)
             return;
 

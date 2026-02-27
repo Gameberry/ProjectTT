@@ -10,7 +10,7 @@ namespace GameBerry.Managers
 
         private List<CharacterControllerBase> _skillHitReceivers = new List<CharacterControllerBase>();
 
-        // ±¤¿ª±â¿¡¼­ ÇÑ ¹ø¿¡ ¸ÂÀ» ¼ö ÀÖ´Â ÃÖ´ë Å¸°Ù ¼ö (¼º´É/¿¬Ãâ»ó Á¦ÇÑ)
+        // ê´‘ì—­ê¸°ì—ì„œ í•œ ë²ˆì— ë§ì„ ìˆ˜ ìˆëŠ” ìµœëŒ€ íƒ€ê²Ÿ ìˆ˜ (ì„±ëŠ¥/ì—°ì¶œìƒ ì œí•œ)
         private const int MaxAoeTargets = 100;
 
         public bool FixDirec = true;
@@ -26,9 +26,9 @@ namespace GameBerry.Managers
                 return;
 
             float range = attackData.HitRange;
-            Vector3 pos = attackPos; // 3D ÁÂÇ¥ ±âÁØ (±âº» XZ Æò¸é)
+            Vector3 pos = attackPos; // 3D ì¢Œí‘œ ê¸°ì¤€ (ê¸°ë³¸ XZ í‰ë©´)
 
-            // Line Å¸ÀÔ À§Ä¡ º¸Á¤ (XÃà ±âÁØ, ÇÊ¿ä ¾øÀ¸¸é »èÁ¦ÇØµµ µÊ)
+            // Line íƒ€ì… ìœ„ì¹˜ ë³´ì • (Xì¶• ê¸°ì¤€, í•„ìš” ì—†ìœ¼ë©´ ì‚­ì œí•´ë„ ë¨)
             if (attackData.AttackRangeType == Enum_AttackRangeType.Line)
             {
                 float offset = attackData.HitRange * 0.5f;
@@ -38,11 +38,11 @@ namespace GameBerry.Managers
                     pos.x += offset;
             }
 
-            // ºÎÃ¤²Ã ¾µÁö ¿©ºÎ
+            // ë¶€ì±„ê¼´ ì“¸ì§€ ì—¬ë¶€
             bool useSector = attackData.AttackRangeType == Enum_AttackRangeType.Sector;
             float sectorAngle = attackData.AttackAngle;
 
-            // ºÎÃ¤²Ã ±âÁØÁ¡: ¹ß/¹«±â ÇÇ¹ş ¿ì¼±, ¾øÀ¸¸é Ä³¸¯ÅÍ À§Ä¡
+            // ë¶€ì±„ê¼´ ê¸°ì¤€ì : ë°œ/ë¬´ê¸° í”¼ë²— ìš°ì„ , ì—†ìœ¼ë©´ ìºë¦­í„° ìœ„ì¹˜
             Vector3 sectorOrigin = pos;
             Vector3 sectorForward = attackPos - actortrans.transform.position;
 
@@ -58,10 +58,10 @@ namespace GameBerry.Managers
                     sectorForward = attackPos - actortrans.transform.position;
             }
 
-            // YÃàÀº ¹«½ÃÇÏ°í(XZ Æò¸é) ÆÇÁ¤ÇÏµµ·Ï Æò¸éÈ­
+            // Yì¶•ì€ ë¬´ì‹œí•˜ê³ (XZ í‰ë©´) íŒì •í•˜ë„ë¡ í‰ë©´í™”
             sectorForward.y = 0f;
 
-            // ·¹ÀÌ¾î ¸¶½ºÅ©
+            // ë ˆì´ì–´ ë§ˆìŠ¤í¬
             int searchLayer = LayerMask.NameToLayer(Util.GetEnemyIFFType(actortrans.IFFType).ToString());
             LayerMask layerMask = 1 << searchLayer;
             // 3D Physics: use LayerMask directly (triggers are included if Physics.queriesHitTriggers is true)
@@ -72,7 +72,7 @@ namespace GameBerry.Managers
 
             if (targetCount < 0)
             {
-                // ±¤¿ª ½ºÅ³: »óÇÑ(MaxAoeTargets) µÎ°í OverlapCircle(ContactFilter2D) »ç¿ë
+                // ê´‘ì—­ ìŠ¤í‚¬: ìƒí•œ(MaxAoeTargets) ë‘ê³  OverlapCircle(ContactFilter2D) ì‚¬ìš©
                 int bufferSize = MaxAoeTargets;
                 if (!_recvColliderPools.TryGetValue(bufferSize, out colliders))
                 {
@@ -84,7 +84,7 @@ namespace GameBerry.Managers
             }
             else
             {
-                // Å¸°Ù Á¦ÇÑ ÀÖÀ½ ¡æ ±× Å©±â¸¸Å­¸¸ ¹öÆÛ ÇÒ´ç
+                // íƒ€ê²Ÿ ì œí•œ ìˆìŒ â†’ ê·¸ í¬ê¸°ë§Œí¼ë§Œ ë²„í¼ í• ë‹¹
                 if (!_recvColliderPools.TryGetValue(targetCount, out colliders))
                 {
                     colliders = new Collider[targetCount];
@@ -94,7 +94,7 @@ namespace GameBerry.Managers
                 colliderCount = Physics.OverlapSphereNonAlloc(overlapCenter, range, colliders, layerMask);
             }
 
-            // µğ¹ö±×¿ë °ª ¼¼ÆÃ
+            // ë””ë²„ê·¸ìš© ê°’ ì„¸íŒ…
             if (actortrans.IFFType == IFFType.IFF_Friend)
             {
                 debugPos = overlapCenter;
@@ -123,7 +123,7 @@ namespace GameBerry.Managers
                 if (skillHitReceiver == null)
                     continue;
 
-                // ºÎÃ¤²ÃÀÌ¸é °¢µµ Ã¼Å©
+                // ë¶€ì±„ê¼´ì´ë©´ ê°ë„ ì²´í¬
                 if (useSector)
                 {
                     Vector3 targetPos = skillHitReceiver.transform.position;
@@ -137,10 +137,10 @@ namespace GameBerry.Managers
                     needAddRecver = false;
             }
 
-            // °Å¸® / º¸½º ¿ì¼± Á¤·Ä + N¸í ÀÚ¸£±â (ÀÌÀü SetHitTarget ±×´ë·Î »ç¿ë)
+            // ê±°ë¦¬ / ë³´ìŠ¤ ìš°ì„  ì •ë ¬ + Nëª… ìë¥´ê¸° (ì´ì „ SetHitTarget ê·¸ëŒ€ë¡œ ì‚¬ìš©)
             SetHitTarget(actortrans, attackData, ref _skillHitReceivers);
 
-            // fixSkillHitReceiver º¸Á¤ ·ÎÁ÷ (¿ø·¡ ÄÚµå À¯Áö)
+            // fixSkillHitReceiver ë³´ì • ë¡œì§ (ì›ë˜ ì½”ë“œ ìœ ì§€)
             if (fixSkillHitReceiver != null && needAddRecver)
             {
                 if (targetCount < 0)
@@ -176,9 +176,9 @@ namespace GameBerry.Managers
         public float debugRadius;
         public float debugAngle;
         public Vector3 debugForward;
-        public Vector3 debugLineSize; // ¶óÀÎ(Á÷»ç°¢Çü) Ç¥Çö¿ë
+        public Vector3 debugLineSize; // ë¼ì¸(ì§ì‚¬ê°í˜•) í‘œí˜„ìš©
 
-        // ±âÁ¸ ÇÊµå ÀçÈ°¿ë (¿øÇüµµ °°ÀÌ Âï°í ½ÍÀ¸¸é)
+        // ê¸°ì¡´ í•„ë“œ ì¬í™œìš© (ì›í˜•ë„ ê°™ì´ ì°ê³  ì‹¶ìœ¼ë©´)
         public Vector3 drawGizmoPos;
         public float drawGizmoRadius;
         private void OnDrawGizmos()
@@ -193,7 +193,7 @@ namespace GameBerry.Managers
 
                 //case DebugRangeType.Line:
                 //    Gizmos.color = Color.green;
-                //    Gizmos.DrawWireCube(debugPos, new Vector3(attackLineLength, 0.01f, attackLineWidth)); // ÇÊ¿äÇÏ¸é ÇÊµå·Î »©±â
+                //    Gizmos.DrawWireCube(debugPos, new Vector3(attackLineLength, 0.01f, attackLineWidth)); // í•„ìš”í•˜ë©´ í•„ë“œë¡œ ë¹¼ê¸°
                 //    break;
 
                 case DebugRangeType.Sector:
@@ -239,7 +239,7 @@ namespace GameBerry.Managers
         {
             Vector3 toTarget = targetPos - origin;
 
-            // XZ Æò¸é ±âÁØÀ¸·Î ÆÇÁ¤ (Y ¹«½Ã)
+            // XZ í‰ë©´ ê¸°ì¤€ìœ¼ë¡œ íŒì • (Y ë¬´ì‹œ)
             toTarget.y = 0f;
 
             float distSqr = toTarget.sqrMagnitude;

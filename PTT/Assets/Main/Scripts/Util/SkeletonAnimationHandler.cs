@@ -32,7 +32,7 @@ namespace GameBerry
 
         private MeshRenderer _meshRenderer;
 
-        // ÇöÀç »ç¿ë ÁßÀÎ SpineModelData(½ºÅ² ½½·Ô ±âº»°ª ÂüÁ¶¿ë)
+        // í˜„ì¬ ì‚¬ìš© ì¤‘ì¸ SpineModelData(ìŠ¤í‚¨ ìŠ¬ë¡¯ ê¸°ë³¸ê°’ ì°¸ì¡°ìš©)
         private SpineModelData _currentModelData;
 
         #region Nested types
@@ -100,7 +100,7 @@ namespace GameBerry
         #region Model & Animation Setup
 
         /// <summary>
-        /// SpineModelData¸¦ ¼¼ÆÃÇÏ°í, ¾Ö´Ï¸ŞÀÌ¼Ç/½ºÅ² ½½·Ô ÃÊ±âÈ­
+        /// SpineModelDataë¥¼ ì„¸íŒ…í•˜ê³ , ì• ë‹ˆë©”ì´ì…˜/ìŠ¤í‚¨ ìŠ¬ë¡¯ ì´ˆê¸°í™”
         /// </summary>
         public void SetSpineModel(SpineModelData spineModelData)
         {
@@ -109,10 +109,10 @@ namespace GameBerry
 
             _currentModelData = spineModelData;
 
-            // ½ºÄÌ·¹Åæ µ¥ÀÌÅÍ ¼¼ÆÃ
+            // ìŠ¤ì¼ˆë ˆí†¤ ë°ì´í„° ì„¸íŒ…
             _skeletonAnimation.skeletonDataAsset = spineModelData.SkeletonData;
 
-            // ÃÖÃÊ ±âº» ½ºÅ²(¾øÀ¸¸é default)
+            // ìµœì´ˆ ê¸°ë³¸ ìŠ¤í‚¨(ì—†ìœ¼ë©´ default)
             if (spineModelData.SkinList.Count > 0)
                 _skeletonAnimation.initialSkinName = spineModelData.SkinList[0];
             else
@@ -120,7 +120,7 @@ namespace GameBerry
 
             _skeletonAnimation.Initialize(true);
 
-            // ¾Ö´Ï¸ŞÀÌ¼Ç ¸ñ·Ï ¼¼ÆÃ
+            // ì• ë‹ˆë©”ì´ì…˜ ëª©ë¡ ì„¸íŒ…
             var skeletonData = _skeletonAnimation.skeletonDataAsset.GetSkeletonData(true);
             _statesAndAnimation = spineModelData.AnimationList;
 
@@ -222,8 +222,8 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// SpineÀÇ skinÀ» ÅëÂ°·Î °¥¾Æ³¢¿ì´Â ¿ëµµ (½½·Ô ½Ã½ºÅÛÀ» ¾È ¾²°í,
-        /// ½ºÄÌ·¹Åæ ³» ÇÏ³ªÀÇ skinÀ¸·Î¸¸ º¸¿©ÁÖ°í ½ÍÀ» ¶§)
+        /// Spineì˜ skinì„ í†µì§¸ë¡œ ê°ˆì•„ë¼ìš°ëŠ” ìš©ë„ (ìŠ¬ë¡¯ ì‹œìŠ¤í…œì„ ì•ˆ ì“°ê³ ,
+        /// ìŠ¤ì¼ˆë ˆí†¤ ë‚´ í•˜ë‚˜ì˜ skinìœ¼ë¡œë§Œ ë³´ì—¬ì£¼ê³  ì‹¶ì„ ë•Œ)
         /// </summary>
         public void SetSkin(string skin)
         {
@@ -264,7 +264,7 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// 2D ÁÂ¿ì µÚÁı±â
+        /// 2D ì¢Œìš° ë’¤ì§‘ê¸°
         /// </summary>
         public void SetFlip(float horizontal)
         {
@@ -339,7 +339,7 @@ namespace GameBerry
 
         #endregion
 
-        #region Skin System (½½·Ô + Ãß°¡ Attach)
+        #region Skin System (ìŠ¬ë¡¯ + ì¶”ê°€ Attach)
 
         public void SetSkin(Skin skin)
         {
@@ -349,7 +349,7 @@ namespace GameBerry
             var skeleton = _skeletonAnimation.skeleton;
             var data = skeleton.Data;
 
-            // ½ÇÁ¦ ½ºÄÌ·¹Åæ¿¡ ¹İ¿µ
+            // ì‹¤ì œ ìŠ¤ì¼ˆë ˆí†¤ì— ë°˜ì˜
             skeleton.SetSkin(skin);
             skeleton.SetSlotsToSetupPose();
             skeleton.SetBonesToSetupPose();

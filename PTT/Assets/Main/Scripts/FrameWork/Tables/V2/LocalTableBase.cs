@@ -13,7 +13,7 @@ namespace GameBerry
 
         public virtual async UniTask InitData_Async()
         {
-            UnityEngine.Debug.LogWarning("¿Ã∞≈ »£√‚");
+            UnityEngine.Debug.LogWarning("Ïù¥Í±∞ Ìò∏Ï∂ú");
             await UniTask.Yield();
             await UniTask.NextFrame();
         }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using GameBerry.UI;
 using CodeStage.AntiCheat.ObscuredTypes;
@@ -24,12 +24,12 @@ namespace GameBerry.Contents
         //------------------------------------------------------------------------------------
         protected override void OnEnter()
         {
-            
+            UIManager.Instance.DialogEnter<GlobalPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         protected override void OnExit()
         {
-            
+            UIManager.Instance.DialogExit<GlobalPopupDialog>();
         }
         //------------------------------------------------------------------------------------
         public static void ShowMaintenanceError()

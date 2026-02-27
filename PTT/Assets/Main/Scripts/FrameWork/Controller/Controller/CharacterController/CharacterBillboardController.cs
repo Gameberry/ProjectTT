@@ -8,11 +8,11 @@ namespace GameBerry
         [SerializeField]
         private CharacterControllerBase characterControllerBase;
 
-        [Header("ºôº¸µå ´ë»ó")]
+        [Header("ë¹Œë³´ë“œ ëŒ€ìƒ")]
         [SerializeField] private List<Transform> applyXBillboard;
         [SerializeField] private List<Transform> fullBillboard;
 
-        [Header("Ä«¸Ş¶ó")]
+        [Header("ì¹´ë©”ë¼")]
         [SerializeField] private Camera targetCamera;
 
         private void Awake()
@@ -35,14 +35,14 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// ÇÊ¿äÇÒ ¶§¸¸ È£ÃâÇØ¼­ Spine/HPBar ¹æÇâÀ» °»½Å
+        /// í•„ìš”í•  ë•Œë§Œ í˜¸ì¶œí•´ì„œ Spine/HPBar ë°©í–¥ì„ ê°±ì‹ 
         /// </summary>
         public void RefreshBillboard()
         {
             if (targetCamera == null)
                 return;
 
-            // Orthographic Ä«¸Ş¶ó ¡æ ¸ğµç ¿ÀºêÁ§Æ®¿¡ ´ëÇØ ¹æÇâÀº Ç×»ó -forward
+            // Orthographic ì¹´ë©”ë¼ â†’ ëª¨ë“  ì˜¤ë¸Œì íŠ¸ì— ëŒ€í•´ ë°©í–¥ì€ í•­ìƒ -forward
             Vector3 lookDir = targetCamera.transform.forward;
 
             if (lookDir.sqrMagnitude < 0.0001f)

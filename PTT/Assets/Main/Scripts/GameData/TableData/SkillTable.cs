@@ -7,12 +7,12 @@ using Spine;
 namespace GameBerry.Table
 {
     /// <summary>
-    /// ?�킬 ?�롯 ?�이??(?�티�??�킬 ?�착??
+    /// ?ㅽ궗 ?щ’ ?곗씠??(?≫떚釉??ㅽ궗 ?μ갑??
     /// </summary>
     public class SkillSlotData : IPackable
     {
-        public int slotIndex; // 0~4 (5�??�롯)
-        public int skillId;   // ?�착???�킬 ID (0?�면 �??�롯)
+        public int slotIndex; // 0~4 (5媛??щ’)
+        public int skillId;   // ?μ갑???ㅽ궗 ID (0?대㈃ 鍮??щ’)
 
         public string Pack() => $"{PackUtil.PackValue(slotIndex)},{PackUtil.PackValue(skillId)}";
 
@@ -35,11 +35,11 @@ namespace GameBerry.Table
     }
 
     /// <summary>
-    /// ?��?가 보유???�킬 ?�이??    /// </summary>
+    /// ?좎?媛 蹂댁쑀???ㅽ궗 ?곗씠??    /// </summary>
     public class SkillData : IPackable
     {
         public int skillId;
-        public int level; // ?�킬 ?�벨 (기본 1)
+        public int level; // ?ㅽ궗 ?덈꺼 (湲곕낯 1)
 
         public string Pack() => $"{PackUtil.PackValue(skillId)},{PackUtil.PackValue(level)}";
 
@@ -69,7 +69,7 @@ namespace GameBerry.Table
         private const string skillSlotsKey = "SkillSlots";
         private List<SkillSlotData> skillSlots = new List<SkillSlotData>();
 
-        public const int MaxSlotCount = 5; // ?�킬 ?�롯 최�? 개수
+        public const int MaxSlotCount = 5; // ?ㅽ궗 ?щ’ 理쒕? 媛쒖닔
 
         //------------------------------------------------------------------------------------
         public override void SetData(JsonData data)
@@ -89,7 +89,7 @@ namespace GameBerry.Table
                 }
             }
 
-            // ?�롯 초기??(�??�롯?�면 ?�성)
+            // ?щ’ 珥덇린??(鍮??щ’?대㈃ ?앹꽦)
             InitializeSlots();
         }
         //------------------------------------------------------------------------------------
@@ -106,13 +106,13 @@ namespace GameBerry.Table
             if (skillSlots == null)
                 skillSlots = new List<SkillSlotData>();
 
-            // ?�롯??부족하�?�??�롯 추�?
+            // ?щ’??遺議깊븯硫?鍮??щ’ 異붽?
             while (skillSlots.Count < MaxSlotCount)
             {
                 skillSlots.Add(new SkillSlotData { slotIndex = skillSlots.Count, skillId = 0 });
             }
 
-            // ?�롯 ?�덱???�렬 �?검�?            skillSlots.Sort((a, b) => a.slotIndex.CompareTo(b.slotIndex));
+            // ?щ’ ?몃뜳???뺣젹 諛?寃利?            skillSlots.Sort((a, b) => a.slotIndex.CompareTo(b.slotIndex));
 
             for (int i = 0; i < skillSlots.Count; i++)
             {
@@ -129,18 +129,18 @@ namespace GameBerry.Table
         #region Skill Ownership & Level
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬 ?�금 (보유)
+        /// ?ㅽ궗 ?닿툑 (蹂댁쑀)
         /// </summary>
         public bool UnlockSkill(int skillId)
         {
             if (skillDataDict.ContainsKey(skillId))
-                return false; // ?��? 보유 �?
+                return false; // ?대? 蹂댁쑀 以?
             skillDataDict.Add(skillId, new SkillData { skillId = skillId, level = 1 });
             return true;
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬 보유 ?��? ?�인
+        /// ?ㅽ궗 蹂댁쑀 ?щ? ?뺤씤
         /// </summary>
         public bool HasSkill(int skillId)
         {
@@ -148,7 +148,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬 ?�이??가?�오�?        /// </summary>
+        /// ?ㅽ궗 ?곗씠??媛?몄삤湲?        /// </summary>
         public SkillData GetSkillData(int skillId)
         {
             if (skillDataDict.TryGetValue(skillId, out var data))
@@ -158,7 +158,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬 ?�벨 가?�오�?        /// </summary>
+        /// ?ㅽ궗 ?덈꺼 媛?몄삤湲?        /// </summary>
         public int GetSkillLevel(int skillId)
         {
             if (skillDataDict.TryGetValue(skillId, out var data))
@@ -168,7 +168,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬 ?�벨 ??        /// </summary>
+        /// ?ㅽ궗 ?덈꺼 ??        /// </summary>
         public bool LevelUpSkill(int skillId)
         {
             if (!skillDataDict.TryGetValue(skillId, out var data))
@@ -179,7 +179,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬 ?�벨 ?�정
+        /// ?ㅽ궗 ?덈꺼 ?ㅼ젙
         /// </summary>
         public bool SetSkillLevel(int skillId, int level)
         {
@@ -194,7 +194,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 보유??모든 ?�킬 목록
+        /// 蹂댁쑀??紐⑤뱺 ?ㅽ궗 紐⑸줉
         /// </summary>
         public Dictionary<int, SkillData> GetAllSkills()
         {
@@ -206,7 +206,7 @@ namespace GameBerry.Table
         #region Skill Slots (Active Skills Only)
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�롯???�킬 ?�착
+        /// ?щ’???ㅽ궗 ?μ갑
         /// </summary>
         public bool EquipSkillToSlot(int slotIndex, int skillId)
         {
@@ -216,14 +216,14 @@ namespace GameBerry.Table
                 return false;
 
             if (!HasSkill(skillId))
-                return false; // 보유?��? ?��? ?�킬
+                return false; // 蹂댁쑀?섏? ?딆? ?ㅽ궗
 
-            // ?��? ?�른 ?�롯???�착?�어 ?�는지 ?�인
+            // ?대? ?ㅻⅨ ?щ’???μ갑?섏뼱 ?덈뒗吏 ?뺤씤
             for (int i = 0; i < skillSlots.Count; i++)
             {
                 if (skillSlots[i].skillId == skillId && i != slotIndex)
                 {
-                    // 기존 ?�롯 ?�제
+                    // 湲곗〈 ?щ’ ?댁젣
                     skillSlots[i].skillId = 0;
                 }
             }
@@ -233,7 +233,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�롯?�서 ?�킬 ?�제
+        /// ?щ’?먯꽌 ?ㅽ궗 ?댁젣
         /// </summary>
         public bool UnequipSkillFromSlot(int slotIndex)
         {
@@ -247,7 +247,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�정 ?�롯???�착???�킬 ID 가?�오�?        /// </summary>
+        /// ?뱀젙 ?щ’???μ갑???ㅽ궗 ID 媛?몄삤湲?        /// </summary>
         public int GetEquippedSkillId(int slotIndex)
         {
             EnsureSlotsInitialized();
@@ -264,7 +264,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬???�착???�롯 ?�덱??찾기 (-1?�면 미장�?
+        /// ?ㅽ궗???μ갑???щ’ ?몃뜳??李얘린 (-1?대㈃ 誘몄옣李?
         /// </summary>
         public int FindSlotIndexBySkillId(int skillId)
         {
@@ -280,7 +280,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// ?�킬???�착?�어 ?�는지 ?�인
+        /// ?ㅽ궗???μ갑?섏뼱 ?덈뒗吏 ?뺤씤
         /// </summary>
         public bool IsSkillEquipped(int skillId)
         {
@@ -288,7 +288,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// 모든 ?�롯 ?�이??가?�오�?        /// </summary>
+        /// 紐⑤뱺 ?щ’ ?곗씠??媛?몄삤湲?        /// </summary>
         public List<SkillSlotData> GetAllSlots()
         {
             EnsureSlotsInitialized();

@@ -257,8 +257,8 @@ namespace GameBerry.Table
 
         public List<InventoryEntry> BuildView(Enum_InventorySort sort)
         {
-            // ¿øº» inventory ¸®½ºÆ® ¼ø¼­°¡ °ğ È¹µæ¼ø(ÀúÀå ¼ø¼­)ÀÌ´Ù.
-            // Á¤·Ä ÅÇÀº "ºä"¸¸ Á¤·ÄÇÏ°í, µ¿·üÀº ¿øº» index·Î ¾ÈÁ¤(stable)ÇÏ°Ô À¯ÁöÇÑ´Ù.
+            // ì›ë³¸ inventory ë¦¬ìŠ¤íŠ¸ ìˆœì„œê°€ ê³§ íšë“ìˆœ(ì €ì¥ ìˆœì„œ)ì´ë‹¤.
+            // ì •ë ¬ íƒ­ì€ "ë·°"ë§Œ ì •ë ¬í•˜ê³ , ë™ë¥ ì€ ì›ë³¸ indexë¡œ ì•ˆì •(stable)í•˜ê²Œ ìœ ì§€í•œë‹¤.
             var itemChart = GameBerry.Chart.GameChart.Get<GameBerry.Chart.ItemChart>();
             var equipChart = GameBerry.Chart.GameChart.Get<GameBerry.Chart.EquipChart>();
 
@@ -340,7 +340,7 @@ namespace GameBerry.Table
                     });
                     break;
                 default:
-                    // ±×´ë·Î
+                    // ê·¸ëŒ€ë¡œ
                     break;
             }
 

@@ -85,7 +85,7 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// 2D µÚÁı±â ¸Ş¼­µå
+        /// 2D ë’¤ì§‘ê¸° ë©”ì„œë“œ
         /// </summary>
         /// <param name="horizontal"></param>
         
@@ -95,10 +95,10 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// PlayAnimationForState Overloading ÇØ´ç ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ½ÇÇà
+        /// PlayAnimationForState Overloading í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜ì„ ì‹¤í–‰
         /// </summary>
-        /// <param name="stateShortName">½ÇÇàÇÏ°íÀÚ ÇÏ´Â ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌ¸§</param>
-        /// <param name="layerIndex">Æ®·¢/·¹ÀÌ¾î ¹øÈ£</param>
+        /// <param name="stateShortName">ì‹¤í–‰í•˜ê³ ì í•˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì´ë¦„</param>
+        /// <param name="layerIndex">íŠ¸ë™/ë ˆì´ì–´ ë²ˆí˜¸</param>
         public void PlayAnimationForState(int stateShortName, int layerIndex)
         {
             var foundAnimation = GetAnimationForState(stateShortName);
@@ -114,10 +114,10 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// GetAnimationForState Overloading ÇØ´ç ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ¹İÈ¯(¾ø´Ù¸é null)
+        /// GetAnimationForState Overloading í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜ì„ ë°˜í™˜(ì—†ë‹¤ë©´ null)
         /// </summary>
-        /// <param name="stateShortName">Ã£°íÀÚ ÇÏ´Â ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌ¸§(Á¤¼ö·Î µé¾î¿È)</param>
-        /// <returns>ÇØ´ç ¾Ö´Ï¸ŞÀÌ¼Ç</returns>
+        /// <param name="stateShortName">ì°¾ê³ ì í•˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ ì´ë¦„(ì •ìˆ˜ë¡œ ë“¤ì–´ì˜´)</param>
+        /// <returns>í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜</returns>
         public Spine.Animation GetAnimationForState(int stateShortName)
         {
             var foundState = _statesAndAnimation.Find(entry => StringToHash(entry.stateName) == stateShortName);
@@ -125,9 +125,9 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı ¸Ş¼­µå
-        /// ÇöÀç ÁøÇàÁßÀÎ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¾ø´Ù¸é || ÀüÈ¯ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¾ø´Ù¸é ¹Ù·Î ¾Ö´Ï¸ŞÀÌ¼Ç ÀüÈ¯
-        /// ÀÖ´Ù¸é ÀüÈ¯ ¾Ö´Ï¸ŞÀÌ¼Ç ¿ì¼± Àç»ı ÈÄ Àç»ı
+        /// ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ ë©”ì„œë“œ
+        /// í˜„ì¬ ì§„í–‰ì¤‘ì¸ ì• ë‹ˆë©”ì´ì…˜ì´ ì—†ë‹¤ë©´ || ì „í™˜ ì• ë‹ˆë©”ì´ì…˜ì´ ì—†ë‹¤ë©´ ë°”ë¡œ ì• ë‹ˆë©”ì´ì…˜ ì „í™˜
+        /// ìˆë‹¤ë©´ ì „í™˜ ì• ë‹ˆë©”ì´ì…˜ ìš°ì„  ì¬ìƒ í›„ ì¬ìƒ
         /// </summary>
         /// <param name="target"></param>
         /// <param name="layerIndex"></param>
@@ -151,11 +151,11 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// ÇöÀç ¾Ö´Ï¸ŞÀÌ¼Ç¿¡¼­ ´ÙÀ½ ¾Ö´Ï¸ŞÀÌ¼ÇÀ¸·Î ÀüÈ¯µÉ ¶§ ÀüÈ¯ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÀÖ´ÂÁö ÆÇ´Ü
+        /// í˜„ì¬ ì• ë‹ˆë©”ì´ì…˜ì—ì„œ ë‹¤ìŒ ì• ë‹ˆë©”ì´ì…˜ìœ¼ë¡œ ì „í™˜ë  ë•Œ ì „í™˜ ì• ë‹ˆë©”ì´ì…˜ì´ ìˆëŠ”ì§€ íŒë‹¨
         /// </summary>
-        /// <param name="from">ÇöÀç ¾Ö´Ï¸ŞÀÌ¼Ç</param>
-        /// <param name="to">´ÙÀ½ ¾Ö´Ï¸ŞÀÌ¼Ç</param>
-        /// <returns>¾ø´Ù¸é null ÀÖ´Ù¸é ÀüÈ¯¾Ö´Ï¸ŞÀÌ¼Ç(ex)ldel-to-jump)</returns>
+        /// <param name="from">í˜„ì¬ ì• ë‹ˆë©”ì´ì…˜</param>
+        /// <param name="to">ë‹¤ìŒ ì• ë‹ˆë©”ì´ì…˜</param>
+        /// <returns>ì—†ë‹¤ë©´ null ìˆë‹¤ë©´ ì „í™˜ì• ë‹ˆë©”ì´ì…˜(ex)ldel-to-jump)</returns>
         private Spine.Animation TryGetTransition(Spine.Animation from)
         {
             foreach (var transition in _transitions)
@@ -170,7 +170,7 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// ¾Ö´Ï¸ŞÀÌ¼Ç ¹®ÀÚ¿­À» ÇØ½¬°ªÀ¸·Î ¹İÈ¯
+        /// ì• ë‹ˆë©”ì´ì…˜ ë¬¸ìì—´ì„ í•´ì‰¬ê°’ìœ¼ë¡œ ë°˜í™˜
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>

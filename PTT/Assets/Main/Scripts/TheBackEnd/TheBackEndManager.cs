@@ -40,7 +40,7 @@ namespace GameBerry.TheBackEnd
 
             if (multiProject == null)
             {
-                Debug.LogError("ÇØ´ç ÇÁ·ÎÁ§Æ®¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                Debug.LogError("í•´ë‹¹ í”„ë¡œì íŠ¸ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             }
 
             var bro = Backend.InitializeByMultiProject(multiProject);
@@ -75,15 +75,15 @@ namespace GameBerry.TheBackEnd
         {
             Backend.Notification.OnAuthorize = (bool Result, string Reason) =>
             {
-                Debug.Log("½Ç½Ã°£ ¾Ë¸² ¼­¹ö Á¢¼Ó ½Ãµµ!");
+                Debug.Log("ì‹¤ì‹œê°„ ì•Œë¦¼ ì„œë²„ ì ‘ì† ì‹œë„!");
 
-                //Á¢¼Ó ÀÌÈÄ Ã³¸®
+                //ì ‘ì† ì´í›„ ì²˜ë¦¬
                 if (Result)
                 {
-                    Debug.Log("½Ç½Ã°£ ¾Ë¸² ¼­¹ö Á¢¼Ó ¼º°ø!");
+                    Debug.Log("ì‹¤ì‹œê°„ ì•Œë¦¼ ì„œë²„ ì ‘ì† ì„±ê³µ!");
 
                     Backend.Notification.OnReceivedUserPost = () => {
-                        Debug.Log("»õ À¯Àú ¿ìÆíÀÌ µµÂøÇß½À´Ï´Ù!");
+                        Debug.Log("ìƒˆ ìœ ì € ìš°í¸ì´ ë„ì°©í–ˆìŠµë‹ˆë‹¤!");
                     };
 
                     Backend.Notification.OnServerStatusChanged = (serverStatusType) => {
@@ -96,13 +96,13 @@ namespace GameBerry.TheBackEnd
                                 ShowDisConnectGame("system/underMaintenance");
                             });
 
-                            //Á¡°Ë
+                            //ì ê²€
                         }
                     };
 
                     Backend.Notification.OnNewPostCreated = (postRepeatType, title, content, author) => {
                         Debug.Log(
-        $"[OnNewPostCreated(»õ·Î¿î ¿ìÆí »ı¼º)]\n" +
+        $"[OnNewPostCreated(ìƒˆë¡œìš´ ìš°í¸ ìƒì„±)]\n" +
         $"| postRepeatType : {postRepeatType}\n" +
         $"| title : {title}\n" +
         $"| content : {content}\n" +
@@ -116,7 +116,7 @@ namespace GameBerry.TheBackEnd
 
                     Backend.Notification.OnNewNoticeCreated = (string title, string content) => {
                         Debug.Log(
-                            $"[OnNewNoticeCreated(»õ·Î¿î °øÁö»çÇ× »ı¼º)]\n" +
+                            $"[OnNewNoticeCreated(ìƒˆë¡œìš´ ê³µì§€ì‚¬í•­ ìƒì„±)]\n" +
                             $"| title : {title}\n" +
                             $"| content : {content}\n"
                         );
@@ -127,18 +127,18 @@ namespace GameBerry.TheBackEnd
                 }
                 else
                 {
-                    Debug.Log("½Ç½Ã°£ ¾Ë¸² ¼­¹ö Á¢¼Ó ½ÇÆĞ : ÀÌÀ¯ : " + Reason);
+                    Debug.Log("ì‹¤ì‹œê°„ ì•Œë¦¼ ì„œë²„ ì ‘ì† ì‹¤íŒ¨ : ì´ìœ  : " + Reason);
                 }
             };
 
-            //Á¢¼Ó ÇØÁ¦ ½Ã ¹İÀÀÇÏ´Â ÇÚµé·¯¸¦ ¼³Á¤.
+            //ì ‘ì† í•´ì œ ì‹œ ë°˜ì‘í•˜ëŠ” í•¸ë“¤ëŸ¬ë¥¼ ì„¤ì •.
             Backend.Notification.OnDisConnect = (string Reason) => {
-                Debug.Log("ÇØÁ¦ ÀÌÀ¯ : " + Reason);
-                Debug.Log("´Ù½Ã ¿¬°á");
+                Debug.Log("í•´ì œ ì´ìœ  : " + Reason);
+                Debug.Log("ë‹¤ì‹œ ì—°ê²°");
                 Backend.Notification.Connect();
             };
 
-            // ½Ç½Ã°£ ¾Ë¸² ¼­¹ö·Î ¿¬°á
+            // ì‹¤ì‹œê°„ ì•Œë¦¼ ì„œë²„ë¡œ ì—°ê²°
             Backend.Notification.Connect();
 
             checkServerState = true;
@@ -790,12 +790,12 @@ namespace GameBerry.TheBackEnd
                 if (bro2.GetMessage() == "bad refreshToken")
                 {
                     ShowDisConnectGame("system/loggedInAnotherDevice");
-                    Debug.Log("´Ù¸¥ ±â±â¿¡¼­ ·Î±×ÀÎµÇ¾ú½À´Ï´Ù.");
+                    Debug.Log("ë‹¤ë¥¸ ê¸°ê¸°ì—ì„œ ë¡œê·¸ì¸ë˜ì—ˆìŠµë‹ˆë‹¤.");
                     return;
                 }
 
                 ShowDisConnectGame("system/accessTokenExpired");
-                Debug.Log("ÅäÅ« ¸¸·á");
+                Debug.Log("í† í° ë§Œë£Œ");
                 return;
             }
 
@@ -806,11 +806,11 @@ namespace GameBerry.TheBackEnd
                     {
                         if (backendReturnObject.GetMessage().Contains("Please Edit the Baceknd Settings"))
                         {
-                            //Client App ID È¤Àº Signature Key°¡ null È¤Àº string.EmptyÀÎ °æ¿ì
+                            //Client App ID í˜¹ì€ Signature Keyê°€ null í˜¹ì€ string.Emptyì¸ ê²½ìš°
                         }
                         else if (backendReturnObject.GetMessage().Contains("undefined device_unique_id, device_unique_id"))
                         {
-                            //µğ¹ÙÀÌ½º Á¤º¸°¡ nullÀÏ °æ¿ì
+                            //ë””ë°”ì´ìŠ¤ ì •ë³´ê°€ nullì¼ ê²½ìš°
                         }
                         break;
                     }
@@ -818,11 +818,11 @@ namespace GameBerry.TheBackEnd
                     {
                         if (backendReturnObject.GetMessage().Contains("bad serverStatus: maintenance"))
                         {
-                            //Á¸ÀçÇÏÁö ¾Ê´Â ¾ÆÀÌµğÀÇ °æ¿ì
+                            //ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì•„ì´ë””ì˜ ê²½ìš°
                         }
                         else if (backendReturnObject.GetMessage().Contains("bad customPassword"))
                         {
-                            //ºñ¹Ğ¹øÈ£°¡ Æ²¸° °æ¿ì
+                            //ë¹„ë°€ë²ˆí˜¸ê°€ í‹€ë¦° ê²½ìš°
                         }
 
                         break;
@@ -832,20 +832,20 @@ namespace GameBerry.TheBackEnd
                         if (backendReturnObject.GetMessage().Contains("blocked device"))
                         {
                             ShowDisConnectGame("Notice_BanAccount_Desc");
-                            //Â÷´Ü´çÇÑ µğ¹ÙÀÌ½ºÀÏ °æ¿ì
+                            //ì°¨ë‹¨ë‹¹í•œ ë””ë°”ì´ìŠ¤ì¼ ê²½ìš°
                         }
                         else if (backendReturnObject.GetMessage().Contains("blocked user"))
                         {
                             ShowDisConnectGame("Notice_BanAccount_Desc");
-                            //Â÷´Ü´çÇÑ À¯ÀúÀÎ °æ¿ì
+                            //ì°¨ë‹¨ë‹¹í•œ ìœ ì €ì¸ ê²½ìš°
                         }
                         else if (backendReturnObject.GetMessage().Contains("Active User"))
                         {
-                            //Ãâ½Ã ¼³Á¤ÀÌ Å×½ºÆ®ÀÎµ¥ AU°¡ 10À» ÃÊ°úÇÑ °æ¿ì
+                            //ì¶œì‹œ ì„¤ì •ì´ í…ŒìŠ¤íŠ¸ì¸ë° AUê°€ 10ì„ ì´ˆê³¼í•œ ê²½ìš°
                         }
                         else if (backendReturnObject.GetMessage().Contains("bad serverStatus: maintenance"))
                         {
-                            //ÇÁ·ÎÁ§Æ® »óÅÂ°¡ 'Á¡°Ë'ÀÏ °æ¿ì(Á¢±Ù Çã¿ë À¯Àú Á¦¿Ü)
+                            //í”„ë¡œì íŠ¸ ìƒíƒœê°€ 'ì ê²€'ì¼ ê²½ìš°(ì ‘ê·¼ í—ˆìš© ìœ ì € ì œì™¸)
                         }
 
                         break;
@@ -854,7 +854,7 @@ namespace GameBerry.TheBackEnd
                     {
                         if (backendReturnObject.GetMessage().Contains("game not found"))
                         {
-                            //Client App ID È¤Àº Signature Key°¡ Àß¸øµÈ °æ¿ì
+                            //Client App ID í˜¹ì€ Signature Keyê°€ ì˜ëª»ëœ ê²½ìš°
                         }
                         break;
                     }
@@ -862,7 +862,7 @@ namespace GameBerry.TheBackEnd
                     {
                         if (backendReturnObject.GetMessage().Contains("Gone user"))
                         {
-                            //Å»Åğ°¡ ÁøÇàÁßÀÏ °æ¿ì(WithdrawAccount ÇÔ¼ö È£Ãâ ÀÌÈÄ)
+                            //íƒˆí‡´ê°€ ì§„í–‰ì¤‘ì¼ ê²½ìš°(WithdrawAccount í•¨ìˆ˜ í˜¸ì¶œ ì´í›„)
                         }
                         break;
                     }
@@ -940,7 +940,7 @@ namespace GameBerry.TheBackEnd
                 string[] clientServerVersionCut = version.Split('.');
                 string[] clientLocalVersionCut = Project.version.Split('.');
 
-                // ¹öÀüÃ¼Å© ·ÎÁ÷ ¼öÁ¤ 2025.02.19 ¿ÀÁøÇõ
+                // ë²„ì „ì²´í¬ ë¡œì§ ìˆ˜ì • 2025.02.19 ì˜¤ì§„í˜
                 for (int i = 0; i < clientLocalVersionCut.Length; ++i)
                 {
                     if (i == 0 || i == 1)
@@ -954,7 +954,7 @@ namespace GameBerry.TheBackEnd
                     }
                 }
 
-                // ¹öÀüÃ¼Å© ·ÎÁ÷ ¼öÁ¤ 2025.02.19 ¿ÀÁøÇõ
+                // ë²„ì „ì²´í¬ ë¡œì§ ìˆ˜ì • 2025.02.19 ì˜¤ì§„í˜
                 //if (version != Project.version)
                 //{
                 //    ProjectNoticeContent.Instance.ShowNeedUpdateDialog();
@@ -986,7 +986,7 @@ namespace GameBerry.TheBackEnd
 
             if (mainThreadQueue != null && mainThreadQueue.Count > 0)
             {
-                // Dequeue¸¦ ÅëÇØ Çàµ¿À» ÃßÃâ ÈÄ È£ÃâÇÑ´Ù.(¸ŞÀÎ¾²·¹µåÀÌ±â ‹š¹®)
+                // Dequeueë¥¼ í†µí•´ í–‰ë™ì„ ì¶”ì¶œ í›„ í˜¸ì¶œí•œë‹¤.(ë©”ì¸ì“°ë ˆë“œì´ê¸° ë–„ë¬¸)
                 mainThreadQueue.Dequeue().Invoke();
             }
 
@@ -1007,7 +1007,7 @@ namespace GameBerry.TheBackEnd
                 //Managers.RankManager.Instance.RefreshMyRankData();
 
                 if (Managers.TimeManager.isAlive == true)
-                    Managers.TimeManager.Instance.RefreshServerTime(); // ¼­¹ö½Ã°£ µ¿±âÈ­
+                    Managers.TimeManager.Instance.RefreshServerTime(); // ì„œë²„ì‹œê°„ ë™ê¸°í™”
 
                 //UpdatePlayerTimeInfoTable();
                 //UpdatePlayerViewDataInfoTable();
@@ -1039,7 +1039,7 @@ namespace GameBerry.TheBackEnd
         {
             if (isPause == true)
             {
-                // °ÔÀÓÀÌ Pause µÇ¾úÀ» ¶§
+                // ê²Œì„ì´ Pause ë˜ì—ˆì„ ë•Œ
 
                 AllUpdateTable();
 
@@ -1047,7 +1047,7 @@ namespace GameBerry.TheBackEnd
             }
             else if (isPause == false)
             {
-                // °ÔÀÓÀÌ ´Ù½Ã ÁøÇàµÇ¾úÀ» ¶§
+                // ê²Œì„ì´ ë‹¤ì‹œ ì§„í–‰ë˜ì—ˆì„ ë•Œ
                 SendQueue.ResumeSendQueue();
 
                 if (Managers.TimeManager.isAlive == true)
@@ -1096,8 +1096,8 @@ namespace GameBerry.TheBackEnd
         //------------------------------------------------------------------------------------
         public void SetApplicationQuit()
         {
-            // Å¥¿¡ Ã³¸®µÇÁö ¾Ê´Â ¿äÃ»ÀÌ ³²¾ÆÀÖ´Â °æ¿ì ´ë±âÇÏ°í ½ÍÀº °æ¿ì
-            // Å¥¿¡ ¸î °³ÀÇ ÇÔ¼ö°¡ ³²¾ÆÀÖ´ÂÁö Ã¼Å©
+            // íì— ì²˜ë¦¬ë˜ì§€ ì•ŠëŠ” ìš”ì²­ì´ ë‚¨ì•„ìˆëŠ” ê²½ìš° ëŒ€ê¸°í•˜ê³  ì‹¶ì€ ê²½ìš°
+            // íì— ëª‡ ê°œì˜ í•¨ìˆ˜ê°€ ë‚¨ì•„ìˆëŠ”ì§€ ì²´í¬
 
             AllUpdateTable();
 

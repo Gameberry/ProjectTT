@@ -128,17 +128,17 @@ namespace GameBerry
             if (!engraving.isUnlocked)
                 return 0;
 
-            // ÀçÈ­ Ã¼Å©
+            // ì¬í™” ì²´í¬
             if (ItemManager.Instance.ConsumeItem(1004, 1).Success == false)
                 return 0;
 
-            // ÀÌÈÄ ´Ü°è ÃÊ±âÈ­
+            // ì´í›„ ë‹¨ê³„ ì´ˆê¸°í™”
             ResetAfterStage(stageNumber);
 
-            // ½½·Ô Æ¼¾î °áÁ¤
+            // ìŠ¬ë¡¯ í‹°ì–´ ê²°ì •
             var tier = GetSlotTierForStage(stageNumber);
 
-            // ¸ÅÄª È®·ü Ã¼Å©
+            // ë§¤ì¹­ í™•ë¥  ì²´í¬
             var matchingRate = _engravingMatchingChart.GetMatchingRate(stageNumber);
             var forceMatching = UnityEngine.Random.Range(0f, 100f) < matchingRate;
 
@@ -147,10 +147,10 @@ namespace GameBerry
             else
                 RollNormalSlots(stageNumber, tier);
 
-            // ´ÙÀ½ ´Ü°è ÇØ±İ ½Ãµµ
+            // ë‹¤ìŒ ë‹¨ê³„ í•´ê¸ˆ ì‹œë„
             TryUnlockNextStage(stageNumber);
 
-            // ÀúÀå
+            // ì €ì¥
             _engravingTable.UpdateTable();
             OnEngravingChanged?.Invoke();
 

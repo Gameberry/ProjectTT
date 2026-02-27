@@ -61,16 +61,16 @@ public class IAPTest : MonoBehaviour
         //        NPurchaseItem[] items = purchaseInfoList;
         //        foreach (NPurchaseItem item in items)
         //        {
-        //            Debug.LogError(item.productId);        // ªÛ«∞ID
-        //            Debug.Log(item.price);            // ∞°∞›
-        //            Debug.Log(item.title);            // ¡¶∏Ò
-        //            Debug.Log(item.description);    // º≥∏Ì
+        //            Debug.LogError(item.productId);        // ÏÉÅÌíàID
+        //            Debug.Log(item.price);            // Í∞ÄÍ≤©
+        //            Debug.Log(item.title);            // Ï†úÎ™©
+        //            Debug.Log(item.description);    // ÏÑ§Î™Ö
         //        }
         //    }
         //    else
         //    {
         //        Debug.LogError("getPurchaseDetailListAsync Error");
-        //        // API ø¿∑˘ 
+        //        // API Ïò§Î•ò 
         //        // result = error.ToJson();
         //    }
         //});

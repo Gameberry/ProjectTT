@@ -1,4 +1,4 @@
-﻿#define LOAD_FROM_ASSETBUNDLE
+#define LOAD_FROM_ASSETBUNDLE
 
 using UnityEngine;
 using System.Collections;

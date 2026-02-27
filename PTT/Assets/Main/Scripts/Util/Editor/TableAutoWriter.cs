@@ -35,7 +35,7 @@ namespace GameBerry.Table
     [MenuItem("PTT/Table Auto Write")]
     public static void CheckCharts()
     {
-        EditorUtility.DisplayCancelableProgressBar("Å×ÀÌºí ÀÚµ¿ »ı¼º", "µÚ³¡ ÃÊ±âÈ­ Áß", 0f);
+        EditorUtility.DisplayCancelableProgressBar("í…Œì´ë¸” ìë™ ìƒì„±", "ë’¤ë ì´ˆê¸°í™” ì¤‘", 0f);
 
         var settings = new BackendCustomSetting();
         settings.clientAppID = "d2a3d980-d3ff-11f0-b82d-791b975f922710704";
@@ -54,7 +54,7 @@ namespace GameBerry.Table
             return;
         }
 
-        if (EditorUtility.DisplayCancelableProgressBar("Å×ÀÌºí ÀÚµ¿ »ı¼º", "µÚ³¡ °Ô½ºÆ® ·Î±×ÀÎ Áß", 0.2f))
+        if (EditorUtility.DisplayCancelableProgressBar("í…Œì´ë¸” ìë™ ìƒì„±", "ë’¤ë ê²ŒìŠ¤íŠ¸ ë¡œê·¸ì¸ ì¤‘", 0.2f))
         {
             EditorUtility.ClearProgressBar();
             return;
@@ -81,7 +81,7 @@ namespace GameBerry.Table
             }
         }
 
-        if (EditorUtility.DisplayCancelableProgressBar("Å×ÀÌºí ÀÚµ¿ »ı¼º", "Å×ÀÌºí ¸®½ºÆ® ºÒ·¯¿À´Â Áß", 0.4f))
+        if (EditorUtility.DisplayCancelableProgressBar("í…Œì´ë¸” ìë™ ìƒì„±", "í…Œì´ë¸” ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘", 0.4f))
         {
             EditorUtility.ClearProgressBar();
             return;
@@ -95,7 +95,7 @@ namespace GameBerry.Table
             return;
         }
 
-        if (EditorUtility.DisplayCancelableProgressBar("Å×ÀÌºí ÀÚµ¿ »ı¼º", "Å×ÀÌºí È®ÀÎ Áß", 0.6f))
+        if (EditorUtility.DisplayCancelableProgressBar("í…Œì´ë¸” ìë™ ìƒì„±", "í…Œì´ë¸” í™•ì¸ ì¤‘", 0.6f))
         {
             EditorUtility.ClearProgressBar();
             return;
@@ -106,7 +106,7 @@ namespace GameBerry.Table
 
         if (bro.IsSuccess() == false)
         {
-            EditorUtility.DisplayDialog("½ÇÆĞ", bro.ToString(), "È®ÀÎ");
+            EditorUtility.DisplayDialog("ì‹¤íŒ¨", bro.ToString(), "í™•ì¸");
             Debug.LogError(bro.ToString());
             return;
         }
@@ -129,7 +129,7 @@ namespace GameBerry.Table
             }
         }
 
-        if (EditorUtility.DisplayCancelableProgressBar("Å×ÀÌºí ÀÚµ¿ »ı¼º", "Å×ÀÌºí »ı¼º Áß", 0.8f))
+        if (EditorUtility.DisplayCancelableProgressBar("í…Œì´ë¸” ìë™ ìƒì„±", "í…Œì´ë¸” ìƒì„± ì¤‘", 0.8f))
         {
             EditorUtility.ClearProgressBar();
             return;
@@ -143,7 +143,7 @@ namespace GameBerry.Table
         if (chartData.Count < 1)
         {
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("¿Ï·á", "»ı¼ºÇÒ Å×ÀÌºí µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.", "È®ÀÎ");
+            EditorUtility.DisplayDialog("ì™„ë£Œ", "ìƒì„±í•  í…Œì´ë¸” ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.", "í™•ì¸");
             return;
         }
 
@@ -167,7 +167,7 @@ namespace GameBerry.Table
         }
 
         EditorUtility.ClearProgressBar();
-        EditorUtility.DisplayDialog("¿Ï·á", $"ÀÚµ¿ »ı¼º ¿Ï·á\n{string.Join(", ", chartData)}", "±Â");
+        EditorUtility.DisplayDialog("ì™„ë£Œ", $"ìë™ ìƒì„± ì™„ë£Œ\n{string.Join(", ", chartData)}", "êµ¿");
     }
 #endif
 }

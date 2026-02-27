@@ -6,7 +6,7 @@ using GameBerry.Chart;
 
 namespace GameBerry
 {
-    // ÀÓ½Ã ³×ÀÌ¹Ö Å¬·¡½º. Å¬·¡½º ÀÌ¸§ ¹Ù²Ü ¼ö ÀÖ´Ù¸é ¹Ù²ÙÀÚ
+    // ì„ì‹œ ë„¤ì´ë° í´ë˜ìŠ¤. í´ë˜ìŠ¤ ì´ë¦„ ë°”ê¿€ ìˆ˜ ìˆë‹¤ë©´ ë°”ê¾¸ì
     public class PlayerController : CharacterControllerBase
     {
         public event System.Action OnAttackPerformed;
@@ -14,7 +14,7 @@ namespace GameBerry
         [SerializeField]
         private ComboController _comboController;
 
-        // Áö±İÀº ¾îÅÃ ¾Ö´Ïµµ ¹¹ ¾ø¾î¼­ ÀÏ´Ü ÀÌÁ¤µµ·Î ±¸Çö
+        // ì§€ê¸ˆì€ ì–´íƒ ì• ë‹ˆë„ ë­ ì—†ì–´ì„œ ì¼ë‹¨ ì´ì •ë„ë¡œ êµ¬í˜„
         [SerializeField]
         private float _attackRange = 1.5f;
 
@@ -34,11 +34,11 @@ namespace GameBerry
 
         public bool _refreshAggro = false;
 
-        // Á¶ÀÌ½ºÆ½ ³Ö±â Àü¿¡ ÀÓ½Ã º¯¼ö
+        // ì¡°ì´ìŠ¤í‹± ë„£ê¸° ì „ì— ì„ì‹œ ë³€ìˆ˜
         private bool _useCustomDirVec = false;
 
         private Vector3 _customDieVec = Vector3.zero;
-        // Á¶ÀÌ½ºÆ½ ³Ö±â Àü¿¡ ÀÓ½Ã º¯¼ö
+        // ì¡°ì´ìŠ¤í‹± ë„£ê¸° ì „ì— ì„ì‹œ ë³€ìˆ˜
         private LanternController _lanternController;
         private int _lastMainLanternId = -1;
         private bool _isLanternPrefabLoading = false;
@@ -99,11 +99,11 @@ namespace GameBerry
             RefreshPlayerSkin(null);
 
             // ============================================================
-            // ½ºÅ³ ½Ã½ºÅÛ ÃÊ±âÈ­ (3ÁÙ Ãß°¡!)
+            // ìŠ¤í‚¬ ì‹œìŠ¤í…œ ì´ˆê¸°í™” (3ì¤„ ì¶”ê°€!)
             // ============================================================
-            InitializeSkillSystem();      // CharacterControllerBaseÀÇ ¸Ş¼­µå
-            ApplyPassiveSkills();          // CharacterControllerBaseÀÇ ¸Ş¼­µå
-            AutoUseSkills = true;          // ÀÚµ¿ ½ºÅ³ »ç¿ë È°¼ºÈ­
+            InitializeSkillSystem();      // CharacterControllerBaseì˜ ë©”ì„œë“œ
+            ApplyPassiveSkills();          // CharacterControllerBaseì˜ ë©”ì„œë“œ
+            AutoUseSkills = true;          // ìë™ ìŠ¤í‚¬ ì‚¬ìš© í™œì„±í™”
             // ============================================================
 
             SendRefreshPlayerHpMsg(CurrentHP, MaxHP);
@@ -118,9 +118,9 @@ namespace GameBerry
             _comboController?.Release();
 
             // ============================================================
-            // ½ºÅ³ ½Ã½ºÅÛ ÇØÁ¦ (1ÁÙ Ãß°¡!)
+            // ìŠ¤í‚¬ ì‹œìŠ¤í…œ í•´ì œ (1ì¤„ ì¶”ê°€!)
             // ============================================================
-            ReleaseSkillSystem();          // CharacterControllerBaseÀÇ ¸Ş¼­µå
+            ReleaseSkillSystem();          // CharacterControllerBaseì˜ ë©”ì„œë“œ
 
             if (LanternManager.isAlive)
                 LanternManager.Instance.OnLanternEquipChanged -= HandleLanternEquipChanged;
@@ -163,8 +163,8 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         public override Vector3 GetMoveDirection()
-        { // MoveController_Base¿¡¼­ ÁÖ·Î È£Ãâ
-            // À¯Àú´Â Á¶ÀÌ½ºÆ½À¸·Î ¹æÇâÀ» Á¤ÇÒ ¶§°¡ ÀÖ¾î¼­ °¡»óÇÔ¼ö·Î ¸¸µë
+        { // MoveController_Baseì—ì„œ ì£¼ë¡œ í˜¸ì¶œ
+            // ìœ ì €ëŠ” ì¡°ì´ìŠ¤í‹±ìœ¼ë¡œ ë°©í–¥ì„ ì •í•  ë•Œê°€ ìˆì–´ì„œ ê°€ìƒí•¨ìˆ˜ë¡œ ë§Œë“¬
 
             if (_useCustomDirVec == true)
                 return _customDieVec.normalized;
@@ -182,10 +182,10 @@ namespace GameBerry
             _comboTrigger = false;
 
             // ============================================================
-            // ½ºÅ³ ½Ã½ºÅÛ ¾÷µ¥ÀÌÆ® (1ÁÙ Ãß°¡!)
-            // ÀÌÁ¦ ½ºÅ³ÀÌ ÀÚµ¿À¸·Î »ç¿ëµÊ!
+            // ìŠ¤í‚¬ ì‹œìŠ¤í…œ ì—…ë°ì´íŠ¸ (1ì¤„ ì¶”ê°€!)
+            // ì´ì œ ìŠ¤í‚¬ì´ ìë™ìœ¼ë¡œ ì‚¬ìš©ë¨!
             // ============================================================
-            UpdateSkillSystem();           // CharacterControllerBaseÀÇ ¸Ş¼­µå
+            UpdateSkillSystem();           // CharacterControllerBaseì˜ ë©”ì„œë“œ
             // ============================================================
 
 
@@ -244,7 +244,7 @@ namespace GameBerry
                 }
 
                 if (_currentAttackData != null && _nextSkillData != null)
-                    _currentAttackData = _nextSkillData; // È¤½Ã¶óµµ ÆòÅ¸ µé¾îÀÖÀ¸¸é ÀÓÀÇ·Î ¹Ù·Î ¹Ù²Ù±â
+                    _currentAttackData = _nextSkillData; // í˜¹ì‹œë¼ë„ í‰íƒ€ ë“¤ì–´ìˆìœ¼ë©´ ì„ì˜ë¡œ ë°”ë¡œ ë°”ê¾¸ê¸°
 
                 if (_currentAttackData == null)
                     SetAttackData();
@@ -316,9 +316,9 @@ namespace GameBerry
                     _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this), AttackTarget);
 
                     // ============================================================
-                    // °ø°İ ½Ã ÄğÅ¸ÀÓ °¨¼Ò (1ÁÙ Ãß°¡!)
+                    // ê³µê²© ì‹œ ì¿¨íƒ€ì„ ê°ì†Œ (1ì¤„ ì¶”ê°€!)
                     // ============================================================
-                    OnSkillOwnerAttack();      // CharacterControllerBaseÀÇ ¸Ş¼­µå
+                    OnSkillOwnerAttack();      // CharacterControllerBaseì˜ ë©”ì„œë“œ
                     OnAttackPerformed?.Invoke();
                     // ============================================================
 
@@ -486,14 +486,14 @@ namespace GameBerry
             _lanternController = null;
         }
         /// <summary>
-        /// UI ¹öÆ°¿¡¼­ ¼öµ¿À¸·Î ½ºÅ³ »ç¿ë
+        /// UI ë²„íŠ¼ì—ì„œ ìˆ˜ë™ìœ¼ë¡œ ìŠ¤í‚¬ ì‚¬ìš©
         /// </summary>
         public void UseSkillManually(int slotIndex)
         {
             int skillId = SkillManager.Instance.GetEquippedSkillId(slotIndex);
             if (skillId > 0 && AttackTarget != null)
             {
-                UseSkill(skillId, AttackTarget); // CharacterControllerBaseÀÇ ¸Ş¼­µå
+                UseSkill(skillId, AttackTarget); // CharacterControllerBaseì˜ ë©”ì„œë“œ
             }
         }
         //------------------------------------------------------------------------------------

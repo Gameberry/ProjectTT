@@ -16,7 +16,7 @@ namespace GameBerry
                 return localkey;
 
             //localkey = string.Format(_statNameLocalKey, stat.ToString());
-            //ÀÓ½Ã
+            //ìž„ì‹œ
             localkey = stat.ToString();
             _statNameLocalKey_Dict.Add(stat, localkey);
             return localkey;

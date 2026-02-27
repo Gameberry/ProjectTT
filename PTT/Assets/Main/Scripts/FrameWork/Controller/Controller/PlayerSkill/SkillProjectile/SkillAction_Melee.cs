@@ -29,7 +29,7 @@ namespace GameBerry
             
             var caster = _skillProjectilePlayer.CharacterControllerBase;
 
-            // Ä³¸¯ÅÍ¿¡ SkeletonAnimationÀÌ ¾îµğ¿¡ ºÙ´ÂÁö ÇÁ·ÎÁ§Æ®¸¶´Ù ´Ù¸§
+            // ìºë¦­í„°ì— SkeletonAnimationì´ ì–´ë””ì— ë¶™ëŠ”ì§€ í”„ë¡œì íŠ¸ë§ˆë‹¤ ë‹¤ë¦„
             _skeletonAnim = caster.GetSkeletonAnimation();
             if (_skeletonAnim == null)
             {
@@ -73,7 +73,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void OnSpineComplete(TrackEntry entry)
         {
-            // ÀÌº¥Æ® ´©¶ô ´ëºñ: ¾Ö´Ï ³¡³µ´Âµ¥ release ¾È µÆÀ¸¸é Á¤¸®
+            // ì´ë²¤íŠ¸ ëˆ„ë½ ëŒ€ë¹„: ì• ë‹ˆ ëë‚¬ëŠ”ë° release ì•ˆ ëìœ¼ë©´ ì •ë¦¬
             if (_released) return;
 
             ReleaseOnce();

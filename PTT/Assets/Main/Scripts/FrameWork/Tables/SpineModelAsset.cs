@@ -23,7 +23,7 @@ namespace GameBerry
 
 
     /// <summary>
-    /// ½½·Ôº° ±âº» ½ºÅ² Á¤º¸ (Ä³¸¯ÅÍ°¡ Ã³À½ ÀÔ°í ³ª¿À´Â ÄÚµğ)
+    /// ìŠ¬ë¡¯ë³„ ê¸°ë³¸ ìŠ¤í‚¨ ì •ë³´ (ìºë¦­í„°ê°€ ì²˜ìŒ ì…ê³  ë‚˜ì˜¤ëŠ” ì½”ë””)
     /// </summary>
     [System.Serializable]
     public class SpineDefaultSlotSkin
@@ -45,8 +45,8 @@ namespace GameBerry
 
 
         /// <summary>
-        /// ÀÌ ¸ğµ¨¿¡¼­ »ç¿ë °¡´ÉÇÑ ¸ğµç ½ºÅ² ÀÌ¸§ ¸ñ·Ï
-        /// (OnValidate¿¡¼­ ÀÚµ¿ Ã¤¿ò)
+        /// ì´ ëª¨ë¸ì—ì„œ ì‚¬ìš© ê°€ëŠ¥í•œ ëª¨ë“  ìŠ¤í‚¨ ì´ë¦„ ëª©ë¡
+        /// (OnValidateì—ì„œ ìë™ ì±„ì›€)
         /// </summary>
         [SpineSkin(dataField = "SkeletonData")]
         public List<string> SkinList = new List<string>();
@@ -57,9 +57,9 @@ namespace GameBerry
         public List<SpineModelStateAnimationNameData> AnimationState = new List<SpineModelStateAnimationNameData>();
 
         /// <summary>
-        /// Ä³¸¯ÅÍ°¡ ±âº»À¸·Î ÀåÂøÇÏ°í ÀÖÀ» ½½·Ôº° ½ºÅ²
-        /// ¿¹) Body=skin_body_01, Hair=skin_hair_01 ...
-        /// ÀÎ½ºÆåÅÍ¿¡¼­ ¸ğµ¨¸¶´Ù ¼³Á¤ÇØµÎ¸é µÊ.
+        /// ìºë¦­í„°ê°€ ê¸°ë³¸ìœ¼ë¡œ ì¥ì°©í•˜ê³  ìˆì„ ìŠ¬ë¡¯ë³„ ìŠ¤í‚¨
+        /// ì˜ˆ) Body=skin_body_01, Hair=skin_hair_01 ...
+        /// ì¸ìŠ¤í™í„°ì—ì„œ ëª¨ë¸ë§ˆë‹¤ ì„¤ì •í•´ë‘ë©´ ë¨.
         /// </summary>
         public List<SpineDefaultSlotSkin> DefaultSlotSkins =
             new List<SpineDefaultSlotSkin>();
@@ -99,24 +99,24 @@ namespace GameBerry
                 if (skeletonData == null)
                     continue;
 
-                // ÀÌ¸§
+                // ì´ë¦„
                 spineModelData.Name = spineModelData.SkeletonData.name.ToLower();
 
-                // »ç¿ë °¡´ÉÇÑ ½ºÅ² ¸ñ·Ï °»½Å
+                // ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¨ ëª©ë¡ ê°±ì‹ 
                 spineModelData.SkinList.Clear();
                 foreach (var skin in skeletonData.Skins)
                 {
                     if (skin == null || string.IsNullOrEmpty(skin.Name))
                         continue;
 
-                    // default ·ù´Â ¸®½ºÆ®¿¡¼­ Á¦¿Ü (¿øÇÏ¸é Æ÷ÇÔÇØµµ µÊ)
+                    // default ë¥˜ëŠ” ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œì™¸ (ì›í•˜ë©´ í¬í•¨í•´ë„ ë¨)
                     if (skin.Name.Contains("default"))
                         continue;
 
                     spineModelData.SkinList.Add(skin.Name);
                 }
 
-                // ¾Ö´Ï¸ŞÀÌ¼Ç ¸ñ·Ï °»½Å
+                // ì• ë‹ˆë©”ì´ì…˜ ëª©ë¡ ê°±ì‹ 
                 spineModelData.AnimationList.Clear();
                 spineModelData.AnimationList_Dic.Clear();
                 foreach (var animation in skeletonData.Animations)
@@ -134,8 +134,8 @@ namespace GameBerry
                     spineModelData.AnimationList_Dic[data.stateName] = data;
                 }
 
-                // DefaultSlotSkinsÀº ÀÎ½ºÆåÅÍ¿¡¼­ ¼öµ¿ ¼¼ÆÃ.
-                // ¿©±â¼­´Â À¯È¿¼º¸¸ °£´ÜÈ÷ Ã¼Å©.
+                // DefaultSlotSkinsì€ ì¸ìŠ¤í™í„°ì—ì„œ ìˆ˜ë™ ì„¸íŒ….
+                // ì—¬ê¸°ì„œëŠ” ìœ íš¨ì„±ë§Œ ê°„ë‹¨íˆ ì²´í¬.
                 if (spineModelData.DefaultSlotSkins != null)
                 {
                     foreach (var slotSkin in spineModelData.DefaultSlotSkins)
@@ -143,12 +143,12 @@ namespace GameBerry
                         if (slotSkin == null || string.IsNullOrEmpty(slotSkin.SkinName))
                             continue;
 
-                        // Á¸ÀçÇÏÁö ¾Ê´Â ½ºÅ²ÀÌ¸é °æ°í¸¸ (ÇÊ¿äÇÏ¸é ÀÚµ¿ ¼öÁ¤ ·ÎÁ÷ ³Ö¾îµµ µÊ)
+                        // ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ìŠ¤í‚¨ì´ë©´ ê²½ê³ ë§Œ (í•„ìš”í•˜ë©´ ìë™ ìˆ˜ì • ë¡œì§ ë„£ì–´ë„ ë¨)
 #if UNITY_EDITOR
                         if (!spineModelData.SkinList.Contains(slotSkin.SkinName))
                         {
                             Debug.LogWarning(
-                                $"[SpineModelAsset] {spineModelData.Name} ÀÇ DefaultSlotSkin '{slotSkin.SkinName}' ÀÌ(°¡) ½ÇÁ¦ ½ºÄÌ·¹Åæ ½ºÅ² ¸ñ·Ï¿¡ ¾ø½À´Ï´Ù.",
+                                $"[SpineModelAsset] {spineModelData.Name} ì˜ DefaultSlotSkin '{slotSkin.SkinName}' ì´(ê°€) ì‹¤ì œ ìŠ¤ì¼ˆë ˆí†¤ ìŠ¤í‚¨ ëª©ë¡ì— ì—†ìŠµë‹ˆë‹¤.",
                                 this);
                         }
 #endif

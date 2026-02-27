@@ -61,7 +61,7 @@ namespace GameBerry
 
         private CharacterControllerBase _owner;
 
-        // ÇÕ»ê °á°ú (Character¿¡¼­ ÂüÁ¶)
+        // í•©ì‚° ê²°ê³¼ (Characterì—ì„œ ì°¸ì¡°)
         public bool IsMoveBlocked = false;// { get; private set; }
         public bool IsAttackBlocked = false;// { get; private set; }
         public bool IsSkillBlocked = false;// { get; private set; }
@@ -127,7 +127,7 @@ namespace GameBerry
             {
                 case ConditionStackPolicy.MultipleInstances:
                     {
-                        // ±×³É »õ ÀÎ½ºÅÏ½º Ãß°¡
+                        // ê·¸ëƒ¥ ìƒˆ ì¸ìŠ¤í„´ìŠ¤ ì¶”ê°€
                         AddNewCondition(conditionData);
                         break;
                     }
@@ -138,7 +138,7 @@ namespace GameBerry
 
                         if (existing != null)
                         {
-                            // ±âÁ¸ °Í °»½Å
+                            // ê¸°ì¡´ ê²ƒ ê°±ì‹ 
                             existing.Refresh(conditionData.Duration);
                         }
                         else
@@ -154,7 +154,7 @@ namespace GameBerry
 
                         if (existing != null)
                         {
-                            // ±âÁ¸ °Í µà·¹ÀÌ¼Ç¸¸ ±³Ã¼ (ÃÖ½Å/ÃÖ´ë µî ±ÔÄ¢Àº ¿©±â¼­ ¹Ù²Ù¸é µÊ)
+                            // ê¸°ì¡´ ê²ƒ ë“€ë ˆì´ì…˜ë§Œ êµì²´ (ìµœì‹ /ìµœëŒ€ ë“± ê·œì¹™ì€ ì—¬ê¸°ì„œ ë°”ê¾¸ë©´ ë¨)
                             existing.Merge(conditionData);
                         }
                         else
@@ -222,7 +222,7 @@ namespace GameBerry
             RecalcControlLocks();
             RecalcStatInc();
 
-            // Character ÂÊÀ¸·Î °á°ú Àü´Ş (Character ÂÊ¿¡ ±¸ÇöÇØµĞ´Ù°í °¡Á¤)
+            // Character ìª½ìœ¼ë¡œ ê²°ê³¼ ì „ë‹¬ (Character ìª½ì— êµ¬í˜„í•´ë‘”ë‹¤ê³  ê°€ì •)
             _owner.SetControlLocks(IsMoveBlocked, IsAttackBlocked, IsSkillBlocked);
 
             _owner.CharacterStatOperator.SetBuffValue(Enum_Stat.Attack_Inc, AttackInc);

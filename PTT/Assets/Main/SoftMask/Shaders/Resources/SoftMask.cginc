@@ -1,4 +1,4 @@
-﻿#ifndef SOFTMASK_INCLUDED
+#ifndef SOFTMASK_INCLUDED
 #define SOFTMASK_INCLUDED
 
 #include "UnityUI.cginc"

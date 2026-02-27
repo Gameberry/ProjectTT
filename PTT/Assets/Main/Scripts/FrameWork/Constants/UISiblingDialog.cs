@@ -1,4 +1,4 @@
-﻿namespace GameBerry.UI
+namespace GameBerry.UI
 {
     public enum UISibling
     {

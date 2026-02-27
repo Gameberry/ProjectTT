@@ -9,7 +9,7 @@ namespace GameBerry
 
         public OnCallBack_Int AddListener;
 
-        // ╪╠ец ╩Себ ╫ц ╩Ж ╧ы╡ы╟М ╫мю╦╦И ©╘╠Б╪╜ цЁ╦╝
+        // Л└═М┐² Л┐│М┐° Л▀° Л┐┴ К╟■Й╬╦ЙЁ═ Л▀╤Л°╪К╘╢ Л≈╛Й╦╟Л└° Л╡≤К╕╛
         [SerializeField] private GameObject _selectedIndicator;
 
         void Start()

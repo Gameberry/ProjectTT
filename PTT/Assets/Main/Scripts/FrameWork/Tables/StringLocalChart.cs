@@ -205,13 +205,13 @@ namespace GameBerry
                 }
                 catch
                 {
-                    Debug.LogError(string.Format("LocalChart ≈Õ¡¸ π¸¿Œ : {0} π¯¬∞ LocalstringID : {1}", i, stringlocaldata.LocalStringID));
+                    Debug.LogError(string.Format("LocalChart ÌÑ∞Ïßê Î≤îÏù∏ : {0} Î≤àÏß∏ LocalstringID : {1}", i, stringlocaldata.LocalStringID));
                 }
 
 
                 if (_stringLocalDatas_Dic.ContainsKey(stringlocaldata.LocalStringID) == true)
                 {
-                    Debug.Log("¿Ãªı≥¢¥Ÿ" + stringlocaldata.LocalStringID);
+                    Debug.Log("Ïù¥ÏÉàÎÅºÎã§" + stringlocaldata.LocalStringID);
                 }
                 else
                     _stringLocalDatas_Dic.Add(stringlocaldata.LocalStringID, stringlocaldata);

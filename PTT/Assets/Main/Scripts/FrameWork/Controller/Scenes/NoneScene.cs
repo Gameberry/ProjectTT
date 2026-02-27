@@ -1,4 +1,4 @@
-﻿namespace GameBerry.Scene
+namespace GameBerry.Scene
 {
     public class NoneScene : IScene
     {

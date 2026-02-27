@@ -154,7 +154,7 @@ namespace GameBerry.Managers
         }
         //------------------------------------------------------------------------------------
         public void ChangeGameOption(GameSettingBtn gameSettingBtn)
-        { // Åä±ÛÇüÅÂÀÇ ¿É¼Çµé¸¸ µé¾î¿Â´Ù,
+        { // í† ê¸€í˜•íƒœì˜ ì˜µì…˜ë“¤ë§Œ ë“¤ì–´ì˜¨ë‹¤,
             if (m_gameSettingValue.ContainsKey(gameSettingBtn) == false)
                 return;
 

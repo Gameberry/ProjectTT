@@ -93,8 +93,8 @@ namespace GameBerry.Managers
         }
         //------------------------------------------------------------------------------------
         /// <summary>
-        /// °¢ Å¸°Ù ¸ó½ºÅÍ¿¡ ´ëÇØ, Àü¿ª Áßº¹ ¾øÀÌ N°³¾¿ ¹«ÀÛÀ§ ¼±ÅÃ
-        /// ÀÚ±â ÀÚ½Å°ú ´Ù¸¥ Å¸°Ù ¸ó½ºÅÍµéµµ Á¦¿ÜµÊ
+        /// ê° íƒ€ê²Ÿ ëª¬ìŠ¤í„°ì— ëŒ€í•´, ì „ì—­ ì¤‘ë³µ ì—†ì´ Nê°œì”© ë¬´ì‘ìœ„ ì„ íƒ
+        /// ìê¸° ìì‹ ê³¼ ë‹¤ë¥¸ íƒ€ê²Ÿ ëª¬ìŠ¤í„°ë“¤ë„ ì œì™¸ë¨
         /// </summary>
         public static Dictionary<T, List<T>> GetNPerTarget_NoGlobalDup<T>(
             List<T> allMonsters,
@@ -102,8 +102,8 @@ namespace GameBerry.Managers
             int pickPerTarget)
         {
             var result = new Dictionary<T, List<T>>();
-            var globalUsed = new HashSet<T>(); // ÀüÃ¼ Áßº¹ ¹æÁö
-            var allTargetsSet = new HashSet<T>(targetMonsters); // Å¸°Ù ¸ó½ºÅÍ ÀüÃ¼
+            var globalUsed = new HashSet<T>(); // ì „ì²´ ì¤‘ë³µ ë°©ì§€
+            var allTargetsSet = new HashSet<T>(targetMonsters); // íƒ€ê²Ÿ ëª¬ìŠ¤í„° ì „ì²´
 
             foreach (var target in targetMonsters)
             {
@@ -111,14 +111,14 @@ namespace GameBerry.Managers
 
                 foreach (var monster in allMonsters)
                 {
-                    // ÀÚ±â ÀÚ½Å + ´Ù¸¥ Å¸°Ù ¸ó½ºÅÍ + ÀÌ¹Ì ¼±ÅÃµÈ ¸ó½ºÅÍ Á¦¿Ü
+                    // ìê¸° ìì‹  + ë‹¤ë¥¸ íƒ€ê²Ÿ ëª¬ìŠ¤í„° + ì´ë¯¸ ì„ íƒëœ ëª¬ìŠ¤í„° ì œì™¸
                     if (allTargetsSet.Contains(monster)) continue;
                     if (globalUsed.Contains(monster)) continue;
 
                     filtered.Add(monster);
                 }
 
-                // Fisher-Yates ¼ÅÇÃ
+                // Fisher-Yates ì…”í”Œ
                 Shuffle(filtered);
 
                 int countToPick = Mathf.Min(pickPerTarget, filtered.Count);

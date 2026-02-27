@@ -1,4 +1,4 @@
-﻿namespace GameBerry.Constants
+namespace GameBerry.Constants
 {
     public enum SceneName
     {

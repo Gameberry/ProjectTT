@@ -219,10 +219,10 @@ namespace GameBerry.UI
             
 #endif
 
-                // D+1抛胶飘俊辑绰 较促 厚劝己拳
+                // D+1韰岇姢韸胳棎靹滊姅 鞁闺嫟 牍勴櫆靹表檾
                 if (m_appleLogin_Btn != null)
                     m_appleLogin_Btn.gameObject.SetActive(false);
-                // D+1抛胶飘俊辑绰 较促 厚劝己拳
+                // D+1韰岇姢韸胳棎靹滊姅 鞁闺嫟 牍勴櫆靹表檾
 
 
                 if (m_guestLogin_Btn != null)

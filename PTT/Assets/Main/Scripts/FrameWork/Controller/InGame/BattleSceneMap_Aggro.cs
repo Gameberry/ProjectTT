@@ -123,23 +123,23 @@ namespace GameBerry
         public static List<Vector3> GeneratePositionsGuaranteed(
             Vector3 center,
             int desiredCount,
-            float spawnRadius,      // Áß½ÉÁ¡ ±âÁØ ¹İ°æ (±âÁ¸ n °³³ä)
-            float minSeparation,    // ¸ó½ºÅÍ °£ ÃÖ¼Ò°Å¸® (±âÁ¸ d)
+            float spawnRadius,      // ì¤‘ì‹¬ì  ê¸°ì¤€ ë°˜ê²½ (ê¸°ì¡´ n ê°œë…)
+            float minSeparation,    // ëª¬ìŠ¤í„° ê°„ ìµœì†Œê±°ë¦¬ (ê¸°ì¡´ d)
             int triesPerCandidate = 30,
             int maxTotalAttempts = 200_000,
             int seed = -1,
 
-            // A: ¿ÏÈ­ ´Ü°è
+            // A: ì™„í™” ë‹¨ê³„
             float[] relaxFactors = null,
 
-            // B: ¾àÇÑ ¹Ğ¾î³»±â
+            // B: ì•½í•œ ë°€ì–´ë‚´ê¸°
             int separationIterations = 4,
             float separationStrength = 0.35f,
 
-            // C: °­Á¦ Ã¤¿ò
+            // C: ê°•ì œ ì±„ì›€
             int forceFillAttemptsPerPoint = 2000,
-            float forceFillMinSeparationFactor = 0.35f, // °­Á¦ ´Ü°è¿¡¼­ dÀÇ ¸î %±îÁö Çã¿ëÇÒÁö
-            float fallbackRingJitterFactor = 0.25f      // ÃÖÈÄ ¸µ ¹èÄ¡ ½Ã ÁöÅÍ (minSeparation * ÀÌ °ª)
+            float forceFillMinSeparationFactor = 0.35f, // ê°•ì œ ë‹¨ê³„ì—ì„œ dì˜ ëª‡ %ê¹Œì§€ í—ˆìš©í• ì§€
+            float fallbackRingJitterFactor = 0.25f      // ìµœí›„ ë§ ë°°ì¹˜ ì‹œ ì§€í„° (minSeparation * ì´ ê°’)
         )
         {
             if (desiredCount <= 0) return new List<Vector3>();
@@ -153,7 +153,7 @@ namespace GameBerry
             var positions = new List<Vector3>(desiredCount);
 
             // =========================
-            // A: ¾ö°İ -> ¿ÏÈ­·Î Ã¤¿ì±â
+            // A: ì—„ê²© -> ì™„í™”ë¡œ ì±„ìš°ê¸°
             // =========================
             int globalAttempts = 0;
 
@@ -186,7 +186,7 @@ namespace GameBerry
             }
 
             // =========================
-            // B: ¾àÇÑ ¹Ğ¾î³»±â Á¤¸®
+            // B: ì•½í•œ ë°€ì–´ë‚´ê¸° ì •ë¦¬
             // =========================
             if (positions.Count > 1 && separationIterations > 0 && separationStrength > 0f)
             {
@@ -201,7 +201,7 @@ namespace GameBerry
             }
 
             // =========================
-            // C: ¹«Á¶°Ç desiredCount Ã¤¿ì±â
+            // C: ë¬´ì¡°ê±´ desiredCount ì±„ìš°ê¸°
             // =========================
             if (positions.Count < desiredCount)
             {
@@ -217,7 +217,7 @@ namespace GameBerry
                     Mathf.Clamp01(fallbackRingJitterFactor)
                 );
 
-                // °­Á¦ Ã¤¿ò ÈÄ ÇÑ ¹ø ´õ ¾ÆÁÖ ¾àÇÏ°Ô Á¤¸®
+                // ê°•ì œ ì±„ì›€ í›„ í•œ ë²ˆ ë” ì•„ì£¼ ì•½í•˜ê²Œ ì •ë¦¬
                 if (positions.Count > 1 && separationIterations > 0 && separationStrength > 0f)
                 {
                     ResolveOverlapsWeak(
@@ -231,7 +231,7 @@ namespace GameBerry
                 }
             }
 
-            // ÃÖÁ¾ °³¼ö º¸Àå
+            // ìµœì¢… ê°œìˆ˜ ë³´ì¥
             if (positions.Count > desiredCount)
                 positions.RemoveRange(desiredCount, positions.Count - desiredCount);
 
@@ -245,7 +245,7 @@ namespace GameBerry
         {
             if (radius <= 0f) return center;
 
-            // ±ÕÀÏ ºĞÆ÷: r = sqrt(u) * R
+            // ê· ì¼ ë¶„í¬: r = sqrt(u) * R
             double u = rng.NextDouble();
             double v = rng.NextDouble();
             double angle = v * Math.PI * 2.0;
@@ -273,7 +273,7 @@ namespace GameBerry
         }
 
         // =========================
-        // B: ¾àÇÑ ¹Ğ¾î³»±â
+        // B: ì•½í•œ ë°€ì–´ë‚´ê¸°
         // =========================
         private static void ResolveOverlapsWeak(
             List<Vector3> points,
@@ -349,7 +349,7 @@ namespace GameBerry
         {
             float relaxedSep = Mathf.Max(0.001f, minSeparation * minSepFactor);
 
-            // 1) ·£´ı ¹èÄ¡ + ¿ÏÈ­µÈ °£°İÀ¸·Î ÃÖ´ëÇÑ ³Ö±â
+            // 1) ëœë¤ ë°°ì¹˜ + ì™„í™”ëœ ê°„ê²©ìœ¼ë¡œ ìµœëŒ€í•œ ë„£ê¸°
             var grid = new SpatialHash(relaxedSep);
             for (int i = 0; i < points.Count; i++)
                 grid.Add(points[i]);
@@ -372,7 +372,7 @@ namespace GameBerry
 
                 if (placed) continue;
 
-                // 2) ÃÖÈÄ º¸·ç: ¿ø µÑ·¹¿¡ ±Õµî ¹èÄ¡ + ÁöÅÍ
+                // 2) ìµœí›„ ë³´ë£¨: ì› ë‘˜ë ˆì— ê· ë“± ë°°ì¹˜ + ì§€í„°
                 int idx = points.Count;
                 float angle = ((idx + 0.5f) / desiredCount) * Mathf.PI * 2f;
 

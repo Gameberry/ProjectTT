@@ -1,4 +1,4 @@
-﻿Shader "Hidden/UI Default with Premultiplied Alpha (Soft Masked)"
+Shader "Hidden/UI Default with Premultiplied Alpha (Soft Masked)"
 {
     // This is a shader that replaces the Unity's Default UI shader. It has all capabilities
     // of the Default UI and also supports Soft Mask. It is a bit complicated because it

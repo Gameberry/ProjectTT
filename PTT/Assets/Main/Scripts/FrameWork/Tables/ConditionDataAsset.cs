@@ -14,13 +14,13 @@ namespace GameBerry
         public ConditionCategory Category;
         public ConditionStackPolicy StackPolicy;
 
-        public string IconKey;       // UI¿¡¼­ ¾µ Å° (Addressable, SpriteAtlas¿ë)
+        public string IconKey;       // UIì—ì„œ ì“¸ í‚¤ (Addressable, SpriteAtlasìš©)
     }
 
     [System.Serializable]
     public class ConditionData
     {
-        public string Desc = string.Empty; // ÇÊ¿ä¾ø´Â°Çµ¥ ÀÎ½ºÆÑÅÍÃ¢¿¡¼­ Àß º¸ÀÌ°ÔÇÏ·Á°í Àá½Ã ¸¸µë
+        public string Desc = string.Empty; // í•„ìš”ì—†ëŠ”ê±´ë° ì¸ìŠ¤íŒ©í„°ì°½ì—ì„œ ì˜ ë³´ì´ê²Œí•˜ë ¤ê³  ì ì‹œ ë§Œë“¬
         public int Index;
         public Enum_ConditionType Type;
 

@@ -1,4 +1,4 @@
-﻿using GameBerry.Managers;
+using GameBerry.Managers;
 using Cysharp.Threading.Tasks;
 
 namespace GameBerry.Scene

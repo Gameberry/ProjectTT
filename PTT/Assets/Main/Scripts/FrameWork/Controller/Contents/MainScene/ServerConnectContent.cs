@@ -11,7 +11,7 @@ using System.Linq;
 namespace GameBerry.Contents
 {
     public class ServerConnectContent : IContent
-    { // ¼­¹ö ºÙÀÌ±â¸¸ ÇÏ±ä ¹¹ÇØ¼­ ¼­¹ö Á¢¼Ó, ·Î±×ÀÎ±îÁö ÇÑ´Ù.
+    { // ì„œë²„ ë¶™ì´ê¸°ë§Œ í•˜ê¸´ ë­í•´ì„œ ì„œë²„ ì ‘ì†, ë¡œê·¸ì¸ê¹Œì§€ í•œë‹¤.
         private AppLoadingDialog _appLoadingDialog;
 
         //------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ namespace GameBerry.Contents
             BuildEnvironmentEnum BuildElement = SceneManager.Instance.BuildElement;
 
             if (BuildElement != BuildEnvironmentEnum.Develop)
-            { // ¼­¹ö ¹öÀü È®ÀÎ
+            { // ì„œë²„ ë²„ì „ í™•ì¸
 #if !UNITY_EDITOR
         var bro = BackEnd.Backend.Utils.GetLatestVersion();
             if (bro.IsSuccess() == true)
@@ -56,13 +56,13 @@ namespace GameBerry.Contents
                     {
                         if (int.Parse(clientServerVersionCut[i]) < int.Parse(clientLocalVersionCut[i]))
                         {
-                            // °Ë¼ö¼­¹ö´Ù
+                            // ê²€ìˆ˜ì„œë²„ë‹¤
                             if (BuildElement == BuildEnvironmentEnum.Product)
                             {
-                                // SceneManager¿¡µµ Á¢¼Ó ¼­¹ö ¹Ù²ãÁÖ±â
+                                // SceneManagerì—ë„ ì ‘ì† ì„œë²„ ë°”ê¿”ì£¼ê¸°
                                 SceneManager.Instance.BuildElement = BuildEnvironmentEnum.Stage;
 
-                                Debug.Log("°Ë¼ö¼­¹ö´Ù");
+                                Debug.Log("ê²€ìˆ˜ì„œë²„ë‹¤");
 
                                 if (TheBackEnd.TheBackEndManager.Instance.InitBackEnd() == false)
                                     return;

@@ -188,7 +188,7 @@ public static class Unity3dBuilder
             var plist = new PlistDocument();
             plist.ReadFromString(File.ReadAllText(plistPath));
             {
-                // ¼öÃâ ±ÔÁ¤ °ü·Ã ¹®¼­ ´©¶ô: ÇØ´çÇÏÁö ¾ÊÀ½ ¼³Á¤
+                // ìˆ˜ì¶œ ê·œì • ê´€ë ¨ ë¬¸ì„œ ëˆ„ë½: í•´ë‹¹í•˜ì§€ ì•ŠìŒ ì„¤ì •
                 plist.root.SetBoolean("ITSAppUsesNonExemptEncryption", false);
                 //plist.root.SetString("NSAdvertisingAttributionReportEndpoint", "https://appsflyer-skadnetwork.com/");
             }

@@ -27,7 +27,7 @@ namespace GameBerry
                 }
                 catch
                 {
-                    Debug.LogError(string.Format("LocalChart ÅÍÁü ¹üÀÎ : {0} ¹øÂ°", i));
+                    Debug.LogError(string.Format("LocalChart í„°ì§ ë²”ì¸ : {0} ë²ˆì§¸", i));
                 }
             }
         }

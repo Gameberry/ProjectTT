@@ -6,14 +6,14 @@ using System.Text;
 namespace GameBerry
 {
     /// <summary>
-    /// ÁßÃ¸ PackÀÏ ¶§¸¸ »ç¿ë
+    /// ì¤‘ì²© Packì¼ ë•Œë§Œ ì‚¬ìš©
     /// </summary>
     public static class PackSep
     {
-        public const char Top = ';'; // ±âº»
-        public const char L1 = '_';   // 1´Ü ÁßÃ¸
-        public const char L2 = '~';   // 2´Ü ÁßÃ¸
-        public const char L3 = '^';   // 3´Ü ÁßÃ¸
+        public const char Top = ';'; // ê¸°ë³¸
+        public const char L1 = '_';   // 1ë‹¨ ì¤‘ì²©
+        public const char L2 = '~';   // 2ë‹¨ ì¤‘ì²©
+        public const char L3 = '^';   // 3ë‹¨ ì¤‘ì²©
     }
 
     public static class PackUtil
@@ -138,7 +138,7 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// Æ÷¸Ë ¿¡·¯°¡ ³ª¸é default(T)·Î ¶³¾îÁü(¿¹¿Ü ¾È ÅÍ¶ß¸²).
+        /// í¬ë§· ì—ëŸ¬ê°€ ë‚˜ë©´ default(T)ë¡œ ë–¨ì–´ì§(ì˜ˆì™¸ ì•ˆ í„°ëœ¨ë¦¼).
         /// </summary>
         public static T UnpackValue<T>(string str)
         {

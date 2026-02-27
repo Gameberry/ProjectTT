@@ -60,6 +60,20 @@ namespace GameBerry.Contents
 
             stopwatch.Start();
 
+            bool isDatabaseInitialized = false;
+            yield return DB.Database.InitializeDatabase().ToCoroutine(result => isDatabaseInitialized = result);
+
+            if (!isDatabaseInitialized)
+            {
+                m_setNoticeMsg.NoticeStr = "Database initialization failed.";
+                Message.Send(m_setNoticeMsg);
+                Debug.LogError("[DataLoadContent] Stop loading because database initialization failed.");
+                yield break;
+            }
+            else
+            {
+                Debug.Log("[DataLoadContent] Database initialization success.");
+            }
 
             int totalTableCount = 0;
             int completeTableCount = 0;

@@ -22,7 +22,7 @@ public class CButtonEditor : ButtonEditor
     {
         base.OnEnable();
 
-        // ¿©±â±îÁöÇÏ¸é ¿ø·¡ ButtonÀÌ ³ª¿È
+        // ì—¬ê¸°ê¹Œì§€í•˜ë©´ ì›ë˜ Buttonì´ ë‚˜ì˜´
         _btn_Sprite = serializedObject.FindProperty(nameof(btn._btn_Sprite));
         _btn_Dimmed_Sprite = serializedObject.FindProperty(nameof(btn._btn_Dimmed_Sprite));
         _text = serializedObject.FindProperty(nameof(btn._text));
@@ -37,13 +37,13 @@ public class CButtonEditor : ButtonEditor
         serializedObject.Update();
 
 
-        // ¿©±âºÎÅÍ
+        // ì—¬ê¸°ë¶€í„°
         EditorGUILayout.PropertyField(_btn_Sprite);
         EditorGUILayout.PropertyField(_btn_Dimmed_Sprite);
         EditorGUILayout.PropertyField(_text);
         EditorGUILayout.PropertyField(_text_Color);
         EditorGUILayout.PropertyField(_text_Dimmed_Color);
-        // ¿©±â±îÁö Ä¿½ºÅÒ
+        // ì—¬ê¸°ê¹Œì§€ ì»¤ìŠ¤í…€
 
         if (EditorApplication.isPlaying == false)
             btn.ChangeDimmedResource(btn.interactable);

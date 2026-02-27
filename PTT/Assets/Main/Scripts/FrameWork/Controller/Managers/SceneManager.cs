@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using GameBerry;
@@ -30,6 +30,7 @@ namespace GameBerry.Managers
         [SerializeField]
         private BuildEnvironmentSelectAsset _buildEnvironmentSelectAsset;
         public BuildEnvironmentEnum BuildElement = BuildEnvironmentEnum.Develop;
+        public BuildEnvironmentData BuildEnvironmentData = null;
 
         Transform _root;
 
@@ -79,6 +80,7 @@ namespace GameBerry.Managers
             SoundManager.Instance.Setup();
 
             BuildElement = _buildEnvironmentSelectAsset.BuildElement;
+            BuildEnvironmentData = _buildEnvironmentSelectAsset.GetEnvironmentData();
 
 #if DEV_DEFINE && !UNITY_EDITOR
             if (BuildElement == BuildEnvironmentEnum.Develop
@@ -146,7 +148,7 @@ namespace GameBerry.Managers
 #endif
 
         //------------------------------------------------------------------------------------
-#endregion
+        #endregion
         //------------------------------------------------------------------------------------
         // 혹시라도 yield return StartCoroutine 사용해서 싱글톤 초기화를 할 수 있기 때문에 IEnumerator로 냅둠
         //IEnumerator InitializeApp()
@@ -192,7 +194,7 @@ namespace GameBerry.Managers
             return default(T);
         }
         //------------------------------------------------------------------------------------
-#region Load/Unload
+        #region Load/Unload
         //------------------------------------------------------------------------------------
         public bool Load(Constants.SceneName sceneName, bool unload = true)
         {
@@ -280,7 +282,7 @@ namespace GameBerry.Managers
             }
         }
         //------------------------------------------------------------------------------------
-#endregion
+        #endregion
         //------------------------------------------------------------------------------------
         public void Show(Constants.SceneName sceneName)
         {
@@ -375,7 +377,7 @@ namespace GameBerry.Managers
 #if UNITY_ANDROID
             //Application.OpenURL(string.Format("market://details?id={0}", Application.identifier));
             Application.OpenURL(string.Format("https://play.google.com/store/apps/details?id=studio.arr.barbar"));
-            
+
 #elif UNITY_IPHONE
             Application.OpenURL("https://itunes.apple.com/kr/app/apple-store/id6468973299");
 #else

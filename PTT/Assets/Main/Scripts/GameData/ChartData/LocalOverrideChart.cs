@@ -70,7 +70,7 @@ namespace GameBerry.Chart
                 }
                 catch
                 {
-                    UnityEngine.Debug.LogError(string.Format("LocalOverrideChart ÅÍÁü ¹üÀÎ : {0} ¹øÂ°", i));
+                    UnityEngine.Debug.LogError(string.Format("LocalOverrideChart í„°ì§ ë²”ì¸ : {0} ë²ˆì§¸", i));
                 }
             }
         }

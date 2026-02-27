@@ -14,8 +14,8 @@ namespace GameBerry.TheBackEnd
         {
             SendQueue.Enqueue(Backend.Probability.GetProbabilityCardList, (callback) =>
             {
-                Debug.Log("»Ì±â ¸ñ·Ï °¡Á®¿È");
-                // ÀÌÈÄ ÀÛ¾÷
+                Debug.Log("ë½‘ê¸° ëª©ë¡ ê°€ì ¸ì˜´");
+                // ì´í›„ ì‘ì—…
                 var data = callback.FlattenRows();
 
                 for (int i = 0; i < data.Count; ++i)
@@ -49,8 +49,8 @@ namespace GameBerry.TheBackEnd
                     string fsda = callback.GetMessage();
                 }
 
-                Debug.Log("»Ì¾Æ¿È");
-                // ÀÌÈÄ ÀÛ¾÷
+                Debug.Log("ë½‘ì•„ì˜´");
+                // ì´í›„ ì‘ì—…
                 var data = callback.GetFlattenJSON();
                 data = data["elements"];
 

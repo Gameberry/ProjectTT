@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GameBerry
 {
     public enum BuildEnvironmentEnum
-    { 
+    {
         Develop,
         QA,
         Stage,
@@ -16,15 +16,14 @@ namespace GameBerry
     {
         public BuildEnvironmentEnum BuildEnvironment = BuildEnvironmentEnum.Develop;
 
-        public string ServerURL = string.Empty;
-        public string ServerPort = string.Empty;
-
         public string GameChat_Project_ID = string.Empty;
 
         public string GameChat_ChatChannel = string.Empty;
         public string GameChat_SystemChannel = string.Empty;
         public string GameChat_NoticeChannel = string.Empty;
         public string GameChat_AdminChannel = string.Empty;
+
+        public string Database = string.Empty;
     }
 
     [CreateAssetMenu(fileName = "BuildEnvironmentSelect", menuName = "Table/BuildEnvironmentSelect", order = 1)]
@@ -42,9 +41,6 @@ namespace GameBerry
                 // Dev
                 BuildEnvironmentData buildEnvironmentData = new BuildEnvironmentData();
 
-                buildEnvironmentData.ServerURL = "http://110.165.18.148:{0}/";
-                buildEnvironmentData.ServerPort = "3013";
-
                 buildEnvironmentData.GameChat_Project_ID = "599da301-d7a7-47c6-aa90-bfe4f46bf413";
 
                 buildEnvironmentData.GameChat_ChatChannel = "6af8bbe3-9fa7-4a0e-add9-8b1b781c8bf9";
@@ -52,15 +48,14 @@ namespace GameBerry
                 buildEnvironmentData.GameChat_NoticeChannel = "4cf17988-884f-4a37-87e2-50e76d34f64b";
                 buildEnvironmentData.GameChat_AdminChannel = "1d384ed2-f865-467c-bf3a-fddb91ae21de";
 
+                buildEnvironmentData.Database = "019c9915-3586-7581-a6e1-1eda7f2be975";
+
                 m_buildElementData.Add(BuildEnvironmentEnum.Develop, buildEnvironmentData);
             }
 
             {
                 // QA
                 BuildEnvironmentData buildEnvironmentData = new BuildEnvironmentData();
-
-                buildEnvironmentData.ServerURL = "http://223.130.163.194:{0}/";
-                buildEnvironmentData.ServerPort = "9001";
 
                 buildEnvironmentData.GameChat_Project_ID = "886e5bef-633e-4d64-8312-fd51be1794b7";
 
@@ -76,9 +71,6 @@ namespace GameBerry
                 // Stage
                 BuildEnvironmentData buildEnvironmentData = new BuildEnvironmentData();
 
-                buildEnvironmentData.ServerURL = "https://y6pfbidkqm.apigw.ntruss.com/studio-dk/staging/";
-                buildEnvironmentData.ServerPort = string.Empty;
-
                 buildEnvironmentData.GameChat_Project_ID = "886e5bef-633e-4d64-8312-fd51be1794b7";
 
                 buildEnvironmentData.GameChat_ChatChannel = "0656226f-3097-4654-9cd3-f6e65297a176";
@@ -92,9 +84,6 @@ namespace GameBerry
             {
                 // Product
                 BuildEnvironmentData buildEnvironmentData = new BuildEnvironmentData();
-
-                buildEnvironmentData.ServerURL = "https://y6pfbidkqm.apigw.ntruss.com/studio-dk/production/";
-                buildEnvironmentData.ServerPort = string.Empty;
 
                 buildEnvironmentData.GameChat_Project_ID = "d1b4b045-9787-4dc4-95f6-7bbaa25f2e86";
 

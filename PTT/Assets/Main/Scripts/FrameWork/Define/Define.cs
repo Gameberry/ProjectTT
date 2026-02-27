@@ -7,8 +7,8 @@ namespace GameBerry
     public enum IFFType
     {
         IFF_None = 0,
-        IFF_Friend, // ¿ì¸®ÆÀ
-        IFF_Foe, // »ó´ëÆÀ
+        IFF_Friend, // ìš°ë¦¬íŒ€
+        IFF_Foe, // ìƒëŒ€íŒ€
     }
 
     public enum Enum_Dungeon
@@ -39,7 +39,7 @@ namespace GameBerry
         Right,
     }
 
-    // Æ®¸®°Å
+    // íŠ¸ë¦¬ê±°
     public enum Enum_TriggerType
     {
         Active = 11,
@@ -54,11 +54,11 @@ namespace GameBerry
         None = 0,
         Circle = 11,
         Line = 12,
-        Sector = 13, // ºÎÃ¤²Ã
+        Sector = 13, // ë¶€ì±„ê¼´
         Max,
     }
 
-    // ´ë¹ÌÁö
+    // ëŒ€ë¯¸ì§€
     public enum Enum_DamageType
     {
         Direct = 11,
@@ -87,10 +87,10 @@ namespace GameBerry
 
     public enum Enum_Tier
     {
-        Low = 1,    // ÇÏ±Ş
-        Normal,    // Áß±Ş
-        High,      // »ó±Ş
-        Top,       // ÃÖ»ó±Ş
+        Low = 1,    // í•˜ê¸‰
+        Normal,    // ì¤‘ê¸‰
+        High,      // ìƒê¸‰
+        Top,       // ìµœìƒê¸‰
 
         Max,
     }
@@ -123,7 +123,7 @@ namespace GameBerry
         Max,
     }
 
-    // ¾ÆÀÌÅÛÀÇ ÃâÃ³/µµ¸ŞÀÎ Å¸ÀÔ
+    // ì•„ì´í…œì˜ ì¶œì²˜/ë„ë©”ì¸ íƒ€ì…
     public enum Enum_ItemType
     {
         Potion,
@@ -138,14 +138,14 @@ namespace GameBerry
         Max
     }
 
-    // ItemÀÌ ¾îµğ¿¡ ÀúÀåµÇ°í ¾î¶»°Ô Ãë±ŞµÇ´ÂÁö¿¡ ´ëÇÑ ´ÜÀÏ ºĞ·ù
+    // Itemì´ ì–´ë””ì— ì €ì¥ë˜ê³  ì–´ë–»ê²Œ ì·¨ê¸‰ë˜ëŠ”ì§€ì— ëŒ€í•œ ë‹¨ì¼ ë¶„ë¥˜
     public enum Enum_ItemStorageType
     {
-        Inventory,   // ÀÏ¹İ ¾ÆÀÌÅÛ/Àåºñ ÀÎº¥Åä¸®
-        Point,       // ÀçÈ­(Áö°©)
-        Skin,         // ½ºÅ² ÄÃ·º¼Ç
-        Weapon,      // ¹«±â
-        Lantern,     // ·£ÅÏ
+        Inventory,   // ì¼ë°˜ ì•„ì´í…œ/ì¥ë¹„ ì¸ë²¤í† ë¦¬
+        Point,       // ì¬í™”(ì§€ê°‘)
+        Skin,         // ìŠ¤í‚¨ ì»¬ë ‰ì…˜
+        Weapon,      // ë¬´ê¸°
+        Lantern,     // ëœí„´
     }
 
     public enum Enum_SummonType
@@ -220,7 +220,7 @@ namespace GameBerry
     public delegate void OnCallBack_String(string text);
     public delegate void OnCallBack_Double(double doublecallback);
 
-    // ½ºÅÈ
+    // ìŠ¤íƒ¯
     public enum Enum_Stat
     {
         Attack = 11,
@@ -240,8 +240,8 @@ namespace GameBerry
         CritChance,
         CritDmg_Inc,
 
-        Evasion, // È¸ÇÇ
-        Accuracy, // ¸íÁß
+        Evasion, // íšŒí”¼
+        Accuracy, // ëª…ì¤‘
 
         HpRecovery,
 
@@ -260,7 +260,7 @@ namespace GameBerry
     }
 
     /// <summary>
-    /// Àåºñ/ÄÚµğ¿ë ½½·Ô Å¸ÀÔ
+    /// ì¥ë¹„/ì½”ë””ìš© ìŠ¬ë¡¯ íƒ€ì…
     /// </summary>
     public enum Enum_SkinSlotType
     {
@@ -277,41 +277,41 @@ namespace GameBerry
     {
         None = -1,
 
-        Quarter = 11, // 15ºĞ		
-        Hour = 12, // 1½Ã°£		
-        Day = 13, // 1ÀÏ		
-        Week = 14, // 1ÁÖÀÏ		
-        Month = 15, // 1´Ş		
-        Account = 16, // °èÁ¤´ç
+        Quarter = 11, // 15ë¶„		
+        Hour = 12, // 1ì‹œê°„		
+        Day = 13, // 1ì¼		
+        Week = 14, // 1ì£¼ì¼		
+        Month = 15, // 1ë‹¬		
+        Account = 16, // ê³„ì •ë‹¹
 
-        Custom = 17, // Ä¿½ºÅÒ (ÀÌº¥Æ® µî ¹öÀü °ü¸® ¸ñÀû¿ë)
+        Custom = 17, // ì»¤ìŠ¤í…€ (ì´ë²¤íŠ¸ ë“± ë²„ì „ ê´€ë¦¬ ëª©ì ìš©)
     }
 
-    // ±ºÁßÁ¦¾î
+    // êµ°ì¤‘ì œì–´
     public enum Enum_ConditionType
     {
         None = 0,
-        Invincible = 11, // ¹«Àû
+        Invincible = 11, // ë¬´ì 
 
-        Stun = 14, // ½ºÅÏ(ÀÌµ¿, ÆòÅ¸, ½ºÅ³ ¸ğµÎ ºÒ´É)
-        Snare = 15, // ¼Ó¹Ú (ÀÌµ¿ ºÒ´É)
-        Slow = 16, // µĞÈ­ (ÀÌ¼Ó °ø¼Ó °¨¼Ò)
+        Stun = 14, // ìŠ¤í„´(ì´ë™, í‰íƒ€, ìŠ¤í‚¬ ëª¨ë‘ ë¶ˆëŠ¥)
+        Snare = 15, // ì†ë°• (ì´ë™ ë¶ˆëŠ¥)
+        Slow = 16, // ë‘”í™” (ì´ì† ê³µì† ê°ì†Œ)
 
-        Knockback = 17, // ³Ë¹é
-        Fling = 18, // ´ç±â±â
-        Dash = 19, // ´ë½¬
+        Knockback = 17, // ë„‰ë°±
+        Fling = 18, // ë‹¹ê¸°ê¸°
+        Dash = 19, // ëŒ€ì‰¬
 
         // --- Buffs ---
-        AttackUp = 101,      // °ø°İ·Â Áõ°¡
-        HpUp = 102,          // Ã¼·Â Áõ°¡
-        DefenseUp = 103,     // ¹æ¾î·Â Áõ°¡
-        MoveSpeedUp = 104,   // ÀÌ¼Ó Áõ°¡
-        AttackSpeedUp = 105, // °ø¼Ó Áõ°¡
+        AttackUp = 101,      // ê³µê²©ë ¥ ì¦ê°€
+        HpUp = 102,          // ì²´ë ¥ ì¦ê°€
+        DefenseUp = 103,     // ë°©ì–´ë ¥ ì¦ê°€
+        MoveSpeedUp = 104,   // ì´ì† ì¦ê°€
+        AttackSpeedUp = 105, // ê³µì† ì¦ê°€
 
         // --- ContentBuffs ---
-        ComboBuff_AttackSpeedUp = 201, // °ø¼Ó ¹öÇÁ
-        ComboBuff_AttackUp = 202, // °ø°İ·Â ¹öÇÁ
-        ComboBuff_CriticalChangeUp = 203, // Å©¸®Æ¼ÄÃÂù½º ¹öÇÁ
+        ComboBuff_AttackSpeedUp = 201, // ê³µì† ë²„í”„
+        ComboBuff_AttackUp = 202, // ê³µê²©ë ¥ ë²„í”„
+        ComboBuff_CriticalChangeUp = 203, // í¬ë¦¬í‹°ì»¬ì°¬ìŠ¤ ë²„í”„
 
         Max,
     }
@@ -321,15 +321,15 @@ namespace GameBerry
         None,
         Buff,
         Debuff,
-        CrowdControl, // Stun, Snare, Slow, Knockback µî
-        Utility       // Invincible, Pull, Push µî
+        CrowdControl, // Stun, Snare, Slow, Knockback ë“±
+        Utility       // Invincible, Pull, Push ë“±
     }
 
     public enum ConditionStackPolicy
     {
-        MultipleInstances,   // °ø¼Ó/ÀÌ¼Ó/°ø°İ·Â ¹öÇÁÃ³·³ ¿©·¯ °³ °¢°¢ Å¸ÀÌ¸Ó
-        Refresh,     // ½ºÅÏÃ³·³ ÇÏ³ª¸¸ Á¸Àç, µà·¹ÀÌ¼Ç¸¸ ÃÖ½ÅÀ¸·Î °»½Å
-        MergyValue,     // ³Ë¹éÃ³·³ °ªÀÌ ´©Àû
+        MultipleInstances,   // ê³µì†/ì´ì†/ê³µê²©ë ¥ ë²„í”„ì²˜ëŸ¼ ì—¬ëŸ¬ ê°œ ê°ê° íƒ€ì´ë¨¸
+        Refresh,     // ìŠ¤í„´ì²˜ëŸ¼ í•˜ë‚˜ë§Œ ì¡´ì¬, ë“€ë ˆì´ì…˜ë§Œ ìµœì‹ ìœ¼ë¡œ ê°±ì‹ 
+        MergyValue,     // ë„‰ë°±ì²˜ëŸ¼ ê°’ì´ ëˆ„ì 
     }
 
     public enum NoneTargetProjectileState
@@ -341,16 +341,16 @@ namespace GameBerry
 
     public enum Enum_ShopMenuType
     {
-        LimitPackage = 11, // 	±â°£ ÇÑÁ¤ ÆĞÅ°Áö
-        Daily = 12, // 	ÀÏ°£ ÆĞÅ°Áö
-        Weekly = 13, // 	ÁÖ°£ ÆĞÅ°Áö
-        Monthly = 14, // 	¿ù°£ ÆĞÅ°Áö
-        Descend = 15, // 	°­¸² °­È­ ÀçÈ­
-        DayofWeek = 16, // 	¿äÀÏ¸¶´Ù ´Ş¶óÁö´Â »óÁ¡
-        DiaCharging = 17, // 	´ÙÀÌ¾Æ ±¸¸Å
-        GoldCharging = 18, // 	°ñµå ±¸¸Å
-        Research = 19, // ¿¬±¸ »óÁ¡
-        Synergy = 20, // ¼Ó¼º »óÁ¡
+        LimitPackage = 11, // 	ê¸°ê°„ í•œì • íŒ¨í‚¤ì§€
+        Daily = 12, // 	ì¼ê°„ íŒ¨í‚¤ì§€
+        Weekly = 13, // 	ì£¼ê°„ íŒ¨í‚¤ì§€
+        Monthly = 14, // 	ì›”ê°„ íŒ¨í‚¤ì§€
+        Descend = 15, // 	ê°•ë¦¼ ê°•í™” ì¬í™”
+        DayofWeek = 16, // 	ìš”ì¼ë§ˆë‹¤ ë‹¬ë¼ì§€ëŠ” ìƒì 
+        DiaCharging = 17, // 	ë‹¤ì´ì•„ êµ¬ë§¤
+        GoldCharging = 18, // 	ê³¨ë“œ êµ¬ë§¤
+        Research = 19, // ì—°êµ¬ ìƒì 
+        Synergy = 20, // ì†ì„± ìƒì 
 
         Max,
     }
@@ -367,19 +367,19 @@ namespace GameBerry
 
     public enum V2Enum_PassType
     {
-        Wave = 11, //¿şÀÌºê ÆĞ½º
-        CharacterLevel = 12, //Ä³¸¯ÅÍ ·¹º§
-        SkillLevel = 13, //½ºÅ³ ·¹º§¾÷ (´©Àû)
-        DescendLevel = 14, //°­¸² ·¹º§
-        MonsterKill = 15, //¸ó½ºÅÍ Ã³Ä¡
+        Wave = 11, //ì›¨ì´ë¸Œ íŒ¨ìŠ¤
+        CharacterLevel = 12, //ìºë¦­í„° ë ˆë²¨
+        SkillLevel = 13, //ìŠ¤í‚¬ ë ˆë²¨ì—… (ëˆ„ì )
+        DescendLevel = 14, //ê°•ë¦¼ ë ˆë²¨
+        MonsterKill = 15, //ëª¬ìŠ¤í„° ì²˜ì¹˜
 
         Max,
     }
 
     public enum V2Enum_RankType
     {
-        Stage = 11, //½ºÅ×ÀÌÁö
-        Power = 12, //ÀüÅõ·Â
+        Stage = 11, //ìŠ¤í…Œì´ì§€
+        Power = 12, //ì „íˆ¬ë ¥
 
         GuildRaid = 101,
         GuildDona = 102,
@@ -475,11 +475,11 @@ namespace GameBerry
         PostShop,
 
         Pass = 7000,
-        PassWave, //¿şÀÌºê ÆĞ½º
-        PassCharacterLevel, //Ä³¸¯ÅÍ ·¹º§
-        PassSkillLevel, //½ºÅ³ ·¹º§¾÷ (´©Àû)
-        PassDescendLevel, //°­¸² ·¹º§
-        PassMonsterKill, //¸ó½ºÅÍ Ã³Ä¡
+        PassWave, //ì›¨ì´ë¸Œ íŒ¨ìŠ¤
+        PassCharacterLevel, //ìºë¦­í„° ë ˆë²¨
+        PassSkillLevel, //ìŠ¤í‚¬ ë ˆë²¨ì—… (ëˆ„ì )
+        PassDescendLevel, //ê°•ë¦¼ ë ˆë²¨
+        PassMonsterKill, //ëª¬ìŠ¤í„° ì²˜ì¹˜
 
         AdBuff = 8000,
 
@@ -516,9 +516,9 @@ namespace GameBerry
 
     public enum V2Enum_ReportType
     {
-        inappropriate = 0, //ºñ¼Ó¾î ¹× ¼ºÀû ¹ß¾ğ
-        conflict, //°¥µî Á¶Àå ¹× ÇãÀ§ »ç½Ç À¯Æ÷
-        spam, //Ã¤ÆÃÃ¢ µµ¹è ¹× ±¤°í
+        inappropriate = 0, //ë¹„ì†ì–´ ë° ì„±ì  ë°œì–¸
+        conflict, //ê°ˆë“± ì¡°ì¥ ë° í—ˆìœ„ ì‚¬ì‹¤ ìœ í¬
+        spam, //ì±„íŒ…ì°½ ë„ë°° ë° ê´‘ê³ 
 
         Max,
     }
@@ -529,10 +529,10 @@ namespace GameBerry
         public static readonly float DefaultScreenHeight = 1920.0f;
         public static readonly float DefaultInGameCameraSize = 4.88f;
 
-        //Ä«¸Ş¶ó °ü·Ã
+        //ì¹´ë©”ë¼ ê´€ë ¨
         public static readonly float DefaultScreenInGameWidth = 17.7777f;
 
-        // ÃÖÃÊ ·Î±×ÀÎÀÎ°¡
+        // ìµœì´ˆ ë¡œê·¸ì¸ì¸ê°€
         public static readonly string FirstLoginKey = "FirstLogin";
 
         public static readonly int NickNameMinCount = 2;
@@ -545,7 +545,7 @@ namespace GameBerry
 
         public static double NickNameChangeDiaCost = 500.0;
 
-        //½Ã½ºÅÛÃª ÀÌ¸§
+        //ì‹œìŠ¤í…œì±— ì´ë¦„
         public static readonly string SystemChatName = "System";
 
         public const string DayLocalKey = "time/day";
@@ -553,7 +553,7 @@ namespace GameBerry
         public const string MinuteLocalKey = "time/minute";
         public const string SecondLocalKey = "time/second";
 
-        // ¼ÂÆÃ °ü·Ã
+        // ì…‹íŒ… ê´€ë ¨
 
         public static readonly string SoundBGOnKey = "SoundBGOnKey";
         public static bool SoundBGOn = true;
@@ -573,7 +573,7 @@ namespace GameBerry
 
         public static readonly int ChatBenMaxCount = 20;
 
-        // ¼ÂÆÃ °ü·Ã
+        // ì…‹íŒ… ê´€ë ¨
 
         public static readonly string RedDotSaveKey = "RedDot_";
 
@@ -585,7 +585,7 @@ namespace GameBerry
         public static ObscuredBool IsSweepUnlimited = false;
 
 
-        //DefineChart¿¡¼­ ÆÄ½ÌÇØ¼­ °¡Á®¿À±â
+        //DefineChartì—ì„œ íŒŒì‹±í•´ì„œ ê°€ì ¸ì˜¤ê¸°
         public static int StarforceRestoration1_Key = 1001;
         public static long StarforceRestoration1_Price = 5000;
         public static int StarforceRestoration2_Key = 1002;

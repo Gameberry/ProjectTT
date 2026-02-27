@@ -7,7 +7,7 @@ namespace GameBerry
     {
         public List<BattleSceneMap_Aggro> _battleSceneMap_Aggros = new List<BattleSceneMap_Aggro>();
 
-        // ¹¹ ¾ø¾î¼­ ¿ì¼± ¿äÁ¤µµ¸¸
+        // ë­ ì—†ì–´ì„œ ìš°ì„  ìš”ì •ë„ë§Œ
         public List<GameObject> Map = new List<GameObject>();
 
         public void SetMap(int index)

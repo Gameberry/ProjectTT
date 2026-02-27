@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace GameBerry.Chart
 {
-    // °¢ÀÎ ¿É¼Ç Á¤º¸
+    // ê°ì¸ ì˜µì…˜ ì •ë³´
     public struct EngravingInfo
     {
         public int Stage;
@@ -35,7 +35,7 @@ namespace GameBerry.Chart
         }
     }
 
-    // °¢ÀÎ ¸ÅÄª È®·ü
+    // ê°ì¸ ë§¤ì¹­ í™•ë¥ 
     public struct EngravingMatchingInfo
     {
         public int Stage;

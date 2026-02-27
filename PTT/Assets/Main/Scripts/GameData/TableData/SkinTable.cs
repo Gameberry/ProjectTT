@@ -104,7 +104,7 @@ namespace GameBerry.Table
 
         public bool EquipSlotSkin(Enum_SkinSlotType slot, int itemId)
         {
-            // °¡µå: ÇØ±İµÇÁö ¾ÊÀº ½ºÅ²Àº ÀåÂø ºÒ°¡
+            // ê°€ë“œ: í•´ê¸ˆë˜ì§€ ì•Šì€ ìŠ¤í‚¨ì€ ì¥ì°© ë¶ˆê°€
             if (!IsUnlocked(itemId))
                 return false;
 

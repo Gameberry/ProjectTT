@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-// ´ëÃ¼·Î ·ÎÁ÷(Dungeon_Base)°ú ´ÙÀÌ¾ó·Î±×ÀÇ µğÆæ´ø½Ã ¹æÁö¸¦ À§ÇØ ¸¸µë
+// ëŒ€ì²´ë¡œ ë¡œì§(Dungeon_Base)ê³¼ ë‹¤ì´ì–¼ë¡œê·¸ì˜ ë””íœë˜ì‹œ ë°©ì§€ë¥¼ ìœ„í•´ ë§Œë“¬
 
 namespace GameBerry.Event
 {

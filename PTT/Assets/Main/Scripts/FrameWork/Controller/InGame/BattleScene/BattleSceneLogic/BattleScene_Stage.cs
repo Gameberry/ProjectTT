@@ -10,7 +10,7 @@ namespace GameBerry
 {
     public class BattleScene_Stage : BattleSceneBase
     {
-        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ºñÈ°¼ºÈ­½Ã Ãë¼ÒÃ³¸®
+        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ë¹„í™œì„±í™”ì‹œ ì·¨ì†Œì²˜ë¦¬
 
         //------------------------------------------------------------------------------------
         protected override void OnSetBattleScene()
@@ -75,7 +75,7 @@ namespace GameBerry
             //    monsterController.Play();
             //}
 
-            // ¹æ±İ ¸ó½ºÅÍ°¡ ½ºÆùµÇ¾î¼­ °¡±îÀÌ »ı±ä ¸ó½ºÅÍ°¡ ÀÖÀ» ¼ö ÀÖÀ¸´Ï ÇÃ·¹ÀÌ¾î Å¸°Ù Àç¼³Á¤
+            // ë°©ê¸ˆ ëª¬ìŠ¤í„°ê°€ ìŠ¤í°ë˜ì–´ì„œ ê°€ê¹Œì´ ìƒê¸´ ëª¬ìŠ¤í„°ê°€ ìˆì„ ìˆ˜ ìˆìœ¼ë‹ˆ í”Œë ˆì´ì–´ íƒ€ê²Ÿ ì¬ì„¤ì •
             PlayerController.SetNewTarget();
         }
         //------------------------------------------------------------------------------------

@@ -180,15 +180,15 @@ namespace GameBerry.Table
             if (callback.IsSuccess() == false)
             {
                 BackEndErrorCode(callback);
-                Debug.Log("µ¥ÀÌÅÍ ÀĞ±â Áß¿¡ ¹®Á¦°¡ ¹ß»ıÇß½À´Ï´Ù : " + callback.ToString());
+                Debug.Log("ë°ì´í„° ì½ê¸° ì¤‘ì— ë¬¸ì œê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤ : " + callback.ToString());
             }
             else
             {
                 var data = callback.FlattenRows();
 
-                // ºÒ·¯¿À±â¿¡´Â ¼º°øÇßÀ¸³ª µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì
+                // ë¶ˆëŸ¬ì˜¤ê¸°ì—ëŠ” ì„±ê³µí–ˆìœ¼ë‚˜ ë°ì´í„°ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš°
                 if (data.Count <= 0)
-                    Debug.Log("µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+                    Debug.Log("ë°ì´í„°ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 
                 tableBase.SetData(data);
             }
@@ -317,7 +317,7 @@ namespace GameBerry.Table
         }
         //------------------------------------------------------------------------------------
         public static void TransactionUpdate_WaitSecond(List<TableBase> tableBases, Action<BackendReturnObject> action = null)
-        { // ÁÖÀÇ action ÀúÀåÀº Å×ÀÌºí Ã¹ Äİ¹é¿¡ ´ëÇÑ°Í¸¸ »ç¿ëÇÏ¹Ç·Î, °°Àº Å×ÀÌºíÀÌ¸§¿¡ ´Ù¸¥ ÇÔ¼öÆ÷ÀÎÅÍ¸¦ »ç¿ëÇÏ¸é ·±Å¸ÀÓ¿¡·¯¸¦ ¸¸µé ¼ö ÀÖÀ½
+        { // ì£¼ì˜ action ì €ì¥ì€ í…Œì´ë¸” ì²« ì½œë°±ì— ëŒ€í•œê²ƒë§Œ ì‚¬ìš©í•˜ë¯€ë¡œ, ê°™ì€ í…Œì´ë¸”ì´ë¦„ì— ë‹¤ë¥¸ í•¨ìˆ˜í¬ì¸í„°ë¥¼ ì‚¬ìš©í•˜ë©´ ëŸ°íƒ€ì„ì—ëŸ¬ë¥¼ ë§Œë“¤ ìˆ˜ ìˆìŒ
             if (tableBases == null)
                 return;
 
@@ -427,13 +427,13 @@ namespace GameBerry.Table
                     TransactionValue transactionValue = transactionValues[i];
                     if (transactionValue.action == TransactionAction.Put)
                     {
-                        // InsertÇÑ µ¥ÀÌÅÍµé InData¼ÂÆÃ
+                        // Insertí•œ ë°ì´í„°ë“¤ InDataì…‹íŒ…
                         var data = callback.GetReturnValuetoJSON();
 
-                        // ºÒ·¯¿À±â¿¡´Â ¼º°øÇßÀ¸³ª µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì
+                        // ë¶ˆëŸ¬ì˜¤ê¸°ì—ëŠ” ì„±ê³µí–ˆìœ¼ë‚˜ ë°ì´í„°ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš°
                         if (data.Count <= 0)
                         { 
-                            Debug.Log("µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+                            Debug.Log("ë°ì´í„°ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
                             continue;
                         }
 
@@ -537,7 +537,7 @@ namespace GameBerry.Table
                         return;
                     }
 
-                    Debug.LogWarning(string.Format("{0} Å×ÀÌºí »èÁ¦ ¿Ï·á", pair.Value.TableName));
+                    Debug.LogWarning(string.Format("{0} í…Œì´ë¸” ì‚­ì œ ì™„ë£Œ", pair.Value.TableName));
                 });
             }
 

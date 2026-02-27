@@ -101,20 +101,20 @@ public class BEditorWindow : EditorWindow
         GUI.Box(dropArea, "Drag and Drop");
 
 
-        var evt = Event.current;      //ÇöÀç ÀÌº¥Æ® ¾ò¾î¿À±â.
+        var evt = Event.current;      //í˜„ì¬ ì´ë²¤íŠ¸ ì–»ì–´ì˜¤ê¸°.
         switch (evt.type)
         {
-            case EventType.DragUpdated:     // µå·¡±× ÇÏ´Â µ¿¾È ¾÷µ¥ÀÌÆ® µÇ´Â ÀÌº¥Æ® Å¸ÀÔ.
-            case EventType.DragPerform:    // µå·¡±× ÈÄ ¸¶¿ì½º ¹öÆ° ¾÷ÀÎ »óÅÂÀÏ¶§.
+            case EventType.DragUpdated:     // ë“œë˜ê·¸ í•˜ëŠ” ë™ì•ˆ ì—…ë°ì´íŠ¸ ë˜ëŠ” ì´ë²¤íŠ¸ íƒ€ì….
+            case EventType.DragPerform:    // ë“œë˜ê·¸ í›„ ë§ˆìš°ìŠ¤ ë²„íŠ¼ ì—…ì¸ ìƒíƒœì¼ë•Œ.
                 {
-                    if (!dropArea.Contains(evt.mousePosition))    // ¸¶¿ì½º Æ÷Áö¼ÇÀÌ ¹Ú½º¾È¿¡ ¿µ¿ªÀÎÁö È®ÀÎ.
+                    if (!dropArea.Contains(evt.mousePosition))    // ë§ˆìš°ìŠ¤ í¬ì§€ì…˜ì´ ë°•ìŠ¤ì•ˆì— ì˜ì—­ì¸ì§€ í™•ì¸.
                         break;
                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                    if (evt.type == EventType.DragPerform)   // // µå·¡±× ÈÄ ¸¶¿ì½º ¹öÆ° ¾÷ÀÎ »óÅÂÀÏ¶§.
+                    if (evt.type == EventType.DragPerform)   // // ë“œë˜ê·¸ í›„ ë§ˆìš°ìŠ¤ ë²„íŠ¼ ì—…ì¸ ìƒíƒœì¼ë•Œ.
                     {
-                        DragAndDrop.AcceptDrag();   // µå·¡±×¾Ø µå¶øÀ» Çã¿ëÇÔ.
+                        DragAndDrop.AcceptDrag();   // ë“œë˜ê·¸ì•¤ ë“œëì„ í—ˆìš©í•¨.
 
-                        foreach (var draggedObj in DragAndDrop.paths)    // objectReferences: µå·¡±×ÇÑ ¿ÀºêÁ§Æ®µéÀÇ ·¹ÆÛ·±½º
+                        foreach (var draggedObj in DragAndDrop.paths)    // objectReferences: ë“œë˜ê·¸í•œ ì˜¤ë¸Œì íŠ¸ë“¤ì˜ ë ˆí¼ëŸ°ìŠ¤
                         {
                             Sprite sp = AssetDatabase.LoadAssetAtPath<Sprite>(draggedObj);
                             if (sp != null)
@@ -130,7 +130,7 @@ public class BEditorWindow : EditorWindow
                         }
                     }
                 }
-                Event.current.Use();  // ÀÌº¥Æ® »ç¿ëÇÑ ÈÄ, ÀÌº¥Æ®ÀÇ Å¸ÀÔÀ» º¯°æÇØÁØ´Ù. (EventType.Used)
+                Event.current.Use();  // ì´ë²¤íŠ¸ ì‚¬ìš©í•œ í›„, ì´ë²¤íŠ¸ì˜ íƒ€ì…ì„ ë³€ê²½í•´ì¤€ë‹¤. (EventType.Used)
                 break;
         }
 

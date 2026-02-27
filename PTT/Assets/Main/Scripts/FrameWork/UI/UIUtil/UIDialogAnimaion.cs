@@ -19,7 +19,7 @@ namespace GameBerry.UI
     }
 
     [RequireComponent(typeof(CanvasGroup))]
-    // ¾Ö½¬¿£º£ÀÏ¿¡ ÀÖ´ø ´ÙÀÌ¾ó·Î±× °£´ÜÇÑ ¾Ö´Ï¸ŞÀÌ¼Ç ÇÔ¼ö ¾µ¸¸ÇØ¼­ °¡Á®¿È
+    // ì• ì‰¬ì—”ë² ì¼ì— ìˆë˜ ë‹¤ì´ì–¼ë¡œê·¸ ê°„ë‹¨í•œ ì• ë‹ˆë©”ì´ì…˜ í•¨ìˆ˜ ì“¸ë§Œí•´ì„œ ê°€ì ¸ì˜´
     public class UIDialogAnimaion : MonoBehaviour
     {
         [FormerlySerializedAs("openingAnimationType")] [SerializeField] private AnimationType _openingAnimationType;
@@ -33,7 +33,7 @@ namespace GameBerry.UI
         [SerializeField] protected RectTransform _dialogView;
 
         private float _frameY;
-        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ºñÈ°¼ºÈ­½Ã Ãë¼ÒÃ³¸®
+        private CancellationTokenSource disableCancellation = new CancellationTokenSource(); //ë¹„í™œì„±í™”ì‹œ ì·¨ì†Œì²˜ë¦¬
 
         public void Init()
         {

@@ -1,4 +1,4 @@
-﻿Shader "Custom/SpineDissolve"
+Shader "Custom/SpineDissolve"
 {
     Properties
     {

@@ -15,7 +15,7 @@ namespace GameBerry.UI
         [SerializeField] private TMP_Text _amount;
         [SerializeField] private TMP_Text _level;
 
-        [SerializeField] private Transform _equipMark; // Àåºñ³ª Æ÷¼Ç È¤Àº ³ªÁß¿¡ ¹«¾ğ°¡
+        [SerializeField] private Transform _equipMark; // ì¥ë¹„ë‚˜ í¬ì…˜ í˜¹ì€ ë‚˜ì¤‘ì— ë¬´ì–¸ê°€
 
         [SerializeField] private Button btn;
 

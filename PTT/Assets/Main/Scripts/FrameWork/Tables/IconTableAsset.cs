@@ -73,7 +73,7 @@ namespace GameBerry
 
             if (containString.Count > 0)
             {
-                Debug.LogError("�ش� Key�� �̹� �ֽ��ϴ�. �Ʒ� �α׸� Ȯ�����ּ���!");
+                Debug.LogError("해당 Key가 이미 있습니다. 아래 로그를 확인해주세요!");
 
                 for (int i = 0; i < containString.Count; ++i)
                 {

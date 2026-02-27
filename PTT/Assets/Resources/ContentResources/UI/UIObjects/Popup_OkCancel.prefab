@@ -496,7 +496,6 @@ GameObject:
   - component: {fileID: 7157288533602124282}
   - component: {fileID: 6167190887944971079}
   - component: {fileID: 338477732102396361}
-  - component: {fileID: 2188566237221154199}
   - component: {fileID: 197501281695912026}
   - component: {fileID: 6223864531441499202}
   m_Layer: 5
@@ -609,18 +608,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2188566237221154199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3587850620328412541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f450a9b220757d149af9e741b42a6fc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &197501281695912026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,7 +829,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogView: {fileID: 4564407125353613497}
   UseBackBtn: 1
-  GuideInteractorInView: 0
   _exitBtn: []
   m_contents: {fileID: 516876874624262151}
   m_titleText: {fileID: 682798341431509274}
@@ -977,6 +963,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 24.8
   m_lineSpacingMax: 0
@@ -1021,7 +1008,6 @@ GameObject:
   - component: {fileID: 2321807352523844702}
   - component: {fileID: 8123632487355215422}
   - component: {fileID: 3731127571123063547}
-  - component: {fileID: 116897825303415477}
   m_Layer: 5
   m_Name: OKBtnDefaultContent
   m_TagString: Untagged
@@ -1114,6 +1100,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1147,19 +1134,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &116897825303415477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5579182534507797430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f91ef65adc513c4eb5e0c98a080c5c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LocalizeID: common/popUp/confirm
 --- !u!1 &5649479004404081903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,6 +1237,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1399,6 +1374,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1444,7 +1420,6 @@ GameObject:
   - component: {fileID: 2972884158879129340}
   - component: {fileID: 8232802079774328911}
   - component: {fileID: 7502466071089330533}
-  - component: {fileID: 2722661042964094477}
   - component: {fileID: 2514646901260043335}
   - component: {fileID: 3528734090061083417}
   m_Layer: 5
@@ -1556,18 +1531,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2722661042964094477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5963811322370460949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f450a9b220757d149af9e741b42a6fc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2514646901260043335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1680,7 +1643,6 @@ GameObject:
   - component: {fileID: 3753892649903171091}
   - component: {fileID: 5831525425637307778}
   - component: {fileID: 2712966922021110419}
-  - component: {fileID: 4841383868411741425}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1773,6 +1735,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1806,19 +1769,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &4841383868411741425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7483501614676311882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f91ef65adc513c4eb5e0c98a080c5c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LocalizeID: common/popUp/cancel
 --- !u!1 &7601030111270613081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,7 +1895,6 @@ GameObject:
   - component: {fileID: 4799628729424479140}
   - component: {fileID: 5226861433975430923}
   - component: {fileID: 7595595239011238154}
-  - component: {fileID: 7688385232217377016}
   - component: {fileID: 7540816282726642171}
   m_Layer: 5
   m_Name: ToDayHideToggle
@@ -2040,6 +1989,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2073,19 +2023,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &7688385232217377016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8862449682349775085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f91ef65adc513c4eb5e0c98a080c5c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LocalizeID: alram/dailydonotopen
 --- !u!114 &7540816282726642171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2242,6 +2179,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

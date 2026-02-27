@@ -13,7 +13,7 @@ public class ButtonToCButtonConverter : MonoBehaviour
             Button oldButton = obj.GetComponent<Button>();
             if (oldButton != null)
             {
-                // ±‚¡∏ º≥¡§ ∫πªÁ
+                // Í∏∞Ï°¥ ÏÑ§Ï†ï Î≥µÏÇ¨
                 var transition = oldButton.transition;
                 var colors = oldButton.colors;
                 var navigation = oldButton.navigation;
@@ -21,13 +21,13 @@ public class ButtonToCButtonConverter : MonoBehaviour
                 var onClick = oldButton.onClick;
                 var targetGraphic = oldButton.targetGraphic;
 
-                // ±‚¡∏ Button ªË¡¶
+                // Í∏∞Ï°¥ Button ÏÇ≠Ï†ú
                 DestroyImmediate(oldButton);
 
-                // ªı CButton √ﬂ∞°
+                // ÏÉà CButton Ï∂îÍ∞Ä
                 var newButton = obj.AddComponent<CButton>();
 
-                // ∫πªÁ«— º≥¡§ ¿˚øÎ
+                // Î≥µÏÇ¨Ìïú ÏÑ§Ï†ï Ï†ÅÏö©
                 newButton.transition = transition;
                 newButton.colors = colors;
                 newButton.navigation = navigation;

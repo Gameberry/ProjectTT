@@ -91,7 +91,7 @@ namespace GameBerry
             bool allowDuplicate = equipRandomRuleInfo.AllowDuplicateStat == 1;
 
             if (allowDuplicate == true)
-            { // Áßº¹ Çã¿ëÀÌ¸é ±×³É °¡ÁßÄ¡·Î »Ì¾Æ¼­ ¤¡¤¡
+            { // ì¤‘ë³µ í—ˆìš©ì´ë©´ ê·¸ëƒ¥ ê°€ì¤‘ì¹˜ë¡œ ë½‘ì•„ì„œ ã„±ã„±
                 for (int i = 0; i < optionCount; ++i)
                 {
                     EquipRandomPoolInfo pick = _picker.Pick();
@@ -159,7 +159,7 @@ namespace GameBerry
         {
             Dictionary<Enum_Stat, double> equipStats = CalculateEquipmentStats();
 
-            // PlayerController¿¡ Àåºñ ½ºÅÈ Àû¿ë
+            // PlayerControllerì— ì¥ë¹„ ìŠ¤íƒ¯ ì ìš©
             CharacterControllerBase player = Managers.BattleSceneManager.Instance?.GetPlayer();
             if (player != null)
             {
@@ -191,7 +191,7 @@ namespace GameBerry
                 if (!_equipSlotEnhanceChart.TryGetEquipSlotEnhanceInfo(slotLevel, out EquipSlotEnhanceInfo enhanceInfo))
                     continue;
 
-                // 1. ±âº» ½ºÅÈ (MainStatPer Àû¿ë)
+                // 1. ê¸°ë³¸ ìŠ¤íƒ¯ (MainStatPer ì ìš©)
                 var baseStats = equipInfo.GetBaseStats();
                 foreach (var kvp in baseStats)
                 {
@@ -199,7 +199,7 @@ namespace GameBerry
                     AddStat(totalStats, kvp.Key, value);
                 }
 
-                // 2. ·£´ı ¿É¼Ç ½ºÅÈ (SubStatPer Àû¿ë)
+                // 2. ëœë¤ ì˜µì…˜ ìŠ¤íƒ¯ (SubStatPer ì ìš©)
                 if (equipmentData?.addStatList != null)
                 {
                     for (int i = 0; i < equipmentData.addStatList.Count; i++)
@@ -273,7 +273,7 @@ namespace GameBerry
         }
         //------------------------------------------------------------------------------------
         public bool DoStarforceRestoration(GameBerry.Enum_EquipType enum_EquipType)
-        { // ÆÄ±« º¹±¸
+        { // íŒŒê´´ ë³µêµ¬
             if (IsDestroyStarforce(enum_EquipType) == false)
                 return false;
 
@@ -299,7 +299,7 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         public Enum_StarforceResult DoStarforceUp(Enum_EquipType enum_EquipType, bool downAid, bool destroyAid)
         {
-            // °­È­ ¿Ï·á ½Ã ÀåÂøÇÑ ºÎÀ§
+            // ê°•í™” ì™„ë£Œ ì‹œ ì¥ì°©í•œ ë¶€ìœ„
             int currentSlotLevel = GetStarforceLevel(enum_EquipType);
             int nextSlotLevel = currentSlotLevel + 1;
 
@@ -317,7 +317,7 @@ namespace GameBerry
 
             long subPrice = enhanceInfo.SubPrice;
 
-            // ¿É¼Ç ¼±ÅÃÇÑ ¸¸Å­ Ãß°¡ ±İ¾×
+            // ì˜µì…˜ ì„ íƒí•œ ë§Œí¼ ì¶”ê°€ ê¸ˆì•¡
             subPrice += downAid == true ? enhanceInfo.SubPrice : 0;
             subPrice += destroyAid == true ? enhanceInfo.SubPrice : 0;
 
@@ -366,7 +366,7 @@ namespace GameBerry
             Table.UserTable.Get<Table.EquipmentTable>().UpdateTable(false);
             Table.UserTable.Get<Table.PointTable>().UpdateTable(false);
 
-            // ½ºÅÈ °»½Å
+            // ìŠ¤íƒ¯ ê°±ì‹ 
             RefreshStat();
 
             return enum_StarforceResult;

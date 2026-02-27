@@ -61,7 +61,7 @@ namespace GameBerry.Managers
                 TimeContainer.AccumLoginCount++;
                 TimeContainer.DailyInitTimeStamp = DailyInit_TimeStamp;
 
-                Debug.LogWarning(string.Format("{0}ÀÏ", TimeContainer.AccumLoginCount.GetDecrypted()));
+                Debug.LogWarning(string.Format("{0}ì¼", TimeContainer.AccumLoginCount.GetDecrypted()));
             }
         }
         //------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ namespace GameBerry.Managers
                 }
 
                 if (Current_TimeStamp >= DailyInit_TimeStamp)
-                { // ÇÏ·ç ÃÊ±âÈ­ ÄÁÅÙÃ÷
+                { // í•˜ë£¨ ì´ˆê¸°í™” ì»¨í…ì¸ 
                     SetDaily_Init_TimeStamp(Current_TimeStamp);
 
                     if (OnInitDailyContent != null)
@@ -178,12 +178,12 @@ namespace GameBerry.Managers
                         TimeContainer.AccumLoginCount++;
                         TimeContainer.DailyInitTimeStamp = DailyInit_TimeStamp;
 
-                        Debug.LogWarning(string.Format("{0}ÀÏ", TimeContainer.AccumLoginCount.GetDecrypted()));
+                        Debug.LogWarning(string.Format("{0}ì¼", TimeContainer.AccumLoginCount.GetDecrypted()));
                     }
                 }
 
                 if (Current_TimeStamp >= WeekInit_TimeStamp)
-                { // ÀÏÁÖÀÏ(¿ù¿äÀÏ) ÃÊ±âÈ­ ÄÁÅÙÃ÷
+                { // ì¼ì£¼ì¼(ì›”ìš”ì¼) ì´ˆê¸°í™” ì»¨í…ì¸ 
                     SetWeek_Init_TimeStamp(Current_TimeStamp);
 
                     if (OnInitWeekContent != null)
@@ -191,7 +191,7 @@ namespace GameBerry.Managers
                 }
 
                 if (Current_TimeStamp >= MonthInit_TimeStamp)
-                { // ÇÑ´Ş(¿ùÃÊ) ÃÊ±âÈ­ ÄÁÅÙÃ÷
+                { // í•œë‹¬(ì›”ì´ˆ) ì´ˆê¸°í™” ì»¨í…ì¸ 
                     SetMonth_Init_TimeStamp(Current_TimeStamp);
 
                     if (OnInitMonthContent != null)

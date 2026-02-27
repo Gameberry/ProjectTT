@@ -952,7 +952,7 @@ public class UnityFacebook
 //    }
 
 //    /// <summary>
-//    /// ·Î±×ÀÎ ¿äÃ»
+//    /// ë¡œê·¸ì¸ ìš”ì²­
 //    /// onSuccess : authCode, idToken
 //    /// onFail : errMessage
 //    /// </summary>
@@ -1112,7 +1112,7 @@ public class UnityFacebook
 //    }
 
 //    /// <summary>
-//    /// ÀÏ¹İ ·Î±×ÀÎ ¿äÃ»: onSuccess, onError(reason)
+//    /// ì¼ë°˜ ë¡œê·¸ì¸ ìš”ì²­: onSuccess, onError(reason)
 //    /// </summary>
 //    public void Request(Action<string> onSuccess, Action<string> onError)
 //    {
@@ -1155,7 +1155,7 @@ public class UnityFacebook
 //    }
 
 //    /// <summary>
-//    /// Äü ·Î±×ÀÎ ¿äÃ»: onSuccess, onFail()
+//    /// í€µ ë¡œê·¸ì¸ ìš”ì²­: onSuccess, onFail()
 //    /// </summary>
 //    public void RequestQuick(Action<string> onSuccess, Action<string> onError)
 //    {
@@ -1196,12 +1196,12 @@ public class UnityFacebook
 //    }
 
 //    /// <summary>
-//    /// À¯Àú »èÁ¦½Ã ÅäÅ« Ãë¼Ò
+//    /// ìœ ì € ì‚­ì œì‹œ í† í° ì·¨ì†Œ
 //    /// https://developer.apple.com/documentation/sign_in_with_apple/revoke_tokens
 //    /// </summary>
 //    public void RevokeToken(MonoBehaviour context, Action onSuccess, Action<string> onFail)
 //    {
-//        // AuthCode À¯È¿½Ã°£ÀÌ 5ºĞÀÌ¶ó Àç·Î±×ÀÎÇØ¾ßÇÔ.
+//        // AuthCode ìœ íš¨ì‹œê°„ì´ 5ë¶„ì´ë¼ ì¬ë¡œê·¸ì¸í•´ì•¼í•¨.
 //        Request(idToken =>
 //        {
 //            context.StartCoroutine(RevokeTokenCoroutine(onSuccess, onFail));

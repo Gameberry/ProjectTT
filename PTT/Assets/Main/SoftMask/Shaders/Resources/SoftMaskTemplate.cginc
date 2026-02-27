@@ -1,4 +1,4 @@
-﻿// Template for SoftMask.shader and SoftMaskETC1.shader.
+// Template for SoftMask.shader and SoftMaskETC1.shader.
 // The SOFTMASK_ETC1 macro defines whether alpha split texture should be supported.
 
 #include "UnityCG.cginc"

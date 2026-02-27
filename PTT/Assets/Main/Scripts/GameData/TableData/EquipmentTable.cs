@@ -9,7 +9,7 @@ namespace GameBerry.Table
     {
         public Enum_EquipType slot; // (int)Enum_EquipType
         public int instanceId;
-        public int level; // -1Àº ÆÄ±«µÈ°Å´Ù º¹±¸ °¡´É
+        public int level; // -1ì€ íŒŒê´´ëœê±°ë‹¤ ë³µêµ¬ ê°€ëŠ¥
 
         public string Pack() => $"{PackUtil.PackValue(slot.Enum32ToInt())},{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(level)}";
         public void Unpack(string str)

@@ -14,7 +14,7 @@ namespace GameBerry
         [SerializeField] private string _eventDashEnd = "Dash_End";
 
         [Header("Dash")]
-        [SerializeField] private float _stopDistance = 0.1f;         // Å¸°Ù¿¡ µü ºÙÁö ¾Ê°Ô À¯ÁöÇÒ °Å¸®
+        [SerializeField] private float _stopDistance = 0.1f;         // íƒ€ê²Ÿì— ë”± ë¶™ì§€ ì•Šê²Œ ìœ ì§€í•  ê±°ë¦¬
         [SerializeField] private bool _clampToMapRange = true;
 
         [Header("VFX / Attack")]
@@ -44,7 +44,7 @@ namespace GameBerry
 
             _rb = caster.MyRigidbody;
 
-            // Ä³¸¯ÅÍ¿¡ SkeletonAnimationÀÌ ¾îµğ¿¡ ºÙ´ÂÁö ÇÁ·ÎÁ§Æ®¸¶´Ù ´Ù¸§
+            // ìºë¦­í„°ì— SkeletonAnimationì´ ì–´ë””ì— ë¶™ëŠ”ì§€ í”„ë¡œì íŠ¸ë§ˆë‹¤ ë‹¤ë¦„
             _skeletonAnim = caster.GetSkeletonAnimation();
             if (_skeletonAnim == null)
             {
@@ -80,17 +80,17 @@ namespace GameBerry
 
             if (name == _eventDashStart)
             {
-                BeginDashOnEventStart();   // ¿©±â¼­ actualInterval °è»ê ÈÄ ÄÚ·çÆ¾ ½ÃÀÛ
+                BeginDashOnEventStart();   // ì—¬ê¸°ì„œ actualInterval ê³„ì‚° í›„ ì½”ë£¨í‹´ ì‹œì‘
             }
             else if (name == _eventDashEnd)
             {
-                EndDashOnEventEnd();       // ¿©±â¼­ ½º³À + ¸¶¹«¸®
+                EndDashOnEventEnd();       // ì—¬ê¸°ì„œ ìŠ¤ëƒ… + ë§ˆë¬´ë¦¬
             }
         }
 
         private void OnSpineComplete(TrackEntry entry)
         {
-            // ÀÌº¥Æ® ´©¶ô ´ëºñ: ¾Ö´Ï ³¡³µ´Âµ¥ release ¾È µÆÀ¸¸é Á¤¸®
+            // ì´ë²¤íŠ¸ ëˆ„ë½ ëŒ€ë¹„: ì• ë‹ˆ ëë‚¬ëŠ”ë° release ì•ˆ ëìœ¼ë©´ ì •ë¦¬
             if (_released) return;
 
             if (_dashActive)
@@ -110,7 +110,7 @@ namespace GameBerry
 
             var caster = _skillProjectilePlayer.CharacterControllerBase;
 
-            // Å¸°Ù À§Ä¡ Ä³½Ã
+            // íƒ€ê²Ÿ ìœ„ì¹˜ ìºì‹œ
             _targetPosCached = (_target != null) ? _target.transform.position : _targetPosition;
             _targetPosCached.y = 0f;
 
@@ -120,7 +120,7 @@ namespace GameBerry
             Vector3 toTarget = _targetPosCached - _startPos;
             if (toTarget.sqrMagnitude < 0.0001f)
             {
-                // ¹æÇâÀÌ ¾Ö¸ÅÇÏ¸é forward·Î (y=0 Æò¸é)
+                // ë°©í–¥ì´ ì• ë§¤í•˜ë©´ forwardë¡œ (y=0 í‰ë©´)
                 toTarget = caster.transform.forward;
                 toTarget.y = 0f;
             }
@@ -130,7 +130,7 @@ namespace GameBerry
             float stopDist = Mathf.Max(0f, _stopDistance);
             float distToTarget = Vector3.Distance(_startPos, _targetPosCached);
 
-            // ÀÌ¹Ì ÃæºĞÈ÷ °¡±î¿ì¸é ÀÌµ¿ ¾øÀÌ endPos=startPos
+            // ì´ë¯¸ ì¶©ë¶„íˆ ê°€ê¹Œìš°ë©´ ì´ë™ ì—†ì´ endPos=startPos
             if (distToTarget <= stopDist + 0.0001f)
             {
                 _endPos = _startPos;
@@ -143,7 +143,7 @@ namespace GameBerry
             if (_clampToMapRange)
                 ClampToMapRange(ref _endPos);
 
-            // dash_start ~ dash_end ½ÇÁ¦ °£°İ(ÃÊ) °¡Á®¿À±â (TimeScale ¹İ¿µ)
+            // dash_start ~ dash_end ì‹¤ì œ ê°„ê²©(ì´ˆ) ê°€ì ¸ì˜¤ê¸° (TimeScale ë°˜ì˜)
             float dashMoveDuration = GetActualEventIntervalSeconds(
                 _skeletonAnim, _trackIndex, _eventDashStart, _eventDashEnd,
                 fallbackSeconds: 0.2f
@@ -179,11 +179,11 @@ namespace GameBerry
 
                 SetCasterPos(nextPos);
 
-                // durationÀº ÀÌº¥Æ® °£°İÀÌ¶ó º¸Åë ¿©±â¼­ Á¤È®È÷ ³¡³ªÁö¸¸,
-                // ½ÇÁ¦ Á¾·á´Â dash_end¿¡¼­ ½º³ÀÀ¸·Î ¡°È®Á¤¡±ÇÑ´Ù.
+                // durationì€ ì´ë²¤íŠ¸ ê°„ê²©ì´ë¼ ë³´í†µ ì—¬ê¸°ì„œ ì •í™•íˆ ëë‚˜ì§€ë§Œ,
+                // ì‹¤ì œ ì¢…ë£ŒëŠ” dash_endì—ì„œ ìŠ¤ëƒ…ìœ¼ë¡œ â€œí™•ì •â€í•œë‹¤.
                 if (t >= 1f)
                 {
-                    // endPos À¯Áö
+                    // endPos ìœ ì§€
                     SetCasterPos(end);
                 }
 
@@ -199,7 +199,7 @@ namespace GameBerry
 
             StopMoveRoutine();
 
-            // dash_end ½ÃÁ¡¿¡ ¡°È®Á¤ µµÂø¡±
+            // dash_end ì‹œì ì— â€œí™•ì • ë„ì°©â€
             SnapToEndPos();
 
             FinishDashAndAttack();
@@ -226,7 +226,7 @@ namespace GameBerry
                 _attakParticle.Play();
             }
 
-            // ¿øÄ¡ ¾ÊÀ¸¸é ÁÖ¼® Ã³¸®
+            // ì›ì¹˜ ì•Šìœ¼ë©´ ì£¼ì„ ì²˜ë¦¬
             caster.PlaySkill(_attackData, caster.transform.position);
         }
 
@@ -250,7 +250,7 @@ namespace GameBerry
         {
             var caster = _skillProjectilePlayer.CharacterControllerBase;
 
-            // y´Â ¿ø·¡ °ª À¯Áö(³Ê ÇÁ·ÎÁ§Æ® Æò¸éÀÌ x/zÀÎ °æ¿ì°¡ ¸¹¾Æ¼­)
+            // yëŠ” ì›ë˜ ê°’ ìœ ì§€(ë„ˆ í”„ë¡œì íŠ¸ í‰ë©´ì´ x/zì¸ ê²½ìš°ê°€ ë§ì•„ì„œ)
             pos.y = caster.transform.position.y;
 
             if (_rb != null) _rb.MovePosition(pos);
@@ -271,9 +271,9 @@ namespace GameBerry
         }
 
         /// <summary>
-        /// ÇöÀç track¿¡ Àç»ı ÁßÀÎ ¾Ö´Ï¿¡¼­ start/end ÀÌº¥Æ®ÀÇ ·ÎÄÃ ½Ã°£ Â÷ÀÌ¸¦ Ã£°í,
-        /// entry.TimeScale + state.TimeScaleÀ» ¹İ¿µÇØ¼­ ½ÇÁ¦ ÃÊ(actual seconds)·Î º¯È¯ÇØ ¹İÈ¯.
-        /// ¸ø Ã£À¸¸é fallback ¹İÈ¯.
+        /// í˜„ì¬ trackì— ì¬ìƒ ì¤‘ì¸ ì• ë‹ˆì—ì„œ start/end ì´ë²¤íŠ¸ì˜ ë¡œì»¬ ì‹œê°„ ì°¨ì´ë¥¼ ì°¾ê³ ,
+        /// entry.TimeScale + state.TimeScaleì„ ë°˜ì˜í•´ì„œ ì‹¤ì œ ì´ˆ(actual seconds)ë¡œ ë³€í™˜í•´ ë°˜í™˜.
+        /// ëª» ì°¾ìœ¼ë©´ fallback ë°˜í™˜.
         /// </summary>
         private static float GetActualEventIntervalSeconds(
             SkeletonAnimation skeletonAnim,
