@@ -75,6 +75,8 @@ namespace GameBerry.Contents
                 Debug.Log("[DataLoadContent] Database initialization success.");
             }
 
+            yield return ItemDataManager.Instance.LoadData().ToCoroutine();
+
             int totalTableCount = 0;
             int completeTableCount = 0;
 

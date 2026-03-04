@@ -27,6 +27,11 @@ namespace GameBerry.DB
 
                 // 3. 데이터베이스 초기화
                 await DBClient.Initialize();
+
+                Debug.Log($"DB UserUUID: {DBClient?.UserUUID}");
+                Debug.Log($"Backend.UserInDate: {BackEnd.Backend.UserInDate}");
+
+
                 return true;
             }
             catch (Exception ex)

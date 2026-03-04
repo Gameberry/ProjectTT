@@ -269,13 +269,45 @@ namespace GameBerry.UI
             if (m_isAdFreeMode != null)
                 m_isAdFreeMode.isOn = Define.IsAdFree;
 
-            GetAuctionItems().Forget();
+            //GetAuctionItems().Forget();
+            GetAuctionTest().Forget();
+        }
+        //------------------------------------------------------------------------------------
+        protected override void OnExit()
+        {
+            GetAuctionAny().Forget();
         }
         //------------------------------------------------------------------------------------
         public async UniTask TestAuction()
         {
             await UniTask.Delay(1000);
             Debug.Log("됨");
+        }
+                //------------------------------------------------------------------------------------
+        public async UniTask GetAuctionTest()
+        {
+            try
+            {
+                await AuctionManager.Instance.Test();
+                Debug.Log($"[CheatDialog] GetAuctionTest completed successfully.");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[CheatDialog] GetAuctionTest failed: {e}");
+            }
+        }
+
+                public async UniTask GetAuctionAny()
+        {
+            try
+            {
+                await AuctionManager.Instance.Test_Any();
+                Debug.Log($"[CheatDialog] GetAuctionAny completed successfully.");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[CheatDialog] GetAuctionAny failed: {e}");
+            }
         }
         //------------------------------------------------------------------------------------
         public async UniTaskVoid GetAuctionItems()

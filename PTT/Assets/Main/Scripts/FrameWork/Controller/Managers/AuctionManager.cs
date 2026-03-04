@@ -43,7 +43,7 @@ namespace GameBerry
 
     public class AuctionManager : Singleton<AuctionManager>
     {
-        private static int diaId = 1001; // ?àÏãúÎ°??§Ïù¥?ÑÎ∞°???ÑÏù¥??IDÎ•??§Ï†ï
+        private static int diaId = 1001; // ??????? ???? ????? ?? ID
 
         private void ShowInfo(string message)
         {
@@ -85,6 +85,45 @@ namespace GameBerry
                 .ToList();
         }
 
+        public async UniTask Test()
+        {
+            try
+            {
+                var btask = Database.DBClient.From<Auction>();
+                btask.ToString();
+                Debug.Log("Fetching all auction items...");
+                Debug.Log(btask.ToString());
+
+
+                var result = await btask.FirstOrDefault();
+                Debug.Log($"GetAuctionItems success: {result?.Id} items");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"GetAuctionItems failed: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
+        }
+
+        public async UniTask Test_Any()
+        {
+            try
+            {
+                var btask = Database.DBClient.From<Auction>();
+                btask.ToString();
+                Debug.Log("Fetching all auction items...");
+                Debug.Log(btask.ToString());
+
+                var result = await btask.Any();
+                Debug.Log($"GetAuctionItems success: {result} items");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"GetAuctionItems failed: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
+        }
+
         public async UniTask<List<Auction>> GetAuctionItems(int itemId)
         {
             try
@@ -124,23 +163,33 @@ namespace GameBerry
                 return;
             }
 
-            var auction = await Database.DBClient.From<Auction>()
-                .Where(x => x.Id == selectedAuction.Id)
-                .First();
-
-            if (auction != null && !auction.Issold)
+            try
             {
-                auction.Issold = true;
-                await Database.DBClient.From<Auction>().Update(auction);
+                int amount = selectedAuction.Amount;
+                int price = selectedAuction.Price;
 
-                ItemManager.Instance.AddItem(auction.Itemid, auction.Amount);
-                ItemManager.Instance.ConsumeItem(diaId, auction.Price);
+                var result = await Database.DBClient.Transaction()
+                .From<Auction>().Where(x => x.Id == selectedAuction.Id && x.Issold == false).Set(x => x.Issold, true).Update()
+                .From<currencytest>().Where(x => x.Owner == Backend.UserInDate).Inc(x => x.Gold, amount).Dec(x => x.Dia, price).Update()
+                .Commit();
 
-                ShowInfo($"Bought item: {auction.Itemid}, Amount: {auction.Amount}, Price: {auction.Price}");
+                if (result.Success)
+                {
+                    ShowInfo($"Bought item: {selectedAuction.Itemid}, Amount: {selectedAuction.Amount}, Price: {selectedAuction.Price} Success! {result.OperationCount}, {result.TotalAffectedRows}");
+
+                    ItemManager.Instance.AddItem(selectedAuction.Itemid, amount);
+                    ItemManager.Instance.ConsumeItem(diaId, price);
+                }
+                else
+                {
+                    ShowError($"Failed to buy auction item: {result.Message}");
+                    // ?? ??? ???? ???
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ShowError("Auction item not found or already sold.");
+                Debug.LogError($"BuyAuctionItem failed: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                throw;
             }
         }
 
