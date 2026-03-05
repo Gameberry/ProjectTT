@@ -100,22 +100,25 @@ namespace GameBerry.UI
                 if (e.isMeta == true)
                 {
                     if (e.metaAmount > 0)
+                    {
                         amount = e.metaAmount;
+                        _amount.gameObject.SetActive(true);
+                        Util.SetCommaInteger(_amount, amount);
+                    }
+                    else
+                        _amount.gameObject.SetActive(false);
                 }
                 else
                 {
                     if (itemInfo.IsStack == true)
+                    {
                         amount = ItemManager.Instance.GetItemAmount(itemId);
+                        _amount.gameObject.SetActive(true);
+                        Util.SetCommaInteger(_amount, amount);
+                    }
+                    else
+                        _amount.gameObject.SetActive(false);
                 }
-
-                Util.SetCommaInteger(_amount, amount);
-
-                // if (amount > 0)
-                // {
-                //     Util.SetCommaInteger(_amount, amount);
-                // }
-                // else
-                //     _amount.gameObject.SetActive(false);
             }
 
             Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);
@@ -141,7 +144,7 @@ namespace GameBerry.UI
                 //    _level.gameObject.SetActive(true);
                 //}
                 //else
-                    _level.gameObject.SetActive(false);
+                _level.gameObject.SetActive(false);
             }
 
             if (_equipMark != null)

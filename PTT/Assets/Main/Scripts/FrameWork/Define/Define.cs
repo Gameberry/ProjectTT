@@ -146,6 +146,7 @@ namespace GameBerry
         Skin,         // 스킨 컬렉션
         Weapon,      // 무기
         Lantern,     // 랜턴
+        Equipment,   // 장비
     }
 
     public enum Enum_SummonType

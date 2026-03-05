@@ -15,6 +15,7 @@ namespace GameBerry.UI
         PointInventoryDialog,
         SkinSelectDialog,
         InventoryItemDialog,
+        EquipmentInventoryDialog,
         WeaponInventoryDialog,
         LanternInventoryDialog,
         SummonDialog,

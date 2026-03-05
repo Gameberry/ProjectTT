@@ -7,9 +7,9 @@ namespace GameBerry.Table
 {
     public class EquipSlotData : IPackable
     {
-        public Enum_EquipType slot; // (int)Enum_EquipType
+        public Enum_EquipType slot;
         public int instanceId;
-        public int level; // -1은 파괴된거다 복구 가능
+        public int level;
 
         public string Pack() => $"{PackUtil.PackValue(slot.Enum32ToInt())},{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(level)}";
         public void Unpack(string str)
@@ -64,13 +64,20 @@ namespace GameBerry.Table
     public class EquipmentData : IPackable
     {
         public int instanceId;
-
+        public int itemId;
         public List<EquipmentAddStat> addStatList;
 
-        public string Pack() => $"{PackUtil.PackValue(instanceId)}:{PackUtil.PackList(addStatList, PackSep.L1)}";
+        // Backward compatible:
+        // - New: instanceId,itemId:addStat...
+        // - Old: instanceId:addStat...
+        public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(itemId)}:{PackUtil.PackList(addStatList, PackSep.L1)}";
 
         public void Unpack(string str)
         {
+            instanceId = 0;
+            itemId = 0;
+            addStatList = new List<EquipmentAddStat>();
+
             if (string.IsNullOrEmpty(str)) return;
 
             var tsp = str.Split(':');
@@ -79,6 +86,7 @@ namespace GameBerry.Table
             {
                 var sp = tsp[0].Split(',');
                 if (sp.Length > 0) instanceId = PackUtil.UnpackValue<int>(sp[0]);
+                if (sp.Length > 1) itemId = PackUtil.UnpackValue<int>(sp[1]);
             }
 
             if (tsp.Length > 1 && string.IsNullOrEmpty(tsp[1]) == false)
@@ -93,6 +101,8 @@ namespace GameBerry.Table
 
         private const string equipmentDataKey = "Equipment";
         private Dictionary<int, EquipmentData> equipmentDataDict = new Dictionary<int, EquipmentData>();
+
+        private int nextInstanceId = 1;
 
         public override void SetData(JsonData data)
         {
@@ -110,8 +120,10 @@ namespace GameBerry.Table
                         equipmentDataDict = PackUtil.UnpackDict<int, EquipmentData>(data[i][key].ToString());
                 }
             }
+
+            RebuildNextInstanceId();
         }
-        //------------------------------------------------------------------------------------
+
         public override Param GetParam()
         {
             Param p = new Param();
@@ -119,43 +131,71 @@ namespace GameBerry.Table
             p.Add(equipmentDataKey, PackUtil.PackDict(equipmentDataDict));
             return p;
         }
-        //------------------------------------------------------------------------------------
-        public bool AddEquipment(EquipmentData equipmentData)
-        {
-            if (equipmentDataDict.ContainsKey(equipmentData.instanceId) == true)
-                return false;
 
-            equipmentDataDict.Add(equipmentData.instanceId, equipmentData);
-
-            return true;
-        }
-        //------------------------------------------------------------------------------------
-        public EquipmentData GetEquipmentData(int instandeId)
+        private void RebuildNextInstanceId()
         {
-            if (equipmentDataDict.TryGetValue(instandeId, out var data))
+            nextInstanceId = 1;
+            if (equipmentDataDict == null || equipmentDataDict.Count == 0)
+                return;
+
+            foreach (var kv in equipmentDataDict)
             {
-                return data;
+                if (kv.Key >= nextInstanceId)
+                    nextInstanceId = kv.Key + 1;
             }
+        }
+
+        private int GetNewInstanceId()
+        {
+            if (nextInstanceId <= 0)
+                nextInstanceId = 1;
+
+            while (equipmentDataDict.ContainsKey(nextInstanceId))
+                nextInstanceId++;
+
+            return nextInstanceId++;
+        }
+
+        public ItemHandle AddEquipment(int itemId, List<EquipmentAddStat> addStats = null)
+        {
+            int instanceId = GetNewInstanceId();
+            EquipmentData equipmentData = new EquipmentData
+            {
+                instanceId = instanceId,
+                itemId = itemId,
+                addStatList = addStats ?? new List<EquipmentAddStat>()
+            };
+
+            equipmentDataDict[instanceId] = equipmentData;
+            return ItemHandle.ForInstance(itemId, instanceId);
+        }
+
+        public EquipmentData GetEquipmentData(int instanceId)
+        {
+            if (equipmentDataDict.TryGetValue(instanceId, out var data))
+                return data;
 
             return null;
         }
-        //------------------------------------------------------------------------------------
+
         public bool RemoveEquipment(int instanceId)
         {
+            if (IsEquipped(instanceId))
+                return false;
+
             if (equipmentDataDict.ContainsKey(instanceId) == false)
-                return true;
+                return false;
 
             equipmentDataDict.Remove(instanceId);
-
             return true;
         }
-        //------------------------------------------------------------------------------------
+
         public int GetEquippedInstanceId(GameBerry.Enum_EquipType slot)
         {
             var d = equipped.Find(x => x.slot == slot);
             return d != null ? d.instanceId : 0;
         }
-        //------------------------------------------------------------------------------------
+
         public int GetStarforceLevel(GameBerry.Enum_EquipType slot)
         {
             var d = equipped.Find(x => x.slot == slot);
@@ -167,7 +207,7 @@ namespace GameBerry.Table
 
             return d.level;
         }
-        //------------------------------------------------------------------------------------
+
         public bool IsDestroyStarforce(GameBerry.Enum_EquipType slot)
         {
             var d = equipped.Find(x => x.slot == slot);
@@ -176,7 +216,7 @@ namespace GameBerry.Table
 
             return d.level == -1;
         }
-        //------------------------------------------------------------------------------------
+
         public bool EnhanceSlot(Enum_EquipType slot, Enum_StarforceResult enum_StarforceResult, bool immediate = true)
         {
             if (enum_StarforceResult == Enum_StarforceResult.Stay)
@@ -199,7 +239,7 @@ namespace GameBerry.Table
 
             return true;
         }
-        //------------------------------------------------------------------------------------
+
         public bool DoSlotRestoration(GameBerry.Enum_EquipType slot, bool immediate = true)
         {
             var d = equipped.Find(x => x.slot == slot);
@@ -216,18 +256,18 @@ namespace GameBerry.Table
 
             return true;
         }
-        //------------------------------------------------------------------------------------
+
         public void SetEquipped(GameBerry.Enum_EquipType slot, int instanceId)
         {
             var d = equipped.Find(x => x.slot == slot);
             if (d == null)
             {
-                equipped.Add(new EquipSlotData { slot = slot, instanceId = instanceId });
+                equipped.Add(new EquipSlotData { slot = slot, instanceId = instanceId, level = 0 });
                 return;
             }
             d.instanceId = instanceId;
         }
-        //------------------------------------------------------------------------------------
+
         public bool IsEquipped(int instanceId)
         {
             for (int i = 0; i < equipped.Count; i++)
@@ -238,16 +278,94 @@ namespace GameBerry.Table
 
             return false;
         }
-        //------------------------------------------------------------------------------------
+
         public bool TryGetData(int instanceId, out EquipmentData data)
         {
             return equipmentDataDict.TryGetValue(instanceId, out data);
         }
-        //------------------------------------------------------------------------------------
+
         public bool HasEquipment(int instanceId)
         {
             return equipmentDataDict.ContainsKey(instanceId);
         }
-        //------------------------------------------------------------------------------------
+
+        public bool TryGetHandleByInstanceId(int instanceId, out ItemHandle handle)
+        {
+            handle = default;
+            if (!equipmentDataDict.TryGetValue(instanceId, out var data))
+                return false;
+
+            handle = ItemHandle.ForInstance(data.itemId, data.instanceId);
+            return true;
+        }
+
+        public long CountByItemId(int itemId)
+        {
+            long count = 0;
+            foreach (var kv in equipmentDataDict)
+            {
+                if (kv.Value == null) continue;
+                if (kv.Value.itemId != itemId) continue;
+                count++;
+            }
+            return count;
+        }
+
+        public bool HasInstance(int instanceId)
+        {
+            return equipmentDataDict.ContainsKey(instanceId);
+        }
+
+        public List<EquipmentData> BuildView(Enum_InventorySort sort)
+        {
+            var itemChart = GameChart.Get<ItemChart>();
+            var equipChart = GameChart.Get<EquipChart>();
+
+            int RarityKey(EquipmentData e) => (int)(itemChart?.Get(e.itemId)?.Rarity ?? 0);
+            int EquipKey(EquipmentData e) => (int)(equipChart?.Get(e.itemId)?.EquipType ?? Enum_EquipType.Max);
+
+            List<EquipmentData> list = new List<EquipmentData>(equipmentDataDict.Values);
+
+            switch (sort)
+            {
+                case Enum_InventorySort.TypeSort:
+                    list.Sort((x, y) =>
+                    {
+                        if (EquipKey(x) < EquipKey(y)) return -1;
+                        if (EquipKey(x) > EquipKey(y)) return 1;
+
+                        if (RarityKey(x) < RarityKey(y)) return 1;
+                        if (RarityKey(x) > RarityKey(y)) return -1;
+
+                        if (x.itemId < y.itemId) return -1;
+                        if (x.itemId > y.itemId) return 1;
+
+                        return x.instanceId.CompareTo(y.instanceId);
+                    });
+                    break;
+
+                case Enum_InventorySort.RaritySort:
+                    list.Sort((x, y) =>
+                    {
+                        if (RarityKey(x) < RarityKey(y)) return 1;
+                        if (RarityKey(x) > RarityKey(y)) return -1;
+
+                        if (EquipKey(x) < EquipKey(y)) return -1;
+                        if (EquipKey(x) > EquipKey(y)) return 1;
+
+                        if (x.itemId < y.itemId) return -1;
+                        if (x.itemId > y.itemId) return 1;
+
+                        return x.instanceId.CompareTo(y.instanceId);
+                    });
+                    break;
+
+                default:
+                    list.Sort((x, y) => x.instanceId.CompareTo(y.instanceId));
+                    break;
+            }
+
+            return list;
+        }
     }
 }

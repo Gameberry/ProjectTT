@@ -58,6 +58,7 @@ namespace GameBerry
         public event Action OnInventoryChanged;
         public event Action OnPointChanged;
         public event Action OnSkinChanged;
+        public event Action OnEquipmentStorageChanged;
         public event Action OnWeaponStorageChanged;
         public event Action OnLanternStorageChanged;
 
@@ -86,6 +87,7 @@ namespace GameBerry
             Register(new InventoryStorageHandler());
             Register(new PointStorageHandler());
             Register(new SkinStorageHandler());
+            Register(new EquipmentStorageHandler());
             Register(new WeaponStorageHandler());
             Register(new LanternStorageHandler());
         }
@@ -259,8 +261,16 @@ namespace GameBerry
 
             if (handle.IsInstance)
             {
-                var inv = UserTable.Get<InventoryTable>();
-                return inv != null && inv.FindInstance(handle.instanceId) != null ? 1 : 0;
+                var meta = GetItemMeta(handle.itemId);
+                if (meta == null) return 0;
+
+                if (meta.StorageType == Enum_ItemStorageType.Equipment)
+                {
+                    var eq = UserTable.Get<EquipmentTable>();
+                    return (eq != null && eq.HasInstance(handle.instanceId)) ? 1 : 0;
+                }
+
+                return 0;
             }
 
             return GetItemAmount(handle.itemId);
@@ -269,10 +279,11 @@ namespace GameBerry
         public bool TryGetHandleByInstanceId(int instanceId, out GameBerry.ItemHandle handle)
         {
             handle = default;
-            var inv = UserTable.Get<InventoryTable>();
-            if (inv == null) return false;
+            var eq = UserTable.Get<EquipmentTable>();
+            if (eq != null && eq.TryGetHandleByInstanceId(instanceId, out handle))
+                return true;
 
-            return inv.TryGetHandleByInstanceId(instanceId, out handle);
+            return false;
         }
 
         public long GetItemAmount(int itemId)
@@ -291,6 +302,7 @@ namespace GameBerry
             if (t == GameBerry.Enum_ItemStorageType.Inventory) OnInventoryChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Point) OnPointChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Skin) OnSkinChanged?.Invoke();
+            else if (t == GameBerry.Enum_ItemStorageType.Equipment) OnEquipmentStorageChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Weapon) OnWeaponStorageChanged?.Invoke();
             else if (t == GameBerry.Enum_ItemStorageType.Lantern) OnLanternStorageChanged?.Invoke();
         }
@@ -369,50 +381,16 @@ namespace GameBerry
         {
             public GameBerry.Enum_ItemStorageType StorageType => GameBerry.Enum_ItemStorageType.Inventory;
 
-            private List<Table.TableBase> EquipInvenTables = new List<Table.TableBase>()
-            {
-                Table.UserTable.Get<Table.InventoryTable>(),
-                Table.UserTable.Get<Table.EquipmentTable>()
-            };
-
             public AddItemResult Add(ItemInfo meta, long amount, bool immediate)
             {
                 var inv = UserTable.Get<InventoryTable>();
-                long added = 0;
+                if (!meta.IsStack)
+                    return new AddItemResult { Success = false, Requested = amount, Added = 0, Reason = "InventoryNonStackNotSupported" };
 
-                if (meta.IsStack)
-                {
-                    inv.AddStack(meta.ItemId, (int)amount);
-                    added = amount;
-                }
-                else
-                {
-                    for (int i = 0; i < amount; i++)
-                    {
-                        ItemHandle itemHandle = inv.AddInstance(meta.ItemId);
-                        if (meta.ItemType == Enum_ItemType.Equip)
-                            EquipmentManager.Instance.AddEquipment(itemHandle);
-                    }
+                inv.AddStack(meta.ItemId, (int)amount);
+                inv.UpdateTable(immediate);
 
-                    added = amount;
-                }
-
-                if (meta.ItemType == Enum_ItemType.Equip)
-                {
-                    if (immediate == false)
-                    {
-                        for (int i = 0; i < EquipInvenTables.Count; ++i)
-                        {
-                            EquipInvenTables[i].UpdateTable(immediate);
-                        }
-                    }
-                    else
-                        UserTable.TransactionUpdate(EquipInvenTables);
-                }
-                else
-                    inv.UpdateTable(immediate);
-
-                return new AddItemResult { Success = true, Requested = amount, Added = added };
+                return new AddItemResult { Success = true, Requested = amount, Added = amount };
             }
 
             public ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediate)
@@ -433,43 +411,68 @@ namespace GameBerry
 
             public ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediate)
             {
-                var inv = UserTable.Get<InventoryTable>();
-
-                int itemid = inv.RemoveInstance(instanceId);
-                if (itemid == -1)
-                    return new ConsumeItemResult { Success = false, Reason = "NotFound" };
-
-                if (itemid != meta.ItemId)
-                    return new ConsumeItemResult { Success = false, Reason = "ItemIdMismatch" };
-
-                Enum_ItemType enum_ItemType = Instance.GetItemType(itemid);
-                if (enum_ItemType == Enum_ItemType.Equip)
-                    UserTable.Get<EquipmentTable>().RemoveEquipment(instanceId);
-
-                if (enum_ItemType == Enum_ItemType.Equip)
-                {
-                    if (immediate == false)
-                    {
-                        for (int i = 0; i < EquipInvenTables.Count; ++i)
-                        {
-                            EquipInvenTables[i].UpdateTable(immediate);
-                        }
-                    }
-                    else
-                        UserTable.TransactionUpdate(EquipInvenTables);
-                }
-                else
-                    inv.UpdateTable(immediate);
-
-                return new ConsumeItemResult { Success = true };
+                return new ConsumeItemResult { Success = false, Reason = "NotSupported" };
             }
 
             public long GetAmount(ItemInfo meta)
             {
                 var inv = UserTable.Get<InventoryTable>();
-                return meta.IsStack
-                    ? inv.FindStack(meta.ItemId)?.count ?? 0
-                    : inv.CountInstance(meta.ItemId);
+                return inv.FindStack(meta.ItemId)?.count ?? 0;
+            }
+        }
+
+        private class EquipmentStorageHandler : IItemStorageHandler
+        {
+            public GameBerry.Enum_ItemStorageType StorageType => GameBerry.Enum_ItemStorageType.Equipment;
+
+            public AddItemResult Add(ItemInfo meta, long amount, bool immediate)
+            {
+                if (amount <= 0)
+                    return new AddItemResult { Success = true, Requested = amount, Added = 0 };
+
+                long added = 0;
+                for (int i = 0; i < amount; ++i)
+                {
+                    ItemHandle handle = EquipmentManager.Instance.AddEquipment(meta.ItemId);
+                    if (handle.IsInstance)
+                        added++;
+                }
+
+                UserTable.Get<EquipmentTable>().UpdateTable(immediate);
+                return new AddItemResult { Success = true, Requested = amount, Added = added };
+            }
+
+            public ConsumeItemResult Consume(ItemInfo meta, long amount, bool immediate)
+            {
+                return new ConsumeItemResult { Success = false, Reason = "UseHandleForInstance" };
+            }
+
+            public ConsumeItemResult Consume_Instance(ItemInfo meta, int instanceId, bool immediate)
+            {
+                var eq = UserTable.Get<EquipmentTable>();
+                if (eq == null)
+                    return new ConsumeItemResult { Success = false, Reason = "EquipmentTableMissing" };
+
+                if (!eq.TryGetData(instanceId, out var data) || data == null)
+                    return new ConsumeItemResult { Success = false, Reason = "NotFound" };
+
+                if (data.itemId != meta.ItemId)
+                    return new ConsumeItemResult { Success = false, Reason = "ItemIdMismatch" };
+
+                if (eq.IsEquipped(instanceId))
+                    return new ConsumeItemResult { Success = false, Reason = "Equipped" };
+
+                if (!eq.RemoveEquipment(instanceId))
+                    return new ConsumeItemResult { Success = false, Reason = "RemoveFailed" };
+
+                eq.UpdateTable(immediate);
+                return new ConsumeItemResult { Success = true, Requested = 1, Consumed = 1 };
+            }
+
+            public long GetAmount(ItemInfo meta)
+            {
+                var eq = UserTable.Get<EquipmentTable>();
+                return eq?.CountByItemId(meta.ItemId) ?? 0;
             }
         }
 
