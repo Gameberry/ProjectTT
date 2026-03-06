@@ -97,14 +97,21 @@ namespace GameBerry
 
     public enum Enum_EquipType
     {
-        Bow = 1,
-        Helmet = 2,
-        Armor = 3,
-        Glove = 4,
-        Shoes = 5,
-        Cape = 6,
+        Helmet = 1,
+        Armor = 2,
+        Glove = 3,
+        Shoes = 4,
+        Cape = 5,
+        Ring = 6,
 
         Max,
+    }
+
+    public enum Enum_ContentCategory
+    {
+        Stage = 11,
+        Raid_Normal = 12,
+        Raid_Hard = 13,
     }
 
     public enum Enum_PointType
@@ -254,6 +261,29 @@ namespace GameBerry
         Max,
     }
 
+    public enum Enum_StatA
+    {
+        Attack = 11,
+        HP,
+        Defence,
+        MoveSpeed,
+        AttackSpeed,
+        Attack_Inc,
+        Hp_Inc,
+        Defence_Inc,
+        MoveSpeed_Inc,
+        AttackSpeed_Inc,
+        CritChance,
+        CritDmg_Inc,
+        Evasion,
+        Accuracy,
+        HpRecovery,
+        MinDamagePer,
+        MaxDamagePer,
+        FinalDamage,
+        Max,
+    }
+
     public enum Enum_StatMode
     {
         Int,
@@ -357,7 +387,7 @@ namespace GameBerry
     }
 
     public enum V2Enum_QuestType
-    { 
+    {
         Daily = 11,
         Weekly = 12,
         Monthly = 13,
@@ -389,7 +419,7 @@ namespace GameBerry
     }
 
     public enum ContentDetailList
-    { 
+    {
         None = 0,
 
         CharacterProfile,

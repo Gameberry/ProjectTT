@@ -64,6 +64,21 @@ namespace GameBerry.Chart
                             Define.WeaponLevelUpCostKey = PackUtil.UnpackValue<int>(rows[i].value);
                             break;
                         }
+                    case "LanternBaseMaxLevel":
+                        {
+                            Define.LanternBaseMaxLevel = PackUtil.UnpackValue<int>(rows[i].value);
+                            break;
+                        }
+                    case "LanternCombineCount":
+                        {
+                            Define.LanternCombineCount = PackUtil.UnpackValue<int>(rows[i].value);
+                            break;
+                        }
+                    case "SummonAdDrawCount":
+                        {
+                            Define.SummonAdDrawCount = PackUtil.UnpackValue<int>(rows[i].value);
+                            break;
+                        }
                 }
             }
         }
