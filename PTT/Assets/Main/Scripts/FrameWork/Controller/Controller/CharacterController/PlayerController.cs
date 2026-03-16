@@ -162,6 +162,15 @@ namespace GameBerry
             ChangeState(CharacterState.Idle);
         }
         //------------------------------------------------------------------------------------
+        protected override void OnDead()
+        {
+            base.OnDead();
+            ClearAttackSlotReservations();
+
+            if (Managers.BattleSceneManager.isAlive)
+                Managers.BattleSceneManager.Instance.DeadPlayer(this);
+        }
+        //------------------------------------------------------------------------------------
         public override Vector3 GetMoveDirection()
         { // MoveController_Base에서 주로 호출
             // 유저는 조이스틱으로 방향을 정할 때가 있어서 가상함수로 만듬
@@ -719,7 +728,7 @@ namespace GameBerry
             foreach (var kvp in _monsterSlotReservations)
             {
                 MonsterController monster = kvp.Key;
-                if (monster != null && monster.IsDead == false)
+                if (monster != null && monster.IsDead == false && monster.gameObject.activeInHierarchy)
                     continue;
                 if (invalidMonsters == null)
                     invalidMonsters = new List<MonsterController>();

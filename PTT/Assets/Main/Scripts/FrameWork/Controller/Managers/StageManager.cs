@@ -20,11 +20,15 @@ namespace GameBerry
         private DungeonProgressTable _dungeonProgressTable;
         private readonly Dictionary<int, Sprite> _chapterIcons = new Dictionary<int, Sprite>();
         private StageBattleMode _stageBattleMode = StageBattleMode.Field;
+        private float _bossBattleRemainingTime = 0f;
+        private bool _isBossBattleTimerRunning = false;
 
         private const string _chapterIconPath = "Icon/chapter/{0}";
 
         public StageBattleMode CurrentStageBattleMode => _stageBattleMode;
         public bool IsStageBossBattle => _stageBattleMode == StageBattleMode.Boss;
+        public float BossBattleRemainingTime => _bossBattleRemainingTime;
+        public bool IsBossBattleTimerRunning => _isBossBattleTimerRunning;
 
         protected override void Init()
         {
@@ -130,6 +134,23 @@ namespace GameBerry
         public void SetStageBattleMode(StageBattleMode battleMode)
         {
             _stageBattleMode = battleMode;
+        }
+
+        public void StartBossBattleTimer(float durationSeconds)
+        {
+            _bossBattleRemainingTime = Mathf.Max(0f, durationSeconds);
+            _isBossBattleTimerRunning = true;
+        }
+
+        public void UpdateBossBattleTimer(float remainingTimeSeconds)
+        {
+            _bossBattleRemainingTime = Mathf.Max(0f, remainingTimeSeconds);
+        }
+
+        public void StopBossBattleTimer()
+        {
+            _bossBattleRemainingTime = 0f;
+            _isBossBattleTimerRunning = false;
         }
 
         public bool PrepareFieldBattle(int chapter, int stage, bool immediate = true)

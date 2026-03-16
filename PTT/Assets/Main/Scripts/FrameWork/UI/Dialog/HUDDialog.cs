@@ -45,6 +45,15 @@ namespace GameBerry.UI
         [SerializeField]
         private TMP_Text _stageNameText;
 
+        [SerializeField]
+        private TMP_Text _challengeButtonText;
+
+        [SerializeField]
+        private GameObject _bossTimerRoot;
+
+        [SerializeField]
+        private TMP_Text _bossTimerText;
+
         private long _cachedCurrentHp = -1;
         private long _cachedMaxHp = -1;
         private float _cachedHpRatio = -1f;
@@ -86,6 +95,11 @@ namespace GameBerry.UI
             Message.RemoveListener<Event.RefreshComboUIMsg>(ShowComboUI);
             Message.RemoveListener<Event.RefreshPlayerHpMsg>(OnRefreshPlayerHp);
             Message.RemoveListener<Event.RefreshBattleSceneUIMsg>(OnRefreshBattleSceneUI);
+        }
+        //------------------------------------------------------------------------------------
+        private void Update()
+        {
+            RefreshBossTimer();
         }
         //------------------------------------------------------------------------------------
         private void ShowComboUI(Event.RefreshComboUIMsg msg)
@@ -188,6 +202,20 @@ namespace GameBerry.UI
         private void OnClickChallenge()
         {
             StageManager.Instance.GetCurrentStage(out int chapter, out int stage);
+
+            if (StageManager.Instance.IsStageBossBattle)
+            {
+                if (StageManager.Instance.PrepareFieldBattle(chapter, stage, true) == false)
+                    return;
+
+                if (BattleSceneManager.Instance.BattleType == Enum_Dungeon.StageScene)
+                    BattleSceneManager.Instance.ReloadCurrentBattleScene();
+                else
+                    BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
+
+                return;
+            }
+
             if (StageManager.Instance.CanEnterStage(chapter, stage) == false)
                 return;
 
@@ -200,13 +228,10 @@ namespace GameBerry.UI
             if (StageManager.Instance.PrepareBossBattle(chapter, stage, true) == false)
                 return;
 
-            if (BattleSceneManager.isAlive)
-            {
-                if (BattleSceneManager.Instance.BattleType == Enum_Dungeon.StageScene)
-                    BattleSceneManager.Instance.ReloadCurrentBattleScene();
-                else
-                    BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
-            }
+            if (BattleSceneManager.Instance.BattleType == Enum_Dungeon.StageScene)
+                BattleSceneManager.Instance.ReloadCurrentBattleScene();
+            else
+                BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
         }
         //------------------------------------------------------------------------------------
         private void OnDungeonProgressChanged(Enum_Dungeon dungeonType)
@@ -225,12 +250,51 @@ namespace GameBerry.UI
         private void RefreshStageInfo()
         {
             StageManager.Instance.GetCurrentStage(out int chapter, out int stage);
+            bool isBossBattle = StageManager.Instance.IsStageBossBattle;
+            bool canChallenge = false;
 
-            IReadOnlyList<StageInfo> chapterStages = StageManager.Instance.GetStages(chapter);
-            int maxStageInChapter = chapterStages?.Count ?? 0;
+            if (StageManager.Instance.TryGetCurrentStageInfo(out StageInfo info) && info != null)
+                canChallenge = info.BossMonster > 0;
 
             if (_stageNameText != null)
                 _stageNameText.SetText($"Stage {chapter}-{stage}");
+
+            for (int i = 0; i < _stageSelectButtons.Count; ++i)
+            {
+                if (_stageSelectButtons[i] != null)
+                    _stageSelectButtons[i].gameObject.SetActive(isBossBattle == false);
+            }
+
+            if (_challengeButton != null)
+                _challengeButton.gameObject.SetActive(isBossBattle || canChallenge);
+
+            if (_challengeButtonText != null)
+                _challengeButtonText.SetText(isBossBattle ? "나가기" : "도전");
+
+            if (_bossTimerRoot != null)
+                _bossTimerRoot.SetActive(isBossBattle);
+
+            RefreshBossTimer();
+        }
+        //------------------------------------------------------------------------------------
+        private void RefreshBossTimer()
+        {
+            bool isBossBattle = StageManager.isAlive && StageManager.Instance.IsStageBossBattle;
+
+            if (_bossTimerRoot != null && _bossTimerRoot.activeSelf != isBossBattle)
+                _bossTimerRoot.SetActive(isBossBattle);
+
+            if (_bossTimerText == null || isBossBattle == false)
+                return;
+
+            float remainingTime = StageManager.Instance.IsBossBattleTimerRunning
+                ? StageManager.Instance.BossBattleRemainingTime
+                : 0f;
+
+            int totalSeconds = Mathf.CeilToInt(Mathf.Max(0f, remainingTime));
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
+            _bossTimerText.SetText("{0:00}:{1:00}", minutes, seconds);
         }
         //------------------------------------------------------------------------------------
     }

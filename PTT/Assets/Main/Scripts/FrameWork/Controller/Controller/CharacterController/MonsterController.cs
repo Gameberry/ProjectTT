@@ -117,6 +117,33 @@ namespace GameBerry
             ScheduleNextWander();
         }
         //------------------------------------------------------------------------------------
+        public void PrepareForPool()
+        {
+            if (_delayedPoolCoroutine != null)
+            {
+                StopCoroutine(_delayedPoolCoroutine);
+                _delayedPoolCoroutine = null;
+            }
+
+            ReleaseAttackSlotReservation();
+            _battleSceneMap_Aggro = null;
+            _onDeadCallback = null;
+            _attackTarget = null;
+            _isDeadHandling = false;
+            _isWandering = false;
+            _isReturningToSpawn = false;
+            _wanderTargetPos = Vector3.zero;
+            _spawnPos = Vector3.zero;
+
+            if (Managers.AggroManager.isAlive)
+                Managers.AggroManager.Instance.RemoveIFFCharacterAggro(this);
+
+            ChangeSpineColor(Color.white);
+            SetCollisionEnabled(false);
+            ChangeState(CharacterState.Idle, false);
+            disableCancellation.Cancel();
+        }
+        //------------------------------------------------------------------------------------
         private void ApplyMonsterStats(int monsterIndex)
         {
             if (_monsterChart == null)

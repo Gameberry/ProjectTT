@@ -171,8 +171,11 @@ namespace GameBerry
             if (rangeInfo == null)
                 return 0d;
 
+            if (level <= 0)
+                level = 1;
+
             double rarityMultiplier = GetEquipStatRarityMultiplier(rangeInfo, rarity);
-            double levelMultiplier = 1d + (Mathf.Max(1, level) - 1) * rangeInfo.LevelMultiple;
+            double levelMultiplier = level * rangeInfo.LevelMultiple;
             double minValue = rangeInfo.Min * rarityMultiplier * levelMultiplier;
             double maxValue = rangeInfo.Max * rarityMultiplier * levelMultiplier;
 

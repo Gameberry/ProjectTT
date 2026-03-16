@@ -24,6 +24,7 @@ namespace GameBerry.UI
         [SerializeField] private UIItemElement _rewardGold;
         [SerializeField] private TMP_Text _rewardExpText;
         [SerializeField] private TMP_Text _rewardEquipText;
+        [SerializeField] private TMP_Text _rewardEquipDropRateText;
         [SerializeField] private UIItemElement _rewardItemPrefab;
         [SerializeField] private Transform _rewardItemRoot;
 
@@ -49,8 +50,8 @@ namespace GameBerry.UI
 
         protected override void OnEnter()
         {
-            
             StageManager.Instance.OnDungeonProgressChanged += OnDungeonProgressChanged;
+            SyncSelectionToCurrentStage();
 
             RefreshAll();
         }
@@ -85,6 +86,11 @@ namespace GameBerry.UI
             RebuildChapters();
             RebuildStages();
             RefreshDetail();
+        }
+
+        private void SyncSelectionToCurrentStage()
+        {
+            StageManager.Instance.GetCurrentStage(out _selectedChapter, out _selectedStage);
         }
 
         private void EnsureSelection()
@@ -211,7 +217,10 @@ namespace GameBerry.UI
                 _rewardExpText.SetText($"{info.Exp:N0}");
 
             if (_rewardEquipText != null)
-                _rewardEquipText.SetText($"Lv.{info.EquipLevelMin}-{info.EquipLevelMax} / Drop {(info.EquipDropRate * 100.0):0.##}%");
+                _rewardEquipText.SetText($"Lv.{info.EquipLevelMin}-{info.EquipLevelMax}");
+
+            if(_rewardEquipDropRateText != null)
+                _rewardEquipDropRateText.SetText($"Drop {(info.EquipDropRate * 100.0):0.##}%");
 
             if (_rewardItemPrefab != null && _rewardItemRoot != null && info.EquipList != null)
             {

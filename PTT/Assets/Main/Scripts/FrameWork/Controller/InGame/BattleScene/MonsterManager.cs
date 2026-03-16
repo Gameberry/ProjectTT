@@ -37,6 +37,10 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void PoolMonster(MonsterController MonsterController)
         {
+            if (MonsterController == null)
+                return;
+
+            MonsterController.PrepareForPool();
             MonsterController.gameObject.SetActive(false);
             _MonsterControllerPool.PoolObject(MonsterController);
         }
@@ -47,10 +51,13 @@ namespace GameBerry.Managers
             for (int i = 0; i < monsters.Length; ++i)
             {
                 MonsterController monster = monsters[i];
-                if (monster == null || monster.gameObject.activeSelf == false)
+                if (monster == null)
                     continue;
 
-                PoolMonster(monster);
+                if (monster.gameObject.activeSelf)
+                    PoolMonster(monster);
+                else
+                    monster.PrepareForPool();
             }
         }
         //------------------------------------------------------------------------------------

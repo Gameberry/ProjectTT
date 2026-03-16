@@ -11,11 +11,18 @@ namespace GameBerry
     {
         private CancellationTokenSource _spawnCancellation = new CancellationTokenSource();
         private readonly List<MonsterController> _bossBattleMonsters = new List<MonsterController>();
+        private MonsterController _bossMonster;
+        private bool _bossBattleCleared;
+        private bool _bossBattleResolved;
+        private float _bossBattleTimeRemaining;
 
         protected override void OnSetBattleScene()
         {
             ResetSpawnCancellation();
             ReleaseSpawnedObjects();
+            _bossBattleCleared = false;
+            _bossBattleResolved = false;
+            _bossBattleTimeRemaining = 0f;
 
             ResourceLoader.Instance.Load<GameObject>("BattleScene/PlayerController", o =>
             {
@@ -37,6 +44,8 @@ namespace GameBerry
         {
             if (PlayerController == null)
                 return;
+
+            ReleaseActiveMonsters();
 
             if (StageManager.Instance.IsStageBossBattle)
                 SpawnBossBattle();
@@ -92,9 +101,14 @@ namespace GameBerry
                 return;
 
             Vector3 bossPosition = data.StageBossMonsterSpawnPosition;
+            _bossMonster = null;
+            _bossBattleCleared = false;
+            _bossBattleResolved = false;
+            _bossBattleTimeRemaining = Mathf.Max(0f, stageInfo.BossTime);
+            StageManager.Instance.StartBossBattleTimer(_bossBattleTimeRemaining);
 
             if (stageInfo.BossMonster > 0)
-                SpawnBossBattleMonster(stageInfo.BossMonster, stageInfo.BossMonsterModel, bossPosition);
+                _bossMonster = SpawnBossBattleMonster(stageInfo.BossMonster, stageInfo.BossMonsterModel, bossPosition);
 
             if (stageInfo.BossSubMonster > 0 && stageInfo.BossSubMonsterCount > 0)
             {
@@ -119,11 +133,11 @@ namespace GameBerry
             }
         }
 
-        private void SpawnBossBattleMonster(int monsterIndex, int modelIndex, Vector3 spawnPosition)
+        private MonsterController SpawnBossBattleMonster(int monsterIndex, int modelIndex, Vector3 spawnPosition)
         {
             MonsterController monsterController = Managers.MonsterManager.Instance.GetMonster();
             if (monsterController == null)
-                return;
+                return null;
 
             monsterController.gameObject.SetActive(true);
             monsterController.transform.position = spawnPosition;
@@ -132,6 +146,7 @@ namespace GameBerry
             monsterController.Play();
 
             _bossBattleMonsters.Add(monsterController);
+            return monsterController;
         }
 
         private void ApplyPlayerSpawnPosition(Transform playerTransform)
@@ -170,30 +185,50 @@ namespace GameBerry
             ReleaseSpawnedObjects();
         }
 
+        protected override void OnUpdated()
+        {
+            if (IsPlay == false || StageManager.Instance.IsStageBossBattle == false || _bossBattleResolved)
+                return;
+
+            if (_bossBattleTimeRemaining <= 0f)
+                return;
+
+            _bossBattleTimeRemaining = Mathf.Max(0f, _bossBattleTimeRemaining - Time.deltaTime);
+            StageManager.Instance.UpdateBossBattleTimer(_bossBattleTimeRemaining);
+
+            if (_bossBattleTimeRemaining <= 0f)
+                FailBossBattle();
+        }
+
         public override void DeadPlayer(PlayerController playerController)
         {
+            if (StageManager.Instance.IsStageBossBattle == false)
+                return;
+
+            FailBossBattle();
         }
 
         public override void DeadMonster(MonsterController monsterController)
         {
-            PlayerManager.Instance.AddExp(10);
+            GiveStageKillRewards();
+            TryDropStageEquipment();
         }
 
         private void OnDeadBossBattleMonster(MonsterController monsterController)
         {
             _bossBattleMonsters.Remove(monsterController);
             DeadMonster(monsterController);
+
+            if (_bossBattleResolved)
+                return;
+
+            if (monsterController == _bossMonster)
+                CompleteBossBattle();
         }
 
         private void ReleaseSpawnedObjects()
         {
-            _bossBattleMonsters.Clear();
-
-            if (BattleSceneManager.isAlive)
-                BattleSceneManager.Instance.ReleaseAllMonsters();
-
-            if (MonsterManager.isAlive)
-                MonsterManager.Instance.ReleaseAllMonsters();
+            ReleaseActiveMonsters();
 
             if (PlayerController != null)
             {
@@ -212,6 +247,101 @@ namespace GameBerry
             }
 
             _spawnCancellation = new CancellationTokenSource();
+        }
+
+        private void ReleaseActiveMonsters()
+        {
+            _bossBattleMonsters.Clear();
+            _bossMonster = null;
+            _bossBattleTimeRemaining = 0f;
+            _bossBattleResolved = false;
+            StageManager.Instance.StopBossBattleTimer();
+
+            if (BattleSceneManager.isAlive)
+                BattleSceneManager.Instance.ReleaseAllMonsters();
+
+            if (MonsterManager.isAlive)
+                MonsterManager.Instance.ReleaseAllMonsters();
+        }
+
+        private void TryDropStageEquipment()
+        {
+            if (StageManager.Instance.TryGetCurrentStageInfo(out StageInfo stageInfo) == false || stageInfo == null)
+                return;
+
+            if (stageInfo.EquipDropRate <= 0d || stageInfo.EquipList == null || stageInfo.EquipList.Length <= 0)
+                return;
+
+            if (Random.value > stageInfo.EquipDropRate)
+                return;
+
+            List<int> validEquipIds = new List<int>();
+            for (int i = 0; i < stageInfo.EquipList.Length; ++i)
+            {
+                int equipItemId = stageInfo.EquipList[i];
+                if (equipItemId > 0)
+                    validEquipIds.Add(equipItemId);
+            }
+
+            if (validEquipIds.Count <= 0)
+                return;
+
+            int selectedEquipItemId = validEquipIds[Random.Range(0, validEquipIds.Count)];
+            ItemManager.Instance.AddItem(selectedEquipItemId, 1);
+        }
+
+        private void GiveStageKillRewards()
+        {
+            if (StageManager.Instance.TryGetCurrentStageInfo(out StageInfo stageInfo) == false || stageInfo == null)
+                return;
+
+            if (stageInfo.Exp > 0)
+                PlayerManager.Instance.AddExp(stageInfo.Exp);
+
+            int goldItemId = GameChart.Get<PointChart>()?.GetByType(Enum_PointType.Gold)?.ItemId ?? 0;
+            if (goldItemId > 0 && stageInfo.Gold > 0)
+                ItemManager.Instance.AddItem(goldItemId, stageInfo.Gold);
+        }
+
+        private void CompleteBossBattle()
+        {
+            if (_bossBattleResolved)
+                return;
+
+            _bossBattleCleared = true;
+            _bossBattleResolved = true;
+            StageManager.Instance.StopBossBattleTimer();
+
+            if (StageManager.Instance.TryAdvanceToNextStage())
+            {
+                StageManager.Instance.GetCurrentStage(out int nextChapter, out int nextStage);
+                StageManager.Instance.PrepareFieldBattle(nextChapter, nextStage, false);
+            }
+            else
+                StageManager.Instance.SetStageBattleMode(StageBattleMode.Field);
+
+            ReleaseActiveMonsters();
+
+            if (BattleSceneManager.isAlive)
+                BattleSceneManager.Instance.ReloadCurrentBattleScene();
+        }
+
+        private void FailBossBattle()
+        {
+            if (_bossBattleResolved)
+                return;
+
+            _bossBattleCleared = false;
+            _bossBattleResolved = true;
+            StageManager.Instance.StopBossBattleTimer();
+
+            StageManager.Instance.GetCurrentStage(out int chapter, out int stage);
+            StageManager.Instance.PrepareFieldBattle(chapter, stage, false);
+
+            ReleaseActiveMonsters();
+
+            if (BattleSceneManager.isAlive)
+                BattleSceneManager.Instance.ReloadCurrentBattleScene();
         }
     }
 }

@@ -12,6 +12,9 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void AddIFFCharacterAggro(CharacterControllerBase characterControllerBase)
         {
+            if (IsInvalidTarget(characterControllerBase))
+                return;
+
             if (characterControllerBase.IFFType == IFFType.IFF_Friend)
             {
                 if (m_iFF_FriendCharacterControllerBases.Contains(characterControllerBase) == true)
@@ -30,6 +33,9 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public void RemoveIFFCharacterAggro(CharacterControllerBase characterControllerBase)
         {
+            if (characterControllerBase == null)
+                return;
+
             if (characterControllerBase.IFFType == IFFType.IFF_Friend)
             {
                 if (m_iFF_FriendCharacterControllerBases.Contains(characterControllerBase) == false)
@@ -48,6 +54,9 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public CharacterControllerBase GetIFFTargetCharacter(CharacterControllerBase myControllerBase)
         {
+            CleanupInvalidTargets(m_iFF_FriendCharacterControllerBases);
+            CleanupInvalidTargets(m_iFF_FoeCharacterControllerBases);
+
             CharacterControllerBase target = null;
 
             List<CharacterControllerBase> iFF_Target = myControllerBase.IFFType == IFFType.IFF_Friend ? m_iFF_FoeCharacterControllerBases : m_iFF_FriendCharacterControllerBases;
@@ -56,10 +65,7 @@ namespace GameBerry.Managers
 
             for (int i = 0; i < iFF_Target.Count; ++i)
             {
-                if (iFF_Target[i] == null)
-                    continue;
-
-                if (iFF_Target[i].IsDead == true)
+                if (IsInvalidTarget(iFF_Target[i]))
                     continue;
 
                 if (target == null)
@@ -86,10 +92,27 @@ namespace GameBerry.Managers
         //------------------------------------------------------------------------------------
         public List<CharacterControllerBase> GetAllTargetCharacter(CharacterControllerBase characterControllerBase)
         {
+            CleanupInvalidTargets(m_iFF_FriendCharacterControllerBases);
+            CleanupInvalidTargets(m_iFF_FoeCharacterControllerBases);
+
             if (characterControllerBase.IFFType == IFFType.IFF_Friend)
                 return m_iFF_FoeCharacterControllerBases;
 
             return m_iFF_FriendCharacterControllerBases;
+        }
+        //------------------------------------------------------------------------------------
+        private void CleanupInvalidTargets(List<CharacterControllerBase> targets)
+        {
+            for (int i = targets.Count - 1; i >= 0; --i)
+            {
+                if (IsInvalidTarget(targets[i]))
+                    targets.RemoveAt(i);
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private bool IsInvalidTarget(CharacterControllerBase target)
+        {
+            return target == null || target.IsDead || target.gameObject.activeInHierarchy == false;
         }
         //------------------------------------------------------------------------------------
         /// <summary>

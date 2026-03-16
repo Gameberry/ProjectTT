@@ -34,16 +34,16 @@ namespace GameBerry
         private EventSystem _blockedEventSystem = null;
         private bool _blockedEventSystemPrevEnabled = true;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static void Bootstrap()
-        {
-            if (FindObjectOfType<AuctionTestGuiController>() != null)
-                return;
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        // private static void Bootstrap()
+        // {
+        //     if (FindObjectOfType<AuctionTestGuiController>() != null)
+        //         return;
 
-            var go = new GameObject("[DEV]AuctionTestGuiController");
-            DontDestroyOnLoad(go);
-            go.AddComponent<AuctionTestGuiController>();
-        }
+        //     var go = new GameObject("[DEV]AuctionTestGuiController");
+        //     DontDestroyOnLoad(go);
+        //     go.AddComponent<AuctionTestGuiController>();
+        // }
 
         private void Start()
         {
