@@ -112,6 +112,15 @@ namespace GameBerry.Managers
             GoRootPos().Forget();
         }
         //------------------------------------------------------------------------------------
+        public void ReloadCurrentBattleScene()
+        {
+            if (_currentBattleType == Enum_Dungeon.None || doChanged == true)
+                return;
+
+            doChanged = true;
+            GoRootPos().Forget();
+        }
+        //------------------------------------------------------------------------------------
         private async UniTask GoRootPos()
         {
             Contents.GlobalContent.DoFade(false, 0.5f);
@@ -180,6 +189,11 @@ namespace GameBerry.Managers
         public void SpawnMonster(int count)
         {
             _battleSceneMap?.SpawnMonster(count);
+        }
+        //------------------------------------------------------------------------------------
+        public void ReleaseAllMonsters()
+        {
+            _battleSceneMap?.ReleaseAllMonsters();
         }
         //------------------------------------------------------------------------------------
         public void DeadPlayer(PlayerController playerController)

@@ -186,7 +186,6 @@ namespace GameBerry
         Max,
     }
 
-
     [System.Serializable]
     public class AttackData
     {

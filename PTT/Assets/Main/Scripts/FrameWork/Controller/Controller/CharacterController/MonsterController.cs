@@ -17,6 +17,8 @@ namespace GameBerry
         private CancellationTokenSource disableCancellation = new CancellationTokenSource();
 
         private BattleSceneMap_Aggro _battleSceneMap_Aggro;
+        private System.Action<MonsterController> _onDeadCallback;
+        private MonsterChart _monsterChart;
 
         private Vector3 _spawnPos;
         private bool _isDeadHandling = false;
@@ -78,11 +80,13 @@ namespace GameBerry
 
         public override void Init()
         {
+            _monsterChart = GameChart.Get<MonsterChart>();
+
             MoveController_Base creatureBaseMove = gameObject.AddComponent<MoveController_Base>();
             creatureBaseMove.SetCharacterController(this);
         }
         //------------------------------------------------------------------------------------
-        public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector3 spawnPos, int modelIndex)
+        public void SetMonster(BattleSceneMap_Aggro battleSceneMap_Aggro, Vector3 spawnPos, int monsterIndex, int modelIndex, System.Action<MonsterController> onDeadCallback = null)
         {
             _isDeadHandling = false;
             SetCollisionEnabled(true);
@@ -95,12 +99,15 @@ namespace GameBerry
                 _delayedPoolCoroutine = null;
             }
 
-            RefreshCheatStat();
+            ApplyMonsterStats(monsterIndex);
 
-            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(1000);
+            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(modelIndex);
+            if (_currentSpineModelData == null)
+                _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(1000);
             SetSpineModelData(_currentSpineModelData);
 
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
+            _onDeadCallback = onDeadCallback;
             _spawnPos = spawnPos;
             _attackTarget = null;
             ReleaseAttackSlotReservation();
@@ -108,6 +115,30 @@ namespace GameBerry
             _isReturningToSpawn = false;
             _wanderTargetPos = _spawnPos;
             ScheduleNextWander();
+        }
+        //------------------------------------------------------------------------------------
+        private void ApplyMonsterStats(int monsterIndex)
+        {
+            if (_monsterChart == null)
+                _monsterChart = GameChart.Get<MonsterChart>();
+
+            if (_monsterChart != null && _monsterChart.TryGetInfo(monsterIndex, out MonsterInfo monsterInfo) && monsterInfo != null)
+            {
+                _characterStatOperator.ForceReleaseStat();
+
+                var baseStats = monsterInfo.GetBaseStats();
+                if (baseStats != null)
+                {
+                    foreach (var pair in baseStats)
+                        _characterStatOperator.SetDefaultStat(pair.Key, pair.Value);
+                }
+
+                _characterStatOperator.RefreshOutputStatValue();
+                RefreshStat(true);
+                return;
+            }
+
+            RefreshCheatStat();
         }
         //------------------------------------------------------------------------------------
         public void SetAggro(PlayerController playerController)
@@ -211,6 +242,10 @@ namespace GameBerry
             {
                 _battleSceneMap_Aggro.OnDeadMonster(this, false);
                 _battleSceneMap_Aggro = null;
+            }
+            else
+            {
+                _onDeadCallback?.Invoke(this);
             }
 
             float deadDuration = 0f;

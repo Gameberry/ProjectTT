@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a41820fdfb7a0445890c11eff3a7bb8, type: 3}
+  m_Name: SpineModel_Monster
+  m_EditorClassIdentifier: 
+  SpineModelDatas:
+  - ResourceIndex: 1000
+    SkeletonData: {fileID: 11400000, guid: 61abc454deece8948b59ba6ecea8d4bf, type: 2}
+    Name: mon_001_skeletondata
+    SkinList: []
+    AnimationList:
+    - stateName: Attack
+    - stateName: Die
+    - stateName: Hit
+    - stateName: Idle
+    - stateName: Run
+    - stateName: wing
+    AnimationState:
+    - characterState: 1
+      animationName: Idle
+    - characterState: 2
+      animationName: Run
+    - characterState: 3
+      animationName: Attack
+    - characterState: 4
+      animationName: Hit
+    - characterState: 5
+      animationName: Die
+    DefaultSlotSkins:
+    - Slot: 0
+      SkinName: default
+  - ResourceIndex: 1001
+    SkeletonData: {fileID: 11400000, guid: 61abc454deece8948b59ba6ecea8d4bf, type: 2}
+    Name: mon_001_skeletondata
+    SkinList: []
+    AnimationList:
+    - stateName: Attack
+    - stateName: Die
+    - stateName: Hit
+    - stateName: Idle
+    - stateName: Run
+    - stateName: wing
+    AnimationState:
+    - characterState: 1
+      animationName: Idle
+    - characterState: 2
+      animationName: Run
+    - characterState: 3
+      animationName: Attack
+    - characterState: 4
+      animationName: Hit
+    - characterState: 5
+      animationName: Die
+    DefaultSlotSkins:
+    - Slot: 0
+      SkinName: default

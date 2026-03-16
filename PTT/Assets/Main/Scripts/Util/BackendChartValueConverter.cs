@@ -285,6 +285,50 @@ public class BackendChartValueConverter : JsonConverter
                 return Enum.GetValues(objectType).GetValue(0);
             }
         }
+
+        if (objectType.IsArray && objectType.GetElementType()?.IsEnum == true)
+        {
+            Type enumType = objectType.GetElementType();
+            Array emptyArray = Array.CreateInstance(enumType, 0);
+
+            if (string.IsNullOrEmpty(str))
+                return emptyArray;
+
+            if (str[^1] == ';')
+                str = str[..^1];
+
+            if (string.IsNullOrEmpty(str))
+                return emptyArray;
+
+            string[] tokens = str.Split(';');
+            Array result = Array.CreateInstance(enumType, tokens.Length);
+            object defaultValue = Enum.GetValues(enumType).GetValue(0);
+
+            for (int i = 0; i < tokens.Length; ++i)
+            {
+                string token = tokens[i].Trim();
+                if (string.IsNullOrEmpty(token))
+                {
+                    result.SetValue(defaultValue, i);
+                    continue;
+                }
+
+                try
+                {
+                    object enumValue = Enum.Parse(enumType, token, true);
+                    result.SetValue(enumValue, i);
+                }
+                catch
+                {
+#if UNITY_EDITOR
+                    Debug.Log($"enum is not defined: {enumType}/{token}");
+#endif
+                    result.SetValue(defaultValue, i);
+                }
+            }
+
+            return result;
+        }
         
         //else if(objectType == typeof(Enum))
         //{
@@ -559,7 +603,9 @@ public class BackendChartValueConverter : JsonConverter
 
     public override bool CanConvert(Type objectType)
     {
-        return objectType.IsEnum || _types.Any(t => t == objectType);
+        return objectType.IsEnum
+            || (objectType.IsArray && objectType.GetElementType()?.IsEnum == true)
+            || _types.Any(t => t == objectType);
     }
 
     #endregion

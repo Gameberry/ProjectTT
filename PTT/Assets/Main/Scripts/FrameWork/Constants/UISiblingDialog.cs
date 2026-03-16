@@ -25,6 +25,8 @@ namespace GameBerry.UI
         StarforceEnhanceDialog,
         SkillManagementDialog,
 
+        StageSelectDialog,
+
         EngravingDialog,
         EngravingProbabilityDialog,
 

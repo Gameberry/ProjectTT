@@ -8,7 +8,9 @@ namespace GameBerry.Chart
     {
         public int ItemId; // ItemId == Equip key (3000 + R*100 + T*10 + V)
         public Enum_EquipType EquipType;
-        // Packed base stats string. Example: "Attack=10|HP=50|Defence=5"
+        public Enum_ContentCategory ContentCategory;
+        public Enum_Stat[] FixedRandomStat;
+        public Enum_Rarity FixedRarity;
         public string BaseStats;
 
         [NonSerialized] private Dictionary<Enum_Stat, double> _baseStatDict;

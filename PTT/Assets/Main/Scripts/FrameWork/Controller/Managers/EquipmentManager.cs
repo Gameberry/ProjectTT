@@ -23,13 +23,12 @@ namespace GameBerry
 
         EquipmentTable _equipmentTable;
         EquipChart _equipChart;
-        EquipRandomRuleChart _equipRandomRuleChart;
-        EquipRandomPoolChart _equipRandomPoolChart;
+        EquipRarityRuleChart _equipRarityRuleChart;
+        EquipStatRangeChart _equipStatRangeChart;
+        EquipTypeRuleChart _equipTypeRuleChart;
         EquipSlotEnhanceChart _equipSlotEnhanceChart;
 
         private readonly System.Random _random = new System.Random();
-
-        WeightedRandomPicker<EquipRandomPoolInfo> _picker = null;
 
         WeightedRandomPicker<Enum_StarforceResult> _starForcePicker = null;
         //------------------------------------------------------------------------------------
@@ -37,77 +36,226 @@ namespace GameBerry
         {
             _equipmentTable = UserTable.Get<EquipmentTable>();
             _equipChart = GameChart.Get<EquipChart>();
-            _equipRandomRuleChart = GameChart.Get<EquipRandomRuleChart>();
-            _equipRandomPoolChart = GameChart.Get<EquipRandomPoolChart>();
+            _equipRarityRuleChart = GameChart.Get<EquipRarityRuleChart>();
+            _equipStatRangeChart = GameChart.Get<EquipStatRangeChart>();
+            _equipTypeRuleChart = GameChart.Get<EquipTypeRuleChart>();
             _equipSlotEnhanceChart = GameChart.Get<EquipSlotEnhanceChart>();
 
         }
         //------------------------------------------------------------------------------------
         #region Data
         //------------------------------------------------------------------------------------
-        public ItemHandle AddEquipment(int itemId)
+        public ItemHandle AddEquipment(int itemId, int level = -1)
         {
-            List<EquipmentAddStat> addStatList = CreateRandomOptionStats(itemId);
-            return _equipmentTable.AddEquipment(itemId, addStatList);
+            int resolvedLevel = ResolveEquipmentLevel(level);
+            Enum_Rarity rarity = ResolveEquipmentRarity(itemId);
+            List<EquipmentAddStat> addStatList = CreateRandomOptionStats(itemId, resolvedLevel, rarity);
+            return _equipmentTable.AddEquipment(itemId, resolvedLevel, rarity, addStatList);
         }
         //------------------------------------------------------------------------------------
-        private List<EquipmentAddStat> CreateRandomOptionStats(int itemId)
+        private List<EquipmentAddStat> CreateRandomOptionStats(int itemId, int level, Enum_Rarity rarity)
         {
-            ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);
             EquipInfo equipInfo = _equipChart.Get(itemId);
 
-            if (itemInfo == null || equipInfo == null)
+            if (equipInfo == null)
                 return new List<EquipmentAddStat>();
 
             var result = new List<EquipmentAddStat>();
 
-            if (!_equipRandomRuleChart.TryGetRandomRule(itemInfo.Rarity, out EquipRandomRuleInfo equipRandomRuleInfo))
+            if (_equipRarityRuleChart == null ||
+                _equipRarityRuleChart.TryGetRandomRule(rarity, out EquipRandomRuleInfo equipRandomRuleInfo) == false)
                 return result;
 
-            int optionCount = UnityEngine.Random.Range(equipRandomRuleInfo.OptionCountMin, equipRandomRuleInfo.OptionCountMax + 1);
-
-            if (optionCount <= 0)
+            if (_equipTypeRuleChart == null ||
+                _equipTypeRuleChart.TryGetRule(equipInfo.EquipType, out EquipTypeRuleInfo typeRuleInfo) == false ||
+                typeRuleInfo == null)
                 return result;
 
-            if (_picker == null)
-                _picker = new WeightedRandomPicker<EquipRandomPoolInfo>();
+            AddFixedStats(result, typeRuleInfo, level, rarity);
 
-            _picker.Clear();
+            int randomOptionCount = UnityEngine.Random.Range(equipRandomRuleInfo.RandomStatMin, equipRandomRuleInfo.RandomStatMax + 1);
 
-            List<EquipRandomPoolInfo> pool = _equipRandomPoolChart.GetRandomPool(equipInfo.EquipType);
+            List<Enum_Stat> guaranteedRandomStats = BuildGuaranteedRandomStats(equipInfo);
+            List<Enum_Stat> randomCandidates = BuildRandomStatCandidates(typeRuleInfo, guaranteedRandomStats);
 
-            if (pool == null || pool.Count <= 0)
-                return new List<EquipmentAddStat>();
+            randomOptionCount = Mathf.Clamp(
+                Mathf.Max(randomOptionCount, guaranteedRandomStats.Count),
+                0,
+                equipRandomRuleInfo.RandomStatMax);
 
-            for (int i = 0; i < pool.Count; ++i)
+            if (randomOptionCount <= 0)
+                return result;
+
+            if (guaranteedRandomStats.Count > randomOptionCount)
+                guaranteedRandomStats = guaranteedRandomStats.GetRange(0, randomOptionCount);
+
+            for (int i = 0; i < guaranteedRandomStats.Count; ++i)
+                result.Add(EquipmentAddStat.Set(guaranteedRandomStats[i], GetRandomOptionStatValue(guaranteedRandomStats[i], level, rarity)));
+
+            int remainingRandomCount = randomOptionCount - guaranteedRandomStats.Count;
+            if (remainingRandomCount <= 0 || randomCandidates.Count <= 0)
+                return result;
+
+            remainingRandomCount = Mathf.Min(remainingRandomCount, randomCandidates.Count);
+
+            for (int i = 0; i < remainingRandomCount; ++i)
             {
-                _picker.Add(pool[i], pool[i].Weight);
-            }
+                int pickIndex = _random.Next(randomCandidates.Count);
+                Enum_Stat stat = randomCandidates[pickIndex];
+                randomCandidates.RemoveAt(pickIndex);
 
-            bool allowDuplicate = equipRandomRuleInfo.AllowDuplicateStat == 1;
-
-            if (allowDuplicate == true)
-            { // 중복 허용이면 그냥 가중치로 뽑아서 ㄱㄱ
-                for (int i = 0; i < optionCount; ++i)
-                {
-                    EquipRandomPoolInfo pick = _picker.Pick();
-                    result.Add(EquipmentAddStat.Set(pick.Stat, pick.GetRandomStatValue()));
-                }
-            }
-            else
-            {
-                for (int i = 0; i < optionCount; ++i)
-                {
-                    if (_picker.Count <= 0)
-                        break;
-
-                    EquipRandomPoolInfo pick = _picker.Pick();
-                    result.Add(EquipmentAddStat.Set(pick.Stat, pick.GetRandomStatValue()));
-                    _picker.Remove(pick, pick.Weight);
-                }
+                double statValue = GetRandomOptionStatValue(stat, level, rarity);
+                result.Add(EquipmentAddStat.Set(stat, statValue));
             }
 
             return result;
+        }
+        //------------------------------------------------------------------------------------
+        private void AddFixedStats(List<EquipmentAddStat> result, EquipTypeRuleInfo typeRuleInfo, int level, Enum_Rarity rarity)
+        {
+            if (result == null || typeRuleInfo?.FixedStatType == null)
+                return;
+
+            for (int i = 0; i < typeRuleInfo.FixedStatType.Length; ++i)
+            {
+                Enum_Stat stat = typeRuleInfo.FixedStatType[i];
+                if (stat == Enum_Stat.Max)
+                    continue;
+
+                result.Add(EquipmentAddStat.Set(stat, GetRandomOptionStatValue(stat, level, rarity)));
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private List<Enum_Stat> BuildGuaranteedRandomStats(EquipInfo equipInfo)
+        {
+            var result = new List<Enum_Stat>();
+            if (equipInfo?.FixedRandomStat == null)
+                return result;
+
+            for (int i = 0; i < equipInfo.FixedRandomStat.Length; ++i)
+            {
+                Enum_Stat stat = equipInfo.FixedRandomStat[i];
+                if (stat == Enum_Stat.Max || result.Contains(stat))
+                    continue;
+
+                result.Add(stat);
+            }
+
+            return result;
+        }
+        //------------------------------------------------------------------------------------
+        private List<Enum_Stat> BuildRandomStatCandidates(EquipTypeRuleInfo typeRuleInfo, List<Enum_Stat> guaranteedRandomStats)
+        {
+            var result = new List<Enum_Stat>();
+            if (typeRuleInfo?.RandomStatType == null)
+                return result;
+
+            for (int i = 0; i < typeRuleInfo.RandomStatType.Length; ++i)
+            {
+                Enum_Stat stat = typeRuleInfo.RandomStatType[i];
+                if (stat == Enum_Stat.Max || result.Contains(stat))
+                    continue;
+
+                if (guaranteedRandomStats != null && guaranteedRandomStats.Contains(stat))
+                    continue;
+
+                result.Add(stat);
+            }
+
+            return result;
+        }
+        //------------------------------------------------------------------------------------
+        private double GetRandomOptionStatValue(Enum_Stat stat, int level, Enum_Rarity rarity)
+        {
+            EquipStatRangeInfo rangeInfo = FindEquipStatRangeInfo(stat);
+            if (rangeInfo == null)
+                return 0d;
+
+            double rarityMultiplier = GetEquipStatRarityMultiplier(rangeInfo, rarity);
+            double levelMultiplier = 1d + (Mathf.Max(1, level) - 1) * rangeInfo.LevelMultiple;
+            double minValue = rangeInfo.Min * rarityMultiplier * levelMultiplier;
+            double maxValue = rangeInfo.Max * rarityMultiplier * levelMultiplier;
+
+            if (maxValue < minValue)
+                maxValue = minValue;
+
+            Enum_StatMode statMode = Enum_StatMode.Double;
+            if (Enum.TryParse(rangeInfo.ValueMode, true, out Enum_StatMode parsedMode))
+                statMode = parsedMode;
+
+            if (statMode == Enum_StatMode.Int)
+            {
+                int minInt = Mathf.RoundToInt((float)minValue);
+                int maxInt = Mathf.RoundToInt((float)maxValue);
+                if (maxInt < minInt)
+                    maxInt = minInt;
+
+                return UnityEngine.Random.Range(minInt, maxInt + 1);
+            }
+
+            double randomValue = minValue + (_random.NextDouble() * (maxValue - minValue));
+            return System.Math.Round(randomValue, 2);
+        }
+        //------------------------------------------------------------------------------------
+        private EquipStatRangeInfo FindEquipStatRangeInfo(Enum_Stat stat)
+        {
+            if (_equipStatRangeChart?.rows == null)
+                return null;
+
+            string statName = stat.ToString();
+            for (int i = 0; i < _equipStatRangeChart.rows.Length; ++i)
+            {
+                EquipStatRangeInfo info = _equipStatRangeChart.rows[i];
+                if (info == null || string.IsNullOrEmpty(info.StatType))
+                    continue;
+
+                if (string.Equals(info.StatType, statName, StringComparison.OrdinalIgnoreCase))
+                    return info;
+            }
+
+            return null;
+        }
+        //------------------------------------------------------------------------------------
+        private int ResolveEquipmentLevel(int explicitLevel)
+        {
+            if (explicitLevel > 0)
+                return explicitLevel;
+
+            if (StageManager.Instance.TryGetCurrentStageInfo(out StageInfo stageInfo) && stageInfo != null)
+            {
+                int minLevel = Mathf.Max(1, stageInfo.EquipLevelMin);
+                int maxLevel = Mathf.Max(minLevel, stageInfo.EquipLevelMax);
+                return UnityEngine.Random.Range(minLevel, maxLevel + 1);
+            }
+
+            return 1;
+        }
+        //------------------------------------------------------------------------------------
+        private double GetEquipStatRarityMultiplier(EquipStatRangeInfo rangeInfo, Enum_Rarity rarity)
+        {
+            return rarity switch
+            {
+                Enum_Rarity.Common => rangeInfo.Common,
+                Enum_Rarity.Uncommon => rangeInfo.Uncommon,
+                Enum_Rarity.Rare => rangeInfo.Rare,
+                Enum_Rarity.Epic => rangeInfo.Epic,
+                Enum_Rarity.Legendary => rangeInfo.Legendary,
+                Enum_Rarity.Mythic => rangeInfo.Mythic,
+                Enum_Rarity.Special => rangeInfo.Special,
+                _ => 1d,
+            };
+        }
+        //------------------------------------------------------------------------------------
+        private Enum_Rarity ResolveEquipmentRarity(int itemId)
+        {
+            EquipInfo equipInfo = _equipChart?.Get(itemId);
+            if (equipInfo == null)
+                return Enum_Rarity.Common;
+
+            if (equipInfo.FixedRarity > 0 && equipInfo.FixedRarity < Enum_Rarity.Max)
+                return equipInfo.FixedRarity;
+
+            return HellManager.Instance.GetRarity();
         }
         //------------------------------------------------------------------------------------
         public EquipmentData GetEquipmentData(ItemHandle itemHandle)
@@ -116,6 +264,16 @@ namespace GameBerry
                 return data;
 
             return null;
+        }
+        //------------------------------------------------------------------------------------
+        public Enum_Rarity GetEquipmentRarity(ItemHandle itemHandle)
+        {
+            EquipmentData data = GetEquipmentData(itemHandle);
+            if (data != null && data.rarity > 0 && data.rarity < Enum_Rarity.Max)
+                return data.rarity;
+
+            ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemHandle.itemId);
+            return itemInfo?.Rarity ?? Enum_Rarity.Common;
         }
         //------------------------------------------------------------------------------------
         public bool TryGetInstanceIdToHandle(int instanceId, out ItemHandle itemHandle)

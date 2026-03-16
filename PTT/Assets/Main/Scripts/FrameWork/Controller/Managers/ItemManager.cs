@@ -465,6 +465,12 @@ namespace GameBerry
                 if (!eq.RemoveEquipment(instanceId))
                     return new ConsumeItemResult { Success = false, Reason = "RemoveFailed" };
 
+                Enum_Rarity rarity = data.rarity;
+                if (rarity <= 0 || rarity >= Enum_Rarity.Max)
+                    rarity = meta.Rarity;
+
+                HellManager.Instance.AddExpByRarity(rarity, immediate);
+
                 eq.UpdateTable(immediate);
                 return new ConsumeItemResult { Success = true, Requested = 1, Consumed = 1 };
             }

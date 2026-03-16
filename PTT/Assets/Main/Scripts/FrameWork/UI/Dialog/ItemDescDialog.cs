@@ -145,11 +145,11 @@ namespace GameBerry.UI
             if (handle.isMeta == true)
             {
                 Enum_Rarity enum_Rarity = ItemManager.Instance.GetItemRarity(handle.itemId);
-                if (Chart.GameChart.Get<Chart.EquipRandomRuleChart>().TryGetRandomRule(enum_Rarity, out var rule))
+                if (Chart.GameChart.Get<Chart.EquipRarityRuleChart>().TryGetRandomRule(enum_Rarity, out var rule))
                 {
                     if (_equipMetaAddStatCount != null)
                     {
-                        _equipMetaAddStatCount.SetText("AddStat{0}~{1}", rule.OptionCountMin, rule.OptionCountMax);
+                        _equipMetaAddStatCount.SetText("AddStat{0}~{1}", rule.RandomStatMin, rule.RandomStatMax);
                         _equipMetaAddStatCount.gameObject.SetActive(true);
                     }
                 }

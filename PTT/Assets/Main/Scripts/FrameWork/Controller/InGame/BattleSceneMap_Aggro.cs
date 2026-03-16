@@ -88,15 +88,51 @@ namespace GameBerry
             for (int i = 0; i < posList.Count; ++i)
             {
                 Vector3 pos = posList[i];
+                int monsterIndex = GetFieldMonsterIndex();
+                int modelIndex = GetFieldMonsterModelIndex();
                 MonsterController monsterController = Managers.MonsterManager.Instance.GetMonster();
                 monsterController.gameObject.SetActive(true);
                 monsterController.transform.position = pos;
-                monsterController.SetMonster(this, pos, StaticResource.Instance.GetBattleModeStaticData().MonsterModelIdxs.GetRandom());
+                monsterController.SetMonster(this, pos, monsterIndex, modelIndex);
                 monsterController.SetAggro(_playerController);
                 monsterController.Play();
 
                 _monsters.Add(monsterController);
             }
+        }
+
+        private int GetFieldMonsterIndex()
+        {
+            if (StageManager.Instance.TryGetCurrentStageInfo(out Chart.StageInfo stageInfo) && stageInfo != null)
+            {
+                if (stageInfo.FieldMonsterKey > 0)
+                    return stageInfo.FieldMonsterKey;
+            }
+
+            return 0;
+        }
+
+        private int GetFieldMonsterModelIndex()
+        {
+            if (StageManager.Instance.TryGetCurrentStageInfo(out Chart.StageInfo stageInfo) && stageInfo?.FieldMonsterModel != null)
+            {
+                List<int> validModels = new List<int>();
+                for (int i = 0; i < stageInfo.FieldMonsterModel.Length; ++i)
+                {
+                    int modelIndex = stageInfo.FieldMonsterModel[i];
+                    if (modelIndex > 0)
+                        validModels.Add(modelIndex);
+                }
+
+                if (validModels.Count > 0)
+                    return validModels.GetRandom();
+            }
+
+            BattleModeStaticDataAsset data = StaticResource.Instance.GetBattleModeStaticData();
+            if (data != null && data.MonsterModelIdxs != null && data.MonsterModelIdxs.Count > 0)
+                return data.MonsterModelIdxs.GetRandom();
+
+            return 1000;
         }
 
         public void OnDeadMonster(MonsterController monsterController, bool immediatePool = true)
@@ -105,6 +141,21 @@ namespace GameBerry
             Managers.BattleSceneManager.Instance.DeadMonster(monsterController);
             if (immediatePool)
                 Managers.MonsterManager.Instance.PoolMonster(monsterController);
+        }
+
+        public void ReleaseAllMonsters()
+        {
+            for (int i = _monsters.Count - 1; i >= 0; --i)
+            {
+                MonsterController monster = _monsters[i];
+                if (monster == null)
+                    continue;
+
+                Managers.MonsterManager.Instance.PoolMonster(monster);
+            }
+
+            _monsters.Clear();
+            _playerController = null;
         }
 
         public bool DrawGizmos = true;

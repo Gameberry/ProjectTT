@@ -41,6 +41,19 @@ namespace GameBerry.Managers
             _MonsterControllerPool.PoolObject(MonsterController);
         }
         //------------------------------------------------------------------------------------
+        public void ReleaseAllMonsters()
+        {
+            MonsterController[] monsters = GetComponentsInChildren<MonsterController>(true);
+            for (int i = 0; i < monsters.Length; ++i)
+            {
+                MonsterController monster = monsters[i];
+                if (monster == null || monster.gameObject.activeSelf == false)
+                    continue;
+
+                PoolMonster(monster);
+            }
+        }
+        //------------------------------------------------------------------------------------
         private MonsterController CreateMonster()
         {
             GameObject clone = Instantiate(_MonsterControllerObject.gameObject, transform);

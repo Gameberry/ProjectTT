@@ -30,5 +30,13 @@ namespace GameBerry
                 _battleSceneMap_Aggros[i].SpawnMonster(count);
             }
         }
+
+        public void ReleaseAllMonsters()
+        {
+            for (int i = 0; i < _battleSceneMap_Aggros.Count; ++i)
+            {
+                _battleSceneMap_Aggros[i].ReleaseAllMonsters();
+            }
+        }
     }
 }

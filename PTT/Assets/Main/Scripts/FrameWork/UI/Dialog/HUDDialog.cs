@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using GameBerry.Chart;
+using GameBerry.Managers;
 
 namespace GameBerry.UI
 {
@@ -32,6 +35,16 @@ namespace GameBerry.UI
         [SerializeField]
         private Image _playerExpBar;
 
+        [Header("Stage")]
+        [SerializeField]
+        private List<Button> _stageSelectButtons = new List<Button>();
+
+        [SerializeField]
+        private Button _challengeButton;
+
+        [SerializeField]
+        private TMP_Text _stageNameText;
+
         private long _cachedCurrentHp = -1;
         private long _cachedMaxHp = -1;
         private float _cachedHpRatio = -1f;
@@ -47,8 +60,14 @@ namespace GameBerry.UI
             PlayerManager.Instance.OnExpChanged += RefreshExp;
             RefreshExp(PlayerManager.Instance.GetExp());
 
+            RegisterStageButtons();
+
             Message.AddListener<Event.RefreshComboUIMsg>(ShowComboUI);
             Message.AddListener<Event.RefreshPlayerHpMsg>(OnRefreshPlayerHp);
+            Message.AddListener<Event.RefreshBattleSceneUIMsg>(OnRefreshBattleSceneUI);
+
+            StageManager.Instance.OnDungeonProgressChanged += OnDungeonProgressChanged;
+            RefreshStageInfo();
         }
         //------------------------------------------------------------------------------------
         protected override void OnUnload()
@@ -59,8 +78,14 @@ namespace GameBerry.UI
                 PlayerManager.Instance.OnExpChanged -= RefreshExp;
             }
 
+            if (StageManager.isAlive)
+                StageManager.Instance.OnDungeonProgressChanged -= OnDungeonProgressChanged;
+
+            UnregisterStageButtons();
+
             Message.RemoveListener<Event.RefreshComboUIMsg>(ShowComboUI);
             Message.RemoveListener<Event.RefreshPlayerHpMsg>(OnRefreshPlayerHp);
+            Message.RemoveListener<Event.RefreshBattleSceneUIMsg>(OnRefreshBattleSceneUI);
         }
         //------------------------------------------------------------------------------------
         private void ShowComboUI(Event.RefreshComboUIMsg msg)
@@ -127,6 +152,85 @@ namespace GameBerry.UI
 
             if (_playerHpbar != null)
                 _playerHpbar.fillAmount = hpRatio;
+        }
+        //------------------------------------------------------------------------------------
+        private void RegisterStageButtons()
+        {
+            for (int i = 0; i < _stageSelectButtons.Count; ++i)
+            {
+                Button button = _stageSelectButtons[i];
+                if (button != null)
+                    button.onClick.AddListener(OnClickStageSelect);
+            }
+
+            if (_challengeButton != null)
+                _challengeButton.onClick.AddListener(OnClickChallenge);
+        }
+        //------------------------------------------------------------------------------------
+        private void UnregisterStageButtons()
+        {
+            for (int i = 0; i < _stageSelectButtons.Count; ++i)
+            {
+                Button button = _stageSelectButtons[i];
+                if (button != null)
+                    button.onClick.RemoveListener(OnClickStageSelect);
+            }
+
+            if (_challengeButton != null)
+                _challengeButton.onClick.RemoveListener(OnClickChallenge);
+        }
+        //------------------------------------------------------------------------------------
+        private void OnClickStageSelect()
+        {
+            UIManager.Instance.DialogEnter<StageSelectDialog>();
+        }
+        //------------------------------------------------------------------------------------
+        private void OnClickChallenge()
+        {
+            StageManager.Instance.GetCurrentStage(out int chapter, out int stage);
+            if (StageManager.Instance.CanEnterStage(chapter, stage) == false)
+                return;
+
+            if (StageManager.Instance.TryGetCurrentStageInfo(out StageInfo info) == false)
+                return;
+
+            if (info.BossMonster <= 0)
+                return;
+
+            if (StageManager.Instance.PrepareBossBattle(chapter, stage, true) == false)
+                return;
+
+            if (BattleSceneManager.isAlive)
+            {
+                if (BattleSceneManager.Instance.BattleType == Enum_Dungeon.StageScene)
+                    BattleSceneManager.Instance.ReloadCurrentBattleScene();
+                else
+                    BattleSceneManager.Instance.ChangeBattleScene(Enum_Dungeon.StageScene);
+            }
+        }
+        //------------------------------------------------------------------------------------
+        private void OnDungeonProgressChanged(Enum_Dungeon dungeonType)
+        {
+            if (dungeonType != Enum_Dungeon.StageScene)
+                return;
+
+            RefreshStageInfo();
+        }
+        //------------------------------------------------------------------------------------
+        private void OnRefreshBattleSceneUI(Event.RefreshBattleSceneUIMsg msg)
+        {
+            RefreshStageInfo();
+        }
+        //------------------------------------------------------------------------------------
+        private void RefreshStageInfo()
+        {
+            StageManager.Instance.GetCurrentStage(out int chapter, out int stage);
+
+            IReadOnlyList<StageInfo> chapterStages = StageManager.Instance.GetStages(chapter);
+            int maxStageInChapter = chapterStages?.Count ?? 0;
+
+            if (_stageNameText != null)
+                _stageNameText.SetText($"Stage {chapter}-{stage}");
         }
         //------------------------------------------------------------------------------------
     }

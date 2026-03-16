@@ -18,6 +18,9 @@ namespace GameBerry
         [SerializeField]
         private SpineModelAsset _creatureSpineModelAsset;
 
+        [SerializeField]
+        private SpineModelAsset _monsterSpineModelAsset;
+
         private Dictionary<int, SpineModelData> _creatureSpineModelDatas_Dic = new Dictionary<int, SpineModelData>();
 
         [SerializeField]
@@ -28,9 +31,6 @@ namespace GameBerry
 
         [SerializeField]
         private ComboDataAsset _comboDataAsset;
-
-        [SerializeField]
-        private StageDataAsset _stageDataAsset;
 
         [SerializeField]
         private IconTableAsset _iconTableAsset;
@@ -45,6 +45,13 @@ namespace GameBerry
             for (int i = 0; i < _creatureSpineModelAsset.SpineModelDatas.Count; ++i)
             {
                 SpineModelData spineModelData = _creatureSpineModelAsset.SpineModelDatas[i];
+
+                _creatureSpineModelDatas_Dic.Add(spineModelData.ResourceIndex, spineModelData);
+            }
+
+            for (int i = 0; i < _monsterSpineModelAsset.SpineModelDatas.Count; ++i)
+            {
+                SpineModelData spineModelData = _monsterSpineModelAsset.SpineModelDatas[i];
 
                 _creatureSpineModelDatas_Dic.Add(spineModelData.ResourceIndex, spineModelData);
             }
@@ -121,11 +128,6 @@ namespace GameBerry
         public ComboDataAsset GetComboData()
         {
             return _comboDataAsset;
-        }
-        //------------------------------------------------------------------------------------
-        public StageDataAsset GetStageData()
-        {
-            return _stageDataAsset;
         }
         //------------------------------------------------------------------------------------
         #region Icon

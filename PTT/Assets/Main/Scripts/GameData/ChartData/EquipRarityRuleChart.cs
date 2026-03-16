@@ -3,12 +3,12 @@ namespace GameBerry.Chart
     public struct EquipRandomRuleInfo
     {
         public Enum_Rarity Rarity;
-        public int OptionCountMin;
-        public int OptionCountMax;
-        public int AllowDuplicateStat;
+        public int RandomStatMin;
+        public int RandomStatMax;
+        public int SalvagePoints;
     }
 
-    public class EquipRandomRuleChart : ChartBase
+    public class EquipRarityRuleChart : ChartBase
     {
         public EquipRandomRuleInfo this[int index] => rows[index];
         public EquipRandomRuleInfo[] rows;

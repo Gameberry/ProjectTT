@@ -65,17 +65,20 @@ namespace GameBerry.Table
     {
         public int instanceId;
         public int itemId;
+        public int level;
         public List<EquipmentAddStat> addStatList;
-
+        public Enum_Rarity rarity;
         // Backward compatible:
-        // - New: instanceId,itemId:addStat...
+        // - New: instanceId,itemId,rarity,level:addStat...
         // - Old: instanceId:addStat...
-        public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(itemId)}:{PackUtil.PackList(addStatList, PackSep.L1)}";
+        public string Pack() => $"{PackUtil.PackValue(instanceId)},{PackUtil.PackValue(itemId)},{PackUtil.PackValue(rarity.Enum32ToInt())},{PackUtil.PackValue(level)}:{PackUtil.PackList(addStatList, PackSep.L1)}";
 
         public void Unpack(string str)
         {
             instanceId = 0;
             itemId = 0;
+            rarity = Enum_Rarity.Common;
+            level = 1;
             addStatList = new List<EquipmentAddStat>();
 
             if (string.IsNullOrEmpty(str)) return;
@@ -87,6 +90,8 @@ namespace GameBerry.Table
                 var sp = tsp[0].Split(',');
                 if (sp.Length > 0) instanceId = PackUtil.UnpackValue<int>(sp[0]);
                 if (sp.Length > 1) itemId = PackUtil.UnpackValue<int>(sp[1]);
+                if (sp.Length > 2) rarity = PackUtil.UnpackValue<int>(sp[2]).IntToEnum32<Enum_Rarity>();
+                if (sp.Length > 3) level = PackUtil.UnpackValue<int>(sp[3]);
             }
 
             if (tsp.Length > 1 && string.IsNullOrEmpty(tsp[1]) == false)
@@ -156,13 +161,15 @@ namespace GameBerry.Table
             return nextInstanceId++;
         }
 
-        public ItemHandle AddEquipment(int itemId, List<EquipmentAddStat> addStats = null)
+        public ItemHandle AddEquipment(int itemId, int level, Enum_Rarity rarity, List<EquipmentAddStat> addStats = null)
         {
             int instanceId = GetNewInstanceId();
             EquipmentData equipmentData = new EquipmentData
             {
                 instanceId = instanceId,
                 itemId = itemId,
+                level = level < 1 ? 1 : level,
+                rarity = rarity,
                 addStatList = addStats ?? new List<EquipmentAddStat>()
             };
 
@@ -321,7 +328,13 @@ namespace GameBerry.Table
             var itemChart = GameChart.Get<ItemChart>();
             var equipChart = GameChart.Get<EquipChart>();
 
-            int RarityKey(EquipmentData e) => (int)(itemChart?.Get(e.itemId)?.Rarity ?? 0);
+            int RarityKey(EquipmentData e)
+            {
+                if (e != null && e.rarity > 0 && e.rarity < Enum_Rarity.Max)
+                    return (int)e.rarity;
+
+                return (int)(itemChart?.Get(e.itemId)?.Rarity ?? 0);
+            }
             int EquipKey(EquipmentData e) => (int)(equipChart?.Get(e.itemId)?.EquipType ?? Enum_EquipType.Max);
 
             List<EquipmentData> list = new List<EquipmentData>(equipmentDataDict.Values);

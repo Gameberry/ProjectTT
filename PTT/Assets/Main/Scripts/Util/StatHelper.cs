@@ -60,7 +60,7 @@ namespace GameBerry
             var dict = new Dictionary<Enum_Stat, double>();
             if (string.IsNullOrEmpty(packed)) return dict;
 
-            var parts = packed.Split('|');
+            var parts = packed.Split(';');
             for (int i = 0; i < parts.Length; ++i)
             {
                 var kv = parts[i].Split('=');

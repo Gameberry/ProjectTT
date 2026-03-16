@@ -108,8 +108,10 @@ namespace GameBerry.Chart
                     continue;
                 }
 
-                var obj = JsonConvert.DeserializeObject($"{{\"rows\":{pair.Value.contentString}}}", type, new BackendChartValueConverter(false));
-
+                try
+                {
+                    var obj = JsonConvert.DeserializeObject($"{{\"rows\":{pair.Value.contentString}}}", type, new BackendChartValueConverter(false));
+                    
                 if (obj == null || (obj as Chart.ChartBase).IsLoaded() == false)
                 {
                     Debug.LogError($"LoadChart Error {className}: {data}");
@@ -119,8 +121,16 @@ namespace GameBerry.Chart
                 Chart.ChartBase chart = obj as Chart.ChartBase;
 
                 ChartData.Add(Type.GetType(className), chart);
-
                 chart.LoadComplete();
+
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"LoadChart Error {className}: {e}");
+                }
+
+                //var obj = JsonConvert.DeserializeObject($"{{\"rows\":{pair.Value.contentString}}}", type, new BackendChartValueConverter(false));
+
 
                 setcount++;
                 if (setcount > 12)

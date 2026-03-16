@@ -28,6 +28,12 @@ namespace GameBerry
         public Vector3 MapRange_Min;
         public Vector3 MapRange_Max;
 
+        [Header("-----------Stage Boss-----------")]
+        public Vector3 StageBossPlayerSpawnPosition = new Vector3(-2.5f, 0f, 0f);
+        public Vector3 StageBossMonsterSpawnPosition = new Vector3(2.5f, 0f, 0f);
+        public float StageBossSubMonsterSpawnRadius = 0f;
+        public float StageBossSubMonsterMinSeparation = 0f;
+
         public List<StatViewer> TempPlayerStat = new List<StatViewer>();
         public List<StatViewer> TempMonsterStat = new List<StatViewer>();
 
