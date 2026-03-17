@@ -27,6 +27,8 @@ namespace GameBerry
 
         public int GetHellLevel()
         {
+            TryCompletePendingLevelUp();
+
             if (_hellTable == null)
                 return 1;
 
@@ -35,6 +37,8 @@ namespace GameBerry
 
         public int GetHellExp()
         {
+            TryCompletePendingLevelUp();
+
             if (_hellTable == null)
                 return 0;
 
@@ -43,11 +47,75 @@ namespace GameBerry
 
         public int GetExpToNextLevel()
         {
+            TryCompletePendingLevelUp();
+
             int level = GetHellLevel();
+            if (_hellLevelChart != null && level >= _hellLevelChart.GetMaxLevel())
+                return 0;
+
             if (_hellLevelChart != null && _hellLevelChart.TryGetInfo(level, out HellLevelInfo info))
                 return Mathf.Max(0, info.Exp);
 
             return 0;
+        }
+
+        public bool IsLevelUpInProgress()
+        {
+            TryCompletePendingLevelUp();
+
+            if (_hellTable == null)
+                return false;
+
+            return GetLevelUpEndTimeSecInternal() > GetCurrentTimeSec();
+        }
+
+        public int GetRemainingLevelUpSeconds()
+        {
+            TryCompletePendingLevelUp();
+
+            long remain = GetLevelUpEndTimeSecInternal() - GetCurrentTimeSec();
+            return remain > 0 ? (int)remain : 0;
+        }
+
+        public bool CanStartLevelUp()
+        {
+            TryCompletePendingLevelUp();
+
+            if (_hellTable == null || _hellLevelChart == null)
+                return false;
+
+            int level = _hellTable.GetLevel();
+            if (level >= _hellLevelChart.GetMaxLevel())
+                return false;
+
+            if (_hellLevelChart.TryGetInfo(level, out HellLevelInfo info) == false)
+                return false;
+
+            return _hellTable.GetExp() >= Mathf.Max(0, info.Exp) && GetLevelUpEndTimeSecInternal() <= 0;
+        }
+
+        public bool TryStartLevelUp(bool immediate = true)
+        {
+            TryCompletePendingLevelUp(immediate);
+
+            if (CanStartLevelUp() == false)
+                return false;
+
+            int level = _hellTable.GetLevel();
+            if (_hellLevelChart.TryGetInfo(level, out HellLevelInfo info) == false)
+                return false;
+
+            long durationSec = Math.Max(0L, info.LevelUpTimeSec);
+            if (durationSec <= 0L)
+            {
+                CompleteLevelUp(immediate);
+                return true;
+            }
+
+            _hellTable.SetState(level, _hellTable.GetExp(), GetCurrentTimeSec() + durationSec);
+            _hellTable.UpdateTable(immediate);
+            OnHellStateChanged?.Invoke();
+            return true;
         }
 
         public Enum_Rarity GetRarity()
@@ -109,14 +177,17 @@ namespace GameBerry
 
         public int AddExp(int amount, bool immediate = true)
         {
+            TryCompletePendingLevelUp(immediate);
+
             if (_hellTable == null || _hellLevelChart == null || amount <= 0)
                 return 0;
 
             int level = GetHellLevel();
-            int exp = GetHellExp() + Mathf.Max(0, amount);
+            if (level >= _hellLevelChart.GetMaxLevel())
+                return 0;
 
-            TryLevelUp(ref level, ref exp);
-            _hellTable.SetState(level, exp);
+            int exp = GetHellExp() + Mathf.Max(0, amount);
+            _hellTable.SetState(level, exp, GetLevelUpEndTimeSecInternal());
             _hellTable.UpdateTable(immediate);
             OnHellStateChanged?.Invoke();
             return amount;
@@ -138,27 +209,63 @@ namespace GameBerry
             return resolved;
         }
 
-        private void TryLevelUp(ref int level, ref int exp)
+        private bool TryCompletePendingLevelUp(bool immediate = true)
         {
-            while (true)
+            if (_hellTable == null || _hellLevelChart == null)
+                return false;
+
+            long endTimeSec = GetLevelUpEndTimeSecInternal();
+            if (endTimeSec <= 0 || endTimeSec > GetCurrentTimeSec())
+                return false;
+
+            CompleteLevelUp(immediate);
+            return true;
+        }
+
+        private void CompleteLevelUp(bool immediate)
+        {
+            if (_hellTable == null || _hellLevelChart == null)
+                return;
+
+            int level = _hellTable.GetLevel();
+            int exp = _hellTable.GetExp();
+            int maxLevel = _hellLevelChart.GetMaxLevel();
+
+            if (level >= maxLevel)
             {
-                int maxLevel = _hellLevelChart.GetMaxLevel();
-                if (level >= maxLevel)
-                {
-                    exp = Mathf.Max(0, exp);
-                    return;
-                }
-
-                if (_hellLevelChart.TryGetInfo(level, out HellLevelInfo info) == false)
-                    return;
-
-                int needExp = Mathf.Max(0, info.Exp);
-                if (needExp <= 0 || exp < needExp)
-                    return;
-
-                exp -= needExp;
-                level += 1;
+                _hellTable.SetState(maxLevel, 0, 0);
+                _hellTable.UpdateTable(immediate);
+                OnHellStateChanged?.Invoke();
+                return;
             }
+
+            if (_hellLevelChart.TryGetInfo(level, out HellLevelInfo info) == false)
+                return;
+
+            int needExp = Mathf.Max(0, info.Exp);
+            if (needExp > 0)
+                exp = Mathf.Max(0, exp - needExp);
+
+            level += 1;
+            _hellTable.SetState(level, exp, 0);
+            _hellTable.UpdateTable(immediate);
+            OnHellStateChanged?.Invoke();
+        }
+
+        private long GetLevelUpEndTimeSecInternal()
+        {
+            if (_hellTable == null)
+                return 0;
+
+            return Math.Max(0L, _hellTable.GetLevelUpEndTimeSec());
+        }
+
+        private static long GetCurrentTimeSec()
+        {
+            if (Managers.TimeManager.isAlive)
+                return (long)Math.Floor((double)Managers.TimeManager.Instance.Current_TimeStamp);
+
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
     }
 }

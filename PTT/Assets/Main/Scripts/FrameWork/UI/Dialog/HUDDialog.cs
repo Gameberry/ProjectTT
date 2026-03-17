@@ -84,8 +84,7 @@ namespace GameBerry.UI
             Message.AddListener<Event.RefreshBattleSceneUIMsg>(OnRefreshBattleSceneUI);
 
             StageManager.Instance.OnDungeonProgressChanged += OnDungeonProgressChanged;
-            if (HellManager.isAlive)
-                HellManager.Instance.OnHellStateChanged += RefreshHellLevel;
+            HellManager.Instance.OnHellStateChanged += RefreshHellLevel;
 
             RefreshStageInfo();
             RefreshHellLevel();
@@ -334,7 +333,7 @@ namespace GameBerry.UI
         {
             if (_hellLevelText != null)
             {
-                int hellLevel = HellManager.isAlive ? HellManager.Instance.GetHellLevel() : 1;
+                int hellLevel = HellManager.Instance.GetHellLevel();
                 _hellLevelText.SetText($"Hell Lv.{hellLevel}");
             }
         }

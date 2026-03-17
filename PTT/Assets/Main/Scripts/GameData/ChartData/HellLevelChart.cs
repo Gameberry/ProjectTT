@@ -6,6 +6,7 @@ namespace GameBerry.Chart
     {
         public int HellLevel;
         public int Exp;
+        public long LevelUpTimeSec;
     }
 
     public class HellLevelChart : ChartBase

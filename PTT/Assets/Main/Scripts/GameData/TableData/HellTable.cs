@@ -7,13 +7,15 @@ namespace GameBerry.Table
     {
         public int level = 1;
         public int exp = 0;
+        public long levelUpEndTimeSec = 0;
 
-        public string Pack() => $"{PackUtil.PackValue(level)},{PackUtil.PackValue(exp)}";
+        public string Pack() => $"{PackUtil.PackValue(level)},{PackUtil.PackValue(exp)},{PackUtil.PackValue(levelUpEndTimeSec)}";
 
         public void Unpack(string str)
         {
             level = 1;
             exp = 0;
+            levelUpEndTimeSec = 0;
 
             if (string.IsNullOrEmpty(str))
                 return;
@@ -23,6 +25,8 @@ namespace GameBerry.Table
                 level = PackUtil.UnpackValue<int>(sp[0]);
             if (sp.Length > 1)
                 exp = PackUtil.UnpackValue<int>(sp[1]);
+            if (sp.Length > 2)
+                levelUpEndTimeSec = PackUtil.UnpackValue<long>(sp[2]);
         }
     }
 
@@ -77,6 +81,20 @@ namespace GameBerry.Table
             EnsureState();
             _state.level = level < 1 ? 1 : level;
             _state.exp = exp < 0 ? 0 : exp;
+        }
+
+        public long GetLevelUpEndTimeSec()
+        {
+            EnsureState();
+            return _state.levelUpEndTimeSec < 0 ? 0 : _state.levelUpEndTimeSec;
+        }
+
+        public void SetState(int level, int exp, long levelUpEndTimeSec)
+        {
+            EnsureState();
+            _state.level = level < 1 ? 1 : level;
+            _state.exp = exp < 0 ? 0 : exp;
+            _state.levelUpEndTimeSec = levelUpEndTimeSec < 0 ? 0 : levelUpEndTimeSec;
         }
 
         private void EnsureState()

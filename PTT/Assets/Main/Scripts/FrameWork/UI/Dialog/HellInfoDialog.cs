@@ -3,11 +3,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using GameBerry.Chart;
+using GameBerry.Managers;
 
 namespace GameBerry.UI
 {
     public class HellInfoDialog : IDialog
     {
+        [Header("Status")]
+        [SerializeField] private TMP_Text _expText;
+        [SerializeField] private Button _levelUpButton;
+        [SerializeField] private TMP_Text _levelUpButtonText;
+        [SerializeField] private TMP_Text _timerText;
+
         [Header("Probability")]
         [SerializeField] private TMP_Text _probLevelText;
         [SerializeField] private Button _prevLevelButton;
@@ -23,6 +30,7 @@ namespace GameBerry.UI
         {
             if (_prevLevelButton != null) _prevLevelButton.onClick.AddListener(OnClickPrevLevel);
             if (_nextLevelButton != null) _nextLevelButton.onClick.AddListener(OnClickNextLevel);
+            if (_levelUpButton != null) _levelUpButton.onClick.AddListener(OnClickLevelUp);
         }
 
         protected override void OnEnter()
@@ -32,7 +40,7 @@ namespace GameBerry.UI
 
             RebuildLevelList();
             ResolveSelectedLevel(forceCurrentLevel: true);
-            RefreshProbability();
+            RefreshAll();
         }
 
         protected override void OnExit()
@@ -41,10 +49,25 @@ namespace GameBerry.UI
                 HellManager.Instance.OnHellStateChanged -= OnHellStateChanged;
         }
 
+        private void Update()
+        {
+            if (isEnter == false)
+                return;
+
+            if (HellManager.isAlive && HellManager.Instance.IsLevelUpInProgress())
+                RefreshStatus();
+        }
+
         private void OnHellStateChanged()
         {
             RebuildLevelList();
-            ResolveSelectedLevel(forceCurrentLevel: true);
+            ResolveSelectedLevel(forceCurrentLevel: false);
+            RefreshAll();
+        }
+
+        private void RefreshAll()
+        {
+            RefreshStatus();
             RefreshProbability();
         }
 
@@ -189,6 +212,64 @@ namespace GameBerry.UI
         {
             for (int i = 0; i < _probGroups.Count; ++i)
                 _probGroups[i].gameObject.SetActive(i < count);
+        }
+
+        private void OnClickLevelUp()
+        {
+            if (HellManager.isAlive == false)
+                return;
+
+            HellManager.Instance.TryStartLevelUp();
+            RefreshStatus();
+        }
+
+        private void RefreshStatus()
+        {
+            if (HellManager.isAlive == false)
+                return;
+
+            int currentLevel = HellManager.Instance.GetHellLevel();
+            int currentExp = HellManager.Instance.GetHellExp();
+            int needExp = HellManager.Instance.GetExpToNextLevel();
+            bool isMaxLevel = needExp <= 0;
+            bool isLeveling = HellManager.Instance.IsLevelUpInProgress();
+            bool canLevelUp = HellManager.Instance.CanStartLevelUp();
+
+            if (_expText != null)
+            {
+                if (isMaxLevel)
+                    _expText.SetText($"Lv.{currentLevel}  MAX");
+                else
+                    _expText.SetText($"Lv.{currentLevel}  {currentExp}/{needExp}");
+            }
+
+            if (_levelUpButton != null)
+                _levelUpButton.interactable = canLevelUp;
+
+            if (_levelUpButtonText != null)
+            {
+                if (isMaxLevel)
+                    _levelUpButtonText.SetText("MAX");
+                else if (isLeveling)
+                    _levelUpButtonText.SetText("Leveling...");
+                else if (canLevelUp)
+                    _levelUpButtonText.SetText("Level Up");
+                else
+                    _levelUpButtonText.SetText("Need EXP");
+            }
+
+            if (_timerText != null)
+            {
+                _timerText.gameObject.SetActive(isLeveling);
+                if (isLeveling)
+                {
+                    int remain = HellManager.Instance.GetRemainingLevelUpSeconds();
+                    if (TimeManager.isAlive)
+                        _timerText.SetText($"Time Left  {TimeManager.Instance.GetSecendToDayString_MS(remain)}");
+                    else
+                        _timerText.SetText($"Time Left  {remain}s");
+                }
+            }
         }
     }
 }

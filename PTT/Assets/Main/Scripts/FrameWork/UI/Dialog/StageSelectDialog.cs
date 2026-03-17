@@ -103,7 +103,9 @@ namespace GameBerry.UI
                 return;
             }
 
-            if (_selectedChapter > 0 && _selectedStage > 0 && StageManager.Instance.CanEnterStage(_selectedChapter, _selectedStage))
+            if (_selectedChapter > 0 &&
+                _selectedStage > 0 &&
+                StageManager.Instance.TryGetStageInfo(_selectedChapter, _selectedStage, out _))
                 return;
 
             StageManager.Instance.GetCurrentStage(out _selectedChapter, out _selectedStage);
