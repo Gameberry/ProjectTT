@@ -70,7 +70,9 @@ namespace GameBerry.UI
 
             if (_itemRarity != null)
             {
-                Enum_Rarity enum_Rarity = ItemManager.Instance.GetItemRarity(handle.itemId);
+                Enum_Rarity enum_Rarity = ItemManager.Instance.GetItemType(handle.itemId) == Enum_ItemType.Equip && handle.isMeta == false
+                    ? EquipmentManager.Instance.GetEquipmentRarity(handle)
+                    : ItemManager.Instance.GetItemRarity(handle.itemId);
                 Managers.LocalStringManager.Instance.SetLocalizeText(_itemRarity, enum_Rarity.ToString());
                 _itemRarity.color = StaticResource.Instance.GetRarityTextColor(enum_Rarity);
             }

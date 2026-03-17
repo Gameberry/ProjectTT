@@ -83,12 +83,17 @@ namespace GameBerry.UI
             int itemId = e.itemId;
 
             Chart.ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);
+            Enum_ItemType itemType = itemInfo != null ? itemInfo.ItemType : Enum_ItemType.Max;
+            Enum_Rarity rarity = itemInfo != null ? itemInfo.Rarity : Enum_Rarity.Common;
+
+            if (itemType == Enum_ItemType.Equip && e.isMeta == false)
+                rarity = EquipmentManager.Instance.GetEquipmentRarity(e);
 
             if (_icon != null)
                 _icon.sprite = ItemManager.Instance.GetIcon(itemId);
 
             if (_frame != null)
-                _frame.sprite = StaticResource.Instance.GetRarityFrame(itemInfo.Rarity);
+                _frame.sprite = StaticResource.Instance.GetRarityFrame(rarity);
 
             if (_itemName != null)
                 Managers.LocalStringManager.Instance.SetLocalizeText(_itemName, ItemManager.Instance.GetItemNameLocalKey(itemId));
@@ -121,7 +126,7 @@ namespace GameBerry.UI
                 }
             }
 
-            Enum_ItemType enumtype = ItemManager.Instance.GetItemType(e.itemId);
+            Enum_ItemType enumtype = itemType;
 
             if (_level != null)
             {
