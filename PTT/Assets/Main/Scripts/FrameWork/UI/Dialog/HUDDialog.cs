@@ -54,6 +54,13 @@ namespace GameBerry.UI
         [SerializeField]
         private TMP_Text _bossTimerText;
 
+        [Header("Hell")]
+        [SerializeField]
+        private Button _hellInfoButton;
+
+        [SerializeField]
+        private TMP_Text _hellLevelText;
+
         private long _cachedCurrentHp = -1;
         private long _cachedMaxHp = -1;
         private float _cachedHpRatio = -1f;
@@ -70,13 +77,18 @@ namespace GameBerry.UI
             RefreshExp(PlayerManager.Instance.GetExp());
 
             RegisterStageButtons();
+            RegisterHellButton();
 
             Message.AddListener<Event.RefreshComboUIMsg>(ShowComboUI);
             Message.AddListener<Event.RefreshPlayerHpMsg>(OnRefreshPlayerHp);
             Message.AddListener<Event.RefreshBattleSceneUIMsg>(OnRefreshBattleSceneUI);
 
             StageManager.Instance.OnDungeonProgressChanged += OnDungeonProgressChanged;
+            if (HellManager.isAlive)
+                HellManager.Instance.OnHellStateChanged += RefreshHellLevel;
+
             RefreshStageInfo();
+            RefreshHellLevel();
         }
         //------------------------------------------------------------------------------------
         protected override void OnUnload()
@@ -91,6 +103,10 @@ namespace GameBerry.UI
                 StageManager.Instance.OnDungeonProgressChanged -= OnDungeonProgressChanged;
 
             UnregisterStageButtons();
+            UnregisterHellButton();
+
+            if (HellManager.isAlive)
+                HellManager.Instance.OnHellStateChanged -= RefreshHellLevel;
 
             Message.RemoveListener<Event.RefreshComboUIMsg>(ShowComboUI);
             Message.RemoveListener<Event.RefreshPlayerHpMsg>(OnRefreshPlayerHp);
@@ -181,6 +197,12 @@ namespace GameBerry.UI
                 _challengeButton.onClick.AddListener(OnClickChallenge);
         }
         //------------------------------------------------------------------------------------
+        private void RegisterHellButton()
+        {
+            if (_hellInfoButton != null)
+                _hellInfoButton.onClick.AddListener(OnClickHellInfo);
+        }
+        //------------------------------------------------------------------------------------
         private void UnregisterStageButtons()
         {
             for (int i = 0; i < _stageSelectButtons.Count; ++i)
@@ -194,9 +216,20 @@ namespace GameBerry.UI
                 _challengeButton.onClick.RemoveListener(OnClickChallenge);
         }
         //------------------------------------------------------------------------------------
+        private void UnregisterHellButton()
+        {
+            if (_hellInfoButton != null)
+                _hellInfoButton.onClick.RemoveListener(OnClickHellInfo);
+        }
+        //------------------------------------------------------------------------------------
         private void OnClickStageSelect()
         {
             UIManager.Instance.DialogEnter<StageSelectDialog>();
+        }
+        //------------------------------------------------------------------------------------
+        private void OnClickHellInfo()
+        {
+            UIManager.Instance.DialogEnter<HellInfoDialog>();
         }
         //------------------------------------------------------------------------------------
         private void OnClickChallenge()
@@ -295,6 +328,15 @@ namespace GameBerry.UI
             int minutes = totalSeconds / 60;
             int seconds = totalSeconds % 60;
             _bossTimerText.SetText("{0:00}:{1:00}", minutes, seconds);
+        }
+        //------------------------------------------------------------------------------------
+        private void RefreshHellLevel()
+        {
+            if (_hellLevelText != null)
+            {
+                int hellLevel = HellManager.isAlive ? HellManager.Instance.GetHellLevel() : 1;
+                _hellLevelText.SetText($"Hell Lv.{hellLevel}");
+            }
         }
         //------------------------------------------------------------------------------------
     }

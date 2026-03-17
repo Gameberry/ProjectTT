@@ -20,6 +20,7 @@ namespace GameBerry.UI
         LanternInventoryDialog,
         SummonDialog,
         SummonInfoDialog,
+        HellInfoDialog,
         AuctionDialog,
         LanternAppliedEffectDialog,
         StarforceEnhanceDialog,
