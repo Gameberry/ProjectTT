@@ -32,6 +32,7 @@ namespace GameBerry.UI
         EngravingProbabilityDialog,
 
         ItemDescDialog,
+        EquipmentReformDialog,
 
 
 

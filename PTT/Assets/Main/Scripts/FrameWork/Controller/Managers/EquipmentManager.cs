@@ -19,6 +19,12 @@ namespace GameBerry
                 Table.UserTable.Get<Table.PointTable>()
             };
 
+        private List<Table.TableBase> EquipReformTables = new List<Table.TableBase>()
+            {
+                Table.UserTable.Get<Table.EquipmentTable>(),
+                Table.UserTable.Get<Table.PointTable>()
+            };
+
         private List<Table.TableBase> EquipSalvageTables = new List<Table.TableBase>()
             {
                 Table.UserTable.Get<Table.EquipmentTable>(),
@@ -277,6 +283,129 @@ namespace GameBerry
                 return data;
 
             return null;
+        }
+        //------------------------------------------------------------------------------------
+        public bool TryGetReformRange(Enum_Stat stat, int level, Enum_Rarity rarity, out double minValue, out double maxValue, out Enum_StatMode statMode)
+        {
+            minValue = 0d;
+            maxValue = 0d;
+            statMode = Enum_StatMode.Double;
+
+            EquipStatRangeInfo rangeInfo = FindEquipStatRangeInfo(stat);
+            if (rangeInfo == null)
+                return false;
+
+            if (level <= 0)
+                level = 1;
+
+            double rarityMultiplier = GetEquipStatRarityMultiplier(rangeInfo, rarity);
+            double levelMultiplier = level * rangeInfo.LevelMultiple;
+
+            minValue = rangeInfo.Min * (1.0 + (rarityMultiplier * levelMultiplier));
+            maxValue = rangeInfo.Max * (1.0 + (rarityMultiplier * levelMultiplier));
+
+            if (maxValue < minValue)
+                maxValue = minValue;
+
+            if (Enum.TryParse(rangeInfo.ValueMode, true, out Enum_StatMode parsedMode))
+                statMode = parsedMode;
+
+            if (statMode == Enum_StatMode.Int)
+            {
+                minValue = Mathf.RoundToInt((float)minValue);
+                maxValue = Mathf.RoundToInt((float)maxValue);
+                if (maxValue < minValue)
+                    maxValue = minValue;
+            }
+            else
+            {
+                minValue = Math.Round(minValue, 2);
+                maxValue = Math.Round(maxValue, 2);
+            }
+
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        public long GetReformPrice(ItemHandle itemHandle, int lockedStatCount)
+        {
+            EquipmentData data = GetEquipmentData(itemHandle);
+            if (data == null)
+                return 0;
+
+            int rarityStep = Mathf.Max(0, ((int)ResolveEquipmentDataRarity(data, itemHandle.itemId)) - 1);
+            int levelValue = Mathf.Max(1, data.level);
+            int lockCount = Mathf.Max(0, lockedStatCount);
+
+            long basePrice = 250L + (rarityStep * 150L) + ((levelValue - 1L) * 25L);
+            long lockPrice = lockCount * (150L + (rarityStep * 75L));
+            return basePrice + lockPrice;
+        }
+        //------------------------------------------------------------------------------------
+        public int GetRoyalCoinItemId()
+        {
+            return GameChart.Get<PointChart>()?.GetByType(Enum_PointType.RoyalCoin)?.ItemId ?? 0;
+        }
+        //------------------------------------------------------------------------------------
+        public bool TryReform(ItemHandle itemHandle, IReadOnlyCollection<Enum_Stat> lockedStats, out string reason)
+        {
+            reason = string.Empty;
+
+            if (itemHandle.isMeta || itemHandle.IsInstance == false)
+            {
+                reason = "InvalidHandle";
+                return false;
+            }
+
+            EquipmentData data = GetEquipmentData(itemHandle);
+            if (data == null)
+            {
+                reason = "EquipmentNotFound";
+                return false;
+            }
+
+            int royalCoinItemId = GetRoyalCoinItemId();
+            if (royalCoinItemId <= 0)
+            {
+                reason = "RoyalCoinNotConfigured";
+                return false;
+            }
+
+            int lockedCount = lockedStats?.Count ?? 0;
+            long price = GetReformPrice(itemHandle, lockedCount);
+            ConsumeItemResult consumeResult = ItemManager.Instance.ConsumeItem(royalCoinItemId, price, false);
+            if (consumeResult.Success == false)
+            {
+                reason = consumeResult.Reason;
+                return false;
+            }
+
+            HashSet<Enum_Stat> lockedSet = lockedStats != null
+                ? new HashSet<Enum_Stat>(lockedStats)
+                : new HashSet<Enum_Stat>();
+
+            Enum_Rarity rarity = ResolveEquipmentDataRarity(data, itemHandle.itemId);
+            if (data.addStatList == null)
+                data.addStatList = new List<EquipmentAddStat>();
+
+            for (int i = 0; i < data.addStatList.Count; ++i)
+            {
+                EquipmentAddStat addStat = data.addStatList[i];
+                if (lockedSet.Contains(addStat.stat))
+                    continue;
+
+                addStat.value = GetRandomOptionStatValue(addStat.stat, data.level, rarity);
+                data.addStatList[i] = addStat;
+            }
+
+            UserTable.TransactionUpdate(EquipReformTables);
+
+            if (IsEquip(itemHandle))
+                RefreshStat();
+
+            ItemManager.Instance?.NotifyStorageChanged(Enum_ItemStorageType.Equipment);
+            ItemManager.Instance?.NotifyStorageChanged(Enum_ItemStorageType.Point);
+
+            return true;
         }
         //------------------------------------------------------------------------------------
         public Enum_Rarity GetEquipmentRarity(ItemHandle itemHandle)

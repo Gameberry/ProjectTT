@@ -38,6 +38,7 @@ namespace GameBerry.UI
         [SerializeField] private Button consumeButton;
         [SerializeField] private Button equipButton;
         [SerializeField] private Button sellButton;
+        [SerializeField] private Button reformButton;
 
         private ItemHandle _handle;
 
@@ -52,6 +53,9 @@ namespace GameBerry.UI
 
             if (sellButton != null) 
                 sellButton.onClick.AddListener(OnSell);
+
+            if (reformButton != null)
+                reformButton.onClick.AddListener(OnReform);
         }
         // --------------------------------------------------------------------
         public void Bind(ItemHandle handle)
@@ -97,6 +101,7 @@ namespace GameBerry.UI
                 }
                 // 버튼 노출 제어(기본)
                 if (equipButton != null) equipButton.gameObject.SetActive(false);
+                if (reformButton != null) reformButton.gameObject.SetActive(false);
             }
 
 
@@ -108,6 +113,9 @@ namespace GameBerry.UI
                 else
                     consumeButton.gameObject.SetActive(false);
             }
+
+            if (reformButton != null)
+                reformButton.gameObject.SetActive(enum_ItemType == Enum_ItemType.Equip && handle.isMeta == false);
             //if (sellButton != null) sellButton.gameObject.SetActive(true);
         }
         //------------------------------------------------------------------------------------
@@ -228,6 +236,21 @@ namespace GameBerry.UI
             // 장착 시스템은 프로젝트별이므로 연결만 해두고 확장
             if (EquipmentManager.Instance.SetEquip(_handle))
                 ShowEquipStat(_handle);
+        }
+        //------------------------------------------------------------------------------------
+        private void OnReform()
+        {
+            if (_handle.isMeta || ItemManager.Instance.GetItemType(_handle.itemId) != Enum_ItemType.Equip)
+                return;
+
+            UIManager.Instance.Load(nameof(EquipmentReformDialog), ui =>
+            {
+                if (ui is EquipmentReformDialog reformDialog == false)
+                    return;
+
+                reformDialog.Bind(_handle, () => Bind(_handle));
+                reformDialog.Enter();
+            });
         }
         //------------------------------------------------------------------------------------
         private void OnSell()
