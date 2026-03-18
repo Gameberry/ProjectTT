@@ -114,7 +114,7 @@ namespace GameBerry.UI
 
         private bool IsAtMaxValue(double currentValue, double maxValue)
         {
-            return Math.Abs(currentValue - maxValue) <= 0.01d || currentValue > maxValue;
+            return Math.Abs(currentValue - maxValue) <= 0.0001d || currentValue > maxValue;
         }
 
         private void RefreshPriceAndBalance()
