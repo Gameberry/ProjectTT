@@ -13,7 +13,7 @@ namespace GameBerry.Chart
         public double Legendary;
         public double Mythic;
         public double Special;
-        public string ValueMode;
+        public Enum_StatMode ValueMode;
     }
 
     public class EquipStatRangeChart : ChartBase

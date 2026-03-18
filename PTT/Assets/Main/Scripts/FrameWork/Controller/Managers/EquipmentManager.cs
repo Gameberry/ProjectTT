@@ -198,10 +198,7 @@ namespace GameBerry
             if (maxValue < minValue)
                 maxValue = minValue;
 
-            Enum_StatMode statMode = Enum_StatMode.Double;
-            if (Enum.TryParse(rangeInfo.ValueMode, true, out Enum_StatMode parsedMode))
-                statMode = parsedMode;
-
+            Enum_StatMode statMode = rangeInfo.ValueMode;
             if (statMode == Enum_StatMode.Int)
             {
                 int minInt = Mathf.RoundToInt((float)minValue);
@@ -213,7 +210,7 @@ namespace GameBerry
             }
 
             double randomValue = minValue + (_random.NextDouble() * (maxValue - minValue));
-            return System.Math.Round(randomValue, 2);
+            return System.Math.Round(randomValue, 3);
         }
         //------------------------------------------------------------------------------------
         private EquipStatRangeInfo FindEquipStatRangeInfo(Enum_Stat stat)
@@ -307,8 +304,7 @@ namespace GameBerry
             if (maxValue < minValue)
                 maxValue = minValue;
 
-            if (Enum.TryParse(rangeInfo.ValueMode, true, out Enum_StatMode parsedMode))
-                statMode = parsedMode;
+            statMode = rangeInfo.ValueMode;
 
             if (statMode == Enum_StatMode.Int)
             {
@@ -319,8 +315,8 @@ namespace GameBerry
             }
             else
             {
-                minValue = Math.Round(minValue, 2);
-                maxValue = Math.Round(maxValue, 2);
+                minValue = Math.Round(minValue, 3);
+                maxValue = Math.Round(maxValue, 3);
             }
 
             return true;
