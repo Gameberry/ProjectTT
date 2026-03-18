@@ -323,6 +323,11 @@ namespace GameBerry.Table
             return equipmentDataDict.ContainsKey(instanceId);
         }
 
+        public List<EquipmentData> GetAllEquipmentData()
+        {
+            return new List<EquipmentData>(equipmentDataDict.Values);
+        }
+
         public List<EquipmentData> BuildView(Enum_InventorySort sort)
         {
             var itemChart = GameChart.Get<ItemChart>();

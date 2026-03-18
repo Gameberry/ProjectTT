@@ -19,6 +19,12 @@ namespace GameBerry
                 Table.UserTable.Get<Table.PointTable>()
             };
 
+        private List<Table.TableBase> EquipSalvageTables = new List<Table.TableBase>()
+            {
+                Table.UserTable.Get<Table.EquipmentTable>(),
+                Table.UserTable.Get<Table.HellTable>()
+            };
+
         public event Action OnEquipSlotChanged;
 
         EquipmentTable _equipmentTable;
@@ -31,6 +37,10 @@ namespace GameBerry
         private readonly System.Random _random = new System.Random();
 
         WeightedRandomPicker<Enum_StarforceResult> _starForcePicker = null;
+
+        private const string AutoSalvageEnabledKey = "equipment.auto_salvage.enabled";
+        private const string AutoSalvageThresholdKey = "equipment.auto_salvage.threshold";
+        private const int AutoSalvageThresholdOff = 0;
         //------------------------------------------------------------------------------------
         protected override void Init()
         {
@@ -176,8 +186,8 @@ namespace GameBerry
 
             double rarityMultiplier = GetEquipStatRarityMultiplier(rangeInfo, rarity);
             double levelMultiplier = level * rangeInfo.LevelMultiple;
-            double minValue = rangeInfo.Min * rarityMultiplier * levelMultiplier;
-            double maxValue = rangeInfo.Max * rarityMultiplier * levelMultiplier;
+            double minValue = rangeInfo.Min * (1.0 + (rarityMultiplier * levelMultiplier));
+            double maxValue = rangeInfo.Max * (1.0 + (rarityMultiplier * levelMultiplier));
 
             if (maxValue < minValue)
                 maxValue = minValue;
@@ -272,10 +282,142 @@ namespace GameBerry
         public Enum_Rarity GetEquipmentRarity(ItemHandle itemHandle)
         {
             EquipmentData data = GetEquipmentData(itemHandle);
+            if (data != null)
+                return ResolveEquipmentDataRarity(data, itemHandle.itemId);
+
+            ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemHandle.itemId);
+            return itemInfo?.Rarity ?? Enum_Rarity.Common;
+        }
+        //------------------------------------------------------------------------------------
+        public bool GetAutoSalvageEnabled()
+        {
+            return PlayerPrefs.GetInt(AutoSalvageEnabledKey, 0) == 1;
+        }
+        //------------------------------------------------------------------------------------
+        public void SetAutoSalvageEnabled(bool enabled)
+        {
+            PlayerPrefs.SetInt(AutoSalvageEnabledKey, enabled ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+        //------------------------------------------------------------------------------------
+        public Enum_Rarity GetAutoSalvageThreshold()
+        {
+            int saved = PlayerPrefs.GetInt(AutoSalvageThresholdKey, AutoSalvageThresholdOff);
+            if (saved <= AutoSalvageThresholdOff)
+                return Enum_Rarity.Max;
+
+            Enum_Rarity rarity = saved.IntToEnum32<Enum_Rarity>();
+            if (rarity <= 0 || rarity >= Enum_Rarity.Max)
+                return Enum_Rarity.Max;
+
+            return rarity;
+        }
+        //------------------------------------------------------------------------------------
+        public void SetAutoSalvageThreshold(Enum_Rarity rarity)
+        {
+            int saved = rarity == Enum_Rarity.Max ? AutoSalvageThresholdOff : rarity.Enum32ToInt();
+            PlayerPrefs.SetInt(AutoSalvageThresholdKey, saved);
+            PlayerPrefs.Save();
+        }
+        //------------------------------------------------------------------------------------
+        public bool ShouldAutoSalvage(ItemHandle itemHandle)
+        {
+            if (GetAutoSalvageEnabled() == false || itemHandle.IsInstance == false)
+                return false;
+
+            Enum_Rarity threshold = GetAutoSalvageThreshold();
+            if (threshold == Enum_Rarity.Max)
+                return false;
+
+            return GetEquipmentRarity(itemHandle) <= threshold;
+        }
+        //------------------------------------------------------------------------------------
+        public bool TryAutoSalvage(ItemHandle itemHandle, bool immediate = true)
+        {
+            if (ShouldAutoSalvage(itemHandle) == false)
+                return false;
+
+            return TrySalvage(itemHandle, immediate, false);
+        }
+        //------------------------------------------------------------------------------------
+        public int SalvageAllAtOrBelow(Enum_Rarity maxRarity, bool immediate = true)
+        {
+            if (maxRarity == Enum_Rarity.Max)
+                return 0;
+
+            List<EquipmentData> allEquipment = _equipmentTable.GetAllEquipmentData();
+            if (allEquipment == null || allEquipment.Count <= 0)
+                return 0;
+
+            int salvagedCount = 0;
+
+            for (int i = 0; i < allEquipment.Count; ++i)
+            {
+                EquipmentData data = allEquipment[i];
+                if (data == null)
+                    continue;
+
+                if (_equipmentTable.IsEquipped(data.instanceId))
+                    continue;
+
+                Enum_Rarity rarity = ResolveEquipmentDataRarity(data, data.itemId);
+                if (rarity > maxRarity)
+                    continue;
+
+                ItemHandle handle = ItemHandle.ForInstance(data.itemId, data.instanceId);
+                if (TrySalvage(handle, false, false))
+                    salvagedCount++;
+            }
+
+            if (salvagedCount <= 0)
+                return 0;
+
+            if (immediate)
+                UserTable.TransactionUpdate(EquipSalvageTables);
+            else
+            {
+                UserTable.Get<EquipmentTable>()?.UpdateTable(false);
+                UserTable.Get<HellTable>()?.UpdateTable(false);
+            }
+
+            ItemManager.Instance?.NotifyStorageChanged(Enum_ItemStorageType.Equipment);
+            return salvagedCount;
+        }
+        //------------------------------------------------------------------------------------
+        private bool TrySalvage(ItemHandle itemHandle, bool immediate, bool notifyChange)
+        {
+            if (itemHandle.IsInstance == false)
+                return false;
+
+            EquipmentData data = GetEquipmentData(itemHandle);
+            if (data == null || _equipmentTable.IsEquipped(itemHandle.instanceId))
+                return false;
+
+            Enum_Rarity rarity = ResolveEquipmentDataRarity(data, itemHandle.itemId);
+            int salvagePoints = HellManager.Instance.GetSalvagePoints(rarity);
+
+            if (_equipmentTable.RemoveEquipment(itemHandle.instanceId) == false)
+                return false;
+
+            if (salvagePoints > 0)
+                HellManager.Instance.AddExp(salvagePoints, false);
+
+            if (immediate)
+                UserTable.TransactionUpdate(EquipSalvageTables);
+
+            if (notifyChange)
+                ItemManager.Instance?.NotifyStorageChanged(Enum_ItemStorageType.Equipment);
+
+            return true;
+        }
+        //------------------------------------------------------------------------------------
+        private Enum_Rarity ResolveEquipmentDataRarity(EquipmentData data, int fallbackItemId)
+        {
             if (data != null && data.rarity > 0 && data.rarity < Enum_Rarity.Max)
                 return data.rarity;
 
-            ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemHandle.itemId);
+            int itemId = data != null && data.itemId > 0 ? data.itemId : fallbackItemId;
+            ItemInfo itemInfo = ItemManager.Instance.GetItemMeta(itemId);
             return itemInfo?.Rarity ?? Enum_Rarity.Common;
         }
         //------------------------------------------------------------------------------------

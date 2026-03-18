@@ -307,6 +307,11 @@ namespace GameBerry
             else if (t == GameBerry.Enum_ItemStorageType.Lantern) OnLanternStorageChanged?.Invoke();
         }
 
+        public void NotifyStorageChanged(GameBerry.Enum_ItemStorageType storageType)
+        {
+            RaiseChanged(storageType);
+        }
+
         public Sprite GetIcon(int itemId)
         {
             Sprite sp = null;
@@ -431,14 +436,44 @@ namespace GameBerry
                     return new AddItemResult { Success = true, Requested = amount, Added = 0 };
 
                 long added = 0;
+                bool autoSalvagedAny = false;
                 for (int i = 0; i < amount; ++i)
                 {
                     ItemHandle handle = EquipmentManager.Instance.AddEquipment(meta.ItemId);
+                    if (handle.IsInstance == false)
+                        continue;
+
+                    if (EquipmentManager.Instance.TryAutoSalvage(handle, false))
+                    {
+                        autoSalvagedAny = true;
+                        continue;
+                    }
+
                     if (handle.IsInstance)
                         added++;
                 }
 
-                UserTable.Get<EquipmentTable>().UpdateTable(immediate);
+                if (autoSalvagedAny)
+                {
+                    if (immediate)
+                    {
+                        UserTable.TransactionUpdate(new List<Table.TableBase>
+                        {
+                            UserTable.Get<EquipmentTable>(),
+                            UserTable.Get<HellTable>()
+                        });
+                    }
+                    else
+                    {
+                        UserTable.Get<EquipmentTable>()?.UpdateTable(false);
+                        UserTable.Get<HellTable>()?.UpdateTable(false);
+                    }
+                }
+                else
+                {
+                    UserTable.Get<EquipmentTable>().UpdateTable(immediate);
+                }
+
                 return new AddItemResult { Success = true, Requested = amount, Added = added };
             }
 
