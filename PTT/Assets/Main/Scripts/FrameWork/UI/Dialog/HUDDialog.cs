@@ -233,6 +233,17 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnClickChallenge()
         {
+            if (GrowthDungeonManager.IsGrowthDungeon(BattleSceneManager.Instance.BattleType))
+            {
+                Enum_Dungeon dungeonType = BattleSceneManager.Instance.BattleType;
+                int growthStage = GrowthDungeonManager.Instance.GetCurrentStage(dungeonType);
+                if (GrowthDungeonManager.Instance.PrepareDungeon(dungeonType, growthStage, true) == false)
+                    return;
+
+                BattleSceneManager.Instance.ReloadCurrentBattleScene();
+                return;
+            }
+
             StageManager.Instance.GetCurrentStage(out int chapter, out int stage);
 
             if (StageManager.Instance.IsStageBossBattle)
@@ -268,7 +279,7 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void OnDungeonProgressChanged(Enum_Dungeon dungeonType)
         {
-            if (dungeonType != Enum_Dungeon.StageScene)
+            if (dungeonType != Enum_Dungeon.StageScene && GrowthDungeonManager.IsGrowthDungeon(dungeonType) == false)
                 return;
 
             RefreshStageInfo();
@@ -281,6 +292,12 @@ namespace GameBerry.UI
         //------------------------------------------------------------------------------------
         private void RefreshStageInfo()
         {
+            if (GrowthDungeonManager.IsGrowthDungeon(BattleSceneManager.Instance.BattleType))
+            {
+                RefreshGrowthDungeonInfo(BattleSceneManager.Instance.BattleType);
+                return;
+            }
+
             StageManager.Instance.GetCurrentStage(out int chapter, out int stage);
             bool isBossBattle = StageManager.Instance.IsStageBossBattle;
             bool canChallenge = false;
@@ -307,6 +324,29 @@ namespace GameBerry.UI
                 _bossTimerRoot.SetActive(isBossBattle);
 
             RefreshBossTimer();
+        }
+
+        private void RefreshGrowthDungeonInfo(Enum_Dungeon dungeonType)
+        {
+            int stage = GrowthDungeonManager.Instance.GetCurrentStage(dungeonType);
+
+            if (_stageNameText != null)
+                _stageNameText.SetText($"{GrowthDungeonManager.Instance.GetDungeonDisplayName(dungeonType)} {stage}");
+
+            for (int i = 0; i < _stageSelectButtons.Count; ++i)
+            {
+                if (_stageSelectButtons[i] != null)
+                    _stageSelectButtons[i].gameObject.SetActive(false);
+            }
+
+            if (_challengeButton != null)
+                _challengeButton.gameObject.SetActive(false);
+
+            if (_challengeButtonText != null)
+                _challengeButtonText.SetText("Retry");
+
+            if (_bossTimerRoot != null)
+                _bossTimerRoot.SetActive(false);
         }
         //------------------------------------------------------------------------------------
         private void RefreshBossTimer()
@@ -337,6 +377,7 @@ namespace GameBerry.UI
                 _hellLevelText.SetText($"Hell Lv.{hellLevel}");
             }
         }
+
         //------------------------------------------------------------------------------------
     }
 }

@@ -62,6 +62,11 @@ namespace GameBerry.Managers
         public void InitBattleScene()
         {
             AddBattleScene(Enum_Dungeon.StageScene, new BattleScene_Stage());
+            AddBattleScene(Enum_Dungeon.GrowthWeapon, new BattleScene_GrowthDungeon());
+            AddBattleScene(Enum_Dungeon.GrowthExperience, new BattleScene_GrowthDungeon());
+            AddBattleScene(Enum_Dungeon.GrowthEquipment, new BattleScene_GrowthDungeon());
+            AddBattleScene(Enum_Dungeon.GrowthTraining, new BattleScene_GrowthDungeon());
+            AddBattleScene(Enum_Dungeon.GrowthEnhance, new BattleScene_GrowthDungeon());
 
             foreach (var pair in _battleScene_Dic)
             {

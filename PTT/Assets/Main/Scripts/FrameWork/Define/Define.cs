@@ -15,6 +15,21 @@ namespace GameBerry
     {
         None,
         StageScene,
+        GrowthWeapon,
+        GrowthExperience,
+        GrowthEquipment,
+        GrowthTraining,
+        GrowthEnhance,
+    }
+
+    public enum Enum_GrowthDungeonRuleType
+    {
+        None,
+        BossStun,
+        KillCountWithTimeBonus,
+        KillCountWithExplosion,
+        StackBuffThenBoss,
+        BossWeaknessCycle,
     }
 
     public enum CharacterState : byte
@@ -125,7 +140,13 @@ namespace GameBerry
         Starforce,
         WeaponSummon,
         LanternSummon,
+        DungeonWeaponTicket,
+        DungeonExperienceTicket,
+        DungeonEquipmentTicket,
+        DungeonTrainingTicket,
+        DungeonEnhanceTicket,
         Mileage,
+
 
         Max,
     }
