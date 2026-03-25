@@ -127,6 +127,34 @@ namespace GameBerry
             return (float)Math.Clamp(expInLevel / expNeeded, 0, 1);
         }
         //------------------------------------------------------------------------------------
+        public float GetCurrentExpPercent()
+        {
+            return GetExpProgress() * 100f;
+        }
+        //------------------------------------------------------------------------------------
+        public float GetExpPercentFromAmount(double amount)
+        {
+            if (amount <= 0)
+                return 0f;
+
+            int currentLevel = GetLevel();
+            int maxLevel = _levelChart.GetMaxLevel();
+            if (currentLevel >= maxLevel)
+                return 0f;
+
+            if (!_levelChart.TryGetLevelInfo(currentLevel, out PlayerLevelInfo currentInfo))
+                return 0f;
+
+            if (!_levelChart.TryGetLevelInfo(currentLevel + 1, out PlayerLevelInfo nextInfo))
+                return 0f;
+
+            double expNeeded = nextInfo.RequiredExp - currentInfo.RequiredExp;
+            if (expNeeded <= 0)
+                return 0f;
+
+            return (float)((amount / expNeeded) * 100.0);
+        }
+        //------------------------------------------------------------------------------------
         public bool IsMaxLevel()
         {
             return GetLevel() >= _levelChart.GetMaxLevel();

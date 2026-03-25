@@ -1,8 +1,16 @@
+using System;
 using System.Collections.Generic;
 using GameBerry;
 
 namespace GameBerry.Chart
 {
+    [System.Serializable]
+    public class DungeonRewardPointInfo
+    {
+        public Enum_PointType PointType;
+        public int Amount;
+    }
+
     public class DungeonRuntimeInfo
     {
         public int Stage;
@@ -34,15 +42,53 @@ namespace GameBerry.Chart
         public float BossWeakDuration;
         public float EffectRadius;
 
-        public int RewardExp;
-        public Enum_PointType RewardPointType1;
-        public int RewardPointAmount1;
-        public Enum_PointType RewardPointType2;
-        public int RewardPointAmount2;
-        public int[] RewardEquipmentItemIds;
-        public int RewardEquipmentLevelMin;
-        public int RewardEquipmentLevelMax;
-        public int RewardEquipmentCount;
+        public string RewardPoints;
+
+        [NonSerialized] private DungeonRewardPointInfo[] _rewardPointInfos;
+
+        public IReadOnlyList<DungeonRewardPointInfo> GetRewardPoints()
+        {
+            if (_rewardPointInfos == null)
+                _rewardPointInfos = DungeonRewardPointParser.Parse(RewardPoints);
+
+            return _rewardPointInfos;
+        }
+    }
+
+    internal static class DungeonRewardPointParser
+    {
+        public static DungeonRewardPointInfo[] Parse(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw))
+                return Array.Empty<DungeonRewardPointInfo>();
+
+            string[] entries = raw.Split(';', StringSplitOptions.RemoveEmptyEntries);
+            List<DungeonRewardPointInfo> rewards = new List<DungeonRewardPointInfo>(entries.Length);
+
+            for (int i = 0; i < entries.Length; ++i)
+            {
+                string[] split = entries[i].Split('=', StringSplitOptions.RemoveEmptyEntries);
+                if (split.Length != 2)
+                    continue;
+
+                string pointTypeRaw = split[0].Trim();
+                string amountRaw = split[1].Trim();
+
+                if (Enum.TryParse(pointTypeRaw, true, out Enum_PointType pointType) == false)
+                    continue;
+
+                if (int.TryParse(amountRaw, out int amount) == false || amount <= 0)
+                    continue;
+
+                rewards.Add(new DungeonRewardPointInfo
+                {
+                    PointType = pointType,
+                    Amount = amount
+                });
+            }
+
+            return rewards.ToArray();
+        }
     }
 
     public class DungeonWeaponInfo : DungeonRuntimeInfo { }
@@ -103,6 +149,7 @@ namespace GameBerry.Chart
 
             return _sortedRows[_sortedRows.Count - 1].Stage;
         }
+
     }
 
     public class DungeonWeaponChart : DungeonStageChart<DungeonWeaponInfo> { }

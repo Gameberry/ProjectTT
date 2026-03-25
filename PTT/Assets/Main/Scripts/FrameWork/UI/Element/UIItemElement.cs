@@ -23,6 +23,7 @@ namespace GameBerry.UI
         [SerializeField] private bool enableAutoRefresh = false;
 
         private ItemHandle _handle;
+        private bool _isListeningPlayerExp;
 
         private void Awake()
         {
@@ -43,6 +44,8 @@ namespace GameBerry.UI
         {
             if (_handle.itemId > 0)
                 ItemManager.Instance.RemoveItemRefreshEvent(_handle.itemId, SetStaticAmount);
+
+            UnregisterPlayerExpEvent();
         }
 
         private void OnClick()
@@ -68,7 +71,16 @@ namespace GameBerry.UI
 
         private void SetStaticAmount(long amount)
         {
-            Util.SetCommaInteger(_amount, amount);
+            if (_amount == null)
+                return;
+
+            if (IsExpItem() == false)
+            {
+                Util.SetCommaInteger(_amount, amount);
+                return;
+            }
+
+            SetExpAmountText(_handle.isMeta ? _handle.metaAmount : amount, _handle.isMeta);
         }
 
         public void Refresh()
@@ -78,6 +90,7 @@ namespace GameBerry.UI
 
         public void Bind(ItemHandle e)
         {
+            UnregisterPlayerExpEvent();
             _handle = e;
 
             int itemId = e.itemId;
@@ -108,7 +121,10 @@ namespace GameBerry.UI
                     {
                         amount = e.metaAmount;
                         _amount.gameObject.SetActive(true);
-                        Util.SetCommaInteger(_amount, amount);
+                        if (IsExpItem())
+                            SetExpAmountText(amount, true);
+                        else
+                            Util.SetCommaInteger(_amount, amount);
                     }
                     else
                         _amount.gameObject.SetActive(false);
@@ -119,7 +135,13 @@ namespace GameBerry.UI
                     {
                         amount = ItemManager.Instance.GetItemAmount(itemId);
                         _amount.gameObject.SetActive(true);
-                        Util.SetCommaInteger(_amount, amount);
+                        if (IsExpItem())
+                        {
+                            SetExpAmountText(amount, false);
+                            RegisterPlayerExpEvent();
+                        }
+                        else
+                            Util.SetCommaInteger(_amount, amount);
                     }
                     else
                         _amount.gameObject.SetActive(false);
@@ -167,6 +189,49 @@ namespace GameBerry.UI
                         _equipMark.gameObject.SetActive(false);
                 }
             }
+        }
+
+        private bool IsExpItem()
+        {
+            return _handle.itemId > 0 && ItemManager.Instance != null && ItemManager.Instance.IsExpItem(_handle.itemId);
+        }
+
+        private void RegisterPlayerExpEvent()
+        {
+            if (_isListeningPlayerExp || PlayerManager.isAlive == false)
+                return;
+
+            PlayerManager.Instance.OnExpChanged += OnPlayerExpChanged;
+            _isListeningPlayerExp = true;
+        }
+
+        private void UnregisterPlayerExpEvent()
+        {
+            if (_isListeningPlayerExp == false || PlayerManager.isAlive == false)
+                return;
+
+            PlayerManager.Instance.OnExpChanged -= OnPlayerExpChanged;
+            _isListeningPlayerExp = false;
+        }
+
+        private void OnPlayerExpChanged(double _)
+        {
+            if (_handle.isMeta || _amount == null || IsExpItem() == false)
+                return;
+
+            SetExpAmountText(0, false);
+        }
+
+        private void SetExpAmountText(long amount, bool isMeta)
+        {
+            if (_amount == null || PlayerManager.isAlive == false)
+                return;
+
+            float percent = isMeta
+                ? PlayerManager.Instance.GetExpPercentFromAmount(amount)
+                : PlayerManager.Instance.GetCurrentExpPercent();
+
+            _amount.SetText($"{percent:0.###}%");
         }
     }
 }

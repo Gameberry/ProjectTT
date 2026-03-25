@@ -22,7 +22,7 @@ namespace GameBerry.UI
         [SerializeField] private Image _chapterImage;
         [SerializeField] private TMP_Text _stageTitleText;
         [SerializeField] private UIItemElement _rewardGold;
-        [SerializeField] private TMP_Text _rewardExpText;
+        [SerializeField] private UIItemElement _rewardExp;
         [SerializeField] private TMP_Text _rewardEquipText;
         [SerializeField] private TMP_Text _rewardEquipDropRateText;
         [SerializeField] private UIItemElement _rewardItemPrefab;
@@ -215,8 +215,12 @@ namespace GameBerry.UI
                 _rewardGold.Bind(ItemHandle.ForMeta(goldItemId, info.Gold));
             }
 
-            if (_rewardExpText != null)
-                _rewardExpText.SetText($"{info.Exp:N0}");
+
+            if (_rewardExp != null)
+            {
+                int goldItemId = GameChart.Get<PointChart>()?.GetByType(Enum_PointType.Exp).ItemId ?? 0;
+                _rewardExp.Bind(ItemHandle.ForMeta(goldItemId, info.Gold));
+            }
 
             if (_rewardEquipText != null)
                 _rewardEquipText.SetText($"Lv.{info.EquipLevelMin}-{info.EquipLevelMax}");

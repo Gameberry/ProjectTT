@@ -307,49 +307,26 @@ namespace GameBerry
             if (info == null)
                 return false;
 
-            if (info.RewardExp > 0)
-                PlayerManager.Instance.AddExp(info.RewardExp);
-
-            TryGrantPointReward(info.RewardPointType1, info.RewardPointAmount1);
-            TryGrantPointReward(info.RewardPointType2, info.RewardPointAmount2);
-
-            if (info.RewardEquipmentCount > 0 &&
-                info.RewardEquipmentItemIds != null &&
-                info.RewardEquipmentItemIds.Length > 0)
-            {
-                List<int> validEquipmentIds = new List<int>();
-                for (int i = 0; i < info.RewardEquipmentItemIds.Length; ++i)
-                {
-                    int itemId = info.RewardEquipmentItemIds[i];
-                    if (itemId > 0)
-                        validEquipmentIds.Add(itemId);
-                }
-
-                int minLevel = Mathf.Max(1, info.RewardEquipmentLevelMin);
-                int maxLevel = Mathf.Max(minLevel, info.RewardEquipmentLevelMax);
-
-                for (int i = 0; i < info.RewardEquipmentCount; ++i)
-                {
-                    if (validEquipmentIds.Count <= 0)
-                        break;
-
-                    int selectedItemId = validEquipmentIds[UnityEngine.Random.Range(0, validEquipmentIds.Count)];
-                    int selectedLevel = UnityEngine.Random.Range(minLevel, maxLevel + 1);
-                    EquipmentManager.Instance.AddEquipment(selectedItemId, selectedLevel);
-                }
-            }
+            TryGrantPointRewards(info.GetRewardPoints());
 
             return true;
         }
 
-        private void TryGrantPointReward(Enum_PointType pointType, int amount)
+        private void TryGrantPointRewards(IReadOnlyList<DungeonRewardPointInfo> rewardPoints)
         {
-            if (pointType == Enum_PointType.Max || amount <= 0)
+            if (rewardPoints == null)
                 return;
 
-            int itemId = GameChart.Get<PointChart>()?.GetByType(pointType)?.ItemId ?? 0;
-            if (itemId > 0)
-                ItemManager.Instance.AddItem(itemId, amount);
+            for (int i = 0; i < rewardPoints.Count; ++i)
+            {
+                DungeonRewardPointInfo reward = rewardPoints[i];
+                if (reward == null || reward.PointType == Enum_PointType.Max || reward.Amount <= 0)
+                    continue;
+
+                int itemId = GameChart.Get<PointChart>()?.GetByType(reward.PointType)?.ItemId ?? 0;
+                if (itemId > 0)
+                    ItemManager.Instance.AddItem(itemId, reward.Amount);
+            }
         }
 
         private static bool AssignInfo<T>(T source, out DungeonRuntimeInfo info) where T : DungeonRuntimeInfo

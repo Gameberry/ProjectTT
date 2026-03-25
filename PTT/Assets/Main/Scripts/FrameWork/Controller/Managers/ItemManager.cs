@@ -79,10 +79,12 @@ namespace GameBerry
         private const string _itemDescLocalKey = "item/{0}/desc";
 
         ItemChart _itemChart;
+        PointChart _pointChart;
 
         protected override void Init()
         {
             _itemChart = GameChart.Get<ItemChart>();
+            _pointChart = GameChart.Get<PointChart>();
 
             Register(new InventoryStorageHandler());
             Register(new PointStorageHandler());
@@ -152,6 +154,26 @@ namespace GameBerry
             var meta = GetItemMeta(itemId);
             if (meta == null)
                 return new AddItemResult { Success = false, Reason = "InvalidItemId" };
+
+            if (IsExpItem(itemId))
+            {
+                bool success = PlayerManager.isAlive && PlayerManager.Instance.AddExp(amount, immediateServerUpdate);
+                AddItemResult expRes = new AddItemResult
+                {
+                    Success = success,
+                    Requested = amount,
+                    Added = success ? amount : 0,
+                    Reason = success ? string.Empty : "PlayerManagerUnavailable"
+                };
+
+                if (success)
+                {
+                    RaiseChanged(meta.StorageType);
+                    InvokeItemRefresh(itemId);
+                }
+
+                return expRes;
+            }
 
             if (!_handlers.TryGetValue(meta.StorageType, out var handler))
                 return new AddItemResult { Success = false, Reason = "NoHandler" };
@@ -295,6 +317,12 @@ namespace GameBerry
                 return 0;
 
             return handler.GetAmount(meta);
+        }
+
+        public bool IsExpItem(int itemId)
+        {
+            PointInfo pointInfo = _pointChart?.Get(itemId);
+            return pointInfo != null && pointInfo.Type == Enum_PointType.Exp;
         }
 
         private void RaiseChanged(GameBerry.Enum_ItemStorageType t)

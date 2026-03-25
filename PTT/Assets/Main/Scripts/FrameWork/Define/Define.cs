@@ -131,6 +131,7 @@ namespace GameBerry
 
     public enum Enum_PointType
     {
+        Exp,
         Dia,
         Gold,
         MagicShard,
@@ -146,7 +147,6 @@ namespace GameBerry
         DungeonTrainingTicket,
         DungeonEnhanceTicket,
         Mileage,
-
 
         Max,
     }

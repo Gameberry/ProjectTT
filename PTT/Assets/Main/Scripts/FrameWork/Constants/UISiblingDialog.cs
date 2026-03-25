@@ -27,7 +27,7 @@ namespace GameBerry.UI
         SkillManagementDialog,
 
         StageSelectDialog,
-
+        DungeonSelectDialog,
         EngravingDialog,
         EngravingProbabilityDialog,
 
@@ -69,8 +69,6 @@ namespace GameBerry.UI
         LobbyTotalExpDetailViewDialog,
 
         DungeonContentDialog,
-        DungeonSelectDialog,
-
         LobbyStaminaShopDialog,
         AdBuffDialog,
 
