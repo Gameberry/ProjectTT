@@ -149,6 +149,81 @@ namespace GameBerry
             return GetEntryTicketCount(dungeonType) >= cost;
         }
 
+        public int GetMaxClearedStage(Enum_Dungeon dungeonType)
+        {
+            DungeonProgressData data = GetProgress(dungeonType);
+            return Mathf.Clamp(data.clearedStage, 0, Mathf.Max(0, GetMaxConfiguredStage(dungeonType)));
+        }
+
+        public bool TryGetMaxClearedInfo(Enum_Dungeon dungeonType, out DungeonRuntimeInfo info)
+        {
+            int clearedStage = GetMaxClearedStage(dungeonType);
+            if (clearedStage <= 0)
+            {
+                info = null;
+                return false;
+            }
+
+            return TryGetInfo(dungeonType, clearedStage, out info);
+        }
+
+        public int GetMaxSweepCount(Enum_Dungeon dungeonType)
+        {
+            if (TryGetMaxClearedInfo(dungeonType, out _) == false)
+                return 0;
+
+            int ticketCost = GetEntryTicketCost(dungeonType, GetMaxClearedStage(dungeonType));
+            if (ticketCost <= 0)
+                return 0;
+
+            long ticketCount = GetEntryTicketCount(dungeonType);
+            if (ticketCount <= 0)
+                return 0;
+
+            return (int)(ticketCount / ticketCost);
+        }
+
+        public bool TrySweep(Enum_Dungeon dungeonType, int count, bool immediate = true)
+        {
+            if (count <= 0)
+                return false;
+
+            if (TryGetMaxClearedInfo(dungeonType, out DungeonRuntimeInfo info) == false || info == null)
+                return false;
+
+            int clearedStage = GetMaxClearedStage(dungeonType);
+            int ticketItemId = GetEntryTicketItemId(dungeonType);
+            int ticketCost = GetEntryTicketCost(dungeonType, clearedStage);
+            if (ticketItemId <= 0 || ticketCost <= 0)
+                return false;
+
+            long totalCost = (long)ticketCost * count;
+            if (GetEntryTicketCount(dungeonType) < totalCost)
+                return false;
+
+            ConsumeItemResult consumeResult = ItemManager.Instance.ConsumeItem(ticketItemId, totalCost, false);
+            if (consumeResult.Success == false)
+                return false;
+
+            TryGrantRewards(info, count);
+
+            if (immediate)
+            {
+                List<TableBase> tables = new List<TableBase>();
+                TableBase pointTable = UserTable.Get<PointTable>();
+                TableBase playerTable = UserTable.Get<PlayerTable>();
+                if (pointTable != null)
+                    tables.Add(pointTable);
+                if (playerTable != null)
+                    tables.Add(playerTable);
+
+                if (tables.Count > 0)
+                    UserTable.TransactionUpdate(tables);
+            }
+
+            return true;
+        }
+
         public bool TryGetInfo(Enum_Dungeon dungeonType, int stage, out DungeonRuntimeInfo info)
         {
             info = null;
@@ -254,6 +329,21 @@ namespace GameBerry
             return true;
         }
 
+        public bool SetClearedStage(Enum_Dungeon dungeonType, int stage, bool immediate = true)
+        {
+            if (_dungeonProgressTable == null || TryGetInfo(dungeonType, stage, out _) == false)
+                return false;
+
+            DungeonProgressData data = GetProgress(dungeonType);
+            if (stage < data.clearedStage)
+                return false;
+
+            _dungeonProgressTable.SetClearedStage(dungeonType, stage);
+            _dungeonProgressTable.UpdateTable(immediate);
+            OnGrowthDungeonProgressChanged?.Invoke(dungeonType);
+            return true;
+        }
+
         public bool PrepareDungeon(Enum_Dungeon dungeonType, int stage, bool immediate = true)
         {
             if (CanEnter(dungeonType, stage) == false)
@@ -302,19 +392,19 @@ namespace GameBerry
             return true;
         }
 
-        public bool TryGrantRewards(DungeonRuntimeInfo info)
+        public bool TryGrantRewards(DungeonRuntimeInfo info, int multiplier = 1)
         {
-            if (info == null)
+            if (info == null || multiplier <= 0)
                 return false;
 
-            TryGrantPointRewards(info.GetRewardPoints());
+            TryGrantPointRewards(info.GetRewardPoints(), multiplier);
 
             return true;
         }
 
-        private void TryGrantPointRewards(IReadOnlyList<DungeonRewardPointInfo> rewardPoints)
+        private void TryGrantPointRewards(IReadOnlyList<DungeonRewardPointInfo> rewardPoints, int multiplier)
         {
-            if (rewardPoints == null)
+            if (rewardPoints == null || multiplier <= 0)
                 return;
 
             for (int i = 0; i < rewardPoints.Count; ++i)
@@ -325,7 +415,7 @@ namespace GameBerry
 
                 int itemId = GameChart.Get<PointChart>()?.GetByType(reward.PointType)?.ItemId ?? 0;
                 if (itemId > 0)
-                    ItemManager.Instance.AddItem(itemId, reward.Amount);
+                    ItemManager.Instance.AddItem(itemId, (long)reward.Amount * multiplier, false);
             }
         }
 

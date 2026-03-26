@@ -11,9 +11,10 @@ namespace GameBerry.Table
         public int currentStage = 1;
         public int maxChapter = 1;
         public int maxStage = 1;
+        public int clearedStage = 0;
 
         public string Pack()
-            => $"{PackUtil.PackValue(dungeonType.Enum32ToInt())},{PackUtil.PackValue(currentChapter)},{PackUtil.PackValue(currentStage)},{PackUtil.PackValue(maxChapter)},{PackUtil.PackValue(maxStage)}";
+            => $"{PackUtil.PackValue(dungeonType.Enum32ToInt())},{PackUtil.PackValue(currentChapter)},{PackUtil.PackValue(currentStage)},{PackUtil.PackValue(maxChapter)},{PackUtil.PackValue(maxStage)},{PackUtil.PackValue(clearedStage)}";
 
         public void Unpack(string str)
         {
@@ -22,6 +23,7 @@ namespace GameBerry.Table
             currentStage = 1;
             maxChapter = 1;
             maxStage = 1;
+            clearedStage = 0;
 
             if (string.IsNullOrEmpty(str))
                 return;
@@ -37,6 +39,8 @@ namespace GameBerry.Table
                 maxChapter = PackUtil.UnpackValue<int>(sp[3]);
             if (sp.Length > 4)
                 maxStage = PackUtil.UnpackValue<int>(sp[4]);
+            if (sp.Length > 5)
+                clearedStage = PackUtil.UnpackValue<int>(sp[5]);
         }
     }
 
@@ -81,7 +85,8 @@ namespace GameBerry.Table
                 currentChapter = 1,
                 currentStage = 1,
                 maxChapter = 1,
-                maxStage = 1
+                maxStage = 1,
+                clearedStage = 0
             };
             _progressList.Add(data);
             return data;
@@ -105,6 +110,12 @@ namespace GameBerry.Table
             DungeonProgressData data = GetOrCreate(dungeonType);
             data.maxChapter = chapter < 1 ? 1 : chapter;
             data.maxStage = stage < 1 ? 1 : stage;
+        }
+
+        public void SetClearedStage(Enum_Dungeon dungeonType, int stage)
+        {
+            DungeonProgressData data = GetOrCreate(dungeonType);
+            data.clearedStage = stage < 0 ? 0 : stage;
         }
     }
 }

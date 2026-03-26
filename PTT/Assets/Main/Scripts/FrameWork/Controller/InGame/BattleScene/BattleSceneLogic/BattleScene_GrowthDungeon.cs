@@ -418,6 +418,7 @@ namespace GameBerry
 
             _isResolved = true;
             CleanupPlayerBuffs();
+            GrowthDungeonManager.Instance.SetClearedStage(MyEnum_BattleType, GrowthDungeonManager.Instance.GetCurrentStage(MyEnum_BattleType), false);
             GrowthDungeonManager.Instance.TryGrantRewards(_currentInfo);
 
             if (GrowthDungeonManager.Instance.TryAdvanceToNextStage(MyEnum_BattleType, false) == false)
