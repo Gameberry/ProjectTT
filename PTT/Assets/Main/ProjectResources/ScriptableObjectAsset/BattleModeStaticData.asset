@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MonsterModelIdxs: 0100000002000000
   MonsterAttackTurm: 0.3
-  SpawnCount: 5
+  SpawnCount: 2
   SpawnTurm: 10
   SpawnrouteRadius: 4
   MonsterMinSeparation: 0.5
@@ -26,15 +26,19 @@ MonoBehaviour:
   MonsterWanderIdleMaxTime: 0.6
   MapRange_Min: {x: -8, y: 0, z: -6}
   MapRange_Max: {x: 8, y: 0, z: 4}
+  StageBossPlayerSpawnPosition: {x: -2.5, y: 0, z: 0}
+  StageBossMonsterSpawnPosition: {x: 2.5, y: 0, z: 0}
+  StageBossSubMonsterSpawnRadius: 0
+  StageBossSubMonsterMinSeparation: 0
   TempPlayerStat:
   - v2Enum_Stat: 11
     value: 10
   - v2Enum_Stat: 12
     value: 100000
   - v2Enum_Stat: 14
-    value: 5
+    value: 3
   - v2Enum_Stat: 15
-    value: 1
+    value: 2
   - v2Enum_Stat: 21
     value: 0.1
   - v2Enum_Stat: 25
@@ -46,14 +50,14 @@ MonoBehaviour:
   - v2Enum_Stat: 27
     value: 1
   - v2Enum_Stat: 23
-    value: 100
+    value: 10000
   - v2Enum_Stat: 24
     value: 200
   TempMonsterStat:
   - v2Enum_Stat: 11
     value: 100
   - v2Enum_Stat: 12
-    value: 100
+    value: 200
   - v2Enum_Stat: 14
     value: 0.7
   - v2Enum_Stat: 15
@@ -79,7 +83,7 @@ MonoBehaviour:
     RequireJobLevel: 0
     RequireCharLevel: 0
     EnemyCondition: 
-    _enemyConditionIndexList: 01000000
+    _enemyConditionIndexList: 
     MyCondition: 
     _myConditionIndexList: 
     CooldownType: 0

@@ -59,23 +59,43 @@ namespace GameBerry.Managers
 
             SkeletonData skeletonData = _characterSpineModel.SkeletonData.GetSkeletonData(true);
 
+            // 스킨구조 다시 잡히기 전까지 주석
+            // for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
+            // {
+            //     Enum_SkinSlotType skinSlotType = (Enum_SkinSlotType)i;
+
+            //     Table.SkinData skinData = skinTable.GetSkinEquipData(skinSlotType);
+
+            //     string skinname = string.Empty;
+
+            //     if (skinData == null)
+            //         skinname = _characterSpineModel.DefaultSkin(skinSlotType);
+            //     else
+            //         skinname = skinChart.GetSkinName(skinData.itemId);
+
+            //     if (string.IsNullOrEmpty(skinname))
+            //         continue;
+
+            //     _runtimeSkin.AddSkin(skeletonData.FindSkin(skinname));
+            // }
+
             for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
             {
                 Enum_SkinSlotType skinSlotType = (Enum_SkinSlotType)i;
 
-                Table.SkinData skinData = skinTable.GetSkinEquipData(skinSlotType);
+                List<string> skinNames = _characterSpineModel.DefaultSkin(skinSlotType);
 
-                string skinname = string.Empty;
-
-                if (skinData == null)
-                    skinname = _characterSpineModel.DefaultSkin(skinSlotType);
-                else
-                    skinname = skinChart.GetSkinName(skinData.itemId);
-
-                if (string.IsNullOrEmpty(skinname))
+                if (skinNames == null || skinNames.Count == 0)
                     continue;
 
-                _runtimeSkin.AddSkin(skeletonData.FindSkin(skinname));
+                foreach (string skinName in skinNames)
+                {
+                    Skin part = skeletonData.FindSkin(skinName);
+                    if (part == null)
+                        continue;
+
+                    _runtimeSkin.AddSkin(part);
+                }
             }
         }
         //------------------------------------------------------------------------------------
@@ -91,21 +111,41 @@ namespace GameBerry.Managers
 
             SkeletonData skeletonData = _characterSpineModel.SkeletonData.GetSkeletonData(true);
 
+            // 스킨구조 다시 잡히기 전까지 주석
+            // for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
+            // {
+            //     Enum_SkinSlotType skinSlotType = (Enum_SkinSlotType)i;
+
+            //     string skinname = string.Empty;
+
+            //     if (skindata.ContainsKey(skinSlotType) == true)
+            //         skinname = skinChart.GetSkinName(skindata[skinSlotType]);
+            //     else
+            //         skinname = _characterSpineModel.DefaultSkin(skinSlotType);
+
+            //     if (string.IsNullOrEmpty(skinname))
+            //         continue;
+
+            //     skin.AddSkin(skeletonData.FindSkin(skinname));
+            // }
+
             for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
             {
                 Enum_SkinSlotType skinSlotType = (Enum_SkinSlotType)i;
 
-                string skinname = string.Empty;
+                List<string> skinNames = _characterSpineModel.DefaultSkin(skinSlotType);
 
-                if (skindata.ContainsKey(skinSlotType) == true)
-                    skinname = skinChart.GetSkinName(skindata[skinSlotType]);
-                else
-                    skinname = _characterSpineModel.DefaultSkin(skinSlotType);
-
-                if (string.IsNullOrEmpty(skinname))
+                if (skinNames == null || skinNames.Count == 0)
                     continue;
 
-                skin.AddSkin(skeletonData.FindSkin(skinname));
+                foreach (string skinName in skinNames)
+                {
+                    Skin part = skeletonData.FindSkin(skinName);
+                    if (part == null)
+                        continue;
+
+                    _runtimeSkin.AddSkin(part);
+                }
             }
         }
         //------------------------------------------------------------------------------------

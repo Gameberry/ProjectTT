@@ -21,16 +21,12 @@ namespace GameBerry
         public string animationName;
     }
 
-
-    /// <summary>
-    /// 슬롯별 기본 스킨 정보 (캐릭터가 처음 입고 나오는 코디)
-    /// </summary>
     [System.Serializable]
     public class SpineDefaultSlotSkin
     {
         public Enum_SkinSlotType Slot;
         [SpineSkin(dataField = "SkeletonData")]
-        public string SkinName;
+        public List<string> SkinName;
     }
 
     [System.Serializable]
@@ -42,12 +38,6 @@ namespace GameBerry
 
         public string Name;
 
-
-
-        /// <summary>
-        /// 이 모델에서 사용 가능한 모든 스킨 이름 목록
-        /// (OnValidate에서 자동 채움)
-        /// </summary>
         [SpineSkin(dataField = "SkeletonData")]
         public List<string> SkinList = new List<string>();
 
@@ -56,19 +46,15 @@ namespace GameBerry
 
         public List<SpineModelStateAnimationNameData> AnimationState = new List<SpineModelStateAnimationNameData>();
 
-        /// <summary>
-        /// 캐릭터가 기본으로 장착하고 있을 슬롯별 스킨
-        /// 예) Body=skin_body_01, Hair=skin_hair_01 ...
-        /// 인스펙터에서 모델마다 설정해두면 됨.
-        /// </summary>
+        [ArrayElementTitle("Slot")]
         public List<SpineDefaultSlotSkin> DefaultSlotSkins =
             new List<SpineDefaultSlotSkin>();
 
-        public string DefaultSkin(Enum_SkinSlotType skinSlotType)
+        public List<string> DefaultSkin(Enum_SkinSlotType skinSlotType)
         {
             SpineDefaultSlotSkin spineDefaultSlotSkin = DefaultSlotSkins.Find(x => x.Slot == skinSlotType);
             if (spineDefaultSlotSkin == null)
-                return string.Empty;
+                return null;
 
             return spineDefaultSlotSkin.SkinName;
         }
@@ -99,24 +85,20 @@ namespace GameBerry
                 if (skeletonData == null)
                     continue;
 
-                // 이름
                 spineModelData.Name = spineModelData.SkeletonData.name.ToLower();
 
-                // 사용 가능한 스킨 목록 갱신
                 spineModelData.SkinList.Clear();
                 foreach (var skin in skeletonData.Skins)
                 {
                     if (skin == null || string.IsNullOrEmpty(skin.Name))
                         continue;
 
-                    // default 류는 리스트에서 제외 (원하면 포함해도 됨)
                     if (skin.Name.Contains("default"))
                         continue;
 
                     spineModelData.SkinList.Add(skin.Name);
                 }
 
-                // 애니메이션 목록 갱신
                 spineModelData.AnimationList.Clear();
                 spineModelData.AnimationList_Dic.Clear();
                 foreach (var animation in skeletonData.Animations)
@@ -134,22 +116,25 @@ namespace GameBerry
                     spineModelData.AnimationList_Dic[data.stateName] = data;
                 }
 
-                // DefaultSlotSkins은 인스펙터에서 수동 세팅.
-                // 여기서는 유효성만 간단히 체크.
                 if (spineModelData.DefaultSlotSkins != null)
                 {
                     foreach (var slotSkin in spineModelData.DefaultSlotSkins)
                     {
-                        if (slotSkin == null || string.IsNullOrEmpty(slotSkin.SkinName))
+                        if (slotSkin == null || slotSkin.SkinName == null || slotSkin.SkinName.Count == 0)
                             continue;
 
-                        // 존재하지 않는 스킨이면 경고만 (필요하면 자동 수정 로직 넣어도 됨)
 #if UNITY_EDITOR
-                        if (!spineModelData.SkinList.Contains(slotSkin.SkinName))
+                        foreach (string skinName in slotSkin.SkinName)
                         {
-                            Debug.LogWarning(
-                                $"[SpineModelAsset] {spineModelData.Name} 의 DefaultSlotSkin '{slotSkin.SkinName}' 이(가) 실제 스켈레톤 스킨 목록에 없습니다.",
-                                this);
+                            if (string.IsNullOrEmpty(skinName))
+                                continue;
+
+                            if (!spineModelData.SkinList.Contains(skinName))
+                            {
+                                Debug.LogWarning(
+                                    $"[SpineModelAsset] {spineModelData.Name} 의 DefaultSlotSkin [{slotSkin.Slot}] '{skinName}' 이(가) 실제 스켈레톤 스킨 목록에 없습니다.",
+                                    this);
+                            }
                         }
 #endif
                     }

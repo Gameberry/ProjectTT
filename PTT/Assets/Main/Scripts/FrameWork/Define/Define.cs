@@ -42,7 +42,7 @@ namespace GameBerry
         Dead,
 
         Skill,
-
+        Tran,
         Max,
     }
 
@@ -321,6 +321,8 @@ namespace GameBerry
         Face,
         Back,
 
+        Helmet,
+        Robe,
         Max,
     }
 

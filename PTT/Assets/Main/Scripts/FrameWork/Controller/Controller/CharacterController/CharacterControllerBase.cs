@@ -7,6 +7,7 @@ using Spine.Unity;
 using GameBerry.Chart;
 using UnityEngine.TextCore.Text;
 using UnityEngine.AdaptivePerformance.Provider;
+using System.CodeDom.Compiler;
 
 namespace GameBerry
 {
@@ -969,6 +970,9 @@ namespace GameBerry
         { // �ܺο��� ���� ��
             ChangeState(state);
         }
+        
+        public float mymelskjte = 1.0f;
+
         //------------------------------------------------------------------------------------
         /// <summary>
         /// 캐릭터 상태 변경 (내부 구현)
@@ -989,7 +993,7 @@ namespace GameBerry
             switch (state)
             {
                 case CharacterState.Attack:
-                case CharacterState.Skill:
+                //case CharacterState.Skill:
                     {
                         _mySkeletonAnimationHandler?.SetAnimationSpeed(FinalAttackSpeed);
                         break;
@@ -998,7 +1002,7 @@ namespace GameBerry
                     {
 
 
-                        _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterMoveSpeed);
+                        _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterMoveSpeed * mymelskjte);
                         break;
                     }
                 default:

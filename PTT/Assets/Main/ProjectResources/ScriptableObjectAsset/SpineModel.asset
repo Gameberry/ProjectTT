@@ -14,49 +14,87 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpineModelDatas:
   - ResourceIndex: 0
-    SkeletonData: {fileID: 11400000, guid: 516b32aa46ea67642a0981c3005e638c, type: 2}
-    Name: basic_setting_00_cha_skeletondata
+    SkeletonData: {fileID: 11400000, guid: 81c33bce10cbf954e99e6aadded7a583, type: 2}
+    Name: dh_main_spine_set_skeletondata
     SkinList:
-    - Body/Body_000
-    - Body/Body_001
-    - Hair/Hair_001
-    - Weapon/Weapon_000
+    - body/beard/000
+    - body/beard/001
+    - body/bottom/000
+    - body/bottom/001
+    - body/face/000
+    - body/hair/000
+    - body/hair/001
+    - body/top/000
+    - body/top/001
+    - helmet/000
+    - helmet/001
+    - robe/000
+    - robe/001
+    - trans/000
+    - trans/001
+    - weapons/L_weapon/000
+    - weapons/L_weapon/001
+    - weapons/R_weapon/000
+    - weapons/R_weapon/001
     AnimationList:
     - stateName: Attack_01
-    - stateName: Attack_01~05
+    - stateName: Attack_01_trans
     - stateName: Attack_02
+    - stateName: Attack_02_trans
     - stateName: Attack_03
-    - stateName: Attack_set_01
-    - stateName: Attack_set_02
-    - stateName: Attack_s_01
-    - stateName: Attack_s_02
-    - stateName: Attack_s_03
-    - stateName: Attack_s_04
-    - stateName: Attack_s_05
-    - stateName: Attack_s_06
-    - stateName: Idle_1
-    - stateName: pose_1
-    - stateName: Run
-    - stateName: Skill_dash
-    - stateName: spin
+    - stateName: Attack_03_trans
+    - stateName: Attack_04
+    - stateName: Attack_04_trans
+    - stateName: attack_30_01
+    - stateName: Attack_combo_1+2
+    - stateName: Attack_combo_1+2_trans
+    - stateName: Attack_combo_1+4
+    - stateName: Attack_combo_1+4_trans
+    - stateName: Idle
+    - stateName: Idle_trans
+    - stateName: ready_01_tans
+    - stateName: Run_1
+    - stateName: Run_trans
+    - stateName: Skill_01
+    - stateName: Skill_01_backup
+    - stateName: Skill_01_trans
+    - stateName: Skill_01_trans_backup
     AnimationState:
     - characterState: 1
-      animationName: Idle_1
+      animationName: Idle
     - characterState: 2
-      animationName: Run
+      animationName: Run_1
     - characterState: 3
-      animationName: Attack_s_01
+      animationName: Attack_combo_1+4
     - characterState: 4
-      animationName: spin
+      animationName: Idle
     - characterState: 5
-      animationName: Idle_1
+      animationName: Idle
+    - characterState: 7
+      animationName: ready_01_tans
+    - characterState: 6
+      animationName: Skill_01
     DefaultSlotSkins:
     - Slot: 0
-      SkinName: Body/Body_001
+      SkinName:
+      - body/bottom/001
+      - body/hair/001
+      - body/top/001
+    - Slot: 3
+      SkinName:
+      - body/face/000
     - Slot: 1
-      SkinName: Hair/Hair_001
+      SkinName:
+      - body/hair/001
+    - Slot: 6
+      SkinName:
+      - robe/000
+      - trans/000
+      - helmet/001
     - Slot: 2
-      SkinName: Weapon/Weapon_000
+      SkinName:
+      - weapons/L_weapon/001
+      - weapons/R_weapon/001
   - ResourceIndex: 97
     SkeletonData: {fileID: 11400000, guid: c616e659c39894c4da3deb9455a9a9f7, type: 2}
     Name: mon_skull_skeletondata
@@ -83,7 +121,8 @@ MonoBehaviour:
       animationName: Idle
     DefaultSlotSkins:
     - Slot: 0
-      SkinName: 00
+      SkinName:
+      - 00
   - ResourceIndex: 98
     SkeletonData: {fileID: 11400000, guid: c616e659c39894c4da3deb9455a9a9f7, type: 2}
     Name: mon_skull_skeletondata
@@ -110,7 +149,8 @@ MonoBehaviour:
       animationName: Idle
     DefaultSlotSkins:
     - Slot: 0
-      SkinName: 01
+      SkinName:
+      - 01
   - ResourceIndex: 99
     SkeletonData: {fileID: 11400000, guid: c616e659c39894c4da3deb9455a9a9f7, type: 2}
     Name: mon_skull_skeletondata
@@ -137,7 +177,8 @@ MonoBehaviour:
       animationName: Idle
     DefaultSlotSkins:
     - Slot: 0
-      SkinName: 02
+      SkinName:
+      - 02
   - ResourceIndex: 100
     SkeletonData: {fileID: 11400000, guid: 60ea6fc91aedd114b8bc0c58c8d44cc4, type: 2}
     Name: lamp_skeletondata
@@ -160,4 +201,5 @@ MonoBehaviour:
       animationName: Idle
     DefaultSlotSkins:
     - Slot: 0
-      SkinName: default
+      SkinName:
+      - default

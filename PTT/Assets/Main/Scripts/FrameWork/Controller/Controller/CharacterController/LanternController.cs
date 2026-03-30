@@ -424,15 +424,19 @@ namespace GameBerry
             bool hasAny = false;
             for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
             {
-                string skinName = modelData.DefaultSkin((Enum_SkinSlotType)i);
-                if (string.IsNullOrEmpty(skinName))
+                List<string> skinNames = modelData.DefaultSkin((Enum_SkinSlotType)i);
+                if (skinNames == null || skinNames.Count == 0)
                     continue;
 
-                Skin part = skeletonData.FindSkin(skinName);
-                if (part == null)
-                    continue;
+                foreach (string skinName in skinNames)
+                {
+                    Skin part = skeletonData.FindSkin(skinName);
+                    if (part == null)
+                        continue;
 
-                skin.AddSkin(part);
+                    skin.AddSkin(part);
+                }
+
                 hasAny = true;
             }
 

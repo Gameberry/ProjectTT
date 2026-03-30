@@ -25,7 +25,8 @@ namespace GameBerry
                 return;
             }
 
-            _attakParticle?.gameObject.SetActive(false);
+            if(_attakParticle != null)
+                _attakParticle.gameObject.SetActive(false);
             
             var caster = _skillProjectilePlayer.CharacterControllerBase;
 
@@ -66,8 +67,11 @@ namespace GameBerry
 
             if (name.Contains("AniAction"))
             {
-                _attakParticle?.gameObject.SetActive(true);
-                _attakParticle?.Play();
+                if(_attakParticle != null)
+                {
+                    _attakParticle?.gameObject.SetActive(true);
+                    _attakParticle?.Play();
+                }
             }
         }
         //------------------------------------------------------------------------------------

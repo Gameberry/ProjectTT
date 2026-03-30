@@ -211,7 +211,7 @@ namespace GameBerry
         public override void DeadMonster(MonsterController monsterController)
         {
             GiveStageKillRewards();
-            TryDropStageEquipment();
+            //TryDropStageEquipment();
         }
 
         private void OnDeadBossBattleMonster(MonsterController monsterController)

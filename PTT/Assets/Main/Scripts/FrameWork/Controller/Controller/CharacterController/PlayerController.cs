@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using CodeStage.AntiCheat.ObscuredTypes;
 using GameBerry.Chart;
+using Spine;
+using Spine.Unity;
 
 namespace GameBerry
 {
@@ -71,6 +73,34 @@ namespace GameBerry
         private readonly Dictionary<MonsterController, AttackSlotReservation> _monsterSlotReservations = new Dictionary<MonsterController, AttackSlotReservation>();
         private readonly Dictionary<int, MonsterController> _occupiedSlots = new Dictionary<int, MonsterController>();
         private readonly Dictionary<MonsterController, float> _monsterSlotAssignTimes = new Dictionary<MonsterController, float>();
+
+        private bool _transMode = false;
+        private string _transAniName = "tans_ready_01";
+
+
+        [Header("Spine")]
+        [SerializeField] private string _dashAnimationName = "Skill_dash";
+        [SerializeField] private int _trackIndex = 0;
+        [SerializeField] private string _eventDashStart = "Dash_Start";
+        [SerializeField] private string _eventDashEnd = "Dash_End";
+
+        [Header("Dash")]
+        [SerializeField] private float _stopDistance = 0.1f;         // 타겟에 딱 붙지 않게 유지할 거리
+        [SerializeField] private bool _clampToMapRange = true;
+
+        [Header("VFX / Attack")]
+        [SerializeField] private ParticleSystem _attakParticle;
+
+
+        private Coroutine _moveRoutine;
+        [SerializeField] private bool _dashActive;
+        private bool _released;
+
+        private Rigidbody _rb;
+
+        private Vector3 _startPos;
+        private Vector3 _endPos;
+        private Vector3 _targetPosCached;
 
         //------------------------------------------------------------------------------------
         public override void Init()
@@ -233,6 +263,16 @@ namespace GameBerry
                 ChangeState(CharacterState.Run);
                 return;
             }
+
+            if (Input.GetKey(KeyCode.J))
+            {
+                PlayTransMode();
+            }
+
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                _transMode = false;
+            }
 #endif
 
             if (CharacterState == CharacterState.Idle || CharacterState == CharacterState.Run)
@@ -267,21 +307,33 @@ namespace GameBerry
                     SkillInfo selectAttackData = _currentAttackData;
 
                     CharacterState characterState = _currentAttackData == _nextSkillData ? CharacterState.Skill : CharacterState.Attack;
-                    if(_currentSkillAction != null)
+                    if (_currentSkillAction != null)
                     {
                         if (characterState == CharacterState.Skill)
                             _currentSkillAction.Release();
 
                         _currentSkillAction = null;
                     }
-                    
-                    if (string.IsNullOrEmpty(_currentAttackData.AnimationName) == false)
-                    { 
-                        ChangeState(characterState, false);
-                        PlayAnimation_AniName(_currentAttackData.AnimationName);
-                    }
-                    else
+
+                    // if (string.IsNullOrEmpty(_currentAttackData.AnimationName) == false)
+                    // {
+                    //     ChangeState(characterState, false);
+                    //     PlayAnimation_AniName(_currentAttackData.AnimationName);
+                    // }
+                    // else
+                    //     ChangeState(characterState);
+
+
+                    if (characterState == CharacterState.Skill)
                         ChangeState(characterState);
+                    else
+                    {
+                        ChangeState(characterState, false);
+                        if (_transMode == false)
+                            PlayAnimation_AniName(_currentAttackData.AnimationName);
+                        else
+                            PlayAnimation_AniName($"{_currentAttackData.AnimationName}_trans");
+                    }
 
                     if (characterState == CharacterState.Skill)
                         _currentSkillAction = _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), AttackTarget);
@@ -289,6 +341,11 @@ namespace GameBerry
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                 }
             }
+        }
+        //------------------------------------------------------------------------------------
+        private void PlayTransMode()
+        {
+            ChangeState(CharacterState.Tran);
         }
         //------------------------------------------------------------------------------------
         protected override void SpineAnimationEvent(string aniName, string eventName)
@@ -353,6 +410,14 @@ namespace GameBerry
                     }
 
                 }
+                else if (eventName == _eventDashStart)
+                {
+                    BeginDashOnEventStart();   // 여기서 actualInterval 계산 후 코루틴 시작
+                }
+                else if (eventName == _eventDashEnd)
+                {
+                    EndDashOnEventEnd();       // 여기서 스냅 + 마무리
+                }
                 else if (eventName.Contains("End"))
                     ReleaseAttack();
             }
@@ -373,16 +438,16 @@ namespace GameBerry
                         return;
                     }
 
-                    if (_currentAttackData != null && AttackTarget != null)
-                    {
-                        float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
-                        if (distance > _currentAttackData.AttackRange && _blockSkill == false)
-                        {
-                            ReleaseAttack();
+                    // if (_currentAttackData != null && AttackTarget != null)
+                    // {
+                    //     float distance = MathDatas.GetDistance(transform.position, _attackTarget.transform.position);
+                    //     if (distance > _currentAttackData.AttackRange && _blockSkill == false)
+                    //     {
+                    //         ReleaseAttack();
 
-                            return;
-                        }
-                    }
+                    //         return;
+                    //     }
+                    // }
 
                     ChangeCharacterLookAtDirection_Target(AttackTarget.transform);
                     PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), transform.position, AttackTarget);
@@ -398,6 +463,37 @@ namespace GameBerry
                     ReleaseAttack();
                 }
             }
+            else if (CharacterState == CharacterState.Tran)
+            {
+                if (eventName.Contains("End"))
+                {
+                    _transMode = true;
+                    ChangeState(CharacterState.Idle);
+                }
+            }
+        }
+        //------------------------------------------------------------------------------------
+        protected override void PlayAnimation(CharacterState state)
+        {
+            if (_transMode == false)
+            {
+                base.PlayAnimation(state);
+                return;
+            }
+
+            string aniname = string.Empty;
+            if (state == CharacterState.Skill)
+            {
+                aniname = "Skill_01_trans";
+            }
+            else
+            {
+                aniname = $"{state}_trans";
+            }
+
+            Debug.Log($"Play Animation : {aniname}");
+
+            PlayAnimation_AniName(aniname);
         }
         //------------------------------------------------------------------------------------
         protected override void ReleaseAttack()
@@ -409,10 +505,226 @@ namespace GameBerry
 
             _currentSkillAction = null;
 
+            if (_dashActive)
+            {
+                _dashActive = false;
+                StopMoveRoutine();
+                SnapToEndPos();
+            }
+
             ChangeState(CharacterState.Idle);
             if (_refreshAggro == true)
                 SetNewTarget();
         }
+
+        private void BeginDashOnEventStart()
+        {
+            if (_released) return;
+            if (_dashActive) return;
+
+            var caster = this;
+
+            // 타겟 위치 캐시
+            _targetPosCached = (_attackTarget != null) ? _attackTarget.transform.position : transform.position;
+            _targetPosCached.y = 0f;
+
+            _startPos = GetCasterPos();
+            _startPos.y = 0f;
+
+            Vector3 toTarget = _targetPosCached - _startPos;
+            if (toTarget.sqrMagnitude < 0.0001f)
+            {
+                // 방향이 애매하면 forward로 (y=0 평면)
+                toTarget = caster.transform.forward;
+                toTarget.y = 0f;
+            }
+
+            Vector3 dir = toTarget.normalized;
+
+            float stopDist = Mathf.Max(0f, _stopDistance);
+            float distToTarget = Vector3.Distance(_startPos, _targetPosCached);
+
+            // 이미 충분히 가까우면 이동 없이 endPos=startPos
+            if (distToTarget <= stopDist + 0.0001f)
+            {
+                _endPos = _startPos;
+                _dashActive = true;
+                return;
+            }
+
+            _endPos = _targetPosCached - dir * stopDist;
+
+            if (_clampToMapRange)
+                ClampToMapRange(ref _endPos);
+
+            // dash_start ~ dash_end 실제 간격(초) 가져오기 (TimeScale 반영)
+            float dashMoveDuration = GetActualEventIntervalSeconds(
+                GetSkeletonAnimation(), _trackIndex, _eventDashStart, _eventDashEnd,
+                fallbackSeconds: 0.2f
+            );
+
+            _dashActive = true;
+
+            StopMoveRoutine();
+            _moveRoutine = StartCoroutine(CoMoveDash(dashMoveDuration));
+        }
+
+        private IEnumerator CoMoveDash(float duration)
+        {
+            duration = Mathf.Max(0.0001f, duration);
+
+            float elapsed = 0f;
+            Vector3 start = _startPos;
+            Vector3 end = _endPos;
+
+            while (!_released && _dashActive)
+            {
+                elapsed += Time.deltaTime;
+
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                // Ease-Out (Quadratic)
+                float easedT = 1f - (1f - t) * (1f - t);
+
+                Vector3 nextPos = Vector3.LerpUnclamped(start, end, easedT);
+
+                if (_clampToMapRange)
+                    ClampToMapRange(ref nextPos);
+
+                SetCasterPos(nextPos);
+
+                // duration은 이벤트 간격이라 보통 여기서 정확히 끝나지만,
+                // 실제 종료는 dash_end에서 스냅으로 “확정”한다.
+                if (t >= 1f)
+                {
+                    // endPos 유지
+                    SetCasterPos(end);
+                }
+
+                yield return null;
+            }
+        }
+
+        private void EndDashOnEventEnd()
+        {
+            if (_released) return;
+
+            _dashActive = false;
+
+            StopMoveRoutine();
+
+            // dash_end 시점에 “확정 도착”
+            SnapToEndPos();
+        }
+
+        private void SnapToEndPos()
+        {
+            Vector3 pos = _endPos;
+            if (_clampToMapRange)
+                ClampToMapRange(ref pos);
+
+            SetCasterPos(pos);
+        }
+
+        private void StopMoveRoutine()
+        {
+            if (_moveRoutine != null)
+            {
+                StopCoroutine(_moveRoutine);
+                _moveRoutine = null;
+            }
+        }
+
+        private Vector3 GetCasterPos()
+        {
+            var caster = this;
+            if (_rb != null) return _rb.position;
+            return caster.transform.position;
+        }
+
+        private void SetCasterPos(Vector3 pos)
+        {
+            var caster = this;
+
+            // y는 원래 값 유지(너 프로젝트 평면이 x/z인 경우가 많아서)
+            pos.y = caster.transform.position.y;
+
+            if (_rb != null) _rb.MovePosition(pos);
+            else caster.transform.position = pos;
+        }
+
+        private void ClampToMapRange(ref Vector3 pos)
+        {
+            var data = StaticResource.Instance.GetBattleModeStaticData();
+            Vector3 minpos = data.MapRange_Min;
+            Vector3 maxpos = data.MapRange_Max;
+
+            if (pos.x < minpos.x) pos.x = minpos.x;
+            else if (pos.x > maxpos.x) pos.x = maxpos.x;
+
+            if (pos.z < minpos.z) pos.z = minpos.z;
+            else if (pos.z > maxpos.z) pos.z = maxpos.z;
+        }
+
+        /// <summary>
+        /// 현재 track에 재생 중인 애니에서 start/end 이벤트의 로컬 시간 차이를 찾고,
+        /// entry.TimeScale + state.TimeScale을 반영해서 실제 초(actual seconds)로 변환해 반환.
+        /// 못 찾으면 fallback 반환.
+        /// </summary>
+        private static float GetActualEventIntervalSeconds(
+            SkeletonAnimation skeletonAnim,
+            int trackIndex,
+            string startEventName,
+            string endEventName,
+            float fallbackSeconds)
+        {
+            if (skeletonAnim == null) return fallbackSeconds;
+
+            TrackEntry entry = skeletonAnim.AnimationState.GetCurrent(trackIndex);
+            if (entry?.Animation == null) return fallbackSeconds;
+
+            float localStart = -1f;
+            float localEnd = -1f;
+
+            var timelines = entry.Animation.Timelines;
+            if (timelines != null)
+            {
+                for (int i = 0; i < timelines.Count; i++)
+                {
+                    if (timelines.Items[i] is not EventTimeline et)
+                        continue;
+
+                    float[] times = et.Frames;
+                    Spine.Event[] events = et.Events;
+
+                    for (int k = 0; k < events.Length; k++)
+                    {
+                        var ev = events[k];
+                        if (ev?.Data == null) continue;
+
+                        string n = ev.Data.Name;
+                        if (n == startEventName) localStart = times[k];
+                        else if (n == endEventName) localEnd = times[k];
+                    }
+                }
+            }
+
+            if (localStart < 0f || localEnd < 0f) return fallbackSeconds;
+
+            float localInterval = Mathf.Max(0f, localEnd - localStart);
+
+            float stateScale = skeletonAnim.AnimationState.TimeScale;
+            float entryScale = entry.TimeScale;
+
+            float effectiveScale = stateScale * entryScale;
+            if (effectiveScale <= 0.0001f) effectiveScale = 1f;
+
+            float actualInterval = localInterval / effectiveScale;
+            if (actualInterval <= 0.0001f) actualInterval = fallbackSeconds;
+
+            return actualInterval;
+        }
+
         //------------------------------------------------------------------------------------
         public void SetAttackData()
         {

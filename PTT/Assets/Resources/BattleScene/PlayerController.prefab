@@ -63821,7 +63821,12 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ee674001c144df649a25315804363134, type: 2}
+  - {fileID: 2100000, guid: b0cf363707132c742b830a9f63f524ad, type: 2}
+  - {fileID: 2100000, guid: cd10c35767b857b4ca6d064b66949f4d, type: 2}
+  - {fileID: 2100000, guid: b0cf363707132c742b830a9f63f524ad, type: 2}
+  - {fileID: 2100000, guid: 6b3cf13d55f1751408ff21d762f16f59, type: 2}
+  - {fileID: 2100000, guid: b0cf363707132c742b830a9f63f524ad, type: 2}
+  - {fileID: 2100000, guid: 6b3cf13d55f1751408ff21d762f16f59, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -63855,8 +63860,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: 6337ed9bd86ad1548af75366439b0b8d, type: 2}
-  initialSkinName: Body/Body_001
+  skeletonDataAsset: {fileID: 11400000, guid: 6f0125c68648afd48a632aef697dbba8, type: 2}
+  initialSkinName: body/bottom/000
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
@@ -93113,6 +93118,7 @@ Transform:
   - {fileID: 4851027155526547501}
   - {fileID: 3954505583991081914}
   - {fileID: 3953214167934319981}
+  - {fileID: 6693968634177778261}
   - {fileID: 1475411721340147306}
   - {fileID: 5495166385846719416}
   - {fileID: 338217994498704660}
@@ -132271,7 +132277,7 @@ MonoBehaviour:
     Projectile: {fileID: 7244319292722202480}
   - Index: 5
     ProjectileRoot: {fileID: 2471590077886810502}
-    Projectile: {fileID: 6804815388947500691}
+    Projectile: {fileID: 8655862385807343921}
   - Index: 6
     ProjectileRoot: {fileID: 2471590077886810502}
     Projectile: {fileID: 6731690523430135343}
@@ -254739,6 +254745,7 @@ MonoBehaviour:
   _maxHP: 0
   _currentHP: 0
   _aniControllerSpeed: 1
+  mymelskjte: 0.5
   _attackRange: 1.5
   _defaultAttackData:
     SkillId: 0
@@ -254763,8 +254770,7 @@ MonoBehaviour:
     TargetCount: 1
     HitRange: 1.5
   _attackAnimations:
-  - Attack_set_01
-  - Attack_set_02
+  - Attack_combo_1+4
   _attackAniSelectIndex: -1
   _refreshAggro: 1
   _frontRowSlotCount: 20
@@ -254774,6 +254780,16 @@ MonoBehaviour:
   _overflowWaitRadiusOffset: 1
   _drawAttackSlotGizmos: 1
   _attackSlotGizmoSphereRadius: 0.12
+  _slotReassignCooldown: 0.75
+  _slotStealMinDistanceDelta: 0.2
+  _dashAnimationName: Skill_dash
+  _trackIndex: 0
+  _eventDashStart: Dash_Start
+  _eventDashEnd: Dash_End
+  _stopDistance: 0.1
+  _clampToMapRange: 1
+  _attakParticle: {fileID: 0}
+  _dashActive: 0
 --- !u!114 &5437201128437125724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318226,6 +318242,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9075032051780752504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4309482688839053617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6693968634177778261}
+  - component: {fileID: 8655862385807343921}
+  m_Layer: 11
+  m_Name: MeleeCriAttack1 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6693968634177778261
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309482688839053617}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2471590077886810502}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8655862385807343921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309482688839053617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0be29dffd8451f64ebffc56914722c86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attakParticle: {fileID: 0}
 --- !u!1 &4418190170806527878
 GameObject:
   m_ObjectHideFlags: 0
@@ -470008,6 +470069,8 @@ MonoBehaviour:
   - CustomParam: AniAction_02_4
     ParticleSystem: {fileID: 5190678664617319632}
   - CustomParam: AniAction_02_5
+    ParticleSystem: {fileID: 6728284206604183506}
+  - CustomParam: AniAction
     ParticleSystem: {fileID: 6728284206604183506}
   _attakParticle: {fileID: 0}
   _hitDuraion: 1
