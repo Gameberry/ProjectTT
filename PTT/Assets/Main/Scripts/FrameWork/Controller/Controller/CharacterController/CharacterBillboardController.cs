@@ -58,7 +58,7 @@ namespace GameBerry
             if (characterControllerBase == null)
                 return;
 
-            lookDir = characterControllerBase.LookDirection == Enum_LookDirection.Left ? targetCamera.transform.forward : -targetCamera.transform.forward;
+            lookDir = characterControllerBase.LookDirection == Enum_LookDirection.Left ? -targetCamera.transform.forward : targetCamera.transform.forward;
 
 
             if (lookDir.sqrMagnitude < 0.0001f)

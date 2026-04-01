@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using CodeStage.AntiCheat.ObscuredTypes;
 using GameBerry.Chart;
-using Spine;
-using Spine.Unity;
 
 namespace GameBerry
 {
@@ -124,9 +122,8 @@ namespace GameBerry
             _comboController.Init(this);
             _comboController.SetVisibleComboUI();
 
-            _currentSpineModelData = Managers.SkinManager.Instance.GetPlayerSpineModelData();
-            SetSpineModelData(_currentSpineModelData);
             RefreshPlayerSkin(null);
+            SetAnimationResourceKey("DarkKnight");
 
             // ============================================================
             // 스킬 시스템 초기화 (3줄 추가!)
@@ -168,7 +165,6 @@ namespace GameBerry
         //------------------------------------------------------------------------------------
         private void RefreshPlayerSkin(Event.RefreshPlayerSkinMsg msg)
         {
-            SetSpineSkin(Managers.SkinManager.Instance.GetRuntimeSkin());
         }
         //------------------------------------------------------------------------------------
         public override void OnKillCharacter(CharacterControllerBase characterControllerBase)
@@ -323,17 +319,17 @@ namespace GameBerry
                     // else
                     //     ChangeState(characterState);
 
-
-                    if (characterState == CharacterState.Skill)
-                        ChangeState(characterState);
-                    else
-                    {
-                        ChangeState(characterState, false);
-                        if (_transMode == false)
-                            PlayAnimation_AniName(_currentAttackData.AnimationName);
-                        else
-                            PlayAnimation_AniName($"{_currentAttackData.AnimationName}_trans");
-                    }
+                    ChangeState(characterState);
+                    // if (characterState == CharacterState.Skill)
+                    //     ChangeState(characterState);
+                    // else
+                    // {
+                    //     ChangeState(characterState, false);
+                    //     if (_transMode == false)
+                    //         PlayAnimation_AniName(_currentAttackData.AnimationName);
+                    //     else
+                    //         PlayAnimation_AniName($"{_currentAttackData.AnimationName}_trans");
+                    // }
 
                     if (characterState == CharacterState.Skill)
                         _currentSkillAction = _skillPlayer.PlaySkill(selectAttackData.GetAttackStruct(this, SkillManager.Instance.GetSkillLevel(selectAttackData.SkillId)), AttackTarget);
@@ -558,10 +554,7 @@ namespace GameBerry
                 ClampToMapRange(ref _endPos);
 
             // dash_start ~ dash_end 실제 간격(초) 가져오기 (TimeScale 반영)
-            float dashMoveDuration = GetActualEventIntervalSeconds(
-                GetSkeletonAnimation(), _trackIndex, _eventDashStart, _eventDashEnd,
-                fallbackSeconds: 0.2f
-            );
+            float dashMoveDuration = 0.2f;
 
             _dashActive = true;
 
@@ -671,60 +664,6 @@ namespace GameBerry
         /// entry.TimeScale + state.TimeScale을 반영해서 실제 초(actual seconds)로 변환해 반환.
         /// 못 찾으면 fallback 반환.
         /// </summary>
-        private static float GetActualEventIntervalSeconds(
-            SkeletonAnimation skeletonAnim,
-            int trackIndex,
-            string startEventName,
-            string endEventName,
-            float fallbackSeconds)
-        {
-            if (skeletonAnim == null) return fallbackSeconds;
-
-            TrackEntry entry = skeletonAnim.AnimationState.GetCurrent(trackIndex);
-            if (entry?.Animation == null) return fallbackSeconds;
-
-            float localStart = -1f;
-            float localEnd = -1f;
-
-            var timelines = entry.Animation.Timelines;
-            if (timelines != null)
-            {
-                for (int i = 0; i < timelines.Count; i++)
-                {
-                    if (timelines.Items[i] is not EventTimeline et)
-                        continue;
-
-                    float[] times = et.Frames;
-                    Spine.Event[] events = et.Events;
-
-                    for (int k = 0; k < events.Length; k++)
-                    {
-                        var ev = events[k];
-                        if (ev?.Data == null) continue;
-
-                        string n = ev.Data.Name;
-                        if (n == startEventName) localStart = times[k];
-                        else if (n == endEventName) localEnd = times[k];
-                    }
-                }
-            }
-
-            if (localStart < 0f || localEnd < 0f) return fallbackSeconds;
-
-            float localInterval = Mathf.Max(0f, localEnd - localStart);
-
-            float stateScale = skeletonAnim.AnimationState.TimeScale;
-            float entryScale = entry.TimeScale;
-
-            float effectiveScale = stateScale * entryScale;
-            if (effectiveScale <= 0.0001f) effectiveScale = 1f;
-
-            float actualInterval = localInterval / effectiveScale;
-            if (actualInterval <= 0.0001f) actualInterval = fallbackSeconds;
-
-            return actualInterval;
-        }
-
         //------------------------------------------------------------------------------------
         public void SetAttackData()
         {

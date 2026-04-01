@@ -100,12 +100,14 @@ namespace GameBerry
             }
 
             ApplyMonsterStats(monsterIndex);
+            string animationResourceKey = "GhostSword";
+            if (_myCharacterAniController != null
+                && _myCharacterAniController.TryGetRandomAnimationResourceKey(out string randomAnimationResourceKey))
+            {
+                animationResourceKey = randomAnimationResourceKey;
+            }
 
-            _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(modelIndex);
-            if (_currentSpineModelData == null)
-                _currentSpineModelData = StaticResource.Instance.GetCreatureSpineModelData(1000);
-            SetSpineModelData(_currentSpineModelData);
-
+            SetAnimationResourceKey(animationResourceKey);
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
             _onDeadCallback = onDeadCallback;
             _spawnPos = spawnPos;

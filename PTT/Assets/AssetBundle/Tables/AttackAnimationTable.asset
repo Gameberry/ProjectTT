@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 766812fe6c508a04391ce045387eff40, type: 3}
+  m_Name: AttackAnimationTable
+  m_EditorClassIdentifier: 
+  AttackAniData_List:
+  - AniType: 2
+    StartDirection: 0
+    EndDirection: 1
+    AnimationID: AttackReady_UpDown_0
+  - AniType: 2
+    StartDirection: 1
+    EndDirection: 0
+    AnimationID: AttackReady_DownUp_0
+  - AniType: 1
+    StartDirection: 0
+    EndDirection: 1
+    AnimationID: Attack_1_UpDown
+  - AniType: 1
+    StartDirection: 1
+    EndDirection: 0
+    AnimationID: Attack_2_DownUp
+  - AniType: 3
+    StartDirection: 1
+    EndDirection: 0
+    AnimationID: AttackTurnReady_DownUp_0
+  - AniType: 3
+    StartDirection: 0
+    EndDirection: 1
+    AnimationID: AttackTurnReady_UpDown_0
+  - AniType: 1
+    StartDirection: 0
+    EndDirection: 1
+    AnimationID: Attack_4_updown
+  - AniType: 1
+    StartDirection: 0
+    EndDirection: 1
+    AnimationID: Attack_5_updown

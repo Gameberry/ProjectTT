@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameBerry.Managers;
-using Spine;
-using Spine.Unity;
 using GameBerry.Chart;
 using UnityEngine.TextCore.Text;
 using UnityEngine.AdaptivePerformance.Provider;
@@ -51,10 +49,9 @@ namespace GameBerry
         public CharacterState CharacterState { get { return _characterState; } }
 
         /// <summary> Spine 애니메이션 핸들러 </summary>
-        [SerializeField] protected SkeletonAnimationHandler _mySkeletonAnimationHandler;
+        [SerializeField] protected CharacterAniController _myCharacterAniController;
 
         /// <summary> 현재 적용 중인 Spine 모델 데이터 </summary>
-        [SerializeField] protected SpineModelData _currentSpineModelData;
 
         /// <summary> UI에 표시되는 캐릭터 상태 </summary>
         [SerializeField]
@@ -219,8 +216,11 @@ namespace GameBerry
         /// <summary> Unity 초기화 시 호출 </summary>
         private void Awake()
         {
-            if (_mySkeletonAnimationHandler != null)
-                _mySkeletonAnimationHandler.AnimationEvent += SpineAnimationEvent;
+            if (_myCharacterAniController == null)
+                _myCharacterAniController = GetComponentInChildren<CharacterAniController>(true);
+
+            if (_myCharacterAniController != null)
+                _myCharacterAniController.AnimationEvent += SpineAnimationEvent;
 
             _conditionController = gameObject.AddComponent<CharacterConditionController>();
         }
@@ -631,35 +631,21 @@ namespace GameBerry
         /// Spine 애니메이션 모델 데이터 설정
         /// </summary>
         /// <param name="spineModelData">설정할 모델 데이터</param>
-        public void SetSpineModelData(SpineModelData spineModelData)
+        public void SetAnimationResourceKey(string animationResourceKey)
         {
-            if (spineModelData == null)
-                return;
-
-            _currentSpineModelData = spineModelData;
-
-            _mySkeletonAnimationHandler?.SetSpineModel(_currentSpineModelData);
+            _myCharacterAniController?.SetAnimationResourceKey(animationResourceKey);
         }
         /// <summary>
         /// Spine 스킨 설정
         /// </summary>
         /// <param name="skin">설정할 스킨</param>
-        public void SetSpineSkin(Skin skin)
-        {
-            _mySkeletonAnimationHandler?.SetSkin(skin);
-        }
         /// <summary>
         /// Spine 애니메이션 색상 변경
         /// </summary>
         /// <param name="color">적용할 색상</param>
         public void ChangeSpineColor(Color color)
         {
-            _mySkeletonAnimationHandler?.SetColor(color);
-        }
-        //------------------------------------------------------------------------------------
-        public SkeletonAnimation GetSkeletonAnimation()
-        {
-            return _mySkeletonAnimationHandler?._skeletonAnimation;
+            _myCharacterAniController?.SetColor(color);
         }
         //------------------------------------------------------------------------------------
         public void RefreshCheatStat()
@@ -995,24 +981,25 @@ namespace GameBerry
                 case CharacterState.Attack:
                 //case CharacterState.Skill:
                     {
-                        _mySkeletonAnimationHandler?.SetAnimationSpeed(FinalAttackSpeed);
+                        _myCharacterAniController?.SetAnimationSpeed(FinalAttackSpeed);
                         break;
                     }
                 case CharacterState.Run:
                     {
 
 
-                        _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterMoveSpeed * mymelskjte);
+                        _myCharacterAniController?.SetAnimationSpeed(_characterMoveSpeed * mymelskjte);
                         break;
                     }
                 default:
                     {
-                        _mySkeletonAnimationHandler?.SetAnimationSpeed(1);
+                        _myCharacterAniController?.SetAnimationSpeed(1);
                         break;
                     }
             }
 
-            PlayAnimation(state);
+            if (playAni == true)
+                PlayAnimation(state);
             if (state == CharacterState.Dead)
             {
                 Managers.AggroManager.Instance.RemoveIFFCharacterAggro(this);
@@ -1034,9 +1021,9 @@ namespace GameBerry
         /// <param name="state">재생할 상태별 애니메이션</param>
         protected virtual void PlayAnimation(CharacterState state)
         {
-            if (_mySkeletonAnimationHandler != null)
+            if (_myCharacterAniController != null && _myCharacterAniController.CanPlayAnimation)
             {
-                _mySkeletonAnimationHandler.PlayAnimation_Once(state, true);
+                _myCharacterAniController.PlayAnimation_Once(state, true);
             }
         }
         //------------------------------------------------------------------------------------
@@ -1047,9 +1034,9 @@ namespace GameBerry
         /// <param name=\"loop\">반복 여부 (기본값: true)</param>
         public void PlayAnimation_AniName(string aniName, bool loop = true)
         {
-            if (_mySkeletonAnimationHandler != null)
+            if (_myCharacterAniController != null && _myCharacterAniController.CanPlayAnimation)
             {
-                _mySkeletonAnimationHandler.PlayAnimation_Once(aniName, loop);
+                _myCharacterAniController.PlayAnimation_Once(aniName, loop);
             }
         }
         //------------------------------------------------------------------------------------
@@ -1077,7 +1064,7 @@ namespace GameBerry
 
             float selectRatote = 0.0f;
 
-            if (_lookDirection == Enum_LookDirection.Right)
+            if (_lookDirection == Enum_LookDirection.Left)
                 selectRatote = 180.0f;
 
             rotate.y = selectRatote;
@@ -1096,7 +1083,7 @@ namespace GameBerry
             Vector3 direction = targetTrans.transform.position - transform.position;
             direction.Normalize();
 
-            ChangeCharacterLookAtDirection(direction.x < 0 ? Enum_LookDirection.Left : Enum_LookDirection.Right);
+            ChangeCharacterLookAtDirection(direction.x > 0 ? Enum_LookDirection.Right : Enum_LookDirection.Left);
         }
         //------------------------------------------------------------------------------------
         public void SetNewTarget()
@@ -1137,9 +1124,13 @@ namespace GameBerry
 
             if (CharacterState == CharacterState.Attack
                 || CharacterState == CharacterState.Skill)
-                _mySkeletonAnimationHandler?.SetAnimationSpeed(FinalAttackSpeed);
+            {
+                _myCharacterAniController?.SetAnimationSpeed(FinalAttackSpeed);
+            }
             else if (CharacterState == CharacterState.Run)
-                _mySkeletonAnimationHandler?.SetAnimationSpeed(_characterMoveSpeed);
+            {
+                _myCharacterAniController?.SetAnimationSpeed(_characterMoveSpeed);
+            }
 
             double currHpRatio = 0;
 

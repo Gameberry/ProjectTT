@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameBerry.Chart;
-using Spine;
 
 namespace GameBerry
 {
@@ -82,7 +81,6 @@ namespace GameBerry
             ChangeState(CharacterState.Idle);
             _isMoveRunState = false;
 
-            RefreshSpineModel();
             PlayIdleAnimation();
             RefreshMainSkill();
             SnapToOwner();
@@ -137,20 +135,6 @@ namespace GameBerry
             }
 
             SetEquippedSkills(new List<int> { _mainSkillInfo.SkillId });
-        }
-
-        private void RefreshSpineModel()
-        {
-            LanternInfo lanternInfo = LanternManager.isAlive ? LanternManager.Instance.GetLanternInfo(_lanternItemId) : null;
-            if (lanternInfo == null || lanternInfo.SpineResourceId <= 0)
-                return;
-
-            SpineModelData modelData = StaticResource.Instance.GetCreatureSpineModelData(lanternInfo.SpineResourceId);
-            if (modelData == null)
-                return;
-
-            SetSpineModelData(modelData);
-            ApplyDefaultSkin(modelData);
         }
 
         private void SyncTarget()
@@ -398,50 +382,7 @@ namespace GameBerry
 
         private void PlayIdleAnimation()
         {
-            if (_currentSpineModelData != null)
-            {
-                string idleAnimation = _currentSpineModelData.GetAnimationName(CharacterState.Idle);
-                if (string.IsNullOrEmpty(idleAnimation) == false)
-                {
-                    PlayAnimation_AniName(idleAnimation, true);
-                    return;
-                }
-            }
-
             PlayAnimation(CharacterState.Idle);
-        }
-
-        private void ApplyDefaultSkin(SpineModelData modelData)
-        {
-            if (modelData == null || modelData.SkeletonData == null)
-                return;
-
-            SkeletonData skeletonData = modelData.SkeletonData.GetSkeletonData(true);
-            if (skeletonData == null)
-                return;
-
-            Skin skin = new Skin("lantern-default-runtime");
-            bool hasAny = false;
-            for (int i = 0; i < (int)Enum_SkinSlotType.Max; ++i)
-            {
-                List<string> skinNames = modelData.DefaultSkin((Enum_SkinSlotType)i);
-                if (skinNames == null || skinNames.Count == 0)
-                    continue;
-
-                foreach (string skinName in skinNames)
-                {
-                    Skin part = skeletonData.FindSkin(skinName);
-                    if (part == null)
-                        continue;
-
-                    skin.AddSkin(part);
-                }
-
-                hasAny = true;
-            }
-
-            if (hasAny)
-                SetSpineSkin(skin);
         }
 
         private void OnDestroy()
