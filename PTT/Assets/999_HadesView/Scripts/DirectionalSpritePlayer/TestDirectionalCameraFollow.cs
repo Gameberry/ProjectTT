@@ -7,8 +7,8 @@ namespace GameBerry.TestScene
     {
         [SerializeField] private Transform _target;
         [SerializeField] private string _targetName = "TestDirectionalPlayer";
-        [SerializeField] private Vector3 _followOffset = new Vector3(0.0f, 14.0f, 0.0f);
-        [SerializeField] private Vector3 _followEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        [SerializeField] private Vector3 _followOffset = new Vector3(0.0f, 0.0f, -10.0f);
+        [SerializeField] private Vector3 _followEulerAngles = Vector3.zero;
         [SerializeField] private float _followSmooth = 12.0f;
         [SerializeField] private bool _configureCameraOnAwake = true;
         [SerializeField] private float _orthographicSize = 5.0f;

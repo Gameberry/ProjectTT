@@ -9,7 +9,7 @@ namespace GameBerry.TestScene
         [SerializeField] private bool _supportWASD = true;
         [SerializeField] private bool _enablePreviewHotKeys = true;
 
-        private Vector3 _lastMoveDirection = Vector3.back;
+        private Vector3 _lastMoveDirection = Vector3.down;
         private CharacterState _previewState = CharacterState.None;
 
         private void Reset()
@@ -89,7 +89,7 @@ namespace GameBerry.TestScene
             if (Input.GetKey(KeyCode.DownArrow) || (_supportWASD && Input.GetKey(KeyCode.S)))
                 vertical -= 1.0f;
 
-            return new Vector3(horizontal, 0.0f, vertical);
+            return new Vector3(horizontal, vertical, 0.0f);
         }
 
         private void UpdatePreviewState()

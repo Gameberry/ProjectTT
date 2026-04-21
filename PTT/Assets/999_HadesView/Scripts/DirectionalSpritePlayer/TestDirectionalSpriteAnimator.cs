@@ -41,13 +41,10 @@ namespace GameBerry.TestScene
         [SerializeField] private Transform _visualRoot;
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
-        [Header("Visual")]
-        [SerializeField] private Vector3 _visualLocalPosition = new Vector3(0.0f, 0.9f, 0.0f);
-        [SerializeField] private Vector3 _visualLocalEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-        [SerializeField] private Vector3 _visualLocalScale = Vector3.one;
         [SerializeField] private int _sortingOrder = 100;
         [SerializeField] private bool _generatePlaceholderAnimations = true;
         [SerializeField] private bool _mirrorLeftDirections = true;
+        [SerializeField] private bool _autoReturnToIdleOnAttackComplete = true;
 
         [Header("Animation Data")] [ArrayElementTitle("State")]
         [SerializeField] private List<CharacterStateDirectionalAnimationSet> _stateAnimations = new List<CharacterStateDirectionalAnimationSet>();
@@ -68,6 +65,11 @@ namespace GameBerry.TestScene
 
         public CharacterState CurrentState => _currentState;
         public EightDirection CurrentDirection => _currentDirection;
+        public bool AutoReturnToIdleOnAttackComplete
+        {
+            get => _autoReturnToIdleOnAttackComplete;
+            set => _autoReturnToIdleOnAttackComplete = value;
+        }
 
         private void Reset()
         {
@@ -122,7 +124,7 @@ namespace GameBerry.TestScene
 
             RebuildLookup();
             ApplyVisualSettings();
-            Play(CharacterState.Idle, Vector3.back, true);
+            Play(CharacterState.Idle, Vector3.down, true);
         }
 
         public void Play(CharacterState state, Vector3 moveDirection, bool forceRestart = false)
@@ -170,7 +172,7 @@ namespace GameBerry.TestScene
 
         public static EightDirection ResolveDirection(Vector3 moveDirection, EightDirection fallback)
         {
-            Vector2 planar = new Vector2(moveDirection.x, moveDirection.z);
+            Vector2 planar = new Vector2(moveDirection.x, moveDirection.y);
             if (planar.sqrMagnitude <= 0.0001f)
                 return fallback;
 
@@ -225,7 +227,9 @@ namespace GameBerry.TestScene
             if (completedState == CharacterState.Attack)
             {
                 StatePlaybackCompleted?.Invoke(completedState);
-                Play(CharacterState.Idle, DirectionToMoveVector(_currentDirection), true);
+
+                if (_autoReturnToIdleOnAttackComplete)
+                    Play(CharacterState.Idle, DirectionToMoveVector(_currentDirection), true);
             }
         }
 
@@ -366,9 +370,9 @@ namespace GameBerry.TestScene
         {
             if (_visualRoot != null)
             {
-                _visualRoot.localPosition = _visualLocalPosition;
-                _visualRoot.localRotation = Quaternion.Euler(_visualLocalEulerAngles);
-                _visualRoot.localScale = _visualLocalScale;
+                _visualRoot.localPosition = Vector3.zero;
+                _visualRoot.localRotation = Quaternion.identity;
+                _visualRoot.localScale = Vector3.one;
             }
 
             if (_spriteRenderer != null)
@@ -670,7 +674,7 @@ namespace GameBerry.TestScene
         private static Vector3 DirectionToMoveVector(EightDirection direction)
         {
             Vector2 planarDirection = DirectionToVector(direction);
-            return new Vector3(planarDirection.x, 0.0f, planarDirection.y);
+            return new Vector3(planarDirection.x, planarDirection.y, 0.0f);
         }
 
         private static bool IsLeftDirection(EightDirection direction)
