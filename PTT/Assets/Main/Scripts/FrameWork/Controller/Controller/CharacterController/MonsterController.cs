@@ -107,6 +107,8 @@ namespace GameBerry
                 animationResourceKey = randomAnimationResourceKey;
             }
 
+            animationResourceKey = "AiMan";
+
             SetAnimationResourceKey(animationResourceKey);
             _battleSceneMap_Aggro = battleSceneMap_Aggro;
             _onDeadCallback = onDeadCallback;
@@ -461,7 +463,7 @@ namespace GameBerry
                     }
 
                     ChangeCharacterLookAtDirection_Target(_attackTarget.transform);
-                    
+
                     SkillInfo defaultAttackData = StaticResource.Instance.GetBattleModeStaticData().MonsterDefaultAttackData;
                     if (defaultAttackData != null)
                         AttackTarget.Damage(defaultAttackData.GetAttackStruct(this));
