@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GameBerry
 {
     public class UICharacterState : MonoBehaviour
     {
+        [SerializeField]
+        private SpriteRenderer m_charHPBerBG;
+
         [SerializeField]
         private SpriteRenderer m_charHPBer;
 
@@ -23,22 +23,45 @@ namespace GameBerry
         private float m_mpDefaultWidth;
 
         private float m_decreaseRatio = 5.0f;
-        //private Coroutine m_hpDecreaseDirection = null;
+        private bool m_useMonoUpdate;
+        private bool m_isVisible;
+        private float m_visibleTimer;
+        [SerializeField] private float m_visibleDurationAfterDamage = 3.0f;
 
         //------------------------------------------------------------------------------------
         private void Awake()
         {
-            Managers.UnityUpdateManager.Instance.UpdateFunc += UpdateFunc;
-
+            TryRegisterUpdate();
             if (m_charHPBer != null)
                 m_hpDefaultWidth = m_charHPBer.size.x;
 
             if (m_charCoolTime != null)
                 m_mpDefaultWidth = m_charCoolTime.size.x;
+
+            HideImmediate();
+        }
+        //------------------------------------------------------------------------------------
+        private void OnDestroy()
+        {
+            if (GameBerry.Managers.UnityUpdateManager.isAlive)
+                Managers.UnityUpdateManager.Instance.UpdateFunc -= UpdateFunc;
+        }
+        //------------------------------------------------------------------------------------
+        private void Update()
+        {
+            if (m_useMonoUpdate)
+                UpdateFunc();
         }
         //------------------------------------------------------------------------------------
         public void UpdateFunc()
         {
+            if (m_isVisible && m_visibleTimer > 0.0f)
+            {
+                m_visibleTimer -= Time.deltaTime;
+                if (m_visibleTimer <= 0.0f)
+                    SetVisible(false);
+            }
+
             if (m_charHPBer != null && m_charHPShadowBer != null)
             {
                 if (m_charHPBer.size.x >= m_charHPShadowBer.size.x)
@@ -77,7 +100,7 @@ namespace GameBerry
                 size.x = 0.0f;
                 m_charHPBer.size = size;
             }
-            else if(ratio >= 1.0f)
+            else if (ratio >= 1.0f)
             {
                 size.x = m_hpDefaultWidth;
 
@@ -91,6 +114,45 @@ namespace GameBerry
                 size.x = m_hpDefaultWidth * (float)ratio;
                 m_charHPBer.size = size;
             }
+        }
+        //------------------------------------------------------------------------------------
+        public void ShowTemporarily()
+        {
+            m_visibleTimer = m_visibleDurationAfterDamage;
+            SetVisible(true);
+        }
+        //------------------------------------------------------------------------------------
+        public void HideImmediate()
+        {
+            m_visibleTimer = 0.0f;
+            SetVisible(false);
+        }
+        //------------------------------------------------------------------------------------
+        private void TryRegisterUpdate()
+        {
+            if (GameBerry.Managers.UnityUpdateManager.isAlive)
+            {
+                Managers.UnityUpdateManager.Instance.UpdateFunc -= UpdateFunc;
+                Managers.UnityUpdateManager.Instance.UpdateFunc += UpdateFunc;
+                m_useMonoUpdate = false;
+                return;
+            }
+
+            m_useMonoUpdate = true;
+        }
+        //------------------------------------------------------------------------------------
+        private void SetVisible(bool visible)
+        {
+            m_isVisible = visible;
+
+            if (m_charHPBerBG != null)
+                m_charHPBerBG.enabled = visible;
+
+            if (m_charHPBer != null)
+                m_charHPBer.enabled = visible && m_charHPBer.size.x > 0.0f;
+
+            if (m_charHPShadowBer != null)
+                m_charHPShadowBer.enabled = visible;
         }
         //------------------------------------------------------------------------------------
     }

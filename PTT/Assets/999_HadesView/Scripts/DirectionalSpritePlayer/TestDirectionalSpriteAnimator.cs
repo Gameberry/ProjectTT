@@ -6,20 +6,16 @@ namespace GameBerry.TestScene
 {
     public enum EightDirection
     {
-        North = 0,
         NorthEast = 1,
-        East = 2,
+        NorthWest = 2,
         SouthEast = 3,
-        South = 4,
-        SouthWest = 5,
-        West = 6,
-        NorthWest = 7,
+        SouthWest = 4,
     }
 
     [Serializable]
     public class DirectionalSpriteAnimationClip
     {
-        public EightDirection Direction = EightDirection.South;
+        public EightDirection Direction = EightDirection.SouthEast;
         public Sprite[] Frames = Array.Empty<Sprite>();
     }
 
@@ -29,6 +25,7 @@ namespace GameBerry.TestScene
         public CharacterState State = CharacterState.Idle;
         public float FramesPerSecond = 6.0f;
         public bool Loop = true;
+        public List<int> TriggerFrameIndices = new List<int>();
         [ArrayElementTitle("Direction")]
         public List<DirectionalSpriteAnimationClip> DirectionClips = new List<DirectionalSpriteAnimationClip>();
     }
@@ -36,6 +33,7 @@ namespace GameBerry.TestScene
     public class TestDirectionalSpriteAnimator : MonoBehaviour
     {
         public event Action<CharacterState> StatePlaybackCompleted;
+        public event Action<CharacterState, int> StateFrameTriggered;
 
         [Header("References")]
         [SerializeField] private Transform _visualRoot;
@@ -55,13 +53,14 @@ namespace GameBerry.TestScene
             = new Dictionary<CharacterState, CharacterStateDirectionalAnimationSet>();
 
         private CharacterState _currentState = CharacterState.None;
-        private EightDirection _currentDirection = EightDirection.South;
+        private EightDirection _currentDirection = EightDirection.SouthEast;
         private DirectionalSpriteAnimationClip _currentClip;
         private CharacterStateDirectionalAnimationSet _currentStateSet;
         private int _currentFrameIndex;
         private float _frameTimer;
         private bool _isInitialized;
         private bool _currentFlipX;
+        private readonly HashSet<int> _triggeredFrameIndices = new HashSet<int>();
 
         public CharacterState CurrentState => _currentState;
         public EightDirection CurrentDirection => _currentDirection;
@@ -160,6 +159,7 @@ namespace GameBerry.TestScene
             {
                 _currentFrameIndex = 0;
                 _frameTimer = 0.0f;
+                _triggeredFrameIndices.Clear();
             }
 
             ApplyCurrentFrame();
@@ -176,12 +176,14 @@ namespace GameBerry.TestScene
             if (planar.sqrMagnitude <= 0.0001f)
                 return fallback;
 
-            float angle = Mathf.Atan2(planar.x, planar.y) * Mathf.Rad2Deg;
-            if (angle < 0.0f)
-                angle += 360.0f;
+            Vector2 fallbackVector = DirectionToVector(fallback);
+            float x = Mathf.Abs(planar.x) <= 0.0001f ? fallbackVector.x : planar.x;
+            float y = Mathf.Abs(planar.y) <= 0.0001f ? fallbackVector.y : planar.y;
 
-            int sector = Mathf.RoundToInt(angle / 45.0f) % 8;
-            return (EightDirection)sector;
+            if (x >= 0.0f)
+                return y >= 0.0f ? EightDirection.NorthEast : EightDirection.SouthEast;
+
+            return y >= 0.0f ? EightDirection.NorthWest : EightDirection.SouthWest;
         }
 
         private bool AdvanceFrame()
@@ -216,6 +218,26 @@ namespace GameBerry.TestScene
 
             _spriteRenderer.flipX = _currentFlipX;
             _spriteRenderer.sprite = _currentClip.Frames[Mathf.Clamp(_currentFrameIndex, 0, _currentClip.Frames.Length - 1)];
+            RaiseFrameTriggersIfNeeded();
+        }
+
+        private void RaiseFrameTriggersIfNeeded()
+        {
+            if (_currentStateSet == null || _currentStateSet.TriggerFrameIndices == null || _currentStateSet.TriggerFrameIndices.Count == 0)
+                return;
+
+            if (_triggeredFrameIndices.Contains(_currentFrameIndex))
+                return;
+
+            for (int i = 0; i < _currentStateSet.TriggerFrameIndices.Count; i++)
+            {
+                if (_currentStateSet.TriggerFrameIndices[i] != _currentFrameIndex)
+                    continue;
+
+                _triggeredFrameIndices.Add(_currentFrameIndex);
+                StateFrameTriggered?.Invoke(_currentState, _currentFrameIndex);
+                return;
+            }
         }
 
         private void HandleNonLoopAnimationFinished()
@@ -224,12 +246,16 @@ namespace GameBerry.TestScene
                 return;
 
             CharacterState completedState = _currentState;
+            StatePlaybackCompleted?.Invoke(completedState);
+
             if (completedState == CharacterState.Attack)
             {
-                StatePlaybackCompleted?.Invoke(completedState);
-
                 if (_autoReturnToIdleOnAttackComplete)
                     Play(CharacterState.Idle, DirectionToMoveVector(_currentDirection), true);
+            }
+            else if (completedState == CharacterState.Hit)
+            {
+                Play(CharacterState.Idle, DirectionToMoveVector(_currentDirection), true);
             }
         }
 
@@ -250,7 +276,7 @@ namespace GameBerry.TestScene
                 return clip != null;
             }
 
-            if (directionMap.TryGetValue(EightDirection.South, out clip))
+            if (directionMap.TryGetValue(EightDirection.SouthEast, out clip))
                 return clip != null;
 
             foreach (DirectionalSpriteAnimationClip value in directionMap.Values)
@@ -368,13 +394,6 @@ namespace GameBerry.TestScene
 
         private void ApplyVisualSettings()
         {
-            if (_visualRoot != null)
-            {
-                _visualRoot.localPosition = Vector3.zero;
-                _visualRoot.localRotation = Quaternion.identity;
-                _visualRoot.localScale = Vector3.one;
-            }
-
             if (_spriteRenderer != null)
                 _spriteRenderer.sortingOrder = _sortingOrder;
         }
@@ -429,23 +448,16 @@ namespace GameBerry.TestScene
             {
                 return new[]
                 {
-                    EightDirection.North,
                     EightDirection.NorthEast,
-                    EightDirection.East,
                     EightDirection.SouthEast,
-                    EightDirection.South,
                 };
             }
 
             return new[]
             {
-                EightDirection.North,
                 EightDirection.NorthEast,
-                EightDirection.East,
                 EightDirection.SouthEast,
-                EightDirection.South,
                 EightDirection.SouthWest,
-                EightDirection.West,
                 EightDirection.NorthWest,
             };
         }
@@ -648,24 +660,16 @@ namespace GameBerry.TestScene
             }
         }
 
-        private static Vector2 DirectionToVector(EightDirection direction)
+        public static Vector2 DirectionToVector(EightDirection direction)
         {
             switch (direction)
             {
-                case EightDirection.North:
-                    return new Vector2(0.0f, 1.0f);
                 case EightDirection.NorthEast:
                     return new Vector2(1.0f, 1.0f).normalized;
-                case EightDirection.East:
-                    return new Vector2(1.0f, 0.0f);
                 case EightDirection.SouthEast:
                     return new Vector2(1.0f, -1.0f).normalized;
-                case EightDirection.South:
-                    return new Vector2(0.0f, -1.0f);
                 case EightDirection.SouthWest:
                     return new Vector2(-1.0f, -1.0f).normalized;
-                case EightDirection.West:
-                    return new Vector2(-1.0f, 0.0f);
                 default:
                     return new Vector2(-1.0f, 1.0f).normalized;
             }
@@ -679,8 +683,7 @@ namespace GameBerry.TestScene
 
         private static bool IsLeftDirection(EightDirection direction)
         {
-            return direction == EightDirection.West
-                || direction == EightDirection.NorthWest
+            return direction == EightDirection.NorthWest
                 || direction == EightDirection.SouthWest;
         }
 
@@ -702,8 +705,6 @@ namespace GameBerry.TestScene
         {
             switch (direction)
             {
-                case EightDirection.West:
-                    return EightDirection.East;
                 case EightDirection.NorthWest:
                     return EightDirection.NorthEast;
                 case EightDirection.SouthWest:
