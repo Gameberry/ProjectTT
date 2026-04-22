@@ -8,6 +8,18 @@ namespace GameBerry.TestScene
         private static readonly List<TestDirectionalMonsterController> QueryBuffer = new List<TestDirectionalMonsterController>(32);
         private static readonly List<TestDirectionalMonsterController> AttackQueryBuffer = new List<TestDirectionalMonsterController>(32);
         private static readonly Collider2D[] WallBuffer = new Collider2D[16];
+        private static readonly Vector2[] SteerDirections = CreateSteerDirections();
+
+        private static Vector2[] CreateSteerDirections()
+        {
+            var dirs = new Vector2[8];
+            for (int i = 0; i < 8; i++)
+            {
+                float angle = i * 45f * Mathf.Deg2Rad;
+                dirs[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            }
+            return dirs;
+        }
 
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
         [SerializeField] private UICharacterState _hpBar;
@@ -26,6 +38,9 @@ namespace GameBerry.TestScene
 
         private Vector3 _lastMoveDirection = Vector3.down;
         private bool _isAttacking;
+        private Vector3 _cachedSteerDirection;
+        private int _steerFrame = -999;
+        private const int SteerInterval = 3;
         [SerializeField]
         private int _currentHp;
         private bool _isDead;
@@ -53,6 +68,7 @@ namespace GameBerry.TestScene
             EnsureDependencies();
             TryFindTarget();
             _currentHp = _maxHp;
+            _steerFrame = Time.frameCount + GetInstanceID() % SteerInterval;
 
             if (_spriteAnimator != null)
             {
@@ -107,7 +123,7 @@ namespace GameBerry.TestScene
                 return;
             }
 
-            Vector3 moveDirection = planarToTarget.normalized;
+            Vector3 moveDirection = GetSteeringDirection(planarToTarget);
             if (moveDirection.sqrMagnitude > 0.0001f)
                 _lastMoveDirection = moveDirection;
 
@@ -153,6 +169,42 @@ namespace GameBerry.TestScene
             Vector3 planarToTarget = _target.position - transform.position;
             planarToTarget.z = 0.0f;
             return planarToTarget;
+        }
+
+        private Vector3 GetSteeringDirection(Vector3 planarToTarget)
+        {
+            Vector2 desiredDir = new Vector2(planarToTarget.x, planarToTarget.y).normalized;
+            Vector2 origin = (Vector2)transform.position;
+            float lookAhead = _bodyRadius * 2f;
+
+            bool blocked = Physics2D.CircleCast(origin, _bodyRadius * 0.5f, desiredDir, lookAhead, _wallLayerMask).collider != null;
+            if (!blocked)
+                return new Vector3(desiredDir.x, desiredDir.y, 0f);
+
+            if (Time.frameCount - _steerFrame >= SteerInterval)
+            {
+                _steerFrame = Time.frameCount;
+                _cachedSteerDirection = ComputeSteeringDirection(desiredDir, origin, lookAhead);
+            }
+            return _cachedSteerDirection;
+        }
+
+        private Vector3 ComputeSteeringDirection(Vector2 desiredDir, Vector2 origin, float lookAhead)
+        {
+            Vector2 result = Vector2.zero;
+            for (int i = 0; i < 8; i++)
+            {
+                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, SteerDirections[i], lookAhead, _wallLayerMask).collider != null)
+                    continue;
+
+                float interest = Mathf.Max(0f, Vector2.Dot(desiredDir, SteerDirections[i]));
+                result += SteerDirections[i] * interest;
+            }
+
+            if (result.sqrMagnitude < 0.0001f)
+                return new Vector3(desiredDir.x, desiredDir.y, 0f);
+
+            return new Vector3(result.x, result.y, 0f).normalized;
         }
 
         private void StartAttack(Vector3 planarToTarget)
