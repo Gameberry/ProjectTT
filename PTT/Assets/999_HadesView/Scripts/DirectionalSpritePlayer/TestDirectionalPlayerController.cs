@@ -6,7 +6,7 @@ namespace GameBerry.TestScene
     public class TestDirectionalPlayerController : MonoBehaviour
     {
         private static readonly List<TestDirectionalMonsterController> QueryBuffer = new List<TestDirectionalMonsterController>(32);
-        private static readonly Collider2D[] WallBuffer = new Collider2D[16];
+        private static readonly List<TestDirectionalMonsterController> AutoBuffer = new List<TestDirectionalMonsterController>(32);
 
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
         [SerializeField] private UICharacterState _hpBar;
@@ -17,6 +17,8 @@ namespace GameBerry.TestScene
         [SerializeField] private float _attackRange = 1.0f;
         [SerializeField] private float _attackAngle = 120.0f;
         [SerializeField] private LayerMask _wallLayerMask;
+        [SerializeField] private bool _autoPlay = true;
+        [SerializeField] private float _autoDetectRange = 6f;
         [SerializeField] private bool _supportWASD = true;
         [SerializeField] private bool _enablePreviewHotKeys = true;
         [SerializeField] private bool _drawBodyGizmo = true;
@@ -24,6 +26,10 @@ namespace GameBerry.TestScene
 
         private Vector3 _lastMoveDirection = Vector3.down;
         private CharacterState _previewState = CharacterState.None;
+        private Vector3 _cachedSteerDirection;
+        private int _steerFrame = -999;
+        private const int SteerInterval = 3;
+        private TestDirectionalMonsterController _autoTarget;
         [SerializeField]
         private int _currentHp;
         private bool _isDead;
@@ -66,8 +72,14 @@ namespace GameBerry.TestScene
             if (moveDirection.sqrMagnitude > 1.0f)
                 moveDirection.Normalize();
 
-            if (moveDirection.sqrMagnitude > 0.0001f)
+            bool hasManualInput = moveDirection.sqrMagnitude > 0.0001f;
+            if (hasManualInput)
                 _lastMoveDirection = moveDirection.normalized;
+
+            // 자동 이동/공격 계산 (IsPreviewLockedState 체크 전에 실행해야 같은 프레임에 공격 시작)
+            Vector3 autoMove = Vector3.zero;
+            if (!hasManualInput && _autoPlay && _previewState == CharacterState.None)
+                autoMove = ComputeAutoMove();
 
             if (IsPreviewLockedState(_previewState))
             {
@@ -76,9 +88,15 @@ namespace GameBerry.TestScene
                 return;
             }
 
-            if (moveDirection.sqrMagnitude > 0.0001f)
+            if (hasManualInput)
             {
                 transform.position += moveDirection * (_moveSpeed * Time.deltaTime);
+                ResolveMonsterOverlaps();
+                _spriteAnimator.Play(CharacterState.Run, _lastMoveDirection);
+            }
+            else if (autoMove.sqrMagnitude > 0.0001f)
+            {
+                transform.position += autoMove;
                 ResolveMonsterOverlaps();
                 _spriteAnimator.Play(CharacterState.Run, _lastMoveDirection);
             }
@@ -88,6 +106,84 @@ namespace GameBerry.TestScene
                 CharacterState idleLikeState = _previewState == CharacterState.None ? CharacterState.Idle : _previewState;
                 _spriteAnimator.Play(idleLikeState, _lastMoveDirection);
             }
+        }
+
+        private Vector3 ComputeAutoMove()
+        {
+            TestDirectionalMonsterManager.Instance.QueryMonsters((Vector2)transform.position, _autoDetectRange, AutoBuffer);
+
+            _autoTarget = FindNearestInBuffer();
+            if (_autoTarget == null)
+                return Vector3.zero;
+
+            Vector3 toMonster = _autoTarget.transform.position - transform.position;
+            toMonster.z = 0f;
+
+            if (toMonster.sqrMagnitude > 0.0001f)
+                _lastMoveDirection = toMonster.normalized;
+
+            if (toMonster.sqrMagnitude <= _attackRange * _attackRange)
+            {
+                _previewState = CharacterState.Attack;
+                return Vector3.zero;
+            }
+
+            return GetSteeringDirection(toMonster) * (_moveSpeed * Time.deltaTime);
+        }
+
+        private Vector3 GetSteeringDirection(Vector3 planarToTarget)
+        {
+            Vector2 desiredDir = ((Vector2)planarToTarget).normalized;
+            Vector2 origin = (Vector2)transform.position;
+            float lookAhead = _bodyRadius * 3f;
+
+            // 벽이 없으면 직진 (몬스터는 overlap 해소로 처리)
+            bool wallBlocked = Physics2D.CircleCast(origin, _bodyRadius * 0.5f, desiredDir, lookAhead, _wallLayerMask).collider != null;
+            if (!wallBlocked)
+                return (Vector3)desiredDir;
+
+            if (Time.frameCount - _steerFrame >= SteerInterval)
+            {
+                _steerFrame = Time.frameCount;
+                _cachedSteerDirection = ComputeSteeringDirection(desiredDir, origin, lookAhead);
+            }
+            return _cachedSteerDirection;
+        }
+
+        private Vector3 ComputeSteeringDirection(Vector2 desiredDir, Vector2 origin, float lookAhead)
+        {
+            Vector2 result = Vector2.zero;
+            for (int i = 0; i < 8; i++)
+            {
+                Vector2 dir = TestSteeringUtils.Directions8[i];
+                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, dir, lookAhead, _wallLayerMask).collider != null)
+                    continue;
+                result += dir * Mathf.Max(0f, Vector2.Dot(desiredDir, dir));
+            }
+            return result.sqrMagnitude > 0.0001f ? (Vector3)result.normalized : (Vector3)desiredDir;
+        }
+
+        private TestDirectionalMonsterController FindNearestInBuffer()
+        {
+            TestDirectionalMonsterController nearest = null;
+            float nearestSqrDist = float.MaxValue;
+            Vector3 myPos = transform.position;
+
+            for (int i = 0; i < AutoBuffer.Count; i++)
+            {
+                TestDirectionalMonsterController m = AutoBuffer[i];
+                if (m == null)
+                    continue;
+
+                float sqrDist = (m.transform.position - myPos).sqrMagnitude;
+                if (sqrDist < nearestSqrDist)
+                {
+                    nearestSqrDist = sqrDist;
+                    nearest = m;
+                }
+            }
+
+            return nearest;
         }
 
         private void EnsureDependencies()
@@ -194,6 +290,9 @@ namespace GameBerry.TestScene
             float queryRadius = _bodyRadius + 1.0f;
             TestDirectionalMonsterManager.Instance.QueryMonsters(new Vector2(resolvedPosition.x, resolvedPosition.y), queryRadius, QueryBuffer);
 
+            TestDirectionalMonsterController overlappingMonster = null;
+            float nearestOverlapSqrDist = float.MaxValue;
+
             for (int i = 0; i < QueryBuffer.Count; i++)
             {
                 TestDirectionalMonsterController monster = QueryBuffer[i];
@@ -207,6 +306,12 @@ namespace GameBerry.TestScene
                 if (sqrDistance >= minDistance * minDistance)
                     continue;
 
+                if (_autoPlay && sqrDistance < nearestOverlapSqrDist)
+                {
+                    nearestOverlapSqrDist = sqrDistance;
+                    overlappingMonster = monster;
+                }
+
                 float distance = Mathf.Sqrt(sqrDistance);
                 Vector3 pushDirection = distance > 0.0001f ? delta / distance : (Vector3)_lastMoveDirection.normalized;
                 if (pushDirection.sqrMagnitude <= 0.0001f)
@@ -218,33 +323,63 @@ namespace GameBerry.TestScene
             }
 
             transform.position = resolvedPosition;
-            transform.position = ResolveWallOverlaps(transform.position);
+            transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, _wallLayerMask);
+
+            if (!_autoPlay)
+                return;
+
+            if (overlappingMonster != null)
+            {
+                // 물리적으로 충돌한 몬스터는 공격 중이더라도 즉시 타겟 전환
+                _autoTarget = overlappingMonster;
+                Vector3 toMonster = overlappingMonster.transform.position - transform.position;
+                toMonster.z = 0f;
+                if (toMonster.sqrMagnitude > 0.0001f)
+                    _lastMoveDirection = toMonster.normalized;
+                _previewState = CharacterState.Attack;
+            }
+            else if (_previewState == CharacterState.None)
+            {
+                TryAutoAttackNearbyMonster();
+            }
         }
 
-        private Vector3 ResolveWallOverlaps(Vector3 position)
+        private void TryAutoAttackNearbyMonster()
         {
-            Vector2 pos2D = (Vector2)position;
-            var filter = new ContactFilter2D { layerMask = _wallLayerMask, useLayerMask = true, useTriggers = false };
-            int count = Physics2D.OverlapCircle(pos2D, _bodyRadius, filter, WallBuffer);
-
-            for (int i = 0; i < count; i++)
+            TestDirectionalMonsterController closest = null;
+            float closestSqrDist = _attackRange * _attackRange;
+            for (int i = 0; i < QueryBuffer.Count; i++)
             {
-                Collider2D wall = WallBuffer[i];
-                if (wall == null)
+                TestDirectionalMonsterController monster = QueryBuffer[i];
+                if (monster == null)
                     continue;
-
-                Vector2 closest = wall.ClosestPoint(pos2D);
-                Vector2 delta = pos2D - closest;
-                float distance = delta.magnitude;
-
-                if (distance >= _bodyRadius)
-                    continue;
-
-                Vector2 pushDir = distance > 0.0001f ? delta / distance : Vector2.up;
-                pos2D += pushDir * (_bodyRadius - distance);
+                float sqrDist = (monster.transform.position - transform.position).sqrMagnitude;
+                if (sqrDist < closestSqrDist)
+                {
+                    closestSqrDist = sqrDist;
+                    closest = monster;
+                }
             }
+            if (closest == null)
+                return;
 
-            return new Vector3(pos2D.x, pos2D.y, position.z);
+            _autoTarget = closest;
+            Vector3 toMonster = closest.transform.position - transform.position;
+            toMonster.z = 0f;
+            if (toMonster.sqrMagnitude > 0.0001f)
+                _lastMoveDirection = toMonster.normalized;
+            _previewState = CharacterState.Attack;
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (_autoTarget == null)
+                return;
+
+            Vector3 targetPos = _autoTarget.transform.position;
+            Gizmos.color = new Color(1.0f, 0.85f, 0.0f, 0.9f);
+            Gizmos.DrawLine(transform.position, targetPos);
+            Gizmos.DrawWireSphere(targetPos, _autoTarget.BodyRadius + 0.08f);
         }
 
         private void OnDrawGizmosSelected()

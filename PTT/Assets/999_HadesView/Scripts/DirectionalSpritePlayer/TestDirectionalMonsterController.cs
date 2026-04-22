@@ -7,19 +7,6 @@ namespace GameBerry.TestScene
     {
         private static readonly List<TestDirectionalMonsterController> QueryBuffer = new List<TestDirectionalMonsterController>(32);
         private static readonly List<TestDirectionalMonsterController> AttackQueryBuffer = new List<TestDirectionalMonsterController>(32);
-        private static readonly Collider2D[] WallBuffer = new Collider2D[16];
-        private static readonly Vector2[] SteerDirections = CreateSteerDirections();
-
-        private static Vector2[] CreateSteerDirections()
-        {
-            var dirs = new Vector2[8];
-            for (int i = 0; i < 8; i++)
-            {
-                float angle = i * 45f * Mathf.Deg2Rad;
-                dirs[i] = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-            }
-            return dirs;
-        }
 
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
         [SerializeField] private UICharacterState _hpBar;
@@ -173,13 +160,13 @@ namespace GameBerry.TestScene
 
         private Vector3 GetSteeringDirection(Vector3 planarToTarget)
         {
-            Vector2 desiredDir = new Vector2(planarToTarget.x, planarToTarget.y).normalized;
+            Vector2 desiredDir = ((Vector2)planarToTarget).normalized;
             Vector2 origin = (Vector2)transform.position;
             float lookAhead = _bodyRadius * 2f;
 
             bool blocked = Physics2D.CircleCast(origin, _bodyRadius * 0.5f, desiredDir, lookAhead, _wallLayerMask).collider != null;
             if (!blocked)
-                return new Vector3(desiredDir.x, desiredDir.y, 0f);
+                return (Vector3)desiredDir;
 
             if (Time.frameCount - _steerFrame >= SteerInterval)
             {
@@ -194,17 +181,17 @@ namespace GameBerry.TestScene
             Vector2 result = Vector2.zero;
             for (int i = 0; i < 8; i++)
             {
-                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, SteerDirections[i], lookAhead, _wallLayerMask).collider != null)
+                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, TestSteeringUtils.Directions8[i], lookAhead, _wallLayerMask).collider != null)
                     continue;
 
-                float interest = Mathf.Max(0f, Vector2.Dot(desiredDir, SteerDirections[i]));
-                result += SteerDirections[i] * interest;
+                float interest = Mathf.Max(0f, Vector2.Dot(desiredDir, TestSteeringUtils.Directions8[i]));
+                result += TestSteeringUtils.Directions8[i] * interest;
             }
 
             if (result.sqrMagnitude < 0.0001f)
-                return new Vector3(desiredDir.x, desiredDir.y, 0f);
+                return (Vector3)desiredDir;
 
-            return new Vector3(result.x, result.y, 0f).normalized;
+            return (Vector3)result.normalized;
         }
 
         private void StartAttack(Vector3 planarToTarget)
@@ -220,34 +207,8 @@ namespace GameBerry.TestScene
         {
             Vector3 resolvedPosition = transform.position;
             resolvedPosition = ResolveOverlapWithMonsters(resolvedPosition);
-            resolvedPosition = ResolveWallOverlaps(resolvedPosition);
+            resolvedPosition = TestSteeringUtils.ResolveWallOverlaps(resolvedPosition, _bodyRadius, _wallLayerMask);
             transform.position = resolvedPosition;
-        }
-
-        private Vector3 ResolveWallOverlaps(Vector3 position)
-        {
-            Vector2 pos2D = (Vector2)position;
-            var filter = new ContactFilter2D { layerMask = _wallLayerMask, useLayerMask = true, useTriggers = false };
-            int count = Physics2D.OverlapCircle(pos2D, _bodyRadius, filter, WallBuffer);
-
-            for (int i = 0; i < count; i++)
-            {
-                Collider2D wall = WallBuffer[i];
-                if (wall == null)
-                    continue;
-
-                Vector2 closest = wall.ClosestPoint(pos2D);
-                Vector2 delta = pos2D - closest;
-                float distance = delta.magnitude;
-
-                if (distance >= _bodyRadius)
-                    continue;
-
-                Vector2 pushDir = distance > 0.0001f ? delta / distance : Vector2.up;
-                pos2D += pushDir * (_bodyRadius - distance);
-            }
-
-            return new Vector3(pos2D.x, pos2D.y, position.z);
         }
 
         private Vector3 ResolveOverlapWithMonsters(Vector3 currentPosition)
