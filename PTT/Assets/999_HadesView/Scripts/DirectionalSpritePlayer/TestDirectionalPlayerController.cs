@@ -22,6 +22,7 @@ namespace GameBerry.TestScene
 
         private Vector3 _lastMoveDirection = Vector3.down;
         private CharacterState _previewState = CharacterState.None;
+        [SerializeField]
         private int _currentHp;
         private bool _isDead;
 
@@ -39,7 +40,7 @@ namespace GameBerry.TestScene
             _currentHp = _maxHp;
             _spriteAnimator.StatePlaybackCompleted += HandleStatePlaybackCompleted;
             _spriteAnimator.StateFrameTriggered += HandleStateFrameTriggered;
-            RefreshHpBar();
+            //RefreshHpBar();
             _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection, true);
         }
 

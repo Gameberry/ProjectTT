@@ -19,6 +19,7 @@ namespace GameBerry
         [SerializeField]
         private SpriteRenderer m_charCoolTime;
 
+        [SerializeField]
         private float m_hpDefaultWidth;
         private float m_mpDefaultWidth;
 
@@ -149,7 +150,7 @@ namespace GameBerry
                 m_charHPBerBG.enabled = visible;
 
             if (m_charHPBer != null)
-                m_charHPBer.enabled = visible && m_charHPBer.size.x > 0.0f;
+                m_charHPBer.enabled = visible;
 
             if (m_charHPShadowBer != null)
                 m_charHPShadowBer.enabled = visible;

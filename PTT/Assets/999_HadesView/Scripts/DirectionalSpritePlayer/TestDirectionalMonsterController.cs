@@ -24,6 +24,7 @@ namespace GameBerry.TestScene
 
         private Vector3 _lastMoveDirection = Vector3.down;
         private bool _isAttacking;
+        [SerializeField]
         private int _currentHp;
         private bool _isDead;
 
@@ -56,7 +57,7 @@ namespace GameBerry.TestScene
                 _spriteAnimator.AutoReturnToIdleOnAttackComplete = false;
                 _spriteAnimator.StatePlaybackCompleted += HandleStatePlaybackCompleted;
                 _spriteAnimator.StateFrameTriggered += HandleStateFrameTriggered;
-                RefreshHpBar();
+                //RefreshHpBar();
                 _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection, true);
             }
         }
@@ -297,7 +298,7 @@ namespace GameBerry.TestScene
             _isDead = true;
             _isAttacking = false;
             _spriteAnimator.Play(CharacterState.Dead, _lastMoveDirection, true);
-            enabled = false;
+            gameObject.SetActive(false);
         }
 
         private void RefreshHpBar()
