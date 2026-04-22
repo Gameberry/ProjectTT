@@ -7,6 +7,7 @@ namespace GameBerry.TestScene
     {
         private static readonly List<TestDirectionalMonsterController> QueryBuffer = new List<TestDirectionalMonsterController>(32);
         private static readonly List<TestDirectionalMonsterController> AttackQueryBuffer = new List<TestDirectionalMonsterController>(32);
+        private static readonly Collider2D[] WallBuffer = new Collider2D[16];
 
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
         [SerializeField] private UICharacterState _hpBar;
@@ -19,6 +20,7 @@ namespace GameBerry.TestScene
         [SerializeField] private int _maxHp = 30;
         [SerializeField] private int _attackDamage = 5;
         [SerializeField] private float _attackAngle = 90.0f;
+        [SerializeField] private LayerMask _wallLayerMask;
         [SerializeField] private bool _drawRangeGizmos = true;
         [SerializeField] private bool _drawAttackGizmo = true;
 
@@ -165,34 +167,35 @@ namespace GameBerry.TestScene
         private void ResolveBodyOverlaps()
         {
             Vector3 resolvedPosition = transform.position;
-            resolvedPosition = ResolveOverlapWithPlayer(resolvedPosition);
             resolvedPosition = ResolveOverlapWithMonsters(resolvedPosition);
+            resolvedPosition = ResolveWallOverlaps(resolvedPosition);
             transform.position = resolvedPosition;
         }
 
-        private Vector3 ResolveOverlapWithPlayer(Vector3 currentPosition)
+        private Vector3 ResolveWallOverlaps(Vector3 position)
         {
-            TestDirectionalPlayerController playerController = _target != null ? _target.GetComponent<TestDirectionalPlayerController>() : null;
-            if (playerController == null)
-                return currentPosition;
+            Vector2 pos2D = (Vector2)position;
+            var filter = new ContactFilter2D { layerMask = _wallLayerMask, useLayerMask = true, useTriggers = false };
+            int count = Physics2D.OverlapCircle(pos2D, _bodyRadius, filter, WallBuffer);
 
-            Vector3 delta = currentPosition - playerController.transform.position;
-            delta.z = 0.0f;
-            float minDistance = _bodyRadius + playerController.BodyRadius;
-            float sqrDistance = delta.sqrMagnitude;
+            for (int i = 0; i < count; i++)
+            {
+                Collider2D wall = WallBuffer[i];
+                if (wall == null)
+                    continue;
 
-            if (sqrDistance >= minDistance * minDistance)
-                return currentPosition;
+                Vector2 closest = wall.ClosestPoint(pos2D);
+                Vector2 delta = pos2D - closest;
+                float distance = delta.magnitude;
 
-            float distance = Mathf.Sqrt(sqrDistance);
-            Vector3 pushDirection = distance > 0.0001f ? delta / distance : (Vector3)_lastMoveDirection.normalized;
-            if (pushDirection.sqrMagnitude <= 0.0001f)
-                pushDirection = Vector3.right;
+                if (distance >= _bodyRadius)
+                    continue;
 
-            float overlap = minDistance - distance;
-            currentPosition += pushDirection * overlap;
-            currentPosition.z = transform.position.z;
-            return currentPosition;
+                Vector2 pushDir = distance > 0.0001f ? delta / distance : Vector2.up;
+                pos2D += pushDir * (_bodyRadius - distance);
+            }
+
+            return new Vector3(pos2D.x, pos2D.y, position.z);
         }
 
         private Vector3 ResolveOverlapWithMonsters(Vector3 currentPosition)

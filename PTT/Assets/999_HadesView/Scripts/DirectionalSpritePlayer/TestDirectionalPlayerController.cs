@@ -6,6 +6,7 @@ namespace GameBerry.TestScene
     public class TestDirectionalPlayerController : MonoBehaviour
     {
         private static readonly List<TestDirectionalMonsterController> QueryBuffer = new List<TestDirectionalMonsterController>(32);
+        private static readonly Collider2D[] WallBuffer = new Collider2D[16];
 
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
         [SerializeField] private UICharacterState _hpBar;
@@ -15,6 +16,7 @@ namespace GameBerry.TestScene
         [SerializeField] private int _attackDamage = 10;
         [SerializeField] private float _attackRange = 1.0f;
         [SerializeField] private float _attackAngle = 120.0f;
+        [SerializeField] private LayerMask _wallLayerMask;
         [SerializeField] private bool _supportWASD = true;
         [SerializeField] private bool _enablePreviewHotKeys = true;
         [SerializeField] private bool _drawBodyGizmo = true;
@@ -189,7 +191,7 @@ namespace GameBerry.TestScene
         private void ResolveMonsterOverlaps()
         {
             Vector3 resolvedPosition = transform.position;
-            float queryRadius = _bodyRadius * 2.5f;
+            float queryRadius = _bodyRadius + 1.0f;
             TestDirectionalMonsterManager.Instance.QueryMonsters(new Vector2(resolvedPosition.x, resolvedPosition.y), queryRadius, QueryBuffer);
 
             for (int i = 0; i < QueryBuffer.Count; i++)
@@ -216,6 +218,33 @@ namespace GameBerry.TestScene
             }
 
             transform.position = resolvedPosition;
+            transform.position = ResolveWallOverlaps(transform.position);
+        }
+
+        private Vector3 ResolveWallOverlaps(Vector3 position)
+        {
+            Vector2 pos2D = (Vector2)position;
+            var filter = new ContactFilter2D { layerMask = _wallLayerMask, useLayerMask = true, useTriggers = false };
+            int count = Physics2D.OverlapCircle(pos2D, _bodyRadius, filter, WallBuffer);
+
+            for (int i = 0; i < count; i++)
+            {
+                Collider2D wall = WallBuffer[i];
+                if (wall == null)
+                    continue;
+
+                Vector2 closest = wall.ClosestPoint(pos2D);
+                Vector2 delta = pos2D - closest;
+                float distance = delta.magnitude;
+
+                if (distance >= _bodyRadius)
+                    continue;
+
+                Vector2 pushDir = distance > 0.0001f ? delta / distance : Vector2.up;
+                pos2D += pushDir * (_bodyRadius - distance);
+            }
+
+            return new Vector3(pos2D.x, pos2D.y, position.z);
         }
 
         private void OnDrawGizmosSelected()
