@@ -11,11 +11,17 @@ namespace GameBerry.TestScene
         [SerializeField] private TestDirectionalPlayerController _playerController;
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
         [SerializeField] private List<TestSkillData> _skills = new List<TestSkillData>();
+        [SerializeField] private bool _drawSkillGizmos = true;
+        [SerializeField] private float _skillGizmoDuration = 2.0f;
 
         private TestSkillData _activeSkill;
         private TestDirectionalMonsterController _lockedTarget;
         private Vector3 _activeSkillDirection = Vector3.down;
         private bool _activeSkillTriggered;
+        private Vector3 _lastSkillGizmoStart;
+        private Vector3 _lastSkillGizmoEnd;
+        private float _lastSkillGizmoRadius;
+        private float _lastSkillGizmoExpireTime;
 
         public bool IsPlayingSkill
         {
@@ -227,8 +233,10 @@ namespace GameBerry.TestScene
                 : FindBlinkSlashTarget(skillData, _activeSkillDirection);
             Vector3 destination = ResolveBlinkSlashDestination(skillData, _activeSkillDirection, blinkTarget);
             destination.z = startPosition.z;
+            float hitRadius = Mathf.Max(skillData.DashHitRadius, _playerController.BodyRadius);
 
             HitBlinkSlashTargets(startPosition, destination, skillData, blinkTarget);
+            CacheSkillGizmo(startPosition, destination, hitRadius);
 
             _playerController.transform.position = destination;
             _playerController.ResolveWallsAfterTeleport();
@@ -331,10 +339,9 @@ namespace GameBerry.TestScene
 
         private void HitMonstersAlongSegment(Vector3 startPosition, Vector3 endPosition, float hitRadius, int damage)
         {
-            Vector3 segment = endPosition - startPosition;
-            float segmentLength = segment.magnitude;
-            float queryRadius = segmentLength + hitRadius + _playerController.BodyRadius;
-            var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(startPosition, queryRadius);
+            startPosition.z = 0.0f;
+            endPosition.z = 0.0f;
+            IReadOnlyList<TestDirectionalMonsterController> monsters = TestDirectionalMonsterManager.Instance.Monsters;
 
             for (int i = 0; i < monsters.Count; i++)
             {
@@ -387,6 +394,9 @@ namespace GameBerry.TestScene
 
         private static float DistanceToSegmentSquared(Vector3 point, Vector3 segmentStart, Vector3 segmentEnd)
         {
+            point.z = 0.0f;
+            segmentStart.z = 0.0f;
+            segmentEnd.z = 0.0f;
             Vector3 segment = segmentEnd - segmentStart;
             float segmentLengthSqr = segment.sqrMagnitude;
             if (segmentLengthSqr <= 0.0001f)
@@ -407,6 +417,20 @@ namespace GameBerry.TestScene
             return s_defaultByungRyeokIlSeomSkill;
         }
 
+        private void OnDrawGizmos()
+        {
+            if (_drawSkillGizmos == false)
+                return;
+
+            if (Application.isPlaying == false)
+                return;
+
+            if (Time.time > _lastSkillGizmoExpireTime || _lastSkillGizmoRadius <= 0.0f)
+                return;
+
+            DrawCapsuleGizmo(_lastSkillGizmoStart, _lastSkillGizmoEnd, _lastSkillGizmoRadius, new Color(0.15f, 0.9f, 1.0f, 0.9f), new Color(0.15f, 0.9f, 1.0f, 0.2f));
+        }
+
         private void RefreshInterruptedSkillState()
         {
             if (_activeSkill == null || _spriteAnimator == null)
@@ -416,6 +440,55 @@ namespace GameBerry.TestScene
                 return;
 
             CancelSkill();
+        }
+
+        private void CacheSkillGizmo(Vector3 start, Vector3 end, float radius)
+        {
+            _lastSkillGizmoStart = start;
+            _lastSkillGizmoEnd = end;
+            _lastSkillGizmoRadius = radius;
+            _lastSkillGizmoExpireTime = Time.time + Mathf.Max(0.0f, _skillGizmoDuration);
+        }
+
+        private static void DrawCapsuleGizmo(Vector3 start, Vector3 end, float radius, Color lineColor, Color fillColor)
+        {
+            const int arcSegments = 12;
+
+            Vector3 segment = end - start;
+            Vector3 forward = segment.sqrMagnitude > 0.0001f ? segment.normalized : Vector3.right;
+            Vector3 perpendicular = new Vector3(-forward.y, forward.x, 0.0f);
+
+            Vector3 startLeft = start + perpendicular * radius;
+            Vector3 startRight = start - perpendicular * radius;
+            Vector3 endLeft = end + perpendicular * radius;
+            Vector3 endRight = end - perpendicular * radius;
+
+            Gizmos.color = fillColor;
+            Gizmos.DrawLine(startLeft, endLeft);
+            Gizmos.DrawLine(startRight, endRight);
+
+            Gizmos.color = lineColor;
+            Gizmos.DrawLine(startLeft, endLeft);
+            Gizmos.DrawLine(startRight, endRight);
+            Gizmos.DrawLine(startLeft, startRight);
+            Gizmos.DrawLine(endLeft, endRight);
+
+            DrawArc(start, perpendicular, forward, radius, arcSegments, lineColor);
+            DrawArc(end, -perpendicular, -forward, radius, arcSegments, lineColor);
+        }
+
+        private static void DrawArc(Vector3 center, Vector3 from, Vector3 to, float radius, int segments, Color color)
+        {
+            Gizmos.color = color;
+            Vector3 previousPoint = center + from.normalized * radius;
+            for (int i = 1; i <= segments; i++)
+            {
+                float t = i / (float)segments;
+                Vector3 direction = Vector3.Slerp(from.normalized, to.normalized, t);
+                Vector3 currentPoint = center + direction * radius;
+                Gizmos.DrawLine(previousPoint, currentPoint);
+                previousPoint = currentPoint;
+            }
         }
     }
 }

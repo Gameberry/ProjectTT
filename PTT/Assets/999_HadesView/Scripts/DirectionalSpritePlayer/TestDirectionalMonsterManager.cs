@@ -34,6 +34,7 @@ namespace GameBerry.TestScene
         }
 
         public static bool HasInstance => _instance != null;
+        public IReadOnlyList<TestDirectionalMonsterController> Monsters => _monsters;
 
         private void Awake()
         {
