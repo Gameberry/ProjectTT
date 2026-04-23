@@ -9,6 +9,7 @@ namespace GameBerry.TestScene
         private static readonly List<TestDirectionalMonsterController> AutoBuffer = new List<TestDirectionalMonsterController>(32);
 
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
+        [SerializeField] private TestPlayerSkillController _skillController;
         [SerializeField] private UICharacterState _hpBar;
         [SerializeField] private float _moveSpeed = 3.5f;
         [SerializeField] private float _bodyRadius = 0.4f;
@@ -36,6 +37,10 @@ namespace GameBerry.TestScene
 
         public float BodyRadius => _bodyRadius;
         public int CurrentHp => _currentHp;
+        public bool IsDead => _isDead;
+        public Vector3 FacingDirection => _lastMoveDirection;
+        public TestDirectionalMonsterController CurrentTarget => IsValidAutoTarget(_autoTarget) ? _autoTarget : null;
+        public bool IsSkillCasting => _previewState == CharacterState.Skill && _skillController != null && _skillController.IsPlayingSkill;
 
         private void Reset()
         {
@@ -66,6 +71,7 @@ namespace GameBerry.TestScene
             if (_isDead)
                 return;
 
+            ValidateAutoTarget();
             UpdatePreviewState();
 
             Vector3 moveDirection = ReadMoveInput();
@@ -73,7 +79,7 @@ namespace GameBerry.TestScene
                 moveDirection.Normalize();
 
             bool hasManualInput = moveDirection.sqrMagnitude > 0.0001f;
-            if (hasManualInput)
+            if (hasManualInput && IsSkillCasting == false)
                 _lastMoveDirection = moveDirection.normalized;
 
             // 자동 이동/공격 계산 (IsPreviewLockedState 체크 전에 실행해야 같은 프레임에 공격 시작)
@@ -84,7 +90,10 @@ namespace GameBerry.TestScene
             if (IsPreviewLockedState(_previewState))
             {
                 ResolveMonsterOverlaps();
-                _spriteAnimator.Play(_previewState, _lastMoveDirection);
+                if (_previewState == CharacterState.Skill && _skillController != null && _skillController.IsPlayingSkill)
+                    _skillController.TickSkillAnimation();
+                else
+                    _spriteAnimator.Play(_previewState, _lastMoveDirection);
                 return;
             }
 
@@ -172,7 +181,7 @@ namespace GameBerry.TestScene
             for (int i = 0; i < AutoBuffer.Count; i++)
             {
                 TestDirectionalMonsterController m = AutoBuffer[i];
-                if (m == null)
+                if (IsValidAutoTarget(m) == false)
                     continue;
 
                 float sqrDist = (m.transform.position - myPos).sqrMagnitude;
@@ -186,6 +195,23 @@ namespace GameBerry.TestScene
             return nearest;
         }
 
+        private void ValidateAutoTarget()
+        {
+            if (IsValidAutoTarget(_autoTarget))
+                return;
+
+            _autoTarget = null;
+            if (_autoPlay == false || _previewState != CharacterState.Attack)
+                return;
+
+            _previewState = CharacterState.None;
+        }
+
+        private static bool IsValidAutoTarget(TestDirectionalMonsterController target)
+        {
+            return target != null && target.isActiveAndEnabled && target.gameObject.activeInHierarchy && target.IsDead == false;
+        }
+
         private void EnsureDependencies()
         {
             if (_spriteAnimator == null)
@@ -193,6 +219,12 @@ namespace GameBerry.TestScene
 
             if (_spriteAnimator == null)
                 _spriteAnimator = gameObject.AddComponent<TestDirectionalSpriteAnimator>();
+
+            if (_skillController == null)
+                _skillController = GetComponent<TestPlayerSkillController>();
+
+            if (_skillController == null)
+                _skillController = gameObject.AddComponent<TestPlayerSkillController>();
 
             if (_hpBar == null)
                 _hpBar = GetComponent<UICharacterState>();
@@ -204,36 +236,27 @@ namespace GameBerry.TestScene
         private void HandleStatePlaybackCompleted(CharacterState completedState)
         {
             if (completedState == CharacterState.Attack)
+            {
+                ValidateAutoTarget();
                 _previewState = CharacterState.None;
+            }
+
+            if (completedState == CharacterState.Skill && _skillController != null)
+            {
+                _skillController.HandleAnimatorStatePlaybackCompleted(completedState);
+                _previewState = CharacterState.None;
+            }
         }
 
         private void HandleStateFrameTriggered(CharacterState state, int frameIndex)
         {
-            if (_isDead || state != CharacterState.Attack)
+            if (_isDead)
                 return;
 
-            var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(transform.position, _attackRange + _bodyRadius);
-            Vector2 forward = TestDirectionalSpriteAnimator.DirectionToVector(_spriteAnimator.CurrentDirection);
-            float halfAngle = _attackAngle * 0.5f;
-
-            for (int i = 0; i < monsters.Count; i++)
-            {
-                TestDirectionalMonsterController monster = monsters[i];
-                if (monster == null)
-                    continue;
-
-                Vector3 toTarget = monster.transform.position - transform.position;
-                toTarget.z = 0.0f;
-                float distance = toTarget.magnitude;
-                if (distance > _attackRange || distance <= 0.0001f)
-                    continue;
-
-                float angle = Vector2.Angle(forward, new Vector2(toTarget.x, toTarget.y));
-                if (angle > halfAngle)
-                    continue;
-
-                monster.TakeDamage(_attackDamage, _spriteAnimator.CurrentDirection);
-            }
+            if (state == CharacterState.Attack)
+                HitMonstersInSector(_attackDamage, _attackRange, _attackAngle);
+            else if (state == CharacterState.Skill && _skillController != null)
+                _skillController.HandleAnimatorStateFrameTriggered(state, frameIndex);
         }
 
         private Vector3 ReadMoveInput()
@@ -262,13 +285,19 @@ namespace GameBerry.TestScene
                 return;
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
                 _previewState = CharacterState.None;
+                _skillController?.CancelSkill();
+            }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
                 _previewState = CharacterState.Attack;
             else if (Input.GetKeyDown(KeyCode.Alpha2))
                 _previewState = CharacterState.Hit;
             else if (Input.GetKeyDown(KeyCode.Alpha3))
-                _previewState = CharacterState.Skill;
+            {
+                if (_skillController != null && _skillController.TryUseFirstSkill())
+                    _previewState = CharacterState.Skill;
+            }
             else if (Input.GetKeyDown(KeyCode.Alpha4))
                 _previewState = CharacterState.Tran;
             else if (Input.GetKeyDown(KeyCode.Alpha5))
@@ -296,7 +325,7 @@ namespace GameBerry.TestScene
             for (int i = 0; i < QueryBuffer.Count; i++)
             {
                 TestDirectionalMonsterController monster = QueryBuffer[i];
-                if (monster == null)
+                if (IsValidAutoTarget(monster) == false)
                     continue;
 
                 Vector3 delta = resolvedPosition - monster.transform.position;
@@ -351,7 +380,7 @@ namespace GameBerry.TestScene
             for (int i = 0; i < QueryBuffer.Count; i++)
             {
                 TestDirectionalMonsterController monster = QueryBuffer[i];
-                if (monster == null)
+                if (IsValidAutoTarget(monster) == false)
                     continue;
                 float sqrDist = (monster.transform.position - transform.position).sqrMagnitude;
                 if (sqrDist < closestSqrDist)
@@ -374,6 +403,9 @@ namespace GameBerry.TestScene
         private void OnDrawGizmos()
         {
             if (_autoTarget == null)
+                return;
+
+            if (IsValidAutoTarget(_autoTarget) == false)
                 return;
 
             Vector3 targetPos = _autoTarget.transform.position;
@@ -402,6 +434,7 @@ namespace GameBerry.TestScene
             _currentHp = Mathf.Max(0, _currentHp - Mathf.Max(0, damage));
             RefreshHpBar();
             _hpBar?.ShowTemporarily();
+            _skillController?.CancelSkill();
             _previewState = CharacterState.None;
             if (_currentHp > 0)
             {
@@ -424,10 +457,49 @@ namespace GameBerry.TestScene
             _hpBar.SetHPBar(normalized);
         }
 
+        private void HitMonstersInSector(int damage, float range, float angle)
+        {
+            var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(transform.position, range + _bodyRadius);
+            Vector2 forward = TestDirectionalSpriteAnimator.DirectionToVector(_spriteAnimator.CurrentDirection);
+            float halfAngle = angle * 0.5f;
+
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                TestDirectionalMonsterController monster = monsters[i];
+                if (IsValidAutoTarget(monster) == false)
+                    continue;
+
+                Vector3 toTarget = monster.transform.position - transform.position;
+                toTarget.z = 0.0f;
+                float distance = toTarget.magnitude;
+                if (distance > range || distance <= 0.0001f)
+                    continue;
+
+                float targetAngle = Vector2.Angle(forward, new Vector2(toTarget.x, toTarget.y));
+                if (targetAngle > halfAngle)
+                    continue;
+
+                monster.TakeDamage(damage, _spriteAnimator.CurrentDirection);
+            }
+        }
+
         private static Vector3 DirectionToWorldVector(EightDirection direction)
         {
             Vector2 vector = TestDirectionalSpriteAnimator.DirectionToVector(direction);
             return new Vector3(vector.x, vector.y, 0.0f);
+        }
+
+        public void SetFacingDirection(Vector3 direction)
+        {
+            if (direction.sqrMagnitude <= 0.0001f)
+                return;
+
+            _lastMoveDirection = direction.normalized;
+        }
+
+        public void ResolveWallsAfterTeleport()
+        {
+            transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, _wallLayerMask);
         }
 
         private void DrawAttackGizmo()

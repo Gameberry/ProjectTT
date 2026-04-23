@@ -23,11 +23,47 @@ namespace GameBerry.TestScene
     public class CharacterStateDirectionalAnimationSet
     {
         public CharacterState State = CharacterState.Idle;
+        public string AnimationKey = "Default";
         public float FramesPerSecond = 6.0f;
         public bool Loop = true;
         public List<int> TriggerFrameIndices = new List<int>();
         [ArrayElementTitle("Direction")]
         public List<DirectionalSpriteAnimationClip> DirectionClips = new List<DirectionalSpriteAnimationClip>();
+    }
+
+    public readonly struct AnimationPlaybackKey : IEquatable<AnimationPlaybackKey>
+    {
+        public readonly CharacterState State;
+        public readonly string AnimationKey;
+
+        public AnimationPlaybackKey(CharacterState state, string animationKey)
+        {
+            State = state;
+            AnimationKey = NormalizeAnimationKey(animationKey);
+        }
+
+        public bool Equals(AnimationPlaybackKey other)
+        {
+            return State == other.State && AnimationKey == other.AnimationKey;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is AnimationPlaybackKey other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((int)State * 397) ^ (AnimationKey != null ? AnimationKey.GetHashCode() : 0);
+            }
+        }
+
+        public static string NormalizeAnimationKey(string animationKey)
+        {
+            return string.IsNullOrWhiteSpace(animationKey) ? "Default" : animationKey.Trim();
+        }
     }
 
     public class TestDirectionalSpriteAnimator : MonoBehaviour
@@ -47,12 +83,13 @@ namespace GameBerry.TestScene
         [Header("Animation Data")] [ArrayElementTitle("State")]
         [SerializeField] private List<CharacterStateDirectionalAnimationSet> _stateAnimations = new List<CharacterStateDirectionalAnimationSet>();
 
-        private readonly Dictionary<CharacterState, Dictionary<EightDirection, DirectionalSpriteAnimationClip>> _animationLookup
-            = new Dictionary<CharacterState, Dictionary<EightDirection, DirectionalSpriteAnimationClip>>();
-        private readonly Dictionary<CharacterState, CharacterStateDirectionalAnimationSet> _stateSetLookup
-            = new Dictionary<CharacterState, CharacterStateDirectionalAnimationSet>();
+        private readonly Dictionary<AnimationPlaybackKey, Dictionary<EightDirection, DirectionalSpriteAnimationClip>> _animationLookup
+            = new Dictionary<AnimationPlaybackKey, Dictionary<EightDirection, DirectionalSpriteAnimationClip>>();
+        private readonly Dictionary<AnimationPlaybackKey, CharacterStateDirectionalAnimationSet> _stateSetLookup
+            = new Dictionary<AnimationPlaybackKey, CharacterStateDirectionalAnimationSet>();
 
         private CharacterState _currentState = CharacterState.None;
+        private string _currentAnimationKey = "Default";
         private EightDirection _currentDirection = EightDirection.SouthEast;
         private DirectionalSpriteAnimationClip _currentClip;
         private CharacterStateDirectionalAnimationSet _currentStateSet;
@@ -63,7 +100,9 @@ namespace GameBerry.TestScene
         private readonly HashSet<int> _triggeredFrameIndices = new HashSet<int>();
 
         public CharacterState CurrentState => _currentState;
+        public string CurrentAnimationKey => _currentAnimationKey;
         public EightDirection CurrentDirection => _currentDirection;
+        public float CurrentPlaybackDuration => GetPlaybackDuration(_currentClip, GetCurrentFramesPerSecond());
         public bool AutoReturnToIdleOnAttackComplete
         {
             get => _autoReturnToIdleOnAttackComplete;
@@ -85,6 +124,7 @@ namespace GameBerry.TestScene
         {
             EnsureVisualObjects();
             EnsureStateEntries();
+            NormalizeAnimationKeys();
             ApplyVisualSettings();
         }
 
@@ -117,16 +157,22 @@ namespace GameBerry.TestScene
 
             EnsureVisualObjects();
             EnsureStateEntries();
+            NormalizeAnimationKeys();
 
             if (_generatePlaceholderAnimations && HasAssignedSprites() == false)
                 BuildPlaceholderAnimations();
 
             RebuildLookup();
             ApplyVisualSettings();
-            Play(CharacterState.Idle, Vector3.down, true);
+            Play(CharacterState.Idle, "Default", Vector3.down, true);
         }
 
         public void Play(CharacterState state, Vector3 moveDirection, bool forceRestart = false)
+        {
+            Play(state, "Default", moveDirection, forceRestart);
+        }
+
+        public void Play(CharacterState state, string animationKey, Vector3 moveDirection, bool forceRestart = false)
         {
             if (_isInitialized == false)
                 Initialize();
@@ -134,21 +180,28 @@ namespace GameBerry.TestScene
             if (state == CharacterState.None || state == CharacterState.Max)
                 state = CharacterState.Idle;
 
+            string normalizedAnimationKey = AnimationPlaybackKey.NormalizeAnimationKey(animationKey);
             EightDirection nextDirection = ResolveDirection(moveDirection, _currentDirection);
-            if (forceRestart == false && _currentState == state && _currentDirection == nextDirection)
+            if (forceRestart == false
+                && _currentState == state
+                && _currentAnimationKey == normalizedAnimationKey
+                && _currentDirection == nextDirection)
                 return;
 
-            if (TryGetClip(state, nextDirection, out DirectionalSpriteAnimationClip clip) == false)
+            if (TryGetClip(state, normalizedAnimationKey, nextDirection, out DirectionalSpriteAnimationClip clip) == false)
                 return;
 
-            bool preserveFrameProgress = forceRestart == false && _currentState == state;
+            bool preserveFrameProgress = forceRestart == false
+                && _currentState == state
+                && _currentAnimationKey == normalizedAnimationKey;
             int preservedFrameIndex = _currentFrameIndex;
             float preservedFrameTimer = _frameTimer;
 
             _currentState = state;
+            _currentAnimationKey = normalizedAnimationKey;
             _currentDirection = nextDirection;
             _currentClip = clip;
-            _currentStateSet = GetStateAnimationSet(state);
+            _currentStateSet = GetStateAnimationSet(state, normalizedAnimationKey);
 
             if (preserveFrameProgress && _currentClip != null && _currentClip.Frames != null && _currentClip.Frames.Length > 0)
             {
@@ -167,7 +220,7 @@ namespace GameBerry.TestScene
 
         public void SetDirection(Vector3 moveDirection, bool forceRefresh = false)
         {
-            Play(_currentState == CharacterState.None ? CharacterState.Idle : _currentState, moveDirection, forceRefresh);
+            Play(_currentState == CharacterState.None ? CharacterState.Idle : _currentState, _currentAnimationKey, moveDirection, forceRefresh);
         }
 
         public static EightDirection ResolveDirection(Vector3 moveDirection, EightDirection fallback)
@@ -195,7 +248,11 @@ namespace GameBerry.TestScene
 
             if (GetCurrentLoop())
             {
-                _currentFrameIndex = (_currentFrameIndex + 1) % _currentClip.Frames.Length;
+                int nextFrameIndex = (_currentFrameIndex + 1) % _currentClip.Frames.Length;
+                if (nextFrameIndex == 0)
+                    _triggeredFrameIndices.Clear();
+
+                _currentFrameIndex = nextFrameIndex;
                 ApplyCurrentFrame();
                 return false;
             }
@@ -246,20 +303,25 @@ namespace GameBerry.TestScene
                 return;
 
             CharacterState completedState = _currentState;
+            string completedAnimationKey = _currentAnimationKey;
             StatePlaybackCompleted?.Invoke(completedState);
 
             if (completedState == CharacterState.Attack)
             {
                 if (_autoReturnToIdleOnAttackComplete)
-                    Play(CharacterState.Idle, DirectionToMoveVector(_currentDirection), true);
+                    Play(CharacterState.Idle, "Default", DirectionToMoveVector(_currentDirection), true);
             }
             else if (completedState == CharacterState.Hit)
             {
-                Play(CharacterState.Idle, DirectionToMoveVector(_currentDirection), true);
+                Play(CharacterState.Idle, "Default", DirectionToMoveVector(_currentDirection), true);
+            }
+            else if (completedState == CharacterState.Skill && completedAnimationKey == _currentAnimationKey)
+            {
+                Play(CharacterState.Idle, "Default", DirectionToMoveVector(_currentDirection), true);
             }
         }
 
-        private bool TryGetClip(CharacterState state, EightDirection direction, out DirectionalSpriteAnimationClip clip)
+        private bool TryGetClip(CharacterState state, string animationKey, EightDirection direction, out DirectionalSpriteAnimationClip clip)
         {
             clip = null;
             _currentFlipX = false;
@@ -267,7 +329,8 @@ namespace GameBerry.TestScene
             if (_animationLookup.Count == 0)
                 RebuildLookup();
 
-            if (_animationLookup.TryGetValue(state, out Dictionary<EightDirection, DirectionalSpriteAnimationClip> directionMap) == false)
+            Dictionary<EightDirection, DirectionalSpriteAnimationClip> directionMap = GetDirectionMap(state, animationKey);
+            if (directionMap == null)
                 return false;
 
             if (TryResolveDirectionalClip(directionMap, direction, out clip, out bool flipX))
@@ -289,6 +352,18 @@ namespace GameBerry.TestScene
             }
 
             return false;
+        }
+
+        private Dictionary<EightDirection, DirectionalSpriteAnimationClip> GetDirectionMap(CharacterState state, string animationKey)
+        {
+            AnimationPlaybackKey playbackKey = new AnimationPlaybackKey(state, animationKey);
+            if (_animationLookup.TryGetValue(playbackKey, out Dictionary<EightDirection, DirectionalSpriteAnimationClip> directionMap))
+                return directionMap;
+
+            if (playbackKey.AnimationKey != "Default")
+                _animationLookup.TryGetValue(new AnimationPlaybackKey(state, "Default"), out directionMap);
+
+            return directionMap;
         }
 
         private bool TryResolveDirectionalClip(
@@ -325,12 +400,14 @@ namespace GameBerry.TestScene
                 if (stateSet == null)
                     continue;
 
-                _stateSetLookup[stateSet.State] = stateSet;
+                stateSet.AnimationKey = AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey);
+                AnimationPlaybackKey playbackKey = new AnimationPlaybackKey(stateSet.State, stateSet.AnimationKey);
+                _stateSetLookup[playbackKey] = stateSet;
 
-                if (_animationLookup.TryGetValue(stateSet.State, out Dictionary<EightDirection, DirectionalSpriteAnimationClip> directionMap) == false)
+                if (_animationLookup.TryGetValue(playbackKey, out Dictionary<EightDirection, DirectionalSpriteAnimationClip> directionMap) == false)
                 {
                     directionMap = new Dictionary<EightDirection, DirectionalSpriteAnimationClip>();
-                    _animationLookup.Add(stateSet.State, directionMap);
+                    _animationLookup.Add(playbackKey, directionMap);
                 }
 
                 for (int j = 0; j < stateSet.DirectionClips.Count; j++)
@@ -407,25 +484,34 @@ namespace GameBerry.TestScene
             EnsureStateEntry(CharacterState.Dead, false);
             EnsureStateEntry(CharacterState.Skill, false);
             EnsureStateEntry(CharacterState.Tran, false);
+            EnsureNamedStateEntry(CharacterState.Skill, TestSkillData.ByungRyeokIlSeomAnimationKey, false, 12.0f);
         }
 
         private void EnsureStateEntry(CharacterState state, bool defaultLoop)
         {
-            CharacterStateDirectionalAnimationSet stateSet = _stateAnimations.Find(data => data != null && data.State == state);
+            CharacterStateDirectionalAnimationSet stateSet = _stateAnimations.Find(
+                data => data != null
+                     && data.State == state
+                     && AnimationPlaybackKey.NormalizeAnimationKey(data.AnimationKey) == "Default");
             if (stateSet == null)
             {
                 stateSet = new CharacterStateDirectionalAnimationSet
                 {
                     State = state,
+                    AnimationKey = "Default",
                     FramesPerSecond = GetDefaultFramesPerSecond(state),
                     Loop = defaultLoop,
                 };
                 _stateAnimations.Add(stateSet);
             }
-            else if (stateSet.FramesPerSecond <= 0.0f)
+            else
             {
-                stateSet.FramesPerSecond = GetDefaultFramesPerSecond(state);
+                stateSet.AnimationKey = AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey);
+                if (stateSet.FramesPerSecond <= 0.0f)
+                    stateSet.FramesPerSecond = GetDefaultFramesPerSecond(state);
             }
+
+            EnsureDefaultTriggerFrames(stateSet);
 
             EightDirection[] requiredDirections = GetRequiredDirections();
             for (int i = 0; i < requiredDirections.Length; i++)
@@ -439,6 +525,82 @@ namespace GameBerry.TestScene
                 {
                     Direction = direction,
                 });
+            }
+        }
+
+        private void EnsureNamedStateEntry(CharacterState state, string animationKey, bool defaultLoop, float defaultFramesPerSecond)
+        {
+            string normalizedAnimationKey = AnimationPlaybackKey.NormalizeAnimationKey(animationKey);
+            CharacterStateDirectionalAnimationSet stateSet = _stateAnimations.Find(
+                data => data != null
+                     && data.State == state
+                     && AnimationPlaybackKey.NormalizeAnimationKey(data.AnimationKey) == normalizedAnimationKey);
+            if (stateSet == null)
+            {
+                stateSet = new CharacterStateDirectionalAnimationSet
+                {
+                    State = state,
+                    AnimationKey = normalizedAnimationKey,
+                    FramesPerSecond = defaultFramesPerSecond,
+                    Loop = defaultLoop,
+                };
+                _stateAnimations.Add(stateSet);
+            }
+            else
+            {
+                stateSet.AnimationKey = normalizedAnimationKey;
+                if (stateSet.FramesPerSecond <= 0.0f)
+                    stateSet.FramesPerSecond = defaultFramesPerSecond;
+            }
+
+            EnsureDefaultTriggerFrames(stateSet);
+
+            EightDirection[] requiredDirections = GetRequiredDirections();
+            for (int i = 0; i < requiredDirections.Length; i++)
+            {
+                EightDirection direction = requiredDirections[i];
+                DirectionalSpriteAnimationClip clip = stateSet.DirectionClips.Find(data => data != null && data.Direction == direction);
+                if (clip != null)
+                    continue;
+
+                stateSet.DirectionClips.Add(new DirectionalSpriteAnimationClip
+                {
+                    Direction = direction,
+                });
+            }
+        }
+
+        private void NormalizeAnimationKeys()
+        {
+            for (int i = 0; i < _stateAnimations.Count; i++)
+            {
+                CharacterStateDirectionalAnimationSet stateSet = _stateAnimations[i];
+                if (stateSet == null)
+                    continue;
+
+                stateSet.AnimationKey = AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey);
+                EnsureDefaultTriggerFrames(stateSet);
+            }
+        }
+
+        private static void EnsureDefaultTriggerFrames(CharacterStateDirectionalAnimationSet stateSet)
+        {
+            if (stateSet == null || stateSet.TriggerFrameIndices == null)
+                return;
+
+            if (stateSet.TriggerFrameIndices.Count > 0)
+                return;
+
+            if (stateSet.State == CharacterState.Attack)
+            {
+                stateSet.TriggerFrameIndices.Add(1);
+                return;
+            }
+
+            if (stateSet.State == CharacterState.Skill
+                && AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey) == TestSkillData.ByungRyeokIlSeomAnimationKey)
+            {
+                stateSet.TriggerFrameIndices.Add(1);
             }
         }
 
@@ -481,12 +643,18 @@ namespace GameBerry.TestScene
             }
         }
 
-        private CharacterStateDirectionalAnimationSet GetStateAnimationSet(CharacterState state)
+        private CharacterStateDirectionalAnimationSet GetStateAnimationSet(CharacterState state, string animationKey)
         {
             if (_stateSetLookup.Count == 0)
                 RebuildLookup();
 
-            _stateSetLookup.TryGetValue(state, out CharacterStateDirectionalAnimationSet stateSet);
+            AnimationPlaybackKey playbackKey = new AnimationPlaybackKey(state, animationKey);
+            if (_stateSetLookup.TryGetValue(playbackKey, out CharacterStateDirectionalAnimationSet stateSet))
+                return stateSet;
+
+            if (playbackKey.AnimationKey != "Default")
+                _stateSetLookup.TryGetValue(new AnimationPlaybackKey(state, "Default"), out stateSet);
+
             return stateSet;
         }
 
@@ -496,6 +664,14 @@ namespace GameBerry.TestScene
                 return _currentStateSet.FramesPerSecond;
 
             return GetDefaultFramesPerSecond(_currentState);
+        }
+
+        private static float GetPlaybackDuration(DirectionalSpriteAnimationClip clip, float framesPerSecond)
+        {
+            if (clip == null || clip.Frames == null || clip.Frames.Length == 0 || framesPerSecond <= 0.0f)
+                return 0.0f;
+
+            return clip.Frames.Length / framesPerSecond;
         }
 
         private bool GetCurrentLoop()
@@ -512,11 +688,6 @@ namespace GameBerry.TestScene
         }
 
         private static bool GetDefaultLoop(CharacterState state)
-        {
-            return state == CharacterState.Idle || state == CharacterState.Run;
-        }
-
-        private static bool ShouldLoop(CharacterState state)
         {
             return state == CharacterState.Idle || state == CharacterState.Run;
         }

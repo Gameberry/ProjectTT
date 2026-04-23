@@ -31,8 +31,10 @@ namespace GameBerry.TestScene
         [SerializeField]
         private int _currentHp;
         private bool _isDead;
+        private bool _pendingHideAfterDeath;
 
         public float BodyRadius => _bodyRadius;
+        public bool IsDead => _isDead;
 
         private void OnEnable()
         {
@@ -78,6 +80,13 @@ namespace GameBerry.TestScene
 
         private void Update()
         {
+            if (_pendingHideAfterDeath && gameObject.activeSelf)
+            {
+                _pendingHideAfterDeath = false;
+                gameObject.SetActive(false);
+                return;
+            }
+
             if (_spriteAnimator == null || _isDead)
                 return;
 
@@ -244,6 +253,13 @@ namespace GameBerry.TestScene
 
         private void HandleStatePlaybackCompleted(CharacterState completedState)
         {
+            if (completedState == CharacterState.Dead)
+            {
+                CancelInvoke(nameof(HideAfterDeathFallback));
+                gameObject.SetActive(false);
+                return;
+            }
+
             if (completedState != CharacterState.Attack)
                 return;
 
@@ -314,7 +330,9 @@ namespace GameBerry.TestScene
             _isDead = true;
             _isAttacking = false;
             _spriteAnimator.Play(CharacterState.Dead, _lastMoveDirection, true);
-            gameObject.SetActive(false);
+            if (_hpBar != null)
+                _hpBar.HideImmediate();
+            ScheduleHideAfterDeath();
         }
 
         private void RefreshHpBar()
@@ -337,6 +355,25 @@ namespace GameBerry.TestScene
         {
             Vector2 vector = TestDirectionalSpriteAnimator.DirectionToVector(direction);
             return new Vector3(vector.x, vector.y, 0.0f);
+        }
+
+        private void ScheduleHideAfterDeath()
+        {
+            CancelInvoke(nameof(HideAfterDeathFallback));
+
+            float delay = _spriteAnimator != null ? _spriteAnimator.CurrentPlaybackDuration : 0.0f;
+            if (delay <= 0.0f)
+                delay = 0.75f;
+
+            Invoke(nameof(HideAfterDeathFallback), delay + 0.05f);
+        }
+
+        private void HideAfterDeathFallback()
+        {
+            if (_isDead == false)
+                return;
+
+            _pendingHideAfterDeath = true;
         }
 
         private void OnDrawGizmosSelected()
