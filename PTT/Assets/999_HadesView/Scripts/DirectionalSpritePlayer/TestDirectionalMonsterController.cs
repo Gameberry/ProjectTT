@@ -330,8 +330,6 @@ namespace GameBerry.TestScene
             _isDead = true;
             _isAttacking = false;
             _spriteAnimator.Play(CharacterState.Dead, _lastMoveDirection, true);
-            if (_hpBar != null)
-                _hpBar.HideImmediate();
             ScheduleHideAfterDeath();
         }
 

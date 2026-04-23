@@ -155,30 +155,27 @@ namespace GameBerry.TestScene
         private TestDirectionalMonsterController ResolveSkillTarget(TestSkillData skillData)
         {
             TestDirectionalMonsterController currentTarget = _playerController.CurrentTarget;
-            if (IsValidSkillTarget(currentTarget))
-                return currentTarget;
-
-            float queryRadius = Mathf.Max(999.0f, Mathf.Max(skillData.DashDistance, skillData.Range));
+            float queryRadius = Mathf.Max(skillData.Range, skillData.DashDistance);
             var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(_playerController.transform.position, queryRadius);
 
-            TestDirectionalMonsterController nearestTarget = null;
-            float nearestSqrDistance = float.MaxValue;
-
-            for (int i = 0; i < monsters.Count; i++)
+            Vector3 baseDirection = Vector3.zero;
+            if (IsValidSkillTarget(currentTarget))
             {
-                TestDirectionalMonsterController monster = monsters[i];
-                if (IsValidSkillTarget(monster) == false)
-                    continue;
-
-                float sqrDistance = (monster.transform.position - _playerController.transform.position).sqrMagnitude;
-                if (sqrDistance < nearestSqrDistance)
-                {
-                    nearestSqrDistance = sqrDistance;
-                    nearestTarget = monster;
-                }
+                baseDirection = currentTarget.transform.position - _playerController.transform.position;
+                baseDirection.z = 0.0f;
             }
 
-            return nearestTarget;
+            if (baseDirection.sqrMagnitude <= 0.0001f)
+            {
+                TestDirectionalMonsterController nearestTarget = FindNearestTarget(monsters, queryRadius);
+                if (nearestTarget == null)
+                    return null;
+
+                baseDirection = nearestTarget.transform.position - _playerController.transform.position;
+                baseDirection.z = 0.0f;
+            }
+
+            return FindFarthestTargetInDirection(monsters, baseDirection, queryRadius, skillData.Angle);
         }
 
         private void ExecuteActiveSkillHit()
@@ -254,12 +251,46 @@ namespace GameBerry.TestScene
             if (IsValidSkillTarget(_lockedTarget))
                 return _lockedTarget;
 
-            float queryRadius = Mathf.Max(skillData.DashDistance, skillData.Range);
+            float queryRadius = Mathf.Max(skillData.Range, skillData.DashDistance);
             var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(_playerController.transform.position, queryRadius);
+            return FindFarthestTargetInDirection(monsters, direction, queryRadius, skillData.Angle);
+        }
 
-            TestDirectionalMonsterController bestTarget = null;
-            float bestDistance = float.MaxValue;
-            Vector2 forward = new Vector2(direction.x, direction.y).normalized;
+        private TestDirectionalMonsterController FindNearestTarget(List<TestDirectionalMonsterController> monsters, float maxRange)
+        {
+            TestDirectionalMonsterController nearestTarget = null;
+            float nearestSqrDistance = maxRange * maxRange;
+
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                TestDirectionalMonsterController monster = monsters[i];
+                if (IsValidSkillTarget(monster) == false)
+                    continue;
+
+                float sqrDistance = (monster.transform.position - _playerController.transform.position).sqrMagnitude;
+                if (sqrDistance < nearestSqrDistance)
+                {
+                    nearestSqrDistance = sqrDistance;
+                    nearestTarget = monster;
+                }
+            }
+
+            return nearestTarget;
+        }
+
+        private TestDirectionalMonsterController FindFarthestTargetInDirection(
+            List<TestDirectionalMonsterController> monsters,
+            Vector3 baseDirection,
+            float maxRange,
+            float allowedAngle)
+        {
+            if (baseDirection.sqrMagnitude <= 0.0001f)
+                return null;
+
+            TestDirectionalMonsterController farthestTarget = null;
+            float farthestDistance = 0.0f;
+            Vector2 forward = new Vector2(baseDirection.x, baseDirection.y).normalized;
+            float halfAngle = allowedAngle * 0.5f;
 
             for (int i = 0; i < monsters.Count; i++)
             {
@@ -270,21 +301,21 @@ namespace GameBerry.TestScene
                 Vector3 toTarget = monster.transform.position - _playerController.transform.position;
                 toTarget.z = 0.0f;
                 float distance = toTarget.magnitude;
-                if (distance <= 0.0001f || distance > skillData.DashDistance)
+                if (distance <= 0.0001f || distance > maxRange)
                     continue;
 
                 float angle = Vector2.Angle(forward, new Vector2(toTarget.x, toTarget.y));
-                if (angle > skillData.Angle * 0.5f)
+                if (angle > halfAngle)
                     continue;
 
-                if (distance < bestDistance)
+                if (distance > farthestDistance)
                 {
-                    bestDistance = distance;
-                    bestTarget = monster;
+                    farthestDistance = distance;
+                    farthestTarget = monster;
                 }
             }
 
-            return bestTarget;
+            return farthestTarget;
         }
 
         private void HitBlinkSlashTargets(Vector3 startPosition, Vector3 destination, TestSkillData skillData, TestDirectionalMonsterController blinkTarget)
@@ -300,9 +331,10 @@ namespace GameBerry.TestScene
 
         private void HitMonstersAlongSegment(Vector3 startPosition, Vector3 endPosition, float hitRadius, int damage)
         {
-            Vector3 center = (startPosition + endPosition) * 0.5f;
-            float queryRadius = Vector3.Distance(startPosition, endPosition) * 0.5f + hitRadius + _playerController.BodyRadius;
-            var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(center, queryRadius);
+            Vector3 segment = endPosition - startPosition;
+            float segmentLength = segment.magnitude;
+            float queryRadius = segmentLength + hitRadius + _playerController.BodyRadius;
+            var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(startPosition, queryRadius);
 
             for (int i = 0; i < monsters.Count; i++)
             {
