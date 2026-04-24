@@ -32,6 +32,7 @@ namespace GameBerry.TestScene
         private int _steerFrame = -999;
         private const int SteerInterval = 3;
         private TestDirectionalMonsterController _autoTarget;
+        private Transform _autoMoveDestination;
         [SerializeField]
         private int _currentHp;
         private bool _isDead;
@@ -85,6 +86,9 @@ namespace GameBerry.TestScene
             if (hasManualInput && IsSkillCasting == false)
                 _lastMoveDirection = moveDirection.normalized;
 
+            if (hasManualInput && _previewState == CharacterState.Attack)
+                _previewState = CharacterState.None;
+
             // 자동 이동/공격 계산 (IsPreviewLockedState 체크 전에 실행해야 같은 프레임에 공격 시작)
             Vector3 autoMove = Vector3.zero;
             if (!hasManualInput && _autoPlay && _previewState == CharacterState.None)
@@ -92,7 +96,7 @@ namespace GameBerry.TestScene
 
             if (IsPreviewLockedState(_previewState))
             {
-                ResolveMonsterOverlaps();
+                ResolveMonsterOverlaps(false);
                 if (_previewState == CharacterState.Skill && _skillController != null && _skillController.IsPlayingSkill)
                     _skillController.TickSkillAnimation();
                 else
@@ -103,18 +107,18 @@ namespace GameBerry.TestScene
             if (hasManualInput)
             {
                 transform.position += moveDirection * (_moveSpeed * Time.deltaTime);
-                ResolveMonsterOverlaps();
+                ResolveMonsterOverlaps(false);
                 _spriteAnimator.Play(CharacterState.Run, _lastMoveDirection);
             }
             else if (autoMove.sqrMagnitude > 0.0001f)
             {
                 transform.position += autoMove;
-                ResolveMonsterOverlaps();
+                ResolveMonsterOverlaps(true);
                 _spriteAnimator.Play(CharacterState.Run, _lastMoveDirection);
             }
             else
             {
-                ResolveMonsterOverlaps();
+                ResolveMonsterOverlaps(true);
                 CharacterState idleLikeState = _previewState == CharacterState.None ? CharacterState.Idle : _previewState;
                 _spriteAnimator.Play(idleLikeState, _lastMoveDirection);
             }
@@ -122,6 +126,17 @@ namespace GameBerry.TestScene
 
         private Vector3 ComputeAutoMove()
         {
+            if (_autoMoveDestination != null && _autoMoveDestination.gameObject.activeInHierarchy)
+            {
+                Vector3 toDestination = _autoMoveDestination.position - transform.position;
+                toDestination.z = 0f;
+                if (toDestination.sqrMagnitude > 0.0025f)
+                {
+                    _lastMoveDirection = toDestination.normalized;
+                    return GetSteeringDirection(toDestination) * (_moveSpeed * Time.deltaTime);
+                }
+            }
+
             TestDirectionalMonsterManager.Instance.QueryMonsters((Vector2)transform.position, _autoDetectRange, AutoBuffer);
 
             _autoTarget = FindNearestInBuffer();
@@ -316,7 +331,7 @@ namespace GameBerry.TestScene
                 || state == CharacterState.Dead;
         }
 
-        private void ResolveMonsterOverlaps()
+        private void ResolveMonsterOverlaps(bool allowAutoAttack)
         {
             Vector3 resolvedPosition = transform.position;
             float queryRadius = _bodyRadius + 1.0f;
@@ -357,7 +372,7 @@ namespace GameBerry.TestScene
             transform.position = resolvedPosition;
             transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, _wallLayerMask);
 
-            if (!_autoPlay)
+            if (!_autoPlay || allowAutoAttack == false)
                 return;
 
             if (overlappingMonster != null)
@@ -452,13 +467,16 @@ namespace GameBerry.TestScene
             enabled = false;
         }
 
-        public void ResetForSpawn(Vector3 worldPosition)
+        public void ResetForSpawn(Vector3 worldPosition, bool restoreFullHp = true)
         {
             transform.position = worldPosition;
-            _currentHp = _maxHp;
+            if (restoreFullHp)
+                _currentHp = _maxHp;
+
             _isDead = false;
             _previewState = CharacterState.None;
             _autoTarget = null;
+            _autoMoveDestination = null;
             _cachedSteerDirection = Vector3.zero;
             _steerFrame = -999;
             _skillController?.CancelSkill();
@@ -518,6 +536,16 @@ namespace GameBerry.TestScene
                 return;
 
             _lastMoveDirection = direction.normalized;
+        }
+
+        public void SetAutoMoveDestination(Transform destination)
+        {
+            _autoMoveDestination = destination;
+        }
+
+        public void ClearAutoMoveDestination()
+        {
+            _autoMoveDestination = null;
         }
 
         public void ResolveWallsAfterTeleport()

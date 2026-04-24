@@ -13,6 +13,7 @@ namespace GameBerry.TestScene
         [SerializeField] private TestMapSelectionUI _mapSelectionUI;
         [SerializeField] private TestDungeonResultUI _dungeonResultUI;
         [SerializeField] private Transform _roomRoot;
+        [SerializeField] private float _lastRoomClearDelay = 0.5f;
         [SerializeField] private float _returnToLobbyDelayOnDeath = 1.0f;
         [SerializeField] private float _returnToLobbyDelayOnClear = 1.5f;
 
@@ -75,6 +76,14 @@ namespace GameBerry.TestScene
                 return;
 
             _isDungeonClearPending = true;
+
+            if (IsLastRoom())
+            {
+                CancelInvoke(nameof(HandleMapCleared));
+                Invoke(nameof(HandleMapCleared), Mathf.Max(0.0f, _lastRoomClearDelay));
+                return;
+            }
+
             SetCurrentPortalActive(true);
         }
 
@@ -261,6 +270,8 @@ namespace GameBerry.TestScene
 
         private void LoadLobby()
         {
+            CancelInvoke(nameof(HandleMapCleared));
+            CancelInvoke(nameof(ReturnToLobbyAfterDeath));
             _returningToLobby = false;
             _isDungeonClearPending = false;
             SelectedMap = null;
@@ -274,6 +285,7 @@ namespace GameBerry.TestScene
         {
             EnsurePlayer();
             EnsureRoomRoot();
+            CancelInvoke(nameof(HandleMapCleared));
             DestroyCurrentRoom();
 
             if (roomPrefab == null)
@@ -286,7 +298,10 @@ namespace GameBerry.TestScene
                 _currentRoomInstance = _currentRoomObject.AddComponent<TestRoomInstance>();
 
             if (_player != null)
-                _player.ResetForSpawn(_currentRoomInstance.PlayerSpawnPoint.position);
+            {
+                _player.ClearAutoMoveDestination();
+                _player.ResetForSpawn(_currentRoomInstance.PlayerSpawnPoint.position, isLobby);
+            }
 
             SetCurrentPortalActive(isLobby);
             _isDungeonClearPending = isLobby;
@@ -311,6 +326,14 @@ namespace GameBerry.TestScene
             LoadRoom(SelectedMap.RoomPrefabs[_currentRoomIndex], false);
         }
 
+        private bool IsLastRoom()
+        {
+            return SelectedMap != null
+                && SelectedMap.RoomCount > 0
+                && _currentRoomIndex >= 0
+                && _currentRoomIndex == SelectedMap.RoomCount - 1;
+        }
+
         private bool AreAllRoomMonstersCleared()
         {
             if (_currentRoomInstance == null)
@@ -333,9 +356,17 @@ namespace GameBerry.TestScene
         private void SetCurrentPortalActive(bool active)
         {
             if (_currentRoomInstance == null || _currentRoomInstance.RoomPortal == null)
+            {
+                _player?.ClearAutoMoveDestination();
                 return;
+            }
 
             _currentRoomInstance.RoomPortal.SetPortalActive(active);
+
+            if (active && _currentRoomInstance.IsLobbyRoom == false)
+                _player?.SetAutoMoveDestination(_currentRoomInstance.RoomPortal.transform);
+            else
+                _player?.ClearAutoMoveDestination();
         }
 
         private void DestroyCurrentRoom()
