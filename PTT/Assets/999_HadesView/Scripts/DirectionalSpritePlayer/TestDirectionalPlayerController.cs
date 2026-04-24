@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace GameBerry.TestScene
 {
@@ -34,6 +35,8 @@ namespace GameBerry.TestScene
         [SerializeField]
         private int _currentHp;
         private bool _isDead;
+
+        public event Action Died;
 
         public float BodyRadius => _bodyRadius;
         public int CurrentHp => _currentHp;
@@ -445,7 +448,27 @@ namespace GameBerry.TestScene
             _isDead = true;
             _previewState = CharacterState.Dead;
             _spriteAnimator.Play(CharacterState.Dead, DirectionToWorldVector(hitDirection), true);
+            Died?.Invoke();
             enabled = false;
+        }
+
+        public void ResetForSpawn(Vector3 worldPosition)
+        {
+            transform.position = worldPosition;
+            _currentHp = _maxHp;
+            _isDead = false;
+            _previewState = CharacterState.None;
+            _autoTarget = null;
+            _cachedSteerDirection = Vector3.zero;
+            _steerFrame = -999;
+            _skillController?.CancelSkill();
+            RefreshHpBar();
+            _hpBar?.HideImmediate();
+            SetFacingDirection(Vector3.down);
+            enabled = true;
+
+            if (_spriteAnimator != null)
+                _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection, true);
         }
 
         private void RefreshHpBar()
