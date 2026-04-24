@@ -219,10 +219,6 @@ namespace GameBerry.TestScene
                 return;
 
             _autoTarget = null;
-            if (_autoPlay == false || _previewState != CharacterState.Attack)
-                return;
-
-            _previewState = CharacterState.None;
         }
 
         private static bool IsValidAutoTarget(TestDirectionalMonsterController target)
