@@ -71,6 +71,25 @@ namespace GameBerry.TestScene
             return handle.gameObject;
         }
 
+        public GameObject PlayWithSizeY(GameObject prefab, Vector3 position, Quaternion rotation, float startSizeY, Transform parent = null)
+        {
+            if (prefab == null)
+                return null;
+
+            Queue<PooledParticleHandle> pool = GetOrCreatePool(prefab);
+            PooledParticleHandle handle = pool.Count > 0 ? pool.Dequeue() : CreateHandle(prefab);
+            if (handle == null)
+                return null;
+
+            handle.transform.SetPositionAndRotation(position, rotation);
+            handle.transform.SetParent(parent, false);
+            handle.gameObject.SetActive(true);
+            handle.SetStartSizeY(startSizeY);
+            handle.Play();
+            _activeParticles.Add(handle);
+            return handle.gameObject;
+        }
+
         private Queue<PooledParticleHandle> GetOrCreatePool(GameObject prefab)
         {
             if (_poolLookup.TryGetValue(prefab, out Queue<PooledParticleHandle> pool))
@@ -114,6 +133,17 @@ namespace GameBerry.TestScene
             {
                 SourcePrefab = sourcePrefab;
                 _particleSystems = GetComponentsInChildren<ParticleSystem>(true);
+            }
+
+            public void SetStartSizeY(float sizeY)
+            {
+                for (int i = 0; i < _particleSystems.Length; i++)
+                {
+                    if (_particleSystems[i] == null)
+                        continue;
+                    var main = _particleSystems[i].main;
+                    main.startSizeY = new ParticleSystem.MinMaxCurve(sizeY);
+                }
             }
 
             public void Play()

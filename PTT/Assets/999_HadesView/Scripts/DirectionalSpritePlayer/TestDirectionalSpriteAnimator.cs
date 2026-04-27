@@ -34,7 +34,7 @@ namespace GameBerry.TestScene
         public int FrameIndex;
         public bool TriggerHit;
         public AudioClip Sound;
-        [ArrayElementTitle("Direction")]
+        //[ArrayElementTitle("Direction")]
         public List<FrameParticleEvent> Particles = new List<FrameParticleEvent>();
 
         public Transform Root;

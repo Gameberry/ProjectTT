@@ -11,6 +11,7 @@ namespace GameBerry.TestScene
         [SerializeField] private TestDirectionalPlayerController _playerController;
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
         [SerializeField] private List<TestSkillData> _skills = new List<TestSkillData>();
+        [SerializeField] private GameObject[] _pathParticlePrefabs = new GameObject[0];
         [SerializeField] private bool _drawSkillGizmos = true;
         [SerializeField] private float _skillGizmoDuration = 2.0f;
 
@@ -237,6 +238,7 @@ namespace GameBerry.TestScene
 
             HitBlinkSlashTargets(startPosition, destination, skillData, blinkTarget);
             CacheSkillGizmo(startPosition, destination, hitRadius);
+            SetupAndPlayPathParticles(startPosition, destination, _activeSkillDirection);
 
             _playerController.transform.position = destination;
             _playerController.ResolveWallsAfterTeleport();
@@ -252,6 +254,25 @@ namespace GameBerry.TestScene
             targetPosition.z = 0.0f;
             Vector3 behindOffset = direction.normalized * (blinkTarget.BodyRadius + _playerController.BodyRadius + 0.1f);
             return targetPosition + behindOffset;
+        }
+
+        private void SetupAndPlayPathParticles(Vector3 startPos, Vector3 endPos, Vector3 direction)
+        {
+            if (_pathParticlePrefabs == null || _pathParticlePrefabs.Length == 0)
+                return;
+
+            Vector3 midPoint = (startPos + endPos) * 0.5f;
+            float dashLength = (endPos - startPos).magnitude;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+            Quaternion rotation = Quaternion.Euler(0f, 0f, angle);
+
+            for (int i = 0; i < _pathParticlePrefabs.Length; i++)
+            {
+                if (_pathParticlePrefabs[i] == null)
+                    continue;
+
+                TestParticlePool.Instance.PlayWithSizeY(_pathParticlePrefabs[i], endPos, rotation, dashLength);
+            }
         }
 
         private TestDirectionalMonsterController FindBlinkSlashTarget(TestSkillData skillData, Vector3 direction)
