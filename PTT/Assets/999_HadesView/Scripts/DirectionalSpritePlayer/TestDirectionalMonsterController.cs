@@ -318,6 +318,7 @@ namespace GameBerry.TestScene
             _currentHp = Mathf.Max(0, _currentHp - Mathf.Max(0, damage));
             RefreshHpBar();
             _hpBar?.ShowTemporarily();
+            TestDamageTextManager.Instance.ShowDamage(transform.position, damage);
             _lastMoveDirection = DirectionToWorldVector(hitDirection);
             _isAttacking = false;
 

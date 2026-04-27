@@ -178,6 +178,9 @@ namespace GameBerry.TestScene
             }
 
             GameObject uiObject = new GameObject("TestMapSelectionUI");
+            Canvas parentCanvas = FindObjectOfType<Canvas>();
+            if (parentCanvas != null)
+                uiObject.transform.SetParent(parentCanvas.transform, false);
             _mapSelectionUI = uiObject.AddComponent<TestMapSelectionUI>();
             EnsureResultUi();
         }

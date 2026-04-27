@@ -20,6 +20,43 @@ namespace GameBerry.TestScene
     }
 
     [Serializable]
+    public class FrameParticleEvent
+    {
+        public EightDirection Direction = EightDirection.SouthEast;
+        public GameObject ParticleObject;
+        public Vector3 LocalOffset = Vector3.zero;
+        public Vector3 RotationOffset = Vector3.zero;
+    }
+
+    [Serializable]
+    public class AnimationFrameEventData
+    {
+        public int FrameIndex;
+        public bool TriggerHit;
+        public AudioClip Sound;
+        [ArrayElementTitle("Direction")]
+        public List<FrameParticleEvent> Particles = new List<FrameParticleEvent>();
+
+        public Transform Root;
+    }
+
+    public readonly struct AnimationFrameEventTrigger
+    {
+        public readonly CharacterState State;
+        public readonly string AnimationKey;
+        public readonly int FrameIndex;
+        public readonly AnimationFrameEventData EventData;
+
+        public AnimationFrameEventTrigger(CharacterState state, string animationKey, int frameIndex, AnimationFrameEventData eventData)
+        {
+            State = state;
+            AnimationKey = animationKey;
+            FrameIndex = frameIndex;
+            EventData = eventData;
+        }
+    }
+
+    [Serializable]
     public class CharacterStateDirectionalAnimationSet
     {
         public CharacterState State = CharacterState.Idle;
@@ -27,6 +64,8 @@ namespace GameBerry.TestScene
         public float FramesPerSecond = 6.0f;
         public bool Loop = true;
         public List<int> TriggerFrameIndices = new List<int>();
+        [ArrayElementTitle("FrameIndex")]
+        public List<AnimationFrameEventData> FrameEvents = new List<AnimationFrameEventData>();
         [ArrayElementTitle("Direction")]
         public List<DirectionalSpriteAnimationClip> DirectionClips = new List<DirectionalSpriteAnimationClip>();
     }
@@ -70,6 +109,7 @@ namespace GameBerry.TestScene
     {
         public event Action<CharacterState> StatePlaybackCompleted;
         public event Action<CharacterState, int> StateFrameTriggered;
+        public event Action<AnimationFrameEventTrigger> FrameEventTriggered;
 
         [Header("References")]
         [SerializeField] private Transform _visualRoot;
@@ -97,7 +137,7 @@ namespace GameBerry.TestScene
         private float _frameTimer;
         private bool _isInitialized;
         private bool _currentFlipX;
-        private readonly HashSet<int> _triggeredFrameIndices = new HashSet<int>();
+        private readonly HashSet<int> _triggeredEventKeys = new HashSet<int>();
 
         public CharacterState CurrentState => _currentState;
         public string CurrentAnimationKey => _currentAnimationKey;
@@ -212,7 +252,7 @@ namespace GameBerry.TestScene
             {
                 _currentFrameIndex = 0;
                 _frameTimer = 0.0f;
-                _triggeredFrameIndices.Clear();
+                _triggeredEventKeys.Clear();
             }
 
             ApplyCurrentFrame();
@@ -250,7 +290,7 @@ namespace GameBerry.TestScene
             {
                 int nextFrameIndex = (_currentFrameIndex + 1) % _currentClip.Frames.Length;
                 if (nextFrameIndex == 0)
-                    _triggeredFrameIndices.Clear();
+                    _triggeredEventKeys.Clear();
 
                 _currentFrameIndex = nextFrameIndex;
                 ApplyCurrentFrame();
@@ -280,20 +320,25 @@ namespace GameBerry.TestScene
 
         private void RaiseFrameTriggersIfNeeded()
         {
-            if (_currentStateSet == null || _currentStateSet.TriggerFrameIndices == null || _currentStateSet.TriggerFrameIndices.Count == 0)
+            if (_currentStateSet == null || _currentStateSet.FrameEvents == null || _currentStateSet.FrameEvents.Count == 0)
                 return;
 
-            if (_triggeredFrameIndices.Contains(_currentFrameIndex))
-                return;
-
-            for (int i = 0; i < _currentStateSet.TriggerFrameIndices.Count; i++)
+            for (int i = 0; i < _currentStateSet.FrameEvents.Count; i++)
             {
-                if (_currentStateSet.TriggerFrameIndices[i] != _currentFrameIndex)
+                AnimationFrameEventData frameEvent = _currentStateSet.FrameEvents[i];
+                if (frameEvent == null || frameEvent.FrameIndex != _currentFrameIndex)
                     continue;
 
-                _triggeredFrameIndices.Add(_currentFrameIndex);
-                StateFrameTriggered?.Invoke(_currentState, _currentFrameIndex);
-                return;
+                int eventKey = (_currentFrameIndex * 397) ^ i;
+                if (_triggeredEventKeys.Contains(eventKey))
+                    continue;
+
+                _triggeredEventKeys.Add(eventKey);
+
+                if (frameEvent.TriggerHit)
+                    StateFrameTriggered?.Invoke(_currentState, _currentFrameIndex);
+
+                FrameEventTriggered?.Invoke(new AnimationFrameEventTrigger(_currentState, _currentAnimationKey, _currentFrameIndex, frameEvent));
             }
         }
 
@@ -585,22 +630,63 @@ namespace GameBerry.TestScene
 
         private static void EnsureDefaultTriggerFrames(CharacterStateDirectionalAnimationSet stateSet)
         {
-            if (stateSet == null || stateSet.TriggerFrameIndices == null)
+            if (stateSet == null)
                 return;
 
-            if (stateSet.TriggerFrameIndices.Count > 0)
+            if (stateSet.FrameEvents == null)
+                stateSet.FrameEvents = new List<AnimationFrameEventData>();
+
+            if (stateSet.TriggerFrameIndices != null)
+            {
+                for (int i = 0; i < stateSet.TriggerFrameIndices.Count; i++)
+                {
+                    int frameIndex = stateSet.TriggerFrameIndices[i];
+                    bool hasHitEvent = false;
+                    for (int j = 0; j < stateSet.FrameEvents.Count; j++)
+                    {
+                        AnimationFrameEventData frameEvent = stateSet.FrameEvents[j];
+                        if (frameEvent == null)
+                            continue;
+
+                        if (frameEvent.FrameIndex == frameIndex && frameEvent.TriggerHit)
+                        {
+                            hasHitEvent = true;
+                            break;
+                        }
+                    }
+
+                    if (hasHitEvent)
+                        continue;
+
+                    stateSet.FrameEvents.Add(new AnimationFrameEventData
+                    {
+                        FrameIndex = frameIndex,
+                        TriggerHit = true,
+                    });
+                }
+            }
+
+            if (stateSet.FrameEvents.Count > 0)
                 return;
 
             if (stateSet.State == CharacterState.Attack)
             {
-                stateSet.TriggerFrameIndices.Add(1);
+                stateSet.FrameEvents.Add(new AnimationFrameEventData
+                {
+                    FrameIndex = 1,
+                    TriggerHit = true,
+                });
                 return;
             }
 
             if (stateSet.State == CharacterState.Skill
                 && AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey) == TestSkillData.ByungRyeokIlSeomAnimationKey)
             {
-                stateSet.TriggerFrameIndices.Add(1);
+                stateSet.FrameEvents.Add(new AnimationFrameEventData
+                {
+                    FrameIndex = 1,
+                    TriggerHit = true,
+                });
             }
         }
 

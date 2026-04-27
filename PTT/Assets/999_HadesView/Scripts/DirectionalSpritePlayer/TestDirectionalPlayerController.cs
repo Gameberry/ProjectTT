@@ -57,6 +57,7 @@ namespace GameBerry.TestScene
             _currentHp = _maxHp;
             _spriteAnimator.StatePlaybackCompleted += HandleStatePlaybackCompleted;
             _spriteAnimator.StateFrameTriggered += HandleStateFrameTriggered;
+            _spriteAnimator.FrameEventTriggered += HandleFrameEventTriggered;
             //RefreshHpBar();
             _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection, true);
         }
@@ -67,6 +68,7 @@ namespace GameBerry.TestScene
             {
                 _spriteAnimator.StatePlaybackCompleted -= HandleStatePlaybackCompleted;
                 _spriteAnimator.StateFrameTriggered -= HandleStateFrameTriggered;
+                _spriteAnimator.FrameEventTriggered -= HandleFrameEventTriggered;
             }
         }
 
@@ -273,6 +275,15 @@ namespace GameBerry.TestScene
                 _skillController.HandleAnimatorStateFrameTriggered(state, frameIndex);
         }
 
+        private void HandleFrameEventTriggered(AnimationFrameEventTrigger frameEventTrigger)
+        {
+            if (_isDead || frameEventTrigger.EventData == null)
+                return;
+
+            PlayFrameEventSound(frameEventTrigger.EventData);
+            PlayFrameEventParticle(frameEventTrigger.EventData);
+        }
+
         private Vector3 ReadMoveInput()
         {
             float horizontal = 0.0f;
@@ -448,6 +459,7 @@ namespace GameBerry.TestScene
             _currentHp = Mathf.Max(0, _currentHp - Mathf.Max(0, damage));
             RefreshHpBar();
             _hpBar?.ShowTemporarily();
+            TestDamageTextManager.Instance.ShowDamage(transform.position, damage, false, true);
             _skillController?.CancelSkill();
             _previewState = CharacterState.None;
             if (_currentHp > 0)
@@ -492,6 +504,26 @@ namespace GameBerry.TestScene
 
             float normalized = _maxHp > 0 ? _currentHp / (float)_maxHp : 0.0f;
             _hpBar.SetHPBar(normalized);
+        }
+
+        private void PlayFrameEventSound(AnimationFrameEventData frameEvent)
+        {
+            if (frameEvent.Sound == null)
+                return;
+
+            AudioSource.PlayClipAtPoint(frameEvent.Sound, transform.position);
+        }
+
+        private void PlayFrameEventParticle(AnimationFrameEventData frameEvent)
+        {
+            FrameParticleEvent particleEvent = ResolveFrameParticleEvent(frameEvent);
+            if (particleEvent == null || particleEvent.ParticleObject == null)
+                return;
+
+            Vector3 spawnPosition = transform.position + particleEvent.LocalOffset;
+            Quaternion rotation = Quaternion.Euler(particleEvent.RotationOffset);
+
+            TestParticlePool.Instance.Play(particleEvent.ParticleObject, spawnPosition, rotation, frameEvent.Root);
         }
 
         private void HitMonstersInSector(int damage, float range, float angle)
@@ -547,6 +579,31 @@ namespace GameBerry.TestScene
         public void ResolveWallsAfterTeleport()
         {
             transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, _wallLayerMask);
+        }
+
+        private FrameParticleEvent ResolveFrameParticleEvent(AnimationFrameEventData frameEvent)
+        {
+            if (frameEvent == null || frameEvent.Particles == null || _spriteAnimator == null)
+                return null;
+
+            return GetDirectionalParticleEvent(frameEvent.Particles, _spriteAnimator.CurrentDirection);
+        }
+
+        private static FrameParticleEvent GetDirectionalParticleEvent(List<FrameParticleEvent> particleEvents, EightDirection direction)
+        {
+            if (particleEvents == null)
+                return null;
+
+            for (int i = 0; i < particleEvents.Count; i++)
+            {
+                FrameParticleEvent particleEvent = particleEvents[i];
+                if (particleEvent == null || particleEvent.Direction != direction)
+                    continue;
+
+                return particleEvent;
+            }
+
+            return null;
         }
 
         private void DrawAttackGizmo()

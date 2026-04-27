@@ -47,23 +47,23 @@ namespace GameBerry.TestScene
 
             if (_canvas == null)
             {
-                _canvas = GetComponent<Canvas>();
+                _canvas = GetComponentInParent<Canvas>();
                 if (_canvas == null)
-                    _canvas = gameObject.AddComponent<Canvas>();
-
-                _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                _canvas.sortingOrder = 4000;
+                    _canvas = FindObjectOfType<Canvas>();
             }
 
-            if (GetComponent<GraphicRaycaster>() == null)
-                gameObject.AddComponent<GraphicRaycaster>();
-
-            if (GetComponent<CanvasScaler>() == null)
+            if (_canvas == null)
             {
-                CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.referenceResolution = new Vector2(1920.0f, 1080.0f);
+                Debug.LogWarning("[TestMapSelectionUI] No parent canvas found. Attach this component under a UI Canvas.");
+                return;
             }
+
+            RectTransform rootRect = transform as RectTransform;
+            if (rootRect == null)
+                rootRect = gameObject.AddComponent<RectTransform>();
+
+            if (transform.parent != _canvas.transform)
+                transform.SetParent(_canvas.transform, false);
 
             if (_panelRoot != null)
                 return;
