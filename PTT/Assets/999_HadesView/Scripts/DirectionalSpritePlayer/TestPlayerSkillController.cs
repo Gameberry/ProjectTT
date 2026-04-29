@@ -236,6 +236,8 @@ namespace GameBerry.TestScene
             destination.z = startPosition.z;
             float hitRadius = Mathf.Max(skillData.DashHitRadius, _playerController.BodyRadius);
 
+            destination = ClampDestinationToWall(startPosition, destination);
+
             HitBlinkSlashTargets(startPosition, destination, skillData, blinkTarget);
             CacheSkillGizmo(startPosition, destination, hitRadius);
             SetupAndPlayPathParticles(startPosition, destination, _activeSkillDirection);
@@ -254,6 +256,25 @@ namespace GameBerry.TestScene
             targetPosition.z = 0.0f;
             Vector3 behindOffset = direction.normalized * (blinkTarget.BodyRadius + _playerController.BodyRadius + 0.1f);
             return targetPosition + behindOffset;
+        }
+
+        private Vector3 ClampDestinationToWall(Vector3 startPos, Vector3 destination)
+        {
+            Vector2 dir2D = (Vector2)(destination - startPos);
+            float distance = dir2D.magnitude;
+            if (distance <= 0.0001f)
+                return destination;
+
+            dir2D /= distance;
+            float bodyRadius = _playerController.BodyRadius;
+            RaycastHit2D hit = Physics2D.CircleCast(startPos, bodyRadius, dir2D, distance, _playerController.WallLayerMask);
+            if (hit.collider == null)
+                return destination;
+
+            float safeDistance = Mathf.Max(0f, hit.distance);
+            Vector3 clamped = startPos + new Vector3(dir2D.x, dir2D.y, 0f) * safeDistance;
+            clamped.z = destination.z;
+            return clamped;
         }
 
         private void SetupAndPlayPathParticles(Vector3 startPos, Vector3 endPos, Vector3 direction)

@@ -40,6 +40,7 @@ namespace GameBerry.TestScene
         public event Action Died;
 
         public float BodyRadius => _bodyRadius;
+        public LayerMask WallLayerMask => _wallLayerMask;
         public int CurrentHp => _currentHp;
         public bool IsDead => _isDead;
         public Vector3 FacingDirection => _lastMoveDirection;
