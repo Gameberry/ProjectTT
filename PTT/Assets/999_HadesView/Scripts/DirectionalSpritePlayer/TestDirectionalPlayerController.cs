@@ -457,14 +457,19 @@ namespace GameBerry.TestScene
             if (_isDead)
                 return;
 
+            bool keepCurrentAction = _previewState == CharacterState.Attack || IsSkillCasting;
+
             _currentHp = Mathf.Max(0, _currentHp - Mathf.Max(0, damage));
             RefreshHpBar();
             _hpBar?.ShowTemporarily();
             TestDamageTextManager.Instance.ShowDamage(transform.position, damage, false, true);
-            _skillController?.CancelSkill();
-            _previewState = CharacterState.None;
             if (_currentHp > 0)
             {
+                if (keepCurrentAction)
+                    return;
+
+                _skillController?.CancelSkill();
+                _previewState = CharacterState.None;
                 _spriteAnimator.Play(CharacterState.Hit, DirectionToWorldVector(hitDirection), true);
                 return;
             }

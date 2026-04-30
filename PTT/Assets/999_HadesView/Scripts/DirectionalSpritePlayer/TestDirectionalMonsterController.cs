@@ -315,21 +315,27 @@ namespace GameBerry.TestScene
             if (_isDead)
                 return;
 
+            bool keepCurrentAction = _isAttacking;
+
             _currentHp = Mathf.Max(0, _currentHp - Mathf.Max(0, damage));
             RefreshHpBar();
             _hpBar?.ShowTemporarily();
             TestDamageTextManager.Instance.ShowDamage(transform.position, damage);
-            _lastMoveDirection = DirectionToWorldVector(hitDirection);
-            _isAttacking = false;
 
             if (_currentHp > 0)
             {
+                if (keepCurrentAction)
+                    return;
+
+                _lastMoveDirection = DirectionToWorldVector(hitDirection);
+                _isAttacking = false;
                 _spriteAnimator.Play(CharacterState.Hit, _lastMoveDirection, true);
                 return;
             }
 
             _isDead = true;
             _isAttacking = false;
+            _lastMoveDirection = DirectionToWorldVector(hitDirection);
             _spriteAnimator.Play(CharacterState.Dead, _lastMoveDirection, true);
             ScheduleHideAfterDeath();
         }
