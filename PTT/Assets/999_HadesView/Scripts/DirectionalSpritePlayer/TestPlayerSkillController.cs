@@ -238,7 +238,7 @@ namespace GameBerry.TestScene
 
             destination = ClampDestinationToWall(startPosition, destination);
 
-            HitBlinkSlashTargets(startPosition, destination, skillData, blinkTarget);
+            HitBlinkSlashTargets(startPosition, destination, skillData);
             CacheSkillGizmo(startPosition, destination, hitRadius);
             SetupAndPlayPathParticles(startPosition, destination, _activeSkillDirection);
 
@@ -368,14 +368,8 @@ namespace GameBerry.TestScene
             return farthestTarget;
         }
 
-        private void HitBlinkSlashTargets(Vector3 startPosition, Vector3 destination, TestSkillData skillData, TestDirectionalMonsterController blinkTarget)
+        private void HitBlinkSlashTargets(Vector3 startPosition, Vector3 destination, TestSkillData skillData)
         {
-            if (IsValidSkillTarget(blinkTarget) && SkillHitBuffer.Contains(blinkTarget) == false)
-            {
-                SkillHitBuffer.Add(blinkTarget);
-                blinkTarget.TakeDamage(skillData.Damage, _spriteAnimator.CurrentDirection);
-            }
-
             HitMonstersAlongSegment(startPosition, destination, Mathf.Max(skillData.DashHitRadius, _playerController.BodyRadius), skillData.Damage);
         }
 
@@ -398,9 +392,25 @@ namespace GameBerry.TestScene
                 if (sqrDistance > combinedRadius * combinedRadius)
                     continue;
 
+                if (IsBlockedByWall(startPosition, monsterPosition))
+                    continue;
+
                 SkillHitBuffer.Add(monster);
                 monster.TakeDamage(damage, _spriteAnimator.CurrentDirection);
             }
+        }
+
+        private bool IsBlockedByWall(Vector3 startPosition, Vector3 targetPosition)
+        {
+            startPosition.z = 0.0f;
+            targetPosition.z = 0.0f;
+
+            Vector2 delta = (Vector2)(targetPosition - startPosition);
+            if (delta.sqrMagnitude <= 0.0001f)
+                return false;
+
+            RaycastHit2D hit = Physics2D.Linecast(startPosition, targetPosition, _playerController.WallLayerMask);
+            return hit.collider != null;
         }
 
         private void HitMonstersInSector(int damage, float range, float angle)

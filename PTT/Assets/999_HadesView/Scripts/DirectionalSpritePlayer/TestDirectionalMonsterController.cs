@@ -12,6 +12,7 @@ namespace GameBerry.TestScene
         [SerializeField] private UICharacterState _hpBar;
         [SerializeField] private Transform _target;
         [SerializeField] private string _targetObjectName = "TestDirectionalPlayer";
+        [SerializeField] private bool _canMove = true;
         [SerializeField] private float _moveSpeed = 2.0f;
         [SerializeField] private float _detectRange = 6.0f;
         [SerializeField] private float _attackRange = 1.25f;
@@ -35,6 +36,7 @@ namespace GameBerry.TestScene
 
         public float BodyRadius => _bodyRadius;
         public bool IsDead => _isDead;
+        public bool CanMove => _canMove;
 
         private void OnEnable()
         {
@@ -100,14 +102,14 @@ namespace GameBerry.TestScene
 
             if (_isAttacking)
             {
-                ResolveBodyOverlaps();
+                ResolveBodyOverlapsIfMovable();
                 _spriteAnimator.SetDirection(_lastMoveDirection);
                 return;
             }
 
             if (_target == null || sqrDistanceToTarget > detectRangeSqr)
             {
-                ResolveBodyOverlaps();
+                ResolveBodyOverlapsIfMovable();
                 _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection);
                 return;
             }
@@ -115,7 +117,14 @@ namespace GameBerry.TestScene
             if (sqrDistanceToTarget <= attackRangeSqr)
             {
                 StartAttack(planarToTarget);
-                ResolveBodyOverlaps();
+                ResolveBodyOverlapsIfMovable();
+                return;
+            }
+
+            if (_canMove == false)
+            {
+                FaceTarget(planarToTarget);
+                _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection);
                 return;
             }
 
@@ -276,6 +285,13 @@ namespace GameBerry.TestScene
                 return;
             }
 
+            if (_canMove == false)
+            {
+                FaceTarget(planarToTarget);
+                _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection, true);
+                return;
+            }
+
             if (sqrDistanceToTarget > attackRangeSqr)
             {
                 Vector3 moveDirection = planarToTarget.sqrMagnitude > 0.0001f ? planarToTarget.normalized : _lastMoveDirection;
@@ -285,6 +301,18 @@ namespace GameBerry.TestScene
             }
 
             StartAttack(planarToTarget);
+        }
+
+        private void ResolveBodyOverlapsIfMovable()
+        {
+            if (_canMove)
+                ResolveBodyOverlaps();
+        }
+
+        private void FaceTarget(Vector3 planarToTarget)
+        {
+            if (planarToTarget.sqrMagnitude > 0.0001f)
+                _lastMoveDirection = planarToTarget.normalized;
         }
 
         private void HandleStateFrameTriggered(CharacterState state, int frameIndex)
