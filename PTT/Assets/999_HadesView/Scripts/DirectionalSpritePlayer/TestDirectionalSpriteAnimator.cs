@@ -117,6 +117,7 @@ namespace GameBerry.TestScene
 
         [SerializeField] private int _sortingOrder = 100;
         [SerializeField] private bool _generatePlaceholderAnimations = true;
+        [SerializeField] private TestSkillData _byungRyeokIlSeomSkillData;
         [SerializeField] private bool _mirrorLeftDirections = true;
         [SerializeField] private bool _autoReturnToIdleOnAttackComplete = true;
 
@@ -529,7 +530,8 @@ namespace GameBerry.TestScene
             EnsureStateEntry(CharacterState.Dead, false);
             EnsureStateEntry(CharacterState.Skill, false);
             EnsureStateEntry(CharacterState.Tran, false);
-            EnsureNamedStateEntry(CharacterState.Skill, TestSkillData.ByungRyeokIlSeomAnimationKey, false, 12.0f);
+            if (_byungRyeokIlSeomSkillData != null)
+                EnsureNamedStateEntry(CharacterState.Skill, _byungRyeokIlSeomSkillData.AnimationKey, false, 12.0f);
         }
 
         private void EnsureStateEntry(CharacterState state, bool defaultLoop)
@@ -556,7 +558,7 @@ namespace GameBerry.TestScene
                     stateSet.FramesPerSecond = GetDefaultFramesPerSecond(state);
             }
 
-            EnsureDefaultTriggerFrames(stateSet);
+            EnsureDefaultTriggerFrames(stateSet, _byungRyeokIlSeomSkillData != null ? _byungRyeokIlSeomSkillData.AnimationKey : string.Empty);
 
             EightDirection[] requiredDirections = GetRequiredDirections();
             for (int i = 0; i < requiredDirections.Length; i++)
@@ -598,7 +600,7 @@ namespace GameBerry.TestScene
                     stateSet.FramesPerSecond = defaultFramesPerSecond;
             }
 
-            EnsureDefaultTriggerFrames(stateSet);
+            EnsureDefaultTriggerFrames(stateSet, _byungRyeokIlSeomSkillData != null ? _byungRyeokIlSeomSkillData.AnimationKey : string.Empty);
 
             EightDirection[] requiredDirections = GetRequiredDirections();
             for (int i = 0; i < requiredDirections.Length; i++)
@@ -624,11 +626,11 @@ namespace GameBerry.TestScene
                     continue;
 
                 stateSet.AnimationKey = AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey);
-                EnsureDefaultTriggerFrames(stateSet);
+                EnsureDefaultTriggerFrames(stateSet, _byungRyeokIlSeomSkillData != null ? _byungRyeokIlSeomSkillData.AnimationKey : string.Empty);
             }
         }
 
-        private static void EnsureDefaultTriggerFrames(CharacterStateDirectionalAnimationSet stateSet)
+        private static void EnsureDefaultTriggerFrames(CharacterStateDirectionalAnimationSet stateSet, string byungRyeokIlSeomKey)
         {
             if (stateSet == null)
                 return;
@@ -680,7 +682,8 @@ namespace GameBerry.TestScene
             }
 
             if (stateSet.State == CharacterState.Skill
-                && AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey) == TestSkillData.ByungRyeokIlSeomAnimationKey)
+                && !string.IsNullOrWhiteSpace(byungRyeokIlSeomKey)
+                && AnimationPlaybackKey.NormalizeAnimationKey(stateSet.AnimationKey) == AnimationPlaybackKey.NormalizeAnimationKey(byungRyeokIlSeomKey))
             {
                 stateSet.FrameEvents.Add(new AnimationFrameEventData
                 {

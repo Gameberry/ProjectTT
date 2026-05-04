@@ -10570,6 +10570,7 @@ MonoBehaviour:
   _spriteRenderer: {fileID: 141667869}
   _sortingOrder: 100
   _generatePlaceholderAnimations: 1
+  _byungRyeokIlSeomSkillData: {fileID: 0}
   _mirrorLeftDirections: 1
   _autoReturnToIdleOnAttackComplete: 1
   _stateAnimations:
@@ -10731,7 +10732,12 @@ MonoBehaviour:
     FramesPerSecond: 6
     Loop: 1
     TriggerFrameIndices: 
-    FrameEvents: []
+    FrameEvents:
+    - FrameIndex: 1
+      TriggerHit: 1
+      Sound: {fileID: 0}
+      Particles: []
+      Root: {fileID: 0}
     DirectionClips:
     - Direction: 1
       Frames: []
@@ -10887,10 +10893,7 @@ MonoBehaviour:
   _playerController: {fileID: 1491135170}
   _spriteAnimator: {fileID: 1491135169}
   _skills:
-  - {fileID: 11400000, guid: 3f4b8af4e582cbd499821c6243935c95, type: 2}
-  _pathParticlePrefabs:
-  - {fileID: 8350390452097087322, guid: 213e3b8be747083419a157f411ed6ee5, type: 3}
-  - {fileID: 5989413045032842719, guid: 77a4df51f8e59eb4097784293ecf9566, type: 3}
+  - {fileID: 11400000, guid: 24260f1a09c53bf47a41d2a120420fb8, type: 2}
   _drawSkillGizmos: 1
   _skillGizmoDuration: 2
 --- !u!1 &1545120836
