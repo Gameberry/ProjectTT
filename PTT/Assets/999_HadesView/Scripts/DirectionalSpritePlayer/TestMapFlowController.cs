@@ -16,6 +16,7 @@ namespace GameBerry.TestScene
         [SerializeField] private float _lastRoomClearDelay = 0.5f;
         [SerializeField] private float _returnToLobbyDelayOnDeath = 1.0f;
         [SerializeField] private float _returnToLobbyDelayOnClear = 1.5f;
+        [SerializeField] private TestDirectionalCameraFollow _cameraFollow;
 
         private readonly HashSet<string> _clearedMapIds = new HashSet<string>();
         private static TestMapDefinition s_runtimeMapA;
@@ -94,6 +95,9 @@ namespace GameBerry.TestScene
 
             EnsureUi();
             _mapSelectionUI.Show(this);
+
+            if (_cameraFollow != null)
+                _cameraFollow.SetMapSpriteRenderer(_currentRoomInstance?._mapSpriteRenderer);
         }
 
         public void CloseMapSelection()
@@ -308,6 +312,10 @@ namespace GameBerry.TestScene
 
             SetCurrentPortalActive(isLobby);
             _isDungeonClearPending = isLobby;
+
+
+            if (_cameraFollow != null)
+                _cameraFollow.SetMapSpriteRenderer(_currentRoomInstance?._mapSpriteRenderer);
         }
 
         private void GoToNextRoomOrLobby()

@@ -7,6 +7,7 @@ namespace GameBerry.TestScene
         [SerializeField] private Transform _playerSpawnPoint;
         [SerializeField] private TestRoomPortal _roomPortal;
         [SerializeField] private bool _isLobbyRoom;
+        public SpriteRenderer _mapSpriteRenderer;
 
         public Transform PlayerSpawnPoint => _playerSpawnPoint != null ? _playerSpawnPoint : transform;
         public TestRoomPortal RoomPortal => _roomPortal;

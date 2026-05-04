@@ -126,6 +126,7 @@ MonoBehaviour:
   _playerSpawnPoint: {fileID: 7138077474427302324}
   _roomPortal: {fileID: 6281551690059782}
   _isLobbyRoom: 0
+  _mapSpriteRenderer: {fileID: 8110109190555363122}
 --- !u!1 &8971954924224889260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,6 +1033,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 759361994316629148}
     m_Modifications:
+    - target: {fileID: 7400692206565032010, guid: dff786e6e1313ea4fad706a479703b29, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8654651235422725318, guid: dff786e6e1313ea4fad706a479703b29, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1091,5 +1096,10 @@ PrefabInstance:
 --- !u!4 &342435012227630871 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8654651235422725318, guid: dff786e6e1313ea4fad706a479703b29, type: 3}
+  m_PrefabInstance: {fileID: 8997045977558311889}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8110109190555363122 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 889189291208901859, guid: dff786e6e1313ea4fad706a479703b29, type: 3}
   m_PrefabInstance: {fileID: 8997045977558311889}
   m_PrefabAsset: {fileID: 0}

@@ -10,9 +10,14 @@ namespace GameBerry.TestScene
         [SerializeField] private Vector3 _followOffset = new Vector3(0.0f, 0.0f, -10.0f);
         [SerializeField] private Vector3 _followEulerAngles = Vector3.zero;
         [SerializeField] private float _followSmooth = 12.0f;
+
+        [Header("Camera")]
         [SerializeField] private bool _configureCameraOnAwake = true;
         [SerializeField] private float _orthographicSize = 5.0f;
         [SerializeField] private int _cameraDepth = 100;
+
+        [Header("Map Clamp")]
+        [SerializeField] private SpriteRenderer _mapSpriteRenderer;
 
         private Camera _camera;
 
@@ -46,8 +51,20 @@ namespace GameBerry.TestScene
                 return;
 
             Vector3 desiredPosition = _target.position + _followOffset;
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, 1.0f - Mathf.Exp(-_followSmooth * Time.deltaTime));
+            desiredPosition = ClampCameraPosition(desiredPosition);
+
+            transform.position = Vector3.Lerp(
+                transform.position,
+                desiredPosition,
+                1.0f - Mathf.Exp(-_followSmooth * Time.deltaTime)
+            );
+
             transform.rotation = Quaternion.Euler(_followEulerAngles);
+        }
+
+        public void SetMapSpriteRenderer(SpriteRenderer mapSpriteRenderer)
+        {
+            _mapSpriteRenderer = mapSpriteRenderer;
         }
 
         private void SnapToTarget()
@@ -55,7 +72,38 @@ namespace GameBerry.TestScene
             if (_target == null)
                 return;
 
-            transform.position = _target.position + _followOffset;
+            Vector3 desiredPosition = _target.position + _followOffset;
+            transform.position = ClampCameraPosition(desiredPosition);
+        }
+
+        private Vector3 ClampCameraPosition(Vector3 desiredPosition)
+        {
+            if (_mapSpriteRenderer == null)
+                return desiredPosition;
+
+            Bounds mapBounds = _mapSpriteRenderer.bounds;
+
+            float cameraHalfHeight = _camera.orthographicSize;
+            float cameraHalfWidth = cameraHalfHeight * _camera.aspect;
+
+            float minX = mapBounds.min.x + cameraHalfWidth;
+            float maxX = mapBounds.max.x - cameraHalfWidth;
+            float minY = mapBounds.min.y + cameraHalfHeight;
+            float maxY = mapBounds.max.y - cameraHalfHeight;
+
+            Vector3 clampedPosition = desiredPosition;
+
+            if (minX > maxX)
+                clampedPosition.x = mapBounds.center.x;
+            else
+                clampedPosition.x = Mathf.Clamp(desiredPosition.x, minX, maxX);
+
+            if (minY > maxY)
+                clampedPosition.y = mapBounds.center.y;
+            else
+                clampedPosition.y = Mathf.Clamp(desiredPosition.y, minY, maxY);
+
+            return clampedPosition;
         }
     }
 }
