@@ -3,16 +3,25 @@ using UnityEngine;
 
 namespace GameBerry.TestScene
 {
-    // 첫 타겟에 도착 후 주변 미타격 적을 찾아 연속 이동하며 최대 _maxTargets명까지 연쇄 타격.
+    // 첫 타겟 즉시 타격 후, _stepDelay 간격으로 다음 타겟에 순차적으로 블링크 타격.
     [CreateAssetMenu(fileName = "ChainBlinkSkillData", menuName = "GameBerry/Test Scene/Skills/Chain Blink Skill")]
     public class TestChainBlinkSkillData : TestSkillData
     {
         [SerializeField] private int _maxTargets = 3;
         [SerializeField] private float _chainRange = 4f;
-        [SerializeField] private float _dashHitRadius = 0.5f;
+        [SerializeField] private float _stepDelay = 0.08f;
         [SerializeField] private GameObject[] _hitParticlePrefabs = new GameObject[0];
 
         public override float TargetQueryRadius => _chainRange;
+
+        private sealed class ChainState
+        {
+            public readonly Queue<TestDirectionalMonsterController> Pending = new();
+            public Vector3 CurrentPos;
+            public Vector3 OriginPos;
+            public Vector3 LastDir;
+            public float Timer;
+        }
 
         public override bool ExecuteHit(TestSkillExecutionContext ctx)
         {
@@ -24,54 +33,95 @@ namespace GameBerry.TestScene
             if (IsValidTarget(ctx.LockedTarget) == false)
                 return false;
 
-            ExecuteChainBlink(ctx);
+            ChainState state = BuildChainState(ctx);
+            if (state.Pending.Count == 0)
+                return false;
+
+            ExecuteStep(ctx, state);
+
+            if (state.Pending.Count == 0)
+                return true;
+
+            state.Timer = _stepDelay;
+            ctx.TickAction = (c) => TickChain(c, state);
             return true;
         }
 
-        private void ExecuteChainBlink(TestSkillExecutionContext ctx)
+        private ChainState BuildChainState(TestSkillExecutionContext ctx)
         {
-            var visited = new HashSet<TestDirectionalMonsterController>();
-            Vector3 originPos = ctx.PlayerController.transform.position;
-            Vector3 currentPos = originPos;
-            TestDirectionalMonsterController currentTarget = ctx.LockedTarget;
-            visited.Add(currentTarget);
+            var state = new ChainState
+            {
+                CurrentPos = ctx.PlayerController.transform.position,
+                OriginPos = ctx.PlayerController.transform.position,
+                LastDir = ctx.SkillDirection,
+            };
 
-            Vector3 lastDir = ctx.SkillDirection;
+            var visited = new HashSet<TestDirectionalMonsterController>();
+            TestDirectionalMonsterController current = ctx.LockedTarget;
 
             for (int i = 0; i < _maxTargets; i++)
             {
-                if (IsValidTarget(currentTarget) == false)
+                if (IsValidTarget(current) == false)
                     break;
 
-                Vector3 toTarget = currentTarget.transform.position - currentPos;
-                toTarget.z = 0f;
-                if (toTarget.sqrMagnitude <= 0.0001f)
+                state.Pending.Enqueue(current);
+                visited.Add(current);
+
+                Vector3 searchOrigin = current.transform.position;
+                searchOrigin.z = 0f;
+                current = FindNextChainTarget(searchOrigin, visited);
+                if (current == null)
                     break;
-
-                lastDir = toTarget.normalized;
-
-                Vector3 behindOffset = lastDir * (currentTarget.BodyRadius + ctx.PlayerController.BodyRadius + 0.1f);
-                Vector3 destination = currentTarget.transform.position + behindOffset;
-                destination.z = originPos.z;
-                destination = ClampDestinationToWall(ctx, currentPos, destination);
-
-                float hitRadius = Mathf.Max(_dashHitRadius, ctx.PlayerController.BodyRadius);
-                HitMonstersAlongSegment(ctx, currentPos, destination, hitRadius, Damage);
-                PlayHitParticle(destination, lastDir);
-
-                currentPos = destination;
-
-                TestDirectionalMonsterController next = FindNextChainTarget(currentPos, visited);
-                if (next == null)
-                    break;
-
-                visited.Add(next);
-                currentTarget = next;
             }
 
-            ctx.PlayerController.transform.position = currentPos;
-            ctx.PlayerController.SetFacingDirection(lastDir);
-            ctx.CacheGizmo(originPos, currentPos, Mathf.Max(_dashHitRadius, ctx.PlayerController.BodyRadius), 2f);
+            return state;
+        }
+
+        private bool TickChain(TestSkillExecutionContext ctx, ChainState state)
+        {
+            state.Timer -= Time.deltaTime;
+            if (state.Timer > 0f)
+                return true;
+
+            if (state.Pending.Count == 0)
+                return false;
+
+            state.Timer = _stepDelay;
+            ExecuteStep(ctx, state);
+            return state.Pending.Count > 0;
+        }
+
+        private void ExecuteStep(TestSkillExecutionContext ctx, ChainState state)
+        {
+            TestDirectionalMonsterController target = state.Pending.Dequeue();
+
+            if (IsValidTarget(target) == false)
+                return;
+
+            Vector3 toTarget = target.transform.position - state.CurrentPos;
+            toTarget.z = 0f;
+            if (toTarget.sqrMagnitude <= 0.0001f)
+                return;
+
+            state.LastDir = toTarget.normalized;
+
+            Vector3 behindOffset = state.LastDir * (target.BodyRadius + ctx.PlayerController.BodyRadius + 0.1f);
+            Vector3 destination = target.transform.position + behindOffset;
+            destination.z = state.OriginPos.z;
+            destination = ClampDestinationToWall(ctx, state.CurrentPos, destination, GameLayers.MapBoundary);
+
+            if (ctx.HitBuffer.Contains(target) == false)
+            {
+                ctx.HitBuffer.Add(target);
+                target.TakeDamage(Damage, ctx.SpriteAnimator.CurrentDirection);
+            }
+
+            PlayHitParticle(destination, state.LastDir);
+
+            state.CurrentPos = destination;
+            ctx.PlayerController.transform.position = destination;
+            ctx.PlayerController.SetFacingDirection(state.LastDir);
+            ctx.CacheGizmo(state.OriginPos, destination, ctx.PlayerController.BodyRadius, 2f);
         }
 
         private TestDirectionalMonsterController FindNextChainTarget(

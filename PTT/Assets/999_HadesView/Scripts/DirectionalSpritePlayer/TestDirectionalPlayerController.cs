@@ -18,7 +18,6 @@ namespace GameBerry.TestScene
         [SerializeField] private int _attackDamage = 10;
         [SerializeField] private float _attackRange = 1.0f;
         [SerializeField] private float _attackAngle = 120.0f;
-        [SerializeField] private LayerMask _wallLayerMask;
         [SerializeField] private bool _autoPlay = true;
         [SerializeField] private float _autoDetectRange = 6f;
         [SerializeField] private bool _supportWASD = true;
@@ -40,7 +39,7 @@ namespace GameBerry.TestScene
         public event Action Died;
 
         public float BodyRadius => _bodyRadius;
-        public LayerMask WallLayerMask => _wallLayerMask;
+        public LayerMask WallLayerMask => GameLayers.Wall;
         public int CurrentHp => _currentHp;
         public bool IsDead => _isDead;
         public Vector3 FacingDirection => _lastMoveDirection;
@@ -101,7 +100,10 @@ namespace GameBerry.TestScene
             {
                 ResolveMonsterOverlaps(false);
                 if (_previewState == CharacterState.Skill && _skillController != null && _skillController.IsPlayingSkill)
-                    _skillController.TickSkillAnimation();
+                {
+                    if (_skillController.TickSkillAnimation() == false)
+                        _previewState = CharacterState.None;
+                }
                 else
                     _spriteAnimator.Play(_previewState, _lastMoveDirection);
                 return;
@@ -168,7 +170,7 @@ namespace GameBerry.TestScene
             float lookAhead = _bodyRadius * 3f;
 
             // 벽이 없으면 직진 (몬스터는 overlap 해소로 처리)
-            bool wallBlocked = Physics2D.CircleCast(origin, _bodyRadius * 0.5f, desiredDir, lookAhead, _wallLayerMask).collider != null;
+            bool wallBlocked = Physics2D.CircleCast(origin, _bodyRadius * 0.5f, desiredDir, lookAhead, GameLayers.Wall).collider != null;
             if (!wallBlocked)
                 return (Vector3)desiredDir;
 
@@ -186,7 +188,7 @@ namespace GameBerry.TestScene
             for (int i = 0; i < 8; i++)
             {
                 Vector2 dir = TestSteeringUtils.Directions8[i];
-                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, dir, lookAhead, _wallLayerMask).collider != null)
+                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, dir, lookAhead, GameLayers.Wall).collider != null)
                     continue;
                 result += dir * Mathf.Max(0f, Vector2.Dot(desiredDir, dir));
             }
@@ -261,7 +263,8 @@ namespace GameBerry.TestScene
             if (completedState == CharacterState.Skill && _skillController != null)
             {
                 _skillController.HandleAnimatorStatePlaybackCompleted(completedState);
-                _previewState = CharacterState.None;
+                if (_skillController.IsPlayingSkill == false)
+                    _previewState = CharacterState.None;
             }
         }
 
@@ -378,7 +381,7 @@ namespace GameBerry.TestScene
             }
 
             transform.position = resolvedPosition;
-            transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, _wallLayerMask);
+            transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, GameLayers.Wall);
 
             if (!_autoPlay || allowAutoAttack == false)
                 return;
@@ -584,7 +587,7 @@ namespace GameBerry.TestScene
 
         public void ResolveWallsAfterTeleport()
         {
-            transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, _wallLayerMask);
+            transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, GameLayers.Wall);
         }
 
         private FrameParticleEvent ResolveFrameParticleEvent(AnimationFrameEventData frameEvent)

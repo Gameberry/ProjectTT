@@ -80,19 +80,35 @@ namespace GameBerry.TestScene
             _context?.Reset();
         }
 
-        public void TickSkillAnimation()
+        // 반환값: 스킬(체인 포함)이 아직 진행 중이면 true, 완전히 종료되면 false.
+        public bool TickSkillAnimation()
         {
             RefreshInterruptedSkillState();
             if (_activeSkill == null)
-                return;
+                return false;
+
+            if (_context.TickAction != null)
+            {
+                bool stillActive = _context.TickAction(_context);
+                if (!stillActive)
+                {
+                    _context.TickAction = null;
+                    CancelSkill();
+                    return false;
+                }
+            }
 
             _spriteAnimator.Play(_activeSkill.PlaybackState, _activeSkill.AnimationKey, _context.SkillDirection);
+            return true;
         }
 
         public void HandleAnimatorStatePlaybackCompleted(CharacterState completedState)
         {
             RefreshInterruptedSkillState();
             if (_activeSkill == null || completedState != _activeSkill.PlaybackState)
+                return;
+
+            if (_context.TickAction != null)
                 return;
 
             CancelSkill();
@@ -267,8 +283,13 @@ namespace GameBerry.TestScene
             if (_activeSkill == null || _spriteAnimator == null)
                 return;
 
-            if (_spriteAnimator.CurrentState != _activeSkill.PlaybackState)
-                CancelSkill();
+            if (_spriteAnimator.CurrentState == _activeSkill.PlaybackState)
+                return;
+
+            if (_context.TickAction != null)
+                return;
+
+            CancelSkill();
         }
 
         private static TestDashSlashSkillData GetOrCreateDefaultDashSlashSkill()

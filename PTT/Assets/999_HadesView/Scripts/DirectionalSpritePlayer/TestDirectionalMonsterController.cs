@@ -20,7 +20,6 @@ namespace GameBerry.TestScene
         [SerializeField] private int _maxHp = 30;
         [SerializeField] private int _attackDamage = 5;
         [SerializeField] private float _attackAngle = 90.0f;
-        [SerializeField] private LayerMask _wallLayerMask;
         [SerializeField] private bool _drawRangeGizmos = true;
         [SerializeField] private bool _drawAttackGizmo = true;
 
@@ -182,7 +181,7 @@ namespace GameBerry.TestScene
             Vector2 origin = (Vector2)transform.position;
             float lookAhead = _bodyRadius * 2f;
 
-            bool blocked = Physics2D.CircleCast(origin, _bodyRadius * 0.5f, desiredDir, lookAhead, _wallLayerMask).collider != null;
+            bool blocked = Physics2D.CircleCast(origin, _bodyRadius * 0.5f, desiredDir, lookAhead, GameLayers.Wall).collider != null;
             if (!blocked)
                 return (Vector3)desiredDir;
 
@@ -199,7 +198,7 @@ namespace GameBerry.TestScene
             Vector2 result = Vector2.zero;
             for (int i = 0; i < 8; i++)
             {
-                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, TestSteeringUtils.Directions8[i], lookAhead, _wallLayerMask).collider != null)
+                if (Physics2D.CircleCast(origin, _bodyRadius * 0.5f, TestSteeringUtils.Directions8[i], lookAhead, GameLayers.Wall).collider != null)
                     continue;
 
                 float interest = Mathf.Max(0f, Vector2.Dot(desiredDir, TestSteeringUtils.Directions8[i]));
@@ -225,7 +224,7 @@ namespace GameBerry.TestScene
         {
             Vector3 resolvedPosition = transform.position;
             resolvedPosition = ResolveOverlapWithMonsters(resolvedPosition);
-            resolvedPosition = TestSteeringUtils.ResolveWallOverlaps(resolvedPosition, _bodyRadius, _wallLayerMask);
+            resolvedPosition = TestSteeringUtils.ResolveWallOverlaps(resolvedPosition, _bodyRadius, GameLayers.Wall);
             transform.position = resolvedPosition;
         }
 

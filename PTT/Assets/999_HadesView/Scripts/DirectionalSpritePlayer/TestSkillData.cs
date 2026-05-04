@@ -91,6 +91,12 @@ namespace GameBerry.TestScene
         protected static Vector3 ClampDestinationToWall(
             TestSkillExecutionContext ctx, Vector3 startPos, Vector3 destination)
         {
+            return ClampDestinationToWall(ctx, startPos, destination, ctx.PlayerController.WallLayerMask);
+        }
+
+        protected static Vector3 ClampDestinationToWall(
+            TestSkillExecutionContext ctx, Vector3 startPos, Vector3 destination, LayerMask layerMask)
+        {
             const float wallSkin = 0.05f;
             TestDirectionalPlayerController player = ctx.PlayerController;
             Vector2 dir2D = (Vector2)(destination - startPos);
@@ -99,19 +105,29 @@ namespace GameBerry.TestScene
                 return destination;
 
             dir2D /= distance;
-            RaycastHit2D hit = Physics2D.CircleCast(startPos, player.BodyRadius, dir2D, distance, player.WallLayerMask);
-            float safeDistance = hit.collider != null ? Mathf.Max(0f, hit.distance - wallSkin) : distance;
-            return BacktrackToSafePosition(player, dir2D, startPos, safeDistance, destination.z);
+
+            // CircleCastAll 사용: 시작 위치가 이미 콜라이더 안에 있어도 감지함.
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(startPos, player.BodyRadius, dir2D, distance, layerMask);
+            float safeDistance = distance;
+            for (int i = 0; i < hits.Length; i++)
+            {
+                float d = Mathf.Max(0f, hits[i].distance - wallSkin);
+                if (d < safeDistance)
+                    safeDistance = d;
+            }
+
+            return BacktrackToSafePosition(player, dir2D, startPos, safeDistance, destination.z, layerMask);
         }
 
         private static Vector3 BacktrackToSafePosition(
-            TestDirectionalPlayerController player, Vector2 direction, Vector3 startPos, float distance, float z)
+            TestDirectionalPlayerController player, Vector2 direction, Vector3 startPos, float distance, float z,
+            LayerMask layerMask)
         {
             const float wallSkin = 0.05f;
             float step = Mathf.Max(wallSkin, player.BodyRadius * 0.25f);
             var filter = new ContactFilter2D
             {
-                layerMask = player.WallLayerMask,
+                layerMask = layerMask,
                 useLayerMask = true,
                 useTriggers = false
             };
