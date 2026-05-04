@@ -98,6 +98,12 @@ namespace GameBerry.TestScene
             if (IsValidTarget(target) == false)
                 return;
 
+            if (IsBlockedByWall(GameLayers.MapBoundary, state.CurrentPos, target.transform.position))
+            {
+                state.Pending.Clear();
+                return;
+            }
+
             Vector3 toTarget = target.transform.position - state.CurrentPos;
             toTarget.z = 0f;
             if (toTarget.sqrMagnitude <= 0.0001f)
@@ -109,6 +115,8 @@ namespace GameBerry.TestScene
             Vector3 destination = target.transform.position + behindOffset;
             destination.z = state.OriginPos.z;
             destination = ClampDestinationToWall(ctx, state.CurrentPos, destination, GameLayers.MapBoundary);
+            if (IsBlockedByWall(GameLayers.MapBoundary, state.CurrentPos, destination))
+                destination = state.CurrentPos;
 
             if (ctx.HitBuffer.Contains(target) == false)
             {
@@ -135,6 +143,9 @@ namespace GameBerry.TestScene
             {
                 TestDirectionalMonsterController monster = monsters[i];
                 if (IsValidTarget(monster) == false || excluded.Contains(monster))
+                    continue;
+
+                if (IsBlockedByWall(GameLayers.MapBoundary, fromPos, monster.transform.position))
                     continue;
 
                 float sqrDist = (monster.transform.position - fromPos).sqrMagnitude;

@@ -106,10 +106,11 @@ namespace GameBerry.TestScene
 
             dir2D /= distance;
 
-            // CircleCastAll 사용: 시작 위치가 이미 콜라이더 안에 있어도 감지함.
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(startPos, player.BodyRadius, dir2D, distance, layerMask);
+            var filter = CreateBlockingFilter(layerMask);
+            RaycastHit2D[] hits = new RaycastHit2D[8];
+            int hitCount = Physics2D.CircleCast(startPos, player.BodyRadius, dir2D, filter, hits, distance);
             float safeDistance = distance;
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < hitCount; i++)
             {
                 float d = Mathf.Max(0f, hits[i].distance - wallSkin);
                 if (d < safeDistance)
@@ -125,12 +126,7 @@ namespace GameBerry.TestScene
         {
             const float wallSkin = 0.05f;
             float step = Mathf.Max(wallSkin, player.BodyRadius * 0.25f);
-            var filter = new ContactFilter2D
-            {
-                layerMask = layerMask,
-                useLayerMask = true,
-                useTriggers = false
-            };
+            var filter = CreateBlockingFilter(layerMask);
             var buffer = new Collider2D[8];
 
             for (int i = 0; i < 16; i++)
@@ -151,14 +147,26 @@ namespace GameBerry.TestScene
             return fallback;
         }
 
-        private static bool IsBlockedByWall(LayerMask wallMask, Vector3 from, Vector3 to)
+        protected static bool IsBlockedByWall(LayerMask wallMask, Vector3 from, Vector3 to)
         {
             from.z = 0f;
             to.z = 0f;
             if (((Vector2)(to - from)).sqrMagnitude <= 0.0001f)
                 return false;
 
-            return Physics2D.Linecast(from, to, wallMask).collider != null;
+            var filter = CreateBlockingFilter(wallMask);
+            RaycastHit2D[] hits = new RaycastHit2D[4];
+            return Physics2D.Linecast(from, to, filter, hits) > 0;
+        }
+
+        private static ContactFilter2D CreateBlockingFilter(LayerMask layerMask)
+        {
+            return new ContactFilter2D
+            {
+                layerMask = layerMask,
+                useLayerMask = true,
+                useTriggers = true
+            };
         }
 
         private static float DistanceToSegmentSquared(Vector3 point, Vector3 segStart, Vector3 segEnd)

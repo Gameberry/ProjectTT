@@ -323,14 +323,17 @@ namespace GameBerry.TestScene
             else if (Input.GetKeyDown(KeyCode.Alpha2))
                 _previewState = CharacterState.Hit;
             else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                if (_skillController != null && _skillController.TryUseFirstSkill())
-                    _previewState = CharacterState.Skill;
-            }
+                TryUsePreviewSkill(0);
             else if (Input.GetKeyDown(KeyCode.Alpha4))
-                _previewState = CharacterState.Tran;
+                TryUsePreviewSkill(1);
             else if (Input.GetKeyDown(KeyCode.Alpha5))
-                _previewState = CharacterState.Dead;
+                TryUsePreviewSkill(2);
+        }
+
+        private void TryUsePreviewSkill(int skillIndex)
+        {
+            if (_skillController != null && _skillController.TryUseSkillAtIndex(skillIndex))
+                _previewState = CharacterState.Skill;
         }
 
         private static bool IsPreviewLockedState(CharacterState state)
@@ -344,6 +347,7 @@ namespace GameBerry.TestScene
 
         private void ResolveMonsterOverlaps(bool allowAutoAttack)
         {
+            Vector3 startPosition = transform.position;
             Vector3 resolvedPosition = transform.position;
             float queryRadius = _bodyRadius + 1.0f;
             TestDirectionalMonsterManager.Instance.QueryMonsters(new Vector2(resolvedPosition.x, resolvedPosition.y), queryRadius, QueryBuffer);
@@ -380,6 +384,7 @@ namespace GameBerry.TestScene
                 resolvedPosition.z = transform.position.z;
             }
 
+            resolvedPosition = TestSteeringUtils.ClampMovementToWall(startPosition, resolvedPosition, _bodyRadius, GameLayers.Wall);
             transform.position = resolvedPosition;
             transform.position = TestSteeringUtils.ResolveWallOverlaps(transform.position, _bodyRadius, GameLayers.Wall);
 

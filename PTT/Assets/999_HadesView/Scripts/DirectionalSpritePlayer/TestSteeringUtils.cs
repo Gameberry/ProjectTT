@@ -6,6 +6,8 @@ namespace GameBerry.TestScene
     {
         public static readonly Vector2[] Directions8 = CreateDirections();
         private static readonly Collider2D[] WallBuffer = new Collider2D[16];
+        private static readonly RaycastHit2D[] WallHitBuffer = new RaycastHit2D[16];
+        private const float WallSkin = 0.05f;
 
         private static Vector2[] CreateDirections()
         {
@@ -21,7 +23,7 @@ namespace GameBerry.TestScene
         public static Vector3 ResolveWallOverlaps(Vector3 position, float bodyRadius, LayerMask wallLayerMask)
         {
             Vector2 pos2D = (Vector2)position;
-            var filter = new ContactFilter2D { layerMask = wallLayerMask, useLayerMask = true, useTriggers = false };
+            ContactFilter2D filter = CreateWallFilter(wallLayerMask);
             int count = Physics2D.OverlapCircle(pos2D, bodyRadius, filter, WallBuffer);
 
             for (int i = 0; i < count; i++)
@@ -42,6 +44,42 @@ namespace GameBerry.TestScene
             }
 
             return new Vector3(pos2D.x, pos2D.y, position.z);
+        }
+
+        public static Vector3 ClampMovementToWall(Vector3 from, Vector3 to, float bodyRadius, LayerMask wallLayerMask)
+        {
+            Vector2 delta = (Vector2)(to - from);
+            float distance = delta.magnitude;
+            if (distance <= 0.0001f)
+                return ResolveWallOverlaps(to, bodyRadius, wallLayerMask);
+
+            Vector2 direction = delta / distance;
+            ContactFilter2D filter = CreateWallFilter(wallLayerMask);
+            int hitCount = Physics2D.CircleCast(from, bodyRadius, direction, filter, WallHitBuffer, distance);
+
+            float safeDistance = distance;
+            for (int i = 0; i < hitCount; i++)
+            {
+                RaycastHit2D hit = WallHitBuffer[i];
+                if (hit.collider == null)
+                    continue;
+
+                safeDistance = Mathf.Min(safeDistance, Mathf.Max(0.0f, hit.distance - WallSkin));
+            }
+
+            Vector3 clamped = from + new Vector3(direction.x, direction.y, 0.0f) * safeDistance;
+            clamped.z = to.z;
+            return ResolveWallOverlaps(clamped, bodyRadius, wallLayerMask);
+        }
+
+        private static ContactFilter2D CreateWallFilter(LayerMask wallLayerMask)
+        {
+            return new ContactFilter2D
+            {
+                layerMask = wallLayerMask,
+                useLayerMask = true,
+                useTriggers = true
+            };
         }
     }
 }

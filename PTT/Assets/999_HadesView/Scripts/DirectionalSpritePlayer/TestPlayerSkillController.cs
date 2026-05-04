@@ -40,15 +40,20 @@ namespace GameBerry.TestScene
 
         public bool TryUseFirstSkill()
         {
+            return TryUseSkillAtIndex(0);
+        }
+
+        public bool TryUseSkillAtIndex(int skillIndex)
+        {
             RefreshInterruptedSkillState();
             if (IsPlayingSkill)
                 return false;
 
-            TestSkillData firstSkill = GetFirstSkill();
-            if (firstSkill == null)
+            TestSkillData skill = GetSkillAtIndex(skillIndex);
+            if (skill == null)
                 return false;
 
-            return UseSkill(firstSkill);
+            return UseSkill(skill);
         }
 
         public bool UseSkill(TestSkillData skillData)
@@ -178,15 +183,15 @@ namespace GameBerry.TestScene
             _skills.Add(GetOrCreateDefaultDashSlashSkill());
         }
 
-        private TestSkillData GetFirstSkill()
+        private TestSkillData GetSkillAtIndex(int skillIndex)
         {
-            for (int i = 0; i < _skills.Count; i++)
-            {
-                if (_skills[i] != null)
-                    return _skills[i];
-            }
+            if (skillIndex < 0)
+                return null;
 
-            return GetOrCreateDefaultDashSlashSkill();
+            if (skillIndex < _skills.Count)
+                return _skills[skillIndex];
+
+            return skillIndex == 0 ? GetOrCreateDefaultDashSlashSkill() : null;
         }
 
         private TestDirectionalMonsterController ResolveSkillTarget(TestSkillData skillData)
