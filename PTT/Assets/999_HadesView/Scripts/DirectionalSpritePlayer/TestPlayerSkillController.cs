@@ -6,7 +6,9 @@ namespace GameBerry.TestScene
     public class TestPlayerSkillController : MonoBehaviour
     {
         private static readonly HashSet<TestDirectionalMonsterController> SkillHitBuffer = new HashSet<TestDirectionalMonsterController>();
+        private static readonly Collider2D[] WallOverlapBuffer = new Collider2D[8];
         private static TestSkillData s_defaultByungRyeokIlSeomSkill;
+        private const float BlinkWallSkin = 0.05f;
 
         [SerializeField] private TestDirectionalPlayerController _playerController;
         [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
@@ -243,7 +245,6 @@ namespace GameBerry.TestScene
             SetupAndPlayPathParticles(startPosition, destination, _activeSkillDirection);
 
             _playerController.transform.position = destination;
-            _playerController.ResolveWallsAfterTeleport();
             _playerController.SetFacingDirection(_activeSkillDirection);
         }
 
@@ -268,13 +269,46 @@ namespace GameBerry.TestScene
             dir2D /= distance;
             float bodyRadius = _playerController.BodyRadius;
             RaycastHit2D hit = Physics2D.CircleCast(startPos, bodyRadius, dir2D, distance, _playerController.WallLayerMask);
-            if (hit.collider == null)
-                return destination;
+            float safeDistance = hit.collider != null
+                ? Mathf.Max(0f, hit.distance - BlinkWallSkin)
+                : distance;
 
-            float safeDistance = Mathf.Max(0f, hit.distance);
-            Vector3 clamped = startPos + new Vector3(dir2D.x, dir2D.y, 0f) * safeDistance;
-            clamped.z = destination.z;
-            return clamped;
+            return BacktrackToSafeBlinkPosition(startPos, dir2D, safeDistance, destination.z);
+        }
+
+        private Vector3 BacktrackToSafeBlinkPosition(Vector3 startPos, Vector2 direction, float distance, float z)
+        {
+            float step = Mathf.Max(BlinkWallSkin, _playerController.BodyRadius * 0.25f);
+
+            for (int i = 0; i < 16; i++)
+            {
+                Vector3 candidate = startPos + new Vector3(direction.x, direction.y, 0.0f) * distance;
+                candidate.z = z;
+
+                if (IsOverlappingWall(candidate) == false)
+                    return candidate;
+
+                distance -= step;
+                if (distance <= 0.0f)
+                    break;
+            }
+
+            Vector3 fallback = startPos;
+            fallback.z = z;
+            return fallback;
+        }
+
+        private bool IsOverlappingWall(Vector3 position)
+        {
+            var filter = new ContactFilter2D
+            {
+                layerMask = _playerController.WallLayerMask,
+                useLayerMask = true,
+                useTriggers = false
+            };
+
+            int count = Physics2D.OverlapCircle((Vector2)position, _playerController.BodyRadius, filter, WallOverlapBuffer);
+            return count > 0;
         }
 
         private void SetupAndPlayPathParticles(Vector3 startPos, Vector3 endPos, Vector3 direction)
