@@ -12,6 +12,7 @@ namespace GameBerry.TestScene
         private TestDirectionalPlayerController _player;
         private bool _isPortalActive;
         private bool _wasInsideRange;
+        private bool _mustExitBeforeEntering;
 
         public bool IsPortalActive => _isPortalActive;
 
@@ -33,6 +34,13 @@ namespace GameBerry.TestScene
             if (isInsideRange == false)
             {
                 _wasInsideRange = false;
+                _mustExitBeforeEntering = false;
+                return;
+            }
+
+            if (_mustExitBeforeEntering)
+            {
+                _wasInsideRange = true;
                 return;
             }
 
@@ -46,10 +54,30 @@ namespace GameBerry.TestScene
         public void SetPortalActive(bool active)
         {
             _isPortalActive = active;
-            _wasInsideRange = false;
+
+            if (active)
+            {
+                bool isInsideRange = IsPlayerInsideRange();
+                _wasInsideRange = isInsideRange;
+                _mustExitBeforeEntering = isInsideRange;
+            }
+            else
+            {
+                _wasInsideRange = false;
+                _mustExitBeforeEntering = false;
+            }
 
             if (_visualRoot != null)
                 _visualRoot.SetActive(active);
+        }
+
+        private bool IsPlayerInsideRange()
+        {
+            EnsurePlayer();
+            if (_player == null)
+                return false;
+
+            return Vector2.Distance(transform.position, _player.transform.position) <= _activationRadius;
         }
 
         private void EnsurePlayer()
