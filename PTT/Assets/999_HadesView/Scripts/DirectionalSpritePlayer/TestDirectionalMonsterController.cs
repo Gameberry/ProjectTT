@@ -8,7 +8,7 @@ namespace GameBerry.TestScene
         private static readonly List<TestDirectionalMonsterController> QueryBuffer = new List<TestDirectionalMonsterController>(32);
         private static readonly List<TestDirectionalMonsterController> AttackQueryBuffer = new List<TestDirectionalMonsterController>(32);
 
-        [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
+        [SerializeField] private TestDirectionalAnimator _spriteAnimator;
         [SerializeField] private UICharacterState _hpBar;
         [SerializeField] private Transform _target;
         [SerializeField] private string _targetObjectName = "TestDirectionalPlayer";
@@ -139,7 +139,10 @@ namespace GameBerry.TestScene
         private void EnsureDependencies()
         {
             if (_spriteAnimator == null)
-                _spriteAnimator = GetComponent<TestDirectionalSpriteAnimator>();
+                _spriteAnimator = GetComponent<TestDirectionalAnimator>();
+
+            if (_spriteAnimator == null)
+                _spriteAnimator = GetComponentInChildren<TestDirectionalAnimator>(true);
 
             if (_spriteAnimator == null)
                 _spriteAnimator = gameObject.AddComponent<TestDirectionalSpriteAnimator>();
@@ -329,7 +332,7 @@ namespace GameBerry.TestScene
             if (distance > _attackRange || distance <= 0.0001f)
                 return;
 
-            Vector2 forward = TestDirectionalSpriteAnimator.DirectionToVector(_spriteAnimator.CurrentDirection);
+            Vector2 forward = TestDirectionalAnimator.DirectionToVector(_spriteAnimator.CurrentDirection);
             float angle = Vector2.Angle(forward, new Vector2(toPlayer.x, toPlayer.y));
             if (angle > _attackAngle * 0.5f)
                 return;
@@ -385,7 +388,7 @@ namespace GameBerry.TestScene
 
         private static Vector3 DirectionToWorldVector(EightDirection direction)
         {
-            Vector2 vector = TestDirectionalSpriteAnimator.DirectionToVector(direction);
+            Vector2 vector = TestDirectionalAnimator.DirectionToVector(direction);
             return new Vector3(vector.x, vector.y, 0.0f);
         }
 

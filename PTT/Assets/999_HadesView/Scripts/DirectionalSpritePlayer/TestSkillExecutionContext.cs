@@ -7,7 +7,7 @@ namespace GameBerry.TestScene
     public class TestSkillExecutionContext
     {
         public TestDirectionalPlayerController PlayerController { get; }
-        public TestDirectionalSpriteAnimator SpriteAnimator { get; }
+        public TestDirectionalAnimator SpriteAnimator { get; }
         public HashSet<TestDirectionalMonsterController> HitBuffer { get; }
 
         public TestDirectionalMonsterController LockedTarget { get; set; }
@@ -24,7 +24,7 @@ namespace GameBerry.TestScene
 
         public TestSkillExecutionContext(
             TestDirectionalPlayerController playerController,
-            TestDirectionalSpriteAnimator spriteAnimator,
+            TestDirectionalAnimator spriteAnimator,
             HashSet<TestDirectionalMonsterController> hitBuffer)
         {
             PlayerController = playerController;

@@ -39,7 +39,7 @@ namespace GameBerry.TestScene
             TestDirectionalPlayerController player = ctx.PlayerController;
             var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(
                 player.transform.position, range + player.BodyRadius);
-            Vector2 forward = TestDirectionalSpriteAnimator.DirectionToVector(ctx.SpriteAnimator.CurrentDirection);
+            Vector2 forward = TestDirectionalAnimator.DirectionToVector(ctx.SpriteAnimator.CurrentDirection);
             float halfAngle = angle * 0.5f;
 
             for (int i = 0; i < monsters.Count; i++)

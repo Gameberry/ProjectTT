@@ -9,10 +9,11 @@ namespace GameBerry.TestScene
         private static TestDashSlashSkillData s_defaultDashSlashSkill;
 
         [SerializeField] private TestDirectionalPlayerController _playerController;
-        [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
+        [SerializeField] private TestDirectionalAnimator _spriteAnimator;
         [SerializeField] private List<TestSkillData> _skills = new List<TestSkillData>();
         [SerializeField] private bool _drawSkillGizmos = true;
         [SerializeField] private float _skillGizmoDuration = 2.0f;
+        [SerializeField] private bool _debugSkillLogs = true;
 
         private TestSkillData _activeSkill;
         private TestSkillExecutionContext _context;
@@ -36,6 +37,7 @@ namespace GameBerry.TestScene
             EnsureDependencies();
             _context = new TestSkillExecutionContext(_playerController, _spriteAnimator, SkillHitBuffer);
             EnsureDefaultSkills();
+            LogSkill($"Awake. animator={DescribeAnimator(_spriteAnimator)}, skills={_skills.Count}");
         }
 
         public bool TryUseFirstSkill()
@@ -45,26 +47,66 @@ namespace GameBerry.TestScene
 
         public bool TryUseSkillAtIndex(int skillIndex)
         {
+            LogSkill($"TryUseSkillAtIndex({skillIndex}) requested. active={DescribeSkill(_activeSkill)}, animator={DescribeAnimator(_spriteAnimator)}");
+
             RefreshInterruptedSkillState();
             if (IsPlayingSkill)
+            {
+                LogSkill($"TryUseSkillAtIndex({skillIndex}) blocked: already playing {DescribeSkill(_activeSkill)}");
                 return false;
+            }
 
             TestSkillData skill = GetSkillAtIndex(skillIndex);
             if (skill == null)
+            {
+                LogSkill($"TryUseSkillAtIndex({skillIndex}) blocked: no skill data.");
                 return false;
+            }
 
             return UseSkill(skill);
         }
 
         public bool UseSkill(TestSkillData skillData)
         {
+            LogSkill($"UseSkill requested. skill={DescribeSkill(skillData)}, player={(_playerController != null ? _playerController.name : "null")}, animator={DescribeAnimator(_spriteAnimator)}");
+
             RefreshInterruptedSkillState();
-            if (skillData == null || _playerController == null || _playerController.IsDead || IsPlayingSkill)
+            if (skillData == null)
+            {
+                LogSkill("UseSkill blocked: skillData is null.");
                 return false;
+            }
+
+            if (_playerController == null)
+            {
+                LogSkill("UseSkill blocked: playerController is null.");
+                return false;
+            }
+
+            if (_spriteAnimator == null)
+            {
+                LogSkill("UseSkill blocked: animator is null.");
+                return false;
+            }
+
+            if (_playerController.IsDead)
+            {
+                LogSkill("UseSkill blocked: player is dead.");
+                return false;
+            }
+
+            if (IsPlayingSkill)
+            {
+                LogSkill($"UseSkill blocked: already playing {DescribeSkill(_activeSkill)}");
+                return false;
+            }
 
             TestDirectionalMonsterController target = ResolveSkillTarget(skillData);
             if (target == null)
+            {
+                LogSkill($"UseSkill blocked: no valid target. currentTarget={DescribeTarget(_playerController.CurrentTarget)}");
                 return false;
+            }
 
             _activeSkill = skillData;
             _context.Reset();
@@ -75,12 +117,26 @@ namespace GameBerry.TestScene
             _context.SkillDirection = toTarget.sqrMagnitude > 0.0001f ? toTarget.normalized : Vector3.down;
 
             _playerController.SetFacingDirection(_context.SkillDirection);
+            LogSkill($"UseSkill Play start. skill={DescribeSkill(skillData)}, target={DescribeTarget(target)}, direction={FormatVector(_context.SkillDirection)}");
             _spriteAnimator.Play(skillData.PlaybackState, skillData.AnimationKey, _context.SkillDirection, true);
+            LogSkill($"UseSkill Play result. animator={DescribeAnimator(_spriteAnimator)}");
+
+            if (IsAnimatorPlayingSkill(skillData) == false)
+            {
+                LogSkill($"UseSkill failed: animator did not enter requested skill. expectedState={skillData.PlaybackState}, expectedKey={skillData.AnimationKey}");
+                CancelSkill();
+                return false;
+            }
+
+            LogSkill($"UseSkill success. active={DescribeSkill(_activeSkill)}");
             return true;
         }
 
         public void CancelSkill()
         {
+            if (_activeSkill != null)
+                LogSkill($"CancelSkill. active={DescribeSkill(_activeSkill)}, animator={DescribeAnimator(_spriteAnimator)}");
+
             _activeSkill = null;
             _context?.Reset();
         }
@@ -97,6 +153,7 @@ namespace GameBerry.TestScene
                 bool stillActive = _context.TickAction(_context);
                 if (!stillActive)
                 {
+                    LogSkill($"TickSkillAnimation ended by TickAction. active={DescribeSkill(_activeSkill)}");
                     _context.TickAction = null;
                     CancelSkill();
                     return false;
@@ -104,11 +161,20 @@ namespace GameBerry.TestScene
             }
 
             _spriteAnimator.Play(_activeSkill.PlaybackState, _activeSkill.AnimationKey, _context.SkillDirection);
+            if (IsAnimatorPlayingSkill(_activeSkill) == false)
+            {
+                LogSkill($"TickSkillAnimation failed: animator left skill. active={DescribeSkill(_activeSkill)}, animator={DescribeAnimator(_spriteAnimator)}");
+                CancelSkill();
+                return false;
+            }
+
             return true;
         }
 
         public void HandleAnimatorStatePlaybackCompleted(CharacterState completedState)
         {
+            LogSkill($"HandleAnimatorStatePlaybackCompleted({completedState}). active={DescribeSkill(_activeSkill)}, animator={DescribeAnimator(_spriteAnimator)}");
+
             RefreshInterruptedSkillState();
             if (_activeSkill == null || completedState != _activeSkill.PlaybackState)
                 return;
@@ -121,6 +187,8 @@ namespace GameBerry.TestScene
 
         public void HandleAnimatorStateFrameTriggered(CharacterState state, int frameIndex)
         {
+            LogSkill($"HandleAnimatorStateFrameTriggered(state={state}, frame={frameIndex}). active={DescribeSkill(_activeSkill)}");
+
             RefreshInterruptedSkillState();
             if (_activeSkill == null || state != _activeSkill.PlaybackState)
                 return;
@@ -135,7 +203,9 @@ namespace GameBerry.TestScene
 
             RefreshContextTarget();
 
+            LogSkill($"ExecuteActiveSkillHit start. active={DescribeSkill(_activeSkill)}, target={DescribeTarget(_context.LockedTarget)}, direction={FormatVector(_context.SkillDirection)}");
             bool success = _activeSkill.ExecuteHit(_context);
+            LogSkill($"ExecuteActiveSkillHit result={success}. active={DescribeSkill(_activeSkill)}");
             if (!success)
                 CancelSkill();
         }
@@ -153,6 +223,7 @@ namespace GameBerry.TestScene
 
             TestDirectionalMonsterController newTarget = ResolveSkillTarget(_activeSkill);
             _context.LockedTarget = newTarget;
+            LogSkill($"RefreshContextTarget reacquired target={DescribeTarget(newTarget)}");
             if (TestSkillData.IsValidTarget(newTarget))
             {
                 Vector3 toTarget = newTarget.transform.position - _playerController.transform.position;
@@ -167,8 +238,62 @@ namespace GameBerry.TestScene
             if (_playerController == null)
                 _playerController = GetComponent<TestDirectionalPlayerController>();
 
+            TestDirectionalAnimator playerAnimator = _playerController != null
+                ? _playerController.DirectionalAnimator
+                : null;
+
+            if (IsUsableAnimator(playerAnimator))
+                _spriteAnimator = playerAnimator;
+
+            if (IsUsableAnimator(_spriteAnimator) == false)
+                _spriteAnimator = FindBestAnimator();
+
             if (_spriteAnimator == null)
-                _spriteAnimator = GetComponent<TestDirectionalSpriteAnimator>();
+                _spriteAnimator = gameObject.AddComponent<TestDirectionalSpriteAnimator>();
+
+            LogSkill($"EnsureDependencies resolved. player={(_playerController != null ? _playerController.name : "null")}, animator={DescribeAnimator(_spriteAnimator)}");
+        }
+
+        private TestDirectionalAnimator FindBestAnimator()
+        {
+            TestDirectionalAnimator animator = FindAnimatorInList(GetComponents<TestDirectionalAnimator>(), true);
+            if (animator != null)
+                return animator;
+
+            animator = FindAnimatorInList(GetComponentsInChildren<TestDirectionalAnimator>(true), true);
+            if (animator != null)
+                return animator;
+
+            animator = FindAnimatorInList(GetComponents<TestDirectionalAnimator>(), false);
+            if (animator != null)
+                return animator;
+
+            return FindAnimatorInList(GetComponentsInChildren<TestDirectionalAnimator>(true), false);
+        }
+
+        private static TestDirectionalAnimator FindAnimatorInList(TestDirectionalAnimator[] animators, bool requireEnabled)
+        {
+            if (animators == null)
+                return null;
+
+            for (int i = 0; i < animators.Length; i++)
+            {
+                TestDirectionalAnimator animator = animators[i];
+                if (animator == null)
+                    continue;
+
+                if (requireEnabled && animator.isActiveAndEnabled == false)
+                    continue;
+
+                return animator;
+            }
+
+            return null;
+        }
+
+        private static bool IsUsableAnimator(TestDirectionalAnimator animator)
+        {
+            return animator != null && animator.isActiveAndEnabled;
         }
 
         private void EnsureDefaultSkills()
@@ -288,13 +413,60 @@ namespace GameBerry.TestScene
             if (_activeSkill == null || _spriteAnimator == null)
                 return;
 
-            if (_spriteAnimator.CurrentState == _activeSkill.PlaybackState)
+            if (IsAnimatorPlayingSkill(_activeSkill))
                 return;
 
             if (_context.TickAction != null)
                 return;
 
+            LogSkill($"RefreshInterruptedSkillState canceling: animator mismatch. active={DescribeSkill(_activeSkill)}, animator={DescribeAnimator(_spriteAnimator)}");
             CancelSkill();
+        }
+
+        private bool IsAnimatorPlayingSkill(TestSkillData skillData)
+        {
+            if (skillData == null || _spriteAnimator == null)
+                return false;
+
+            return _spriteAnimator.CurrentState == skillData.PlaybackState
+                && _spriteAnimator.CurrentAnimationKey == skillData.AnimationKey;
+        }
+
+        private void LogSkill(string message)
+        {
+            if (_debugSkillLogs == false)
+                return;
+
+            Debug.Log($"{nameof(TestPlayerSkillController)}[{name} frame={Time.frameCount}]: {message}", this);
+        }
+
+        private static string DescribeSkill(TestSkillData skillData)
+        {
+            if (skillData == null)
+                return "null";
+
+            return $"{skillData.name}(state={skillData.PlaybackState}, key={skillData.AnimationKey})";
+        }
+
+        private static string DescribeAnimator(TestDirectionalAnimator animator)
+        {
+            if (animator == null)
+                return "null";
+
+            return $"{animator.GetType().Name}(active={animator.isActiveAndEnabled}, state={animator.CurrentState}, key={animator.CurrentAnimationKey}, dir={animator.CurrentDirection})";
+        }
+
+        private static string DescribeTarget(TestDirectionalMonsterController target)
+        {
+            if (target == null)
+                return "null";
+
+            return $"{target.name}(active={target.isActiveAndEnabled}, dead={target.IsDead}, pos={FormatVector(target.transform.position)})";
+        }
+
+        private static string FormatVector(Vector3 vector)
+        {
+            return $"({vector.x:0.###}, {vector.y:0.###}, {vector.z:0.###})";
         }
 
         private static TestDashSlashSkillData GetOrCreateDefaultDashSlashSkill()

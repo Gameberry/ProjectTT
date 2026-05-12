@@ -9,7 +9,7 @@ namespace GameBerry.TestScene
         private static readonly List<TestDirectionalMonsterController> QueryBuffer = new List<TestDirectionalMonsterController>(32);
         private static readonly List<TestDirectionalMonsterController> AutoBuffer = new List<TestDirectionalMonsterController>(32);
 
-        [SerializeField] private TestDirectionalSpriteAnimator _spriteAnimator;
+        [SerializeField] private TestDirectionalAnimator _spriteAnimator;
         [SerializeField] private TestPlayerSkillController _skillController;
         [SerializeField] private UICharacterState _hpBar;
         [SerializeField] private float _moveSpeed = 3.5f;
@@ -24,6 +24,7 @@ namespace GameBerry.TestScene
         [SerializeField] private bool _enablePreviewHotKeys = true;
         [SerializeField] private bool _drawBodyGizmo = true;
         [SerializeField] private bool _drawAttackGizmo = true;
+        [SerializeField] private bool _debugSkillLogs = true;
 
         private Vector3 _lastMoveDirection = Vector3.down;
         private CharacterState _previewState = CharacterState.None;
@@ -43,6 +44,7 @@ namespace GameBerry.TestScene
         public int CurrentHp => _currentHp;
         public bool IsDead => _isDead;
         public Vector3 FacingDirection => _lastMoveDirection;
+        public TestDirectionalAnimator DirectionalAnimator => _spriteAnimator;
         public TestDirectionalMonsterController CurrentTarget => IsValidAutoTarget(_autoTarget) ? _autoTarget : null;
         public bool IsSkillCasting => _previewState == CharacterState.Skill && _skillController != null && _skillController.IsPlayingSkill;
 
@@ -99,13 +101,24 @@ namespace GameBerry.TestScene
             if (IsPreviewLockedState(_previewState))
             {
                 ResolveMonsterOverlaps(false);
-                if (_previewState == CharacterState.Skill && _skillController != null && _skillController.IsPlayingSkill)
+                if (_previewState == CharacterState.Skill)
                 {
-                    if (_skillController.TickSkillAnimation() == false)
+                    if (_skillController == null || _skillController.IsPlayingSkill == false)
+                    {
+                        LogSkill($"Skill locked state released: skillController={(_skillController != null ? "exists" : "null")}, isPlaying={(_skillController != null && _skillController.IsPlayingSkill)}");
                         _previewState = CharacterState.None;
+                    }
+                    else if (_skillController.TickSkillAnimation() == false)
+                    {
+                        LogSkill("Skill locked state released: TickSkillAnimation returned false.");
+                        _previewState = CharacterState.None;
+                    }
                 }
                 else
+                {
                     _spriteAnimator.Play(_previewState, _lastMoveDirection);
+                }
+
                 return;
             }
 
@@ -234,7 +247,10 @@ namespace GameBerry.TestScene
         private void EnsureDependencies()
         {
             if (_spriteAnimator == null)
-                _spriteAnimator = GetComponent<TestDirectionalSpriteAnimator>();
+                _spriteAnimator = GetComponent<TestDirectionalAnimator>();
+
+            if (_spriteAnimator == null)
+                _spriteAnimator = GetComponentInChildren<TestDirectionalAnimator>(true);
 
             if (_spriteAnimator == null)
                 _spriteAnimator = gameObject.AddComponent<TestDirectionalSpriteAnimator>();
@@ -323,7 +339,10 @@ namespace GameBerry.TestScene
             else if (Input.GetKeyDown(KeyCode.Alpha2))
                 _previewState = CharacterState.Hit;
             else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                LogSkill("Alpha3 pressed.");
                 TryUsePreviewSkill(0);
+            }
             else if (Input.GetKeyDown(KeyCode.Alpha4))
                 TryUsePreviewSkill(1);
             else if (Input.GetKeyDown(KeyCode.Alpha5))
@@ -332,8 +351,27 @@ namespace GameBerry.TestScene
 
         private void TryUsePreviewSkill(int skillIndex)
         {
-            if (_skillController != null && _skillController.TryUseSkillAtIndex(skillIndex))
+            bool success = _skillController != null && _skillController.TryUseSkillAtIndex(skillIndex);
+            LogSkill($"TryUsePreviewSkill({skillIndex}) result={success}, previewBefore={_previewState}, animator={DescribeAnimator(_spriteAnimator)}");
+
+            if (success)
                 _previewState = CharacterState.Skill;
+        }
+
+        private void LogSkill(string message)
+        {
+            if (_debugSkillLogs == false)
+                return;
+
+            Debug.Log($"{nameof(TestDirectionalPlayerController)}[{name} frame={Time.frameCount}]: {message}", this);
+        }
+
+        private static string DescribeAnimator(TestDirectionalAnimator animator)
+        {
+            if (animator == null)
+                return "null";
+
+            return $"{animator.GetType().Name}(active={animator.isActiveAndEnabled}, state={animator.CurrentState}, key={animator.CurrentAnimationKey}, dir={animator.CurrentDirection})";
         }
 
         private static bool IsPreviewLockedState(CharacterState state)
@@ -543,7 +581,7 @@ namespace GameBerry.TestScene
         private void HitMonstersInSector(int damage, float range, float angle)
         {
             var monsters = TestDirectionalMonsterController.QueryMonstersInRadius(transform.position, range + _bodyRadius);
-            Vector2 forward = TestDirectionalSpriteAnimator.DirectionToVector(_spriteAnimator.CurrentDirection);
+            Vector2 forward = TestDirectionalAnimator.DirectionToVector(_spriteAnimator.CurrentDirection);
             float halfAngle = angle * 0.5f;
 
             for (int i = 0; i < monsters.Count; i++)
@@ -568,7 +606,7 @@ namespace GameBerry.TestScene
 
         private static Vector3 DirectionToWorldVector(EightDirection direction)
         {
-            Vector2 vector = TestDirectionalSpriteAnimator.DirectionToVector(direction);
+            Vector2 vector = TestDirectionalAnimator.DirectionToVector(direction);
             return new Vector3(vector.x, vector.y, 0.0f);
         }
 
