@@ -22,7 +22,7 @@ namespace GameBerry.TestScene
         [SerializeField] private float _attackAngle = 90.0f;
         [SerializeField] private bool _drawRangeGizmos = true;
         [SerializeField] private bool _drawAttackGizmo = true;
-
+        [SerializeField] private ParticleSystem _hitEffectPrefab;
         private Vector3 _lastMoveDirection = Vector3.down;
         private bool _isAttacking;
         private Vector3 _cachedSteerDirection;
@@ -68,6 +68,13 @@ namespace GameBerry.TestScene
                 //RefreshHpBar();
                 _spriteAnimator.Play(CharacterState.Idle, _lastMoveDirection, true);
             }
+
+            // float sizeFactor = transform.localScale.x;
+            // _detectRange *= sizeFactor;
+            // _attackRange *= sizeFactor;
+            // _bodyRadius *= sizeFactor;
+            // if (_bodyRadius > 0.5f)
+            //     _bodyRadius = 0.5f;
         }
 
         private void OnDestroy()
